@@ -86,8 +86,8 @@ export default function Trajecten() {
             {/* NAVBAR */}
             <Navbar />
 
-            {/* HERO SECTION */}
-            <section className="relative pt-48 pb-24 px-6 md:px-16 overflow-hidden bg-background min-h-[50dvh] flex flex-col justify-center">
+            {/* B. HERO SECTION (Trajecten) */}
+            <section className="relative pt-64 pb-32 px-6 md:px-16 overflow-hidden bg-white min-h-[60dvh] flex flex-col justify-center">
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                     <div className="absolute left-1/4 top-0 w-px h-full bg-foreground"></div>
                     <div className="absolute left-2/4 top-0 w-px h-full bg-foreground"></div>
@@ -96,7 +96,7 @@ export default function Trajecten() {
                 </div>
 
                 <div className="relative z-10 max-w-5xl mx-auto text-center">
-                    <h1 className="hero-stagger text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight font-semibold mb-6 text-foreground">
+                    <h1 className="hero-stagger text-5xl md:text-6xl lg:text-6xl leading-[1.05] tracking-tight font-semibold mb-6 text-foreground">
                         {language === 'nl' ? <p>Twee trajecten.<br /> Eén doel.</p> : <p>Two paths.<br /> One goal.</p>}
                     </h1>
                     <p className="hero-stagger text-xl md:text-2xl font-medium text-foreground/70 tracking-tight max-w-2xl mx-auto">

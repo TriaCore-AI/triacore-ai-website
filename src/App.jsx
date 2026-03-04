@@ -127,7 +127,7 @@ function App() {
       <Navbar />
 
       {/* B. HERO SECTION */}
-      <section className="relative pt-40 pb-24 px-6 md:px-16 overflow-hidden bg-background min-h-[85dvh] flex flex-col justify-center">
+      <section className="relative pt-56 pb-24 px-6 md:px-16 overflow-hidden bg-background min-h-[80dvh] flex flex-col justify-start">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           {/* Abstract structural lines placeholder - Full Section Grid */}
           <div className="absolute left-1/4 top-0 w-px h-full bg-foreground"></div>
@@ -143,7 +143,7 @@ function App() {
             <p className="hero-stagger section-label mb-4">
               {language === 'nl' ? 'Structuur voor een' : 'Structure for an'}
             </p>
-            <h1 className="hero-stagger hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-7xl mb-8 leading-[1.1]">
+            <h1 className="hero-stagger hero-title text-foreground text-5xl sm:text-6xl md:text-6xl lg:text-6xl mb-8 leading-[1.1]">
               {language === 'nl' ? 'AI-gedreven toekomst.' : 'AI-driven future.'}
             </h1>
             <p className="hero-stagger max-w-xl text-lg text-foreground/60 mb-12 leading-relaxed">
@@ -178,7 +178,7 @@ function App() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="hero-title text-foreground text-4xl md:text-5xl mb-6 scroll-animate">{language === 'nl' ? 'Twee trajecten. Eén doel.' : 'Two paths. One goal.'}</h2>
-            <p className="section-subtitle text-foreground/60 text-xl max-w-2xl mx-auto scroll-animate">{language === 'nl' ? 'Afhankelijk van waar uw organisatie vandaag staat, begeleiden we u via één van deze trajecten.' : 'Depending on where your organization is today, we guide you through one of these paths.'}</p>
+            <p className="section-subtitle text-foreground/60 text-lg max-w-2xl mx-auto scroll-animate">{language === 'nl' ? 'Afhankelijk van waar uw organisatie vandaag staat, begeleiden we u via één van deze trajecten.' : 'Depending on where your organization is today, we guide you through one of these paths.'}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
@@ -244,7 +244,7 @@ function App() {
           <h2 className="hero-title text-4xl md:text-5xl text-white mb-6 scroll-animate">
             {language === 'nl' ? 'Geïntegreerde AI-agents.' : 'Integrated AI agents.'}
           </h2>
-          <p className="section-subtitle text-white/60 max-w-2xl mx-auto scroll-animate">
+          <p className="section-subtitle text-white/60 text-lg max-w-2xl mx-auto scroll-animate">
             {language === 'nl'
               ? 'Digitale collega’s die naadloos samenwerken met uw team en uw bestaande software. Ze nemen repetitief werk over en creëren directe tijdswinst.'
               : 'Digital colleagues that collaborate seamlessly with your team and your existing software. They take over repetitive work and create an immediate time saving.'}

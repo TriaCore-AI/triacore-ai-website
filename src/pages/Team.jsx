@@ -116,7 +116,7 @@ export default function Team() {
             <Navbar />
 
             {/* HERO SECTION (Grid Background) */}
-            <section className="relative pt-48 pb-32 px-6 md:px-16 overflow-hidden bg-background min-h-[50dvh] flex flex-col justify-center">
+            <section className="relative pt-64 pb-32 px-6 md:px-16 overflow-hidden bg-background min-h-[50dvh] flex flex-col justify-center">
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                     <div className="absolute left-1/4 top-0 w-px h-full bg-foreground"></div>
                     <div className="absolute left-2/4 top-0 w-px h-full bg-foreground"></div>
