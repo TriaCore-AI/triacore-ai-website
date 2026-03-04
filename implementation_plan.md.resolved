@@ -1,0 +1,25 @@
+# Goal Description
+Build a cinematic, high-fidelity landing page for TriacoreAI. The site must serve as a minimal, strategic digital instrument reflecting their positioning: "Wij transformeren bedrijven in het AI-tijdperk door digitale fundamenten te ontwerpen waarop AI duurzaam kan groeien."
+
+## Proposed Changes
+### Project Setup
+#### [NEW] [Vite Config](file:///c:/Users/nicoc/OneDrive - PXL/Documenten/TriaCore AI gemini 3.1 website/vite.config.js)
+#### [NEW] [Tailwind Config](file:///c:/Users/nicoc/OneDrive - PXL/Documenten/TriaCore AI gemini 3.1 website/tailwind.config.js)
+
+### Application Structure
+#### [NEW] [index.css](file:///c:/Users/nicoc/OneDrive - PXL/Documenten/TriaCore AI gemini 3.1 website/src/index.css)
+- Implement global CSS noise overlay using inline SVG `<feTurbulence>` at 0.05 opacity.
+- Setup smooth scrolling and font configurations.
+
+#### [NEW] [App.jsx](file:///c:/Users/nicoc/OneDrive - PXL/Documenten/TriaCore AI gemini 3.1 website/src/App.jsx)
+- Build all sections requested in prompt: Navbar, Hero, Foundations, Philosophy, Protocol, Visibility, Team, Security, CTA.
+- Incorporate GSAP `ScrollTrigger` and standard animations with cleanup inside `gsap.context()`.
+
+## Verification Plan
+### Automated Tests
+- Run `npm run build` to ensure project compiles without errors.
+- Run `npm run dev` and visually verify the landing page loads all sections correctly.
+### Manual Verification
+- Visual check: Ensure it matches the "Light-dominant" aesthetic.
+- Animation check: Ensure GSAP ScrollTriggers work smoothly.
+- Language check: Make sure all text is in Dutch.

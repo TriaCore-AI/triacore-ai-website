@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-accent: #628f69;
+  --color-dark-section: #020617;
+
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "Fira Code", monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+}
+
+::selection {
+  background-color: theme('colors.foreground');
+  color: theme('colors.background');
+}
+
+@layer utilities {
+  .custom-bezier {
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes scroll-reverse {
+    0% {
+      transform: translateX(-50%);
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 60s linear infinite;
+  }
+
+  .animate-scroll-reverse {
+    animation: scroll-reverse 60s linear infinite;
+  }
+
+  /* Typography System tokens - Colors removed from tokens for better reusability */
+  .hero-title {
+    @apply font-serif italic leading-[1.05] tracking-tight;
+  }
+
+  .section-title {
+    @apply font-sans font-semibold tracking-tight;
+  }
+
+  .section-label {
+    @apply text-accent text-[11px] font-bold tracking-[0.2em] uppercase;
+  }
+
+  .section-subtitle {
+    @apply leading-relaxed font-medium transition-colors duration-300;
+  }
+}

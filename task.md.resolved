@@ -1,0 +1,20 @@
+# TriacoreAI Landing Page
+
+- [x] Initialize React Vite Project
+- [/] Install Dependencies (Tailwind, GSAP, Lucide React)
+- [x] Configure Tailwind CSS
+- [x] Create Core Structural Files
+  - [x] [index.css](file:///c:/Users/nicoc/OneDrive%20-%20PXL/Documenten/TriaCore%20AI%20gemini%203.1%20website/src/index.css) (noise texture, base styling)
+  - [/] `App.jsx` foundation
+- [ ] Build Page Components
+  - [ ] Navbar (Strategic Capsule)
+  - [ ] Hero Section (The Foundational Statement)
+  - [ ] Foundations & Integration 
+  - [ ] Philosophy 
+  - [ ] Protocol (Transformation Framework)
+  - [ ] Digital Visibility Section
+  - [ ] Team Section
+  - [ ] Security Section
+  - [ ] Final CTA
+- [ ] Implement GSAP Animations
+- [ ] Review & Polish (Responsive, Pixel-Perfect)
