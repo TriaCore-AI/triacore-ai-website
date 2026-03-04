@@ -280,7 +280,7 @@ export default function AiAgents() {
             <Navbar />
 
             {/* 1. HERO / HEADER SECTIE */}
-            <section className="relative min-h-[90vh] w-full flex flex-col items-center justify-center pt-32 pb-20 px-6 md:px-16 bg-white overflow-hidden">
+            <section className="relative min-h-[80vh] w-full flex flex-col items-center justify-center pt-32 pb-16 px-6 md:px-16 bg-white overflow-hidden">
 
                 {/* Structural Grid Background - Same as landing page */}
                 <div className="absolute inset-0 opacity-[0.07] pointer-events-none">
@@ -294,7 +294,7 @@ export default function AiAgents() {
                 <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center">
                     {/* Header Text */}
                     <div className="text-center mb-12 hero-animate">
-                        <h1 className="text-5xl sm:text-6xl md:text-8xl font-semibold tracking-tight text-foreground mb-6">
+                        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-semibold tracking-tight text-foreground mb-6">
                             AI Agents
                         </h1>
                         <p className="text-xl md:text-2xl font-medium text-foreground/60 max-w-3xl leading-relaxed">

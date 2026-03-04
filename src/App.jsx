@@ -127,7 +127,7 @@ function App() {
       <Navbar />
 
       {/* B. HERO SECTION */}
-      <section className="relative min-h-[100dvh] w-full flex items-center pt-32 pb-24 px-6 md:px-16 overflow-hidden bg-background">
+      <section className="relative pt-40 pb-24 px-6 md:px-16 overflow-hidden bg-background min-h-[85dvh] flex flex-col justify-center">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           {/* Abstract structural lines placeholder - Full Section Grid */}
           <div className="absolute left-1/4 top-0 w-px h-full bg-foreground"></div>
@@ -143,7 +143,7 @@ function App() {
             <p className="hero-stagger section-label mb-4">
               {language === 'nl' ? 'Structuur voor een' : 'Structure for an'}
             </p>
-            <h1 className="hero-stagger hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-10 leading-[1.1]">
+            <h1 className="hero-stagger hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-7xl mb-8 leading-[1.1]">
               {language === 'nl' ? 'AI-gedreven toekomst.' : 'AI-driven future.'}
             </h1>
             <p className="hero-stagger max-w-xl text-lg text-foreground/60 mb-12 leading-relaxed">
