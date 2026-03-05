@@ -21,18 +21,31 @@ export default function ContactForm() {
 
         setStatus('loading');
 
-        // Simulating a minor delay for better UX
-        setTimeout(() => {
-            // Success 
-            setStatus('success');
-            setFormData({
-                name: '',
-                company: '',
-                email: '',
-                topic: '',
-                message: ''
+        try {
+            const res = await fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    "form-name": "contact",
+                    ...formData
+                }).toString(),
             });
-        }, 1200);
+
+            if (res.ok) {
+                setStatus('success');
+                setFormData({
+                    name: '',
+                    company: '',
+                    email: '',
+                    topic: '',
+                    message: ''
+                });
+            } else {
+                setStatus('error');
+            }
+        } catch (error) {
+            setStatus('error');
+        }
     };
 
     const handleInputChange = (e) => {
