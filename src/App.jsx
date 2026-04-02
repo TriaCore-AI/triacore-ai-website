@@ -6,7 +6,6 @@ import { ArrowRight, Terminal, Layers, Activity, ShieldCheck, Shield, FileCheck,
 import TriacoreRadar from './components/ui/triacore-radar';
 import TriacoreRoadmap from './components/ui/triacore-roadmap';
 import TriacoreLoop from './components/ui/triacore-loop';
-import ImageGallery from './components/ui/image-gallery';
 import Footer from './components/ui/footer';
 import Navbar from './components/ui/navbar';
 import CTAButton from './components/ui/cta-button';
@@ -359,10 +358,8 @@ function App() {
         </div>
       </section>
 
-      <ImageGallery />
-
       {/* G. TEAM SECTION */}
-      <section id="team" className="py-32 px-6 md:px-16 bg-background">
+      <section id="team" className="py-32 px-6 md:px-16 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="hero-title text-foreground text-4xl md:text-5xl mb-4 scroll-animate">
@@ -422,7 +419,7 @@ function App() {
         id="faq"
         className="py-32 px-6 md:px-16 relative overflow-hidden"
         style={{
-          background: 'linear-gradient(to bottom, #f8fafc 0%, #020617 100px)'
+          background: 'linear-gradient(to bottom, #ffffff 0%, #020617 100px)'
         }}
       >
 
