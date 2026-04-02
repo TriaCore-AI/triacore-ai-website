@@ -46,7 +46,6 @@ export default function Footer() {
                                 <a href="/#fundamenten" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Trajecten' : 'Paths'}</a>
                                 <a href="/#ai-agents" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'AI-agents' : 'AI Agents'}</a>
                                 <a href="/#aanpak" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Aanpak' : 'Approach'}</a>
-                                <a href="/#digitale-zichtbaarheid" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Zichtbaarheid' : 'Presence'}</a>
                                 <a href="/#team" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Team</a>
                                 <a href="/#security" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Security</a>
                             </div>
