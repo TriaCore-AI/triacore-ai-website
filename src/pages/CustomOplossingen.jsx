@@ -293,7 +293,7 @@ const Visual4 = () => (
 const DecisionCriteria = () => {
     const { language } = useLanguage();
     const sectionRef = useRef(null);
-    const [openIndex, setOpenIndex] = useState(null);
+    const [openIndices, setOpenIndices] = useState([]);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
@@ -324,11 +324,7 @@ const DecisionCriteria = () => {
                 ScrollTrigger.create({
                     trigger: item,
                     start: 'top 50%',
-                    end: 'bottom 50%',
-                    onEnter: () => setOpenIndex(index),
-                    onEnterBack: () => setOpenIndex(index),
-                    onLeave: () => setOpenIndex(prev => prev === index ? null : prev),
-                    onLeaveBack: () => setOpenIndex(prev => prev === index ? null : prev)
+                    onEnter: () => setOpenIndices(prev => prev.includes(index) ? prev : [...prev, index]),
                 });
             });
         }, sectionRef);
@@ -402,9 +398,9 @@ const DecisionCriteria = () => {
                             <div 
                                 key={i}
                                 onClick={() => {
-                                    if (window.innerWidth < 768) {
-                                        setOpenIndex(openIndex === i ? null : i);
-                                    }
+                                    setOpenIndices(prev => 
+                                        prev.includes(i) ? prev.filter(idx => idx !== i) : [...prev, i]
+                                    );
                                 }}
                                 className={`flex flex-col w-full opacity-0 decision-item-anim
                                     ${isEven ? 'md:items-end decision-item-right' : 'md:items-start decision-item-left'}
@@ -423,7 +419,7 @@ const DecisionCriteria = () => {
                                         </div>
                                         {/* Mobile Plus/Minus Icon */}
                                         <div className="md:hidden">
-                                            {openIndex === i ? (
+                                            {openIndices.includes(i) ? (
                                                 <Minus className="w-5 h-5 text-[#628f69]" />
                                             ) : (
                                                 <Plus className="w-5 h-5 text-foreground/40" />
@@ -434,7 +430,7 @@ const DecisionCriteria = () => {
                                     {/* Description: Accordion on Mobile, Always Visible on Desktop */}
                                     <div 
                                         className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
-                                            ${openIndex === i ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}
+                                            ${openIndices.includes(i) ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}
                                         `}
                                     >
                                         <p className={`text-foreground/50 text-lg md:text-xl font-light leading-relaxed max-w-2xl`}>
