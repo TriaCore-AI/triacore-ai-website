@@ -870,7 +870,18 @@ function App() {
                       </p>
                     </div>
                   ) : solevoMedia?.type === 'video' ? (
-                    <video src={solevoMedia.url} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover" />
+                    <video 
+                      src={solevoMedia.url} 
+                      autoPlay 
+                      muted 
+                      loop 
+                      playsInline 
+                      preload="auto" 
+                      onLoadedData={(e) => {
+                        e.target.play().catch(err => console.log("Autoplay blocked:", err));
+                      }}
+                      className="w-full h-full object-cover" 
+                    />
                   ) : solevoMedia?.type === 'image' ? (
                     <img src={solevoMedia.url} alt="Solevo Visual" className="w-full h-full object-cover" />
                   ) : null}
