@@ -880,6 +880,9 @@ function App() {
                       onLoadedData={(e) => {
                         e.target.play().catch(err => console.log("Autoplay blocked:", err));
                       }}
+                      onPause={(e) => {
+                        e.target.play();
+                      }}
                       className="w-full h-full object-cover" 
                     />
                   ) : solevoMedia?.type === 'image' ? (
