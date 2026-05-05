@@ -41,7 +41,7 @@ export default function Navbar() {
                         <img
                             src="/logo/TriaCore Logo Zwart.svg"
                             alt="TriaCore AI Logo"
-                            className="h-8 w-auto md:h-12"
+                            className="h-11 w-auto md:h-12"
                         />
                     </Link>
 
