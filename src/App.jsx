@@ -871,6 +871,7 @@ function App() {
                     </div>
                   ) : solevoMedia?.type === 'video' ? (
                     <video 
+                      key={solevoMedia.url}
                       src={solevoMedia.url} 
                       autoPlay 
                       muted 
@@ -878,6 +879,9 @@ function App() {
                       playsInline 
                       preload="auto" 
                       onLoadedData={(e) => {
+                        e.target.play().catch(err => console.log("Autoplay blocked:", err));
+                      }}
+                      onCanPlay={(e) => {
                         e.target.play().catch(err => console.log("Autoplay blocked:", err));
                       }}
                       onPause={(e) => {
