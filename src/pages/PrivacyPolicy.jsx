@@ -46,7 +46,7 @@ export default function PrivacyPolicy() {
                         <p className="text-sm opacity-40 mb-6">{language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on March 3, 2026'}</p>
                         <p className="text-lg opacity-70">
                             {language === 'nl'
-                                ? 'Bij TriCore AI hechten wij veel belang aan de bescherming van persoonsgegevens. In deze verklaring leggen wij helder uit hoe wij met gegevens omgaan.'
+                                ? 'Bij TriaCore AI hechten wij veel belang aan de bescherming van persoonsgegevens. In deze verklaring leggen wij helder uit hoe wij met gegevens omgaan.'
                                 : 'At TriaCore AI we attach great importance to the protection of personal data. In this policy we clearly explain how we handle your data.'}
                         </p>
                     </div>
@@ -76,7 +76,7 @@ export default function PrivacyPolicy() {
                             <p className="mb-1">{language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 0876.478.439 (Starterslabo)</p>
                             <p className="mb-1">E-mail: <a href="mailto:info@triacore.be" className="text-accent underline decoration-accent/30 underline-offset-4 font-medium">info@triacore.be</a></p>
                             <p className="mb-4">Website: <a href="https://www.triacore.be" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">www.triacore.be</a></p>
-                            <p className="text-sm italic opacity-60">{language === 'nl' ? 'Voor vragen of verzoeken met betrekking tot privacy kan u ons contacteren via bovenstaande gegevens.' : 'For questions or requests regarding privacy, you can contact us using the details above.'}</p>
+                            <p className="text-sm opacity-60">{language === 'nl' ? 'Voor vragen of verzoeken met betrekking tot privacy kan u ons contacteren via bovenstaande gegevens.' : 'For questions or requests regarding privacy, you can contact us using the details above.'}</p>
                         </section>
 
                         <section className="scroll-animate">
@@ -98,6 +98,16 @@ export default function PrivacyPolicy() {
                                 <li>{language === 'nl' ? 'communicatie en opvolging;' : 'communication and follow-up;'}</li>
                                 <li>{language === 'nl' ? 'administratieve en facturatiegegevens.' : 'administrative and invoicing data.'}</li>
                             </ul>
+
+                            <h3 className="font-bold mb-2 mt-6">{language === 'nl' ? 'Via onze website (Google Analytics 4):' : 'Via our website (Google Analytics 4):'}</h3>
+                            <p className="mb-2">{language === 'nl' ? 'Indien u hiervoor via de cookiebanner toestemming heeft gegeven, verzamelen wij analytische gegevens:' : 'If you have given consent via the cookie banner, we collect analytical data:'}</p>
+                            <ul className="list-disc ml-6 space-y-1 font-medium mb-2">
+                                <li>{language === 'nl' ? 'paginabezoeken en interacties;' : 'page views and interactions;'}</li>
+                                <li>{language === 'nl' ? 'sessieduur;' : 'session duration;'}</li>
+                                <li>{language === 'nl' ? 'apparaattype en browser;' : 'device type and browser;'}</li>
+                                <li>{language === 'nl' ? 'locatie (beperkt tot landniveau).' : 'location (limited to country level).'}</li>
+                            </ul>
+                            <p className="mt-2 mb-6 text-sm opacity-80">{language === 'nl' ? 'Deze data wordt gedurende 14 maanden bewaard in Google Analytics. U kan uw toestemming steeds intrekken via de cookie-instellingen.' : 'This data is stored for 14 months in Google Analytics. You can withdraw your consent at any time via the cookie settings.'}</p>
                             <p className="mt-4 text-sm opacity-60">{language === 'nl' ? 'Wij verzamelen geen bijzondere of gevoelige persoonsgegevens en richten ons uitsluitend op professionele (B2B) contacten.' : 'We do not collect any special or sensitive personal data and focus exclusively on professional (B2B) contacts.'}</p>
                         </section>
 

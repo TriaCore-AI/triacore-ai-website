@@ -35,20 +35,19 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] md:max-w-[1000px] max-w-[600px]">
-                <div className="flex items-center justify-between px-6 py-4 rounded-[2rem] bg-background/60 backdrop-blur-xl border border-foreground/5 shadow-sm">
+            <nav className="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+                <div className="w-full md:max-w-[1000px] max-w-[600px] flex items-center justify-between px-6 py-3 rounded-full bg-background/60 backdrop-blur-xl border border-foreground/5 shadow-sm pointer-events-auto">
                     <Link to="/" className="hover:opacity-80 transition-opacity z-50">
                         <img
                             src="/logo/TriaCore Logo Zwart.svg"
                             alt="TriaCore AI Logo"
-                            className="h-10 w-auto md:h-20"
+                            className="h-8 w-auto md:h-12"
                         />
                     </Link>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex gap-8 text-sm font-medium text-foreground/70 items-center">
-                        <Link to="/trajecten" className="hover:text-foreground transition-colors">{language === 'nl' ? 'Trajecten' : 'Paths'}</Link>
-                        <Link to="/ai-agents" className="hover:text-foreground transition-colors">{language === 'nl' ? 'AI-agents' : 'AI Agents'}</Link>
+                        <Link to="/custom-oplossingen" className="hover:text-foreground transition-colors">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
                         <Link to="/team" className="hover:text-foreground transition-colors">Team</Link>
                         <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                     </div>
@@ -91,8 +90,8 @@ export default function Navbar() {
                     }`}
             >
                 <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center justify-center h-full gap-8 px-6 text-xl font-medium">
-                    <Link to="/trajecten" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'Trajecten' : 'Paths'}</Link>
-                    <Link to="/ai-agents" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'AI-agents' : 'AI Agents'}</Link>
+                    <Link to="/" onClick={() => { setIsOpen(false); window.scrollTo(0,0); }} className="hover:text-accent transition-colors">Home</Link>
+                    <Link to="/custom-oplossingen" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
                     <Link to="/team" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">Team</Link>
                     <Link to="/contact" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">Contact</Link>
 

@@ -11,11 +11,17 @@ export default function CTAButton({
     type = 'button',
     disabled = false,
     icon: Icon = ArrowRight,
-    size = 'md'
+    size = 'md',
+    variant = 'primary'
 }) {
-    // baseClasses based on the reference: "Ontmoet het volledige team"
-    // bg-foreground (dark blue), text-background (white), rounded-full, pill shape, shadow-xl
-    const baseClasses = "group relative overflow-hidden rounded-full bg-foreground text-background transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] custom-bezier flex items-center justify-center gap-3 shadow-xl shadow-foreground/10 disabled:opacity-50 disabled:cursor-not-allowed";
+    // Base classes
+    const baseClasses = "group relative overflow-hidden rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] custom-bezier flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed";
+
+    const variantClasses = {
+        primary: "bg-foreground text-background shadow-foreground/10",
+        light: "bg-white text-[#080a0e] shadow-white/5 hover:text-white",
+        secondary: "bg-transparent border border-foreground/20 text-foreground shadow-none hover:border-accent hover:text-black"
+    };
 
     const sizeClasses = {
         sm: "px-6 py-2.5 text-sm font-medium",
@@ -23,6 +29,7 @@ export default function CTAButton({
         lg: "px-10 py-5 text-lg font-semibold"
     };
 
+    const currentVariant = variantClasses[variant] || variantClasses.primary;
     const currentSize = sizeClasses[size] || sizeClasses.md;
 
     // The animated background div (slides up to show the accent green color)
@@ -37,7 +44,7 @@ export default function CTAButton({
         </span>
     );
 
-    const combinedClasses = `${baseClasses} ${currentSize} ${className}`;
+    const combinedClasses = `${baseClasses} ${currentVariant} ${currentSize} ${className}`;
 
     if (to) {
         return (

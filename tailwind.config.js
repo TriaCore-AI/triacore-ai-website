@@ -13,9 +13,9 @@ export default {
                 darkSection: '#020617',
             },
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
+                sans: ['"Playfair Display"', 'serif'],
                 serif: ['"Playfair Display"', 'serif'],
-                mono: ['"Fira Code"', 'monospace'],
+                mono: ['"Playfair Display"', 'serif'],
             },
         },
     },

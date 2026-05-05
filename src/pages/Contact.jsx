@@ -50,7 +50,7 @@ export default function Contact() {
     }, []);
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
+        <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
 
             {/* NOISE OVERLAY */}
             <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
@@ -62,30 +62,36 @@ export default function Contact() {
 
             <Navbar />
 
-            {/* HERO SECTION (Grid Background like Trajecten) */}
-            <section className="relative pt-48 pb-16 px-6 md:px-16 overflow-hidden bg-background min-h-[40dvh] flex flex-col justify-center">
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
-                    <div className="absolute left-1/4 top-0 w-px h-full bg-foreground"></div>
-                    <div className="absolute left-2/4 top-0 w-px h-full bg-foreground"></div>
-                    <div className="absolute left-3/4 top-0 w-px h-full bg-foreground"></div>
-                    <div className="absolute top-1/2 left-0 w-full h-px bg-foreground"></div>
-                </div>
+            {/* GLOBAL GRID BACKGROUND (architectural style like homepage) */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0" 
+                 style={{
+                   backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
+                   backgroundSize: '4rem 4rem',
+                 }}>
+            </div>
 
-                <div className="relative z-10 max-w-5xl mx-auto text-center scroll-animate">
-                    <h1 className="hero-stagger text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight font-semibold mb-6 text-foreground">
-                        {language === 'nl' ? 'Plan je gesprek' : 'Book a call'}
-                    </h1>
-                    <p className="hero-stagger text-xl md:text-2xl font-medium text-foreground/70 tracking-tight max-w-3xl mx-auto">
-                        {language === 'nl'
-                            ? 'We luisteren, analyseren en geven helder advies over de beste volgende stap.'
-                            : 'We listen, analyze, and provide clear advice on the best next step.'}
-                    </p>
-                </div>
-            </section>
+            <div className="relative z-10 flex flex-col w-full">
+                {/* HERO SECTION */}
+                <section className="relative pt-48 pb-12 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
+                    <div className="max-w-5xl mx-auto text-center scroll-animate">
+                        <span className="hero-stagger uppercase tracking-[0.3em] text-xs font-bold mb-8 text-accent block">
+                            CONTACT
+                        </span>
+                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-8 text-foreground">
+                            {language === 'nl' ? 'Plan uw gesprek.' : 'Book a call.'}
+                        </h1>
+                        <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-8 font-light leading-relaxed mx-auto">
+                            {language === 'nl'
+                                ? 'We luisteren, analyseren en geven helder advies over de beste volgende stap.'
+                                : 'We listen, analyze, and provide clear advice on the best next step.'}
+                        </p>
+                    </div>
+                </section>
 
-            <main className="flex-grow pb-32">
-                <ContactForm />
-            </main>
+                <main className="flex-grow pb-32">
+                    <ContactForm />
+                </main>
+            </div>
 
             <Footer />
         </div>

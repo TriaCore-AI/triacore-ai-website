@@ -32,7 +32,7 @@ export default function Footer() {
                             />
                         </Link>
                         <p className="text-sm text-white/60 leading-relaxed font-light">
-                            {language === 'nl' ? 'Custom platformen en AI-integratie voor bedrijven.' : 'Custom platforms and AI integration for businesses.'}
+                            {language === 'nl' ? 'De AI-partner waar groeiende bedrijven op bouwen.' : 'The AI partner growing companies build on.'}
                         </p>
                     </div>
 
@@ -43,11 +43,11 @@ export default function Footer() {
                         <div className="flex flex-col gap-5 min-w-[120px]">
                             <h4 className="font-bold text-white text-sm tracking-widest uppercase mb-4">Links</h4>
                             <div className="flex flex-col gap-3">
-                                <a href="/#fundamenten" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Trajecten' : 'Paths'}</a>
-                                <a href="/#ai-agents" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'AI-agents' : 'AI Agents'}</a>
+                                <a href="/#verhaal" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Ons verhaal' : 'Our story'}</a>
+                                <a href="/#uitdagingen" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Uitdagingen' : 'Challenges'}</a>
                                 <a href="/#aanpak" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Aanpak' : 'Approach'}</a>
                                 <a href="/#team" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Team</a>
-                                <a href="/#security" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Security</a>
+                                <a href="/#faq" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Veelgestelde vragen' : 'FAQ'}</a>
                             </div>
                         </div>
 
@@ -55,8 +55,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-5 min-w-[120px]">
                             <h4 className="font-bold text-white text-sm tracking-widest uppercase mb-4">{language === 'nl' ? "Pagina's" : "Pages"}</h4>
                             <div className="flex flex-col gap-3">
-                                <Link to="/trajecten" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Trajecten' : 'Paths'}</Link>
-                                <Link to="/ai-agents" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'AI-agents' : 'AI Agents'}</Link>
+                                <Link to="/custom-oplossingen" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
                                 <Link to="/team" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Team</Link>
                                 <Link to="/contact" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Contact</Link>
                             </div>
@@ -93,8 +92,9 @@ export default function Footer() {
 
                 {/* Legal Bar */}
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="text-[10px] text-white/30 font-light tracking-wide">
-                        &copy; {new Date().getFullYear()} TriaCore AI. {language === 'nl' ? 'Alle rechten voorbehouden.' : 'All rights reserved.'}
+                    <div className="text-[10px] text-white/30 font-light tracking-wide flex flex-col gap-1">
+                        <div>&copy; {new Date().getFullYear()} TriaCore AI. {language === 'nl' ? 'Alle rechten voorbehouden.' : 'All rights reserved.'}</div>
+                        <div>Site gemaakt door Lucas Curto</div>
                     </div>
                     <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-3 text-[10px] text-white/30 font-medium tracking-widest uppercase">
                         <Link to="/privacybeleid" className="hover:text-accent transition-colors">{language === 'nl' ? 'Privacybeleid' : 'Privacy policy'}</Link>

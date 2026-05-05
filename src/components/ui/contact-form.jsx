@@ -9,11 +9,11 @@ export default function ContactForm() {
         name: '',
         company: '',
         email: '',
-        topic: '',
+        phone: '',
         message: ''
     });
 
-    const isFormValid = formData.name && formData.email && formData.topic;
+    const isFormValid = formData.name && formData.email;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,7 +37,7 @@ export default function ContactForm() {
                     name: '',
                     company: '',
                     email: '',
-                    topic: '',
+                    phone: '',
                     message: ''
                 });
             } else {
@@ -54,9 +54,9 @@ export default function ContactForm() {
     };
 
     return (
-        <section id="contact" className="px-6 md:px-16 bg-background relative z-10">
+        <section id="contact" className="px-6 md:px-16 bg-transparent relative z-10">
             <div className="max-w-[800px] mx-auto">
-                <div className="bg-white border border-foreground/5 shadow-2xl shadow-foreground/[0.03] rounded-[2.5rem] p-8 md:p-14 relative overflow-hidden">
+                <div className="bg-white/70 backdrop-blur-xl border border-foreground/5 shadow-2xl shadow-foreground/[0.03] rounded-[2.5rem] p-8 md:p-14 relative overflow-hidden">
                     {/* Form-specific overlay */}
                     <div className="absolute inset-0 opacity-[0.01] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
@@ -69,7 +69,7 @@ export default function ContactForm() {
                             </div>
                             <h3 className="text-3xl font-semibold mb-4 text-foreground tracking-tight">{language === 'nl' ? 'Bedankt.' : 'Thank you.'}</h3>
                             <p className="text-foreground/60 text-lg max-w-sm mx-auto">
-                                {language === 'nl' ? 'We hebben je aanvraag goed ontvangen en nemen binnen 24 uur contact met je op.' : 'We have received your request and will contact you within 24 hours.'}
+                                {language === 'nl' ? 'We hebben uw aanvraag goed ontvangen en nemen binnen 24 uur contact met u op.' : 'We have received your request and will contact you within 24 hours.'}
                             </p>
                             <button
                                 onClick={() => setStatus('idle')}
@@ -95,21 +95,6 @@ export default function ContactForm() {
                                     />
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    <label htmlFor="company" className="text-sm font-semibold text-foreground/80 tracking-tight ml-1">{language === 'nl' ? 'Bedrijf' : 'Company'}</label>
-                                    <input
-                                        id="company"
-                                        type="text"
-                                        autoComplete="organization"
-                                        value={formData.company}
-                                        onChange={handleInputChange}
-                                        className="w-full bg-[#f8fafc] border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300 text-foreground"
-                                        placeholder={language === 'nl' ? 'Bedrijfsnaam' : 'Company name'}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="flex flex-col gap-3">
                                     <label htmlFor="email" className="text-sm font-semibold text-foreground/80 tracking-tight ml-1">{language === 'nl' ? 'E-mail *' : 'Email *'}</label>
                                     <input
                                         required
@@ -122,22 +107,32 @@ export default function ContactForm() {
                                         placeholder={language === 'nl' ? 'naam@bedrijf.be' : 'name@company.com'}
                                     />
                                 </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="flex flex-col gap-3">
-                                    <label htmlFor="topic" className="text-sm font-semibold text-foreground/80 tracking-tight ml-1">{language === 'nl' ? 'Waar wil je over praten? *' : 'What do you want to talk about? *'}</label>
-                                    <select
-                                        required
-                                        id="topic"
-                                        value={formData.topic}
+                                    <label htmlFor="company" className="text-sm font-semibold text-foreground/80 tracking-tight ml-1">{language === 'nl' ? 'Bedrijf' : 'Company'}</label>
+                                    <input
+                                        id="company"
+                                        type="text"
+                                        autoComplete="organization"
+                                        value={formData.company}
                                         onChange={handleInputChange}
-                                        className="w-full bg-[#f8fafc] border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300 text-foreground appearance-none"
-                                    >
-                                        <option value="" disabled>{language === 'nl' ? 'Maak een keuze' : 'Make a choice'}</option>
-                                        <option value="Analyse & bedrijfsinzicht">{language === 'nl' ? 'Analyse & bedrijfsinzicht' : 'Analysis & business insights'}</option>
-                                        <option value="Custom platform">{language === 'nl' ? 'Custom platform' : 'Custom platform'}</option>
-                                        <option value="AI agents">{language === 'nl' ? 'AI agents' : 'AI agents'}</option>
-                                        <option value="Website">{language === 'nl' ? 'Website' : 'Website'}</option>
-                                        <option value="Ik weet het nog niet, maar wil advies">{language === 'nl' ? 'Ik weet het nog niet, maar wil advies' : 'I don\'t know yet, but I want advice'}</option>
-                                    </select>
+                                        className="w-full bg-[#f8fafc] border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300 text-foreground"
+                                        placeholder={language === 'nl' ? 'Bedrijfsnaam' : 'Company name'}
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                    <label htmlFor="phone" className="text-sm font-semibold text-foreground/80 tracking-tight ml-1">{language === 'nl' ? 'Telefoon' : 'Phone'}</label>
+                                    <input
+                                        id="phone"
+                                        type="tel"
+                                        autoComplete="tel"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-[#f8fafc] border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300 text-foreground"
+                                        placeholder={language === 'nl' ? 'Telefoonnummer' : 'Phone number'}
+                                    />
                                 </div>
                             </div>
 
@@ -149,7 +144,7 @@ export default function ContactForm() {
                                     value={formData.message}
                                     onChange={handleInputChange}
                                     className="w-full bg-[#f8fafc] border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300 resize-none text-foreground"
-                                    placeholder={language === 'nl' ? 'Beschrijf kort je situatie of wat je wil bereiken.' : 'Briefly describe your situation or what you want to achieve.'}
+                                    placeholder={language === 'nl' ? 'Beschrijf kort uw situatie of wat u wilt bereiken.' : 'Briefly describe your situation or what you want to achieve.'}
                                 ></textarea>
                             </div>
 
@@ -159,7 +154,7 @@ export default function ContactForm() {
                                     disabled={!isFormValid || status === 'loading'}
                                     className="w-full md:w-auto"
                                 >
-                                    {status === 'loading' ? (language === 'nl' ? 'Moment geduld...' : 'Just a moment...') : (language === 'nl' ? 'Plan mijn gesprek' : 'Book my call')}
+                                    {status === 'loading' ? (language === 'nl' ? 'Moment geduld...' : 'Just a moment...') : (language === 'nl' ? 'Plan mijn gesprek' : 'Book a call')}
                                 </CTAButton>
 
                                 {status === 'error' && (

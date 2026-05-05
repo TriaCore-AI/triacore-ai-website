@@ -6,9 +6,13 @@
   --color-accent: #628f69;
   --color-dark-section: #020617;
 
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "DM Sans", sans-serif;
   --font-serif: "Playfair Display", serif;
-  --font-mono: "Fira Code", monospace;
+  --font-mono: "DM Sans", sans-serif;
+  --font-syne: "Syne", sans-serif;
+  
+  --color-sol: #FFFFFF;
+  --color-evo: #C1440E;
 }
 
 @layer base {
@@ -16,7 +20,6 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    overflow-x: hidden;
   }
 }
 
@@ -39,6 +42,15 @@
 @layer utilities {
   .custom-bezier {
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; filter: blur(10px); transform: translateY(15px); }
+    to { opacity: 1; filter: blur(0px); transform: translateY(0); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.8s cubic-bezier(0.2, 0, 0.2, 1) forwards;
   }
 
   @keyframes scroll {
@@ -69,9 +81,28 @@
     animation: scroll-reverse 60s linear infinite;
   }
 
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .animate-blink {
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes liquid-flow {
+    0% { transform: translate(-20%, -20%) rotate(0deg); }
+    50% { transform: translate(20%, 20%) rotate(180deg); }
+    100% { transform: translate(-20%, -20%) rotate(360deg); }
+  }
+
+  .animate-liquid-flow {
+    animation: liquid-flow 15s ease-in-out infinite;
+  }
+
   /* Typography System tokens - Colors removed from tokens for better reusability */
   .hero-title {
-    @apply font-serif italic leading-[1.05] tracking-tight;
+    @apply font-serif leading-[1.05] tracking-tight;
   }
 
   .section-title {
@@ -79,10 +110,38 @@
   }
 
   .section-label {
-    @apply text-accent text-[11px] font-bold tracking-[0.2em] uppercase;
+    @apply text-accent text-[13px] font-bold tracking-[0.2em] uppercase;
   }
 
   .section-subtitle {
     @apply leading-relaxed font-medium transition-colors duration-300;
+  }
+
+  .solevo-brand {
+    @apply font-syne tracking-[-0.02em];
+  }
+
+  @keyframes flow-progress {
+    0% { stroke-dashoffset: 240; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+
+  .animate-flow-progress {
+    animation: flow-progress 3.5s linear infinite;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.03); opacity: 1; }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3.5s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
   }
 }

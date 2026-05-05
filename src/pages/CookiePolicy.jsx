@@ -85,11 +85,11 @@ export default function CookiePolicy() {
                                 <li>
                                     <strong className="text-foreground">{language === 'nl' ? 'Beperkte, privacyvriendelijke analytische cookies:' : 'Limited, privacy-friendly analytical cookies:'}</strong><br />
                                     {language === 'nl'
-                                        ? 'Wij maken gebruik van ingebouwde website-analytics om geanonimiseerde inzichten te verkrijgen in het gebruik van onze website (zoals paginaweergaven en algemene bezoekersstatistieken). Deze gegevens worden enkel gebruikt om de website te verbeteren.'
-                                        : 'We use built-in website analytics to gain anonymized insights into the use of our website (such as page views and general visitor statistics). This data is only used to improve the website.'}
+                                        ? 'Wij maken gebruik van Google Analytics 4 om geanonimiseerde inzichten te verkrijgen in het gebruik van onze website. Hierbij worden gegevens verzameld zoals paginabezoeken, sessieduur, apparaattype en locatie op landniveau. Deze data wordt 14 maanden bewaard. U kan uw toestemming op elk moment intrekken.'
+                                        : 'We use Google Analytics 4 to gain anonymized insights into the use of our website. This collects data such as page views, session duration, device type, and country-level location. This data is kept for 14 months. You can withdraw your consent at any time.'}
                                 </li>
                             </ul>
-                            <p className="mt-8 font-medium italic opacity-70 underline decoration-accent/20 underline-offset-4 decoration-2">
+                            <p className="mt-8 font-medium opacity-70 underline decoration-accent/20 underline-offset-4 decoration-2">
                                 {language === 'nl'
                                     ? 'Wij gebruiken geen marketingcookies, geen advertentiecookies en geen trackingcookies voor sociale media.'
                                     : 'We do not use marketing cookies, advertising cookies and no tracking cookies for social media.'}
@@ -113,7 +113,7 @@ export default function CookiePolicy() {
                                     ? 'Onze website is gebouwd en gehost via een extern websiteplatform. Dit platform kan technische cookies plaatsen die noodzakelijk zijn voor prestaties, beveiliging en correcte werking van de website.'
                                     : 'Our website is built and hosted via an external website platform. This platform may place technical cookies that are necessary for performance, security and correct operation of the website.'}
                             </p>
-                            <p className="text-sm italic opacity-60">
+                            <p className="text-sm opacity-60">
                                 {language === 'nl'
                                     ? 'TriaCore AI heeft geen controle over deze technische cookies en verwijst voor meer informatie naar de documentatie en het beleid van dit platform.'
                                     : 'TriaCore AI has no control over these technical cookies and refers you to the documentation and policy of this platform for more information.'}
