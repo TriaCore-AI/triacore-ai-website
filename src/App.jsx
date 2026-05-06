@@ -1007,8 +1007,8 @@ function App() {
                     <div className="h-px w-20 bg-[#628f69]"></div>
                     <p className="text-white text-base lg:text-lg leading-relaxed font-light">
                       {language === 'nl' 
-                        ? "AI naar bedrijven brengen op een manier die het echte potentieel toont. Niet door hun werknemers te laten chatten met AI, maar door AI te integreren in de processen waar het een echte, meetbare impact heeft."
-                        : "Bringing AI to companies in a way that shows its true potential. Not by letting their employees chat with AI, but by integrating AI into the processes where it has a real, measurable impact."}
+                        ? "De meeste bedrijven gebruiken AI vandaag aan de oppervlakte. Het echte potentieel van AI ligt dieper: in de processen die bepalen hoe snel, hoe accuraat en hoe efficiënt een organisatie werkt. Dat potentieel blijft voor de meeste bedrijven onbenut. Het omzetten in iets concreets en meetbaars, dat is wat TriaCore doet."
+                        : "Most companies use AI on the surface today. The true potential of AI lies deeper: in the processes that determine how fast, how accurate, and how efficient an organization operates. That potential remains untapped for most companies. Turning it into something concrete and measurable, that is what TriaCore does."}
                     </p>
                   </div>
                   
