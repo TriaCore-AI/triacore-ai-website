@@ -148,37 +148,79 @@ function App() {
         }
       );
 
-      // Refined animations for News section (Ons verhaal)
-      gsap.fromTo('#solevo-case-card', 
-        { x: -100, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: '#solevo-case-card',
-            start: 'top 85%',
-            once: true
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1.5,
-          ease: 'power4.out'
-        }
-      );
+      // Refined animations for News section (Ons verhaal) - Responsive and ultra-smooth
+      let mm = gsap.matchMedia();
 
-      gsap.fromTo('.news-card-stagger', 
-        { x: 60, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: '.news-card-stagger',
-            start: 'top 85%',
-            once: true
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: 'power3.out'
-        }
-      );
+      // Desktop (grid layout)
+      mm.add("(min-width: 1024px)", () => {
+        gsap.fromTo('#solevo-case-card', 
+          { x: -80, opacity: 0 },
+          {
+            scrollTrigger: {
+              trigger: '#solevo-case-card',
+              start: 'top 85%',
+              once: true
+            },
+            x: 0,
+            opacity: 1,
+            duration: 1.5,
+            ease: 'power4.out'
+          }
+        );
+
+        gsap.fromTo('.news-card-stagger', 
+          { x: 40, opacity: 0 },
+          {
+            scrollTrigger: {
+              trigger: '.news-card-stagger',
+              start: 'top 85%',
+              once: true
+            },
+            x: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'power3.out'
+          }
+        );
+      });
+
+      // Mobile/Tablet (vertical stacked layout)
+      mm.add("(max-width: 1023px)", () => {
+        gsap.fromTo('#solevo-case-card', 
+          { y: 30, opacity: 0 },
+          {
+            scrollTrigger: {
+              trigger: '#solevo-case-card',
+              start: 'top 90%',
+              once: true
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power3.out'
+          }
+        );
+
+        // On mobile, trigger each news card individually as they enter viewport to prevent vertical lag/glitches
+        const newsCards = gsap.utils.toArray('.news-card-stagger');
+        newsCards.forEach((card) => {
+          gsap.fromTo(card,
+            { y: 30, opacity: 0 },
+            {
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 90%',
+                once: true
+              },
+              y: 0,
+              opacity: 1,
+              duration: 1.0,
+              ease: 'power3.out'
+            }
+          );
+        });
+      });
 
       // General scroll animations (movement AND opacity for smoothness)
       const scrollElements = gsap.utils.toArray('.scroll-animate');
@@ -958,54 +1000,60 @@ function App() {
             </div>
 
             <div className="flex flex-col gap-6">
-              <a href="https://www.made-in.be/limburg/trio-toont-bedrijven-wat-ai-allemaal-mogelijk-maakt/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
-                  <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">MADE IN LIMBURG</span>
-                </div>
-                <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
-                  {language === 'nl' ? 'Trio toont bedrijven wat AI allemaal mogelijk maakt' : 'Trio shows companies what AI makes possible'}
-                </h4>
-                <p className="text-foreground/50 text-sm leading-relaxed mb-8">
-                  {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants richtten TriaCore op en ontwikkelen AI-oplossingen op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants founded TriaCore and develop custom AI solutions for companies.'}
-                </p>
-                <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
-                  <span>{language === 'nl' ? 'Lees het artikel' : 'Read the article'}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </a>
-
-              <a href="https://www.made-in.be/limburg/jonge-truienaars-maken-appje-voor-een-vrachtbon/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
-                  <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">MADE IN LIMBURG</span>
-                </div>
-                <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
-                  {language === 'nl' ? 'Jonge Truienaars maken appje voor een vrachtbon' : 'Young Limburgers create app for a transport note'}
-                </h4>
-                <p className="text-foreground/50 text-sm leading-relaxed mb-8">
-                  {language === 'nl' ? 'Met Solevo brengt TriaCore een digitale vrachtbon op de markt voor de grondverzetsector, voor snellere en overzichtelijkere administratie op de werf.' : 'With Solevo, TriaCore brings a digital transport note to the market for the earthmoving sector, for faster and clearer administration on site.'}
-                </p>
-                <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
-                  <span>{language === 'nl' ? 'Lees het artikel' : 'Read the article'}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <a href="https://www.made-in.be/limburg/trio-toont-bedrijven-wat-ai-allemaal-mogelijk-maakt/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-[box-shadow] duration-500">
+                <div className="flex flex-col h-full w-full transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
+                    <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">MADE IN LIMBURG</span>
+                  </div>
+                  <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
+                    {language === 'nl' ? 'Trio toont bedrijven wat AI allemaal mogelijk maakt' : 'Trio shows companies what AI makes possible'}
+                  </h4>
+                  <p className="text-foreground/50 text-sm leading-relaxed mb-8">
+                    {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants richtten TriaCore op en ontwikkelen AI-oplossingen op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants founded TriaCore and develop custom AI solutions for companies.'}
+                  </p>
+                  <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
+                    <span>{language === 'nl' ? 'Lees het artikel' : 'Read the article'}</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </a>
 
-              <a href="https://www.vrt.be/vrtmax/luister/radio/r/radio-2-middag-in-limburg~23-3/radio-2-middag-in-limburg~23-20477-0/fragment~ba9a9797-be1e-4e54-b5c9-9dff908e5e13/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
-                  <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">RADIO 2</span>
+              <a href="https://www.made-in.be/limburg/jonge-truienaars-maken-appje-voor-een-vrachtbon/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-[box-shadow] duration-500">
+                <div className="flex flex-col h-full w-full transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
+                    <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">MADE IN LIMBURG</span>
+                  </div>
+                  <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
+                    {language === 'nl' ? 'Jonge Truienaars maken appje voor een vrachtbon' : 'Young Limburgers create app for a transport note'}
+                  </h4>
+                  <p className="text-foreground/50 text-sm leading-relaxed mb-8">
+                    {language === 'nl' ? 'Met Solevo brengt TriaCore een digitale vrachtbon op de markt voor de grondverzetsector, voor snellere en overzichtelijkere administratie op de werf.' : 'With Solevo, TriaCore brings a digital transport note to the market for the earthmoving sector, for faster and clearer administration on site.'}
+                  </p>
+                  <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
+                    <span>{language === 'nl' ? 'Lees het artikel' : 'Read the article'}</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-                <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
-                  {language === 'nl' ? '3 jonge Limburgers helpen uw bedrijf met AI' : '3 young Limburgers help your business with AI'}
-                </h4>
-                <p className="text-foreground/50 text-sm leading-relaxed mb-8">
-                  {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants startten TriaCore, een onderneming die AI-oplossingen aanbiedt op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants started TriaCore, a company that offers AI solutions tailored to companies.'}
-                </p>
-                <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
-                  <span>{language === 'nl' ? 'Beluister het fragment' : 'Listen to the fragment'}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+
+              <a href="https://www.vrt.be/vrtmax/luister/radio/r/radio-2-middag-in-limburg~23-3/radio-2-middag-in-limburg~23-20477-0/fragment~ba9a9797-be1e-4e54-b5c9-9dff908e5e13/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-[box-shadow] duration-500">
+                <div className="flex flex-col h-full w-full transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
+                    <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">RADIO 2</span>
+                  </div>
+                  <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
+                    {language === 'nl' ? '3 jonge Limburgers helpen uw bedrijf met AI' : '3 young Limburgers help your business with AI'}
+                  </h4>
+                  <p className="text-foreground/50 text-sm leading-relaxed mb-8">
+                    {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants startten TriaCore, een onderneming die AI-oplossingen aanbiedt op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants started TriaCore, a company that offers AI solutions tailored to companies.'}
+                  </p>
+                  <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
+                    <span>{language === 'nl' ? 'Beluister het fragment' : 'Listen to the fragment'}</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </a>
             </div>
