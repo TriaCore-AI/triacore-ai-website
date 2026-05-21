@@ -822,17 +822,44 @@ function App() {
             {Object.entries(import.meta.glob('./assets/partners/*.{png,jpg,jpeg,svg,webp}', { eager: true }))
               .filter(([path]) => {
                 const filename = path.split('/').pop().toLowerCase();
-                return !filename.includes('atl') && !filename.includes('a&m');
+                return !filename.includes('atl');
               })
               .map(([path, module]) => {
                 const filename = path.split('/').pop();
                 const companyName = filename.split('.')[0];
-                return (
-                  <div key={path} className="group/partner relative h-16 md:h-20 w-auto flex flex-col items-center justify-center transition-transform hover:scale-105 duration-500 px-4">
+                
+                const partnerLinks = {
+                  'a&m group': 'https://anmgroup.be/nl/',
+                  'croes nv': 'https://www.croesnv.be/'
+                };
+                const link = partnerLinks[companyName.toLowerCase()];
+
+                const cardContent = (
+                  <>
                     <img src={module.default} alt={companyName} className="h-full w-auto object-contain" />
                     <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] md:text-[11px] text-slate-900 font-bold opacity-100 transition-all duration-300 whitespace-nowrap bg-white px-4 py-1.5 rounded-full shadow-xl border border-slate-200 z-50 capitalize">
                       {companyName.replace(/[-_]/g, ' ')}
                     </span>
+                  </>
+                );
+
+                if (link) {
+                  return (
+                    <a 
+                      key={path}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/partner relative h-16 md:h-20 w-auto flex flex-col items-center justify-center transition-transform hover:scale-105 duration-500 px-4 cursor-pointer"
+                    >
+                      {cardContent}
+                    </a>
+                  );
+                }
+
+                return (
+                  <div key={path} className="group/partner relative h-16 md:h-20 w-auto flex flex-col items-center justify-center transition-transform hover:scale-105 duration-500 px-4">
+                    {cardContent}
                   </div>
                 );
               })}
