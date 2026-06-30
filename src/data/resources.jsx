@@ -179,28 +179,28 @@ export const resources = [
                 items: [
                     {
                         title: { nl: 'Rol', en: 'Role' },
-                        nl: 'Geef de AI de rol van kritische sparringspartner, geen ja knikker.',
-                        en: 'Give the AI the role of critical sparring partner, not a yes man.',
+                        nl: 'Geef de AI de rol van ervaren expert in uw vakgebied, als kritische sparringspartner in plaats van ja knikker.',
+                        en: 'Give the AI the role of an experienced expert in your field, as a critical sparring partner instead of a yes man.',
                     },
                     {
                         title: { nl: 'Context', en: 'Context' },
-                        nl: 'Beschrijf kort het project en het doel, zodat het oordeel hout snijdt.',
-                        en: 'Briefly describe the project and the goal, so the judgment holds up.',
+                        nl: 'Vertel wie u bent, waar u aan werkt en wat u wil bereiken, zodat het oordeel aansluit op uw situatie.',
+                        en: 'Say who you are, what you are working on and what you want to achieve, so the assessment fits your situation.',
                     },
                     {
-                        title: { nl: 'Gedragsregels', en: 'Behavior rules' },
-                        nl: 'Vraag een eerlijk oordeel, ook als het tegenvalt.',
-                        en: 'Ask for an honest assessment, even when it disappoints.',
+                        title: { nl: 'Gedrag', en: 'Behavior' },
+                        nl: 'Leg vast dat de AI op feiten en uw doelen oordeelt, alles onderbouwt en zwakke punten eerlijk maar constructief benoemt.',
+                        en: 'Set that the AI judges on facts and your goals, backs everything up and names weak points honestly but constructively.',
                     },
                     {
                         title: { nl: 'Guardrails', en: 'Guardrails' },
-                        nl: 'Verbied automatisch instemmen en verzinnen.',
-                        en: 'Forbid automatic agreement and making things up.',
+                        nl: 'Bepaal wat de AI niet zelf mag doen zonder uw toestemming, zoals iets versturen of aanpassen.',
+                        en: 'Define what the AI may not do on its own without your permission, such as sending or changing something.',
                     },
                     {
                         title: { nl: 'Output', en: 'Output' },
-                        nl: 'Zeg in welke vorm u het antwoord wil.',
-                        en: 'State in which form you want the answer.',
+                        nl: 'Zeg in welke vorm u het antwoord wil, bijvoorbeeld kort, een opsomming of een tabel.',
+                        en: 'Say in which form you want the answer, for example short, a list or a table.',
                     },
                 ],
             },
@@ -212,40 +212,104 @@ export const resources = [
             {
                 type: 'prompt',
                 anchor: 'projectinstructie',
-                label: { nl: 'Projectinstructie tegen sycofantie', en: 'Project instruction against sycophancy' },
-                nl: `Rol: Je bent een kritische sparringspartner, geen ja knikker. Je taak is mij scherper laten denken, niet mij geruststellen.
+                label: { nl: 'Vaste projectinstructies voor betere resultaten', en: 'Fixed project instructions for better results' },
+                nl: `## 1. Rol
+Je bent een ervaren [(bv. financieel adviseur, marketeer, jurist)] met diepgaande kennis van mijn vakgebied. Je treedt op als mijn kritische sparringspartner, geen ja knikker. Je doel is mij scherper laten denken en mijn werk beter maken.
 
-Context: [Beschrijf kort het project, het doel, en voor wie het is.]
+## 2. Context
+[Wie ben je en wat is je achtergrond? Waar werk je aan en wat wil je hiermee bereiken? Voor wie is het bedoeld? Hoe meer context je geeft, hoe scherper het oordeel.]
 
-Gedragsregels:
-Geef altijd je eerlijke oordeel, ook als het niet is wat ik wil horen.
-Maak ik een denkfout of mis ik iets, zeg het meteen en leg uit waarom.
-Onderbouw je antwoord en geef aan hoe zeker je bent.
+## 3. Gedrag
+- **Oordeel op feiten en doelen.** Elk oordeel wordt onderbouwd met logica, feiten (research waar nodig) en de doelen van dit project, nooit met wat prettig klinkt of wat ik lijk te willen horen.
+- **Goede ideeën worden erkend als goed**, met onderbouwing waarom, plus: hoe wordt het beter en welke zwakke punten blijven?
+- **Slechte ideeën worden eerlijk maar constructief benoemd:** waarom het zwak is, wat een betere richting is, en wat er wél bruikbaar aan is.
+- **Het doel is heilig, de weg niet.** Je stelt andere routes voor als die het doel beter dienen.
+- **Zelfcontrole vóór elk antwoord:** "Baseer ik dit op feiten, logica en de doelen, of praat ik mee?" Houdt het geen stand, herformuleer het.
+- **Onderbouwing is verplicht.** Geen oordeel zonder waarom.
+- **Research waar nodig** bij beweringen over markt, cijfers, technologie of regelgeving.
 
-Guardrails:
-Stem niet automatisch in. Verander je antwoord niet alleen omdat ik twijfel of tegenspreek.
-Verzin niets. Weet je iets niet of mis je informatie, zeg dat dan en vraag erom.
+## 4. Guardrails
+- [Genereer geen document of bestand zonder mijn toestemming.]
+- [Maak geen aanpassingen aan mijn ontwerpen of bestanden, bv. een Canva design, zonder mijn toestemming.]
+- [Verstuur of deel niets extern, zoals een mail of bericht, zonder mijn toestemming.]
+- ...
 
-Output: [In welk formaat wil je het antwoord? Bv. kort, een opsomming, een tabel.]`,
-                en: `Role: You are a critical sparring partner, not a yes man. Your job is to make me think more sharply, not to reassure me.
+## 5. Output
+[In welke vorm wil je het antwoord? Bv. kort en bondig, een opsomming, een tabel, stap voor stap, of eerst je oordeel en dan de onderbouwing.]`,
+                en: `## 1. Role
+You are an experienced [(e.g. financial advisor, marketer, lawyer)] with deep knowledge of my field. You act as my critical sparring partner, not a yes man. Your goal is to make me think more sharply and improve my work.
 
-Context: [Briefly describe the project, the goal, and who it is for.]
+## 2. Context
+[Who are you and what is your background? What are you working on and what do you want to achieve with it? Who is it for? The more context you give, the sharper the assessment.]
 
-Behavior rules:
-Always give your honest assessment, even when it is not what I want to hear.
-If I make a reasoning error or miss something, say so right away and explain why.
-Support your answer and state how confident you are.
+## 3. Behavior
+- **Judge on facts and goals.** Every judgment is backed by logic, facts (research where needed) and the goals of this project, never by what sounds pleasant or what I seem to want to hear.
+- **Good ideas are recognized as good**, with reasoning why, plus: how does it get better and which weak points remain?
+- **Bad ideas are named honestly but constructively:** why it is weak, what a better direction is, and what is still usable about it.
+- **The goal is sacred, the path is not.** You propose other routes when they serve the goal better.
+- **Self check before every answer:** "Am I basing this on facts, logic and the goals, or am I just going along?" If it does not hold up, rephrase it.
+- **Reasoning is mandatory.** No judgment without a why.
+- **Research where needed** for claims about market, numbers, technology or regulation.
 
-Guardrails:
-Do not agree automatically. Do not change your answer just because I doubt or contradict you.
-Do not make things up. If you do not know something or lack information, say so and ask for it.
+## 4. Guardrails
+- [Generate no document or file without my permission.]
+- [Make no changes to my designs or files, e.g. a Canva design, without my permission.]
+- [Send or share nothing externally, such as an email or message, without my permission.]
+- ...
 
-Output: [In which format do you want the answer? E.g. short, a list, a table.]`,
+## 5. Output
+[In which form do you want the answer? E.g. short and concise, a list, a table, step by step, or your judgment first and then the reasoning.]`,
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Waar plaatst u dit?',
+                en: 'Where do you set this?',
             },
             {
-                type: 'callout',
-                nl: 'Test het zelf. Leg een AI een middelmatig idee voor en vraag een eerlijk oordeel. Zeg daarna "ik denk dat het toch goed is" en kijk of het model meebuigt. Met de instructie hierboven zou het bij zijn standpunt moeten blijven zolang u geen nieuw argument geeft.',
-                en: 'Test it yourself. Give an AI a mediocre idea and ask for an honest judgment. Then say "I think it is good anyway" and see if the model caves. With the instruction above it should hold its position as long as you give no new argument.',
+                type: 'paragraph',
+                nl: 'Elke tool bewaart zulke instructies op een vaste plek, zodat ze voor elk nieuw gesprek meteen gelden. Hieronder ziet u stap voor stap waar u ze instelt, eerst in ChatGPT, dan in Claude.',
+                en: 'Every tool stores such instructions in a fixed place, so they apply to every new conversation right away. Below you see step by step where to set them, first in ChatGPT, then in Claude.',
+            },
+            {
+                type: 'heading',
+                nl: 'In ChatGPT',
+                en: 'In ChatGPT',
+            },
+            {
+                type: 'image',
+                src: '/resources/instructie-chatgpt-1.png',
+                alt: { nl: 'ChatGPT, stap 1', en: 'ChatGPT, step 1' },
+                caption: { nl: 'Stap 1', en: 'Step 1' },
+            },
+            {
+                type: 'image',
+                src: '/resources/instructie-chatgpt-2.png',
+                alt: { nl: 'ChatGPT, stap 2', en: 'ChatGPT, step 2' },
+                caption: { nl: 'Stap 2', en: 'Step 2' },
+            },
+            {
+                type: 'image',
+                src: '/resources/instructie-chatgpt-3.png',
+                alt: { nl: 'ChatGPT, stap 3', en: 'ChatGPT, step 3' },
+                caption: { nl: 'Stap 3', en: 'Step 3' },
+            },
+            {
+                type: 'heading',
+                nl: 'In Claude',
+                en: 'In Claude',
+            },
+            {
+                type: 'image',
+                src: '/resources/instructie-claude-1.png',
+                alt: { nl: 'Claude, stap 1', en: 'Claude, step 1' },
+                caption: { nl: 'Stap 1', en: 'Step 1' },
+            },
+            {
+                type: 'image',
+                src: '/resources/instructie-claude-2.png',
+                alt: { nl: 'Claude, stap 2', en: 'Claude, step 2' },
+                caption: { nl: 'Stap 2', en: 'Step 2' },
             },
         ],
     },

@@ -10,6 +10,81 @@ import gsap from 'gsap';
 
 // --- BLOCK RENDERERS ---
 
+// Rendert **vette** stukken als echte vetletters. De ruwe tekst (mét de
+// sterretjes) wordt nog steeds gekopieerd, zodat ChatGPT/Claude het als
+// markdown-opmaak herkent bij het plakken.
+function renderInlineMarkdown(text) {
+    return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+        const match = part.match(/^\*\*([^*]+)\*\*$/);
+        if (match) {
+            return (
+                <strong key={i} className="font-semibold text-foreground">
+                    {match[1]}
+                </strong>
+            );
+        }
+        return <React.Fragment key={i}>{part}</React.Fragment>;
+    });
+}
+
+// Rendert een markdown-instructie netjes: # en ## worden koppen, regels die
+// met "- " beginnen worden een opsomming, de rest wordt een alinea. De ruwe
+// tekst (mét #, - en **) wordt nog steeds gekopieerd, zodat het bij plakken
+// weer als markdown opmaakt in ChatGPT/Claude.
+function renderPromptMarkdown(text) {
+    const blocks = [];
+    let bullets = null;
+
+    const flushBullets = (key) => {
+        if (bullets) {
+            blocks.push(
+                <ul key={`ul-${key}`} className="my-3 space-y-2">
+                    {bullets}
+                </ul>
+            );
+            bullets = null;
+        }
+    };
+
+    text.split('\n').forEach((line, i) => {
+        if (line.startsWith('## ')) {
+            flushBullets(i);
+            blocks.push(
+                <h4 key={i} className="mt-6 mb-2 text-[15px] font-bold text-foreground">
+                    {renderInlineMarkdown(line.slice(3))}
+                </h4>
+            );
+        } else if (line.startsWith('# ')) {
+            flushBullets(i);
+            blocks.push(
+                <h3 key={i} className="mt-1 mb-4 pb-3 border-b border-foreground/10 text-lg font-bold tracking-tight text-foreground">
+                    {renderInlineMarkdown(line.slice(2))}
+                </h3>
+            );
+        } else if (line.startsWith('- ')) {
+            if (!bullets) bullets = [];
+            bullets.push(
+                <li key={i} className="flex items-start gap-2.5">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <span>{renderInlineMarkdown(line.slice(2))}</span>
+                </li>
+            );
+        } else if (line.trim() === '') {
+            flushBullets(i);
+        } else {
+            flushBullets(i);
+            blocks.push(
+                <p key={i} className="mb-2">
+                    {renderInlineMarkdown(line)}
+                </p>
+            );
+        }
+    });
+
+    flushBullets('end');
+    return blocks;
+}
+
 function PromptBlock({ block, language }) {
     const [copied, setCopied] = useState(false);
     const text = block[language];
@@ -41,9 +116,9 @@ function PromptBlock({ block, language }) {
                         : (language === 'nl' ? 'Kopieer' : 'Copy')}
                 </button>
             </div>
-            <pre className="px-6 py-6 text-sm text-foreground/75 font-sans leading-relaxed whitespace-pre-wrap break-words">
-                {text}
-            </pre>
+            <div className="px-6 py-6 text-sm text-foreground/75 font-sans leading-relaxed break-words">
+                {renderPromptMarkdown(text)}
+            </div>
         </div>
     );
 }
@@ -357,13 +432,13 @@ export default function ResourceDetail() {
                     <div className="mt-20 pt-12 border-t border-foreground/10 text-center">
                         <p className="font-serif text-2xl md:text-3xl text-foreground mb-3">
                             {language === 'nl'
-                                ? 'Benieuwd wat AI in uw bedrijf kan doen?'
-                                : 'Curious what AI can do in your company?'}
+                                ? 'Hier verder over praten?'
+                                : 'Want to take this further?'}
                         </p>
                         <p className="text-foreground/55 font-light mb-8 max-w-lg mx-auto">
                             {language === 'nl'
-                                ? 'Wij vertalen deze inzichten naar concrete oplossingen op maat van uw processen.'
-                                : 'We translate these insights into concrete solutions tailored to your processes.'}
+                                ? 'Wilt u dit toepassen in uw eigen bedrijf of er dieper op ingaan? Plan gerust een gesprek, we denken graag met u mee.'
+                                : 'Want to apply this in your own company or dig deeper? Book a call, we are happy to think along.'}
                         </p>
                         <div className="flex justify-center">
                             <CTAButton to="/contact" variant="primary">
