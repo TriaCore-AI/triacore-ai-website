@@ -5,7 +5,7 @@
 // Gebruikt exact dezelfde builders als de echte mails (welcomeEmail /
 // resourceBroadcast), dus de preview kan niet uit de pas lopen.
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { welcomeEmail, resourceBroadcast, SITE_URL } from '../lib/email-template.js';
+import { welcomeEmail, resourceBroadcast, unsubscribePage, SITE_URL } from '../lib/email-template.js';
 import { loadResources } from './load-resources.mjs';
 
 // Lokaal bestand als data-URI, zodat logo/thumbnail tonen ook al staan ze nog
@@ -16,7 +16,7 @@ const dataUri = (path, mime) =>
 const { resources, CATEGORIES } = await loadResources();
 const r = [...resources].sort((a, b) => (a.date < b.date ? 1 : -1))[0];
 
-const welcome = welcomeEmail('nl').html;
+const welcome = welcomeEmail('nl', { unsubscribeUrl: `${SITE_URL}/uitschrijven-voorbeeld` }).html;
 const broadcast = r
     ? resourceBroadcast({
           title: r.title?.nl || r.title,
@@ -34,6 +34,8 @@ let page = `<!doctype html><html><head><meta charset="utf-8"><title>Mail preview
   ${welcome}
   <h2>2 &mdash; Nieuwe resource (broadcast)</h2>
   ${broadcast}
+  <h2>3 &mdash; Uitschrijf-pagina (na klikken op "Uitschrijven")</h2>
+  <iframe title="uitschrijfpagina" style="display:block;margin:24px auto;width:100%;max-width:560px;height:360px;border:0;border-radius:12px;background:#fff;" srcdoc="${unsubscribePage('nl', true).replaceAll('"', '&quot;')}"></iframe>
 </body></html>`;
 
 // Live-URL's vervangen door lokale afbeeldingen voor de preview.

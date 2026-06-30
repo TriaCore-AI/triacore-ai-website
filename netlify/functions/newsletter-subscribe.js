@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { welcomeEmail } from '../../lib/email-template.js';
+import { unsubscribeUrl } from '../../lib/unsubscribe.js';
 
 // Nieuwsbrief-inschrijving -> Resend.
 // Stap A: contact toevoegen aan de Resend Audience (de nieuwsbrieflijst).
@@ -49,7 +50,8 @@ export const handler = async (event) => {
 
     const resend = new Resend(apiKey);
 
-    // Stap A: contact toevoegen. Bestaat het al, dan behandelen we dat als succes.
+    // Stap A: contact toevoegen. Bestaat het al, dan zetten we het expliciet
+    // (terug) op subscribed — opnieuw inschrijven = opnieuw toestemming geven.
     const { error: contactError } = await resend.contacts.create({
         audienceId,
         email,
@@ -59,7 +61,16 @@ export const handler = async (event) => {
     if (contactError) {
         const msg = (contactError.message || '').toLowerCase();
         const alreadyExists = msg.includes('already') || contactError.name === 'validation_error';
-        if (!alreadyExists) {
+        if (alreadyExists) {
+            const { error: updateError } = await resend.contacts.update({
+                audienceId,
+                email,
+                unsubscribed: false,
+            });
+            if (updateError) {
+                console.error('Newsletter: re-subscribe (contacts.update) faalde', updateError);
+            }
+        } else {
             console.error('Newsletter: contacts.create faalde', contactError);
             return json(502, { ok: false, error: 'Subscription failed' });
         }
@@ -67,7 +78,8 @@ export const handler = async (event) => {
 
     // Stap B: welkomstmail. Faalt dit, dan blijft de inschrijving toch geldig.
     try {
-        const mail = welcomeEmail(language);
+        const unsub = unsubscribeUrl(email, apiKey, language);
+        const mail = welcomeEmail(language, { unsubscribeUrl: unsub });
         const { error: mailError } = await resend.emails.send({
             from,
             to: email,
@@ -75,6 +87,10 @@ export const handler = async (event) => {
             subject: mail.subject,
             html: mail.html,
             text: mail.text,
+            headers: {
+                'List-Unsubscribe': `<${unsub}>`,
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+            },
         });
         if (mailError) {
             console.error('Newsletter: welkomstmail faalde', mailError);
