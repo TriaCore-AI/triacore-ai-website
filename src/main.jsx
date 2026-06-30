@@ -10,6 +10,8 @@ import CookiePolicy from './pages/CookiePolicy.jsx'
 import Contact from './pages/Contact.jsx'
 
 import CustomOplossingen from './pages/CustomOplossingen.jsx'
+import Resources from './pages/Resources.jsx'
+import ResourceDetail from './pages/ResourceDetail.jsx'
 import ScrollToTop from './components/ui/ScrollToTop.jsx'
 import CookieBanner from './components/ui/cookie-banner.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
@@ -26,6 +28,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/cookiebeleid" element={<CookiePolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/custom-oplossingen" element={<CustomOplossingen />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/:slug" element={<ResourceDetail />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>

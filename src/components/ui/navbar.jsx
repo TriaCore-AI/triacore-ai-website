@@ -48,6 +48,7 @@ export default function Navbar() {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex gap-8 text-sm font-medium text-foreground/70 items-center">
                         <Link to="/custom-oplossingen" className="hover:text-foreground transition-colors">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
+                        <Link to="/resources" className="hover:text-foreground transition-colors">Resources</Link>
                         <Link to="/team" className="hover:text-foreground transition-colors">Team</Link>
                         <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                     </div>
@@ -92,6 +93,7 @@ export default function Navbar() {
                 <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center justify-center h-full gap-8 px-6 text-xl font-medium">
                     <Link to="/" onClick={() => { setIsOpen(false); window.scrollTo(0,0); }} className="hover:text-accent transition-colors">Home</Link>
                     <Link to="/custom-oplossingen" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
+                    <Link to="/resources" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">Resources</Link>
                     <Link to="/team" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">Team</Link>
                     <Link to="/contact" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">Contact</Link>
 

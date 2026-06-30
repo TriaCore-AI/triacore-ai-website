@@ -74,10 +74,12 @@ export default function Contact() {
                 {/* HERO SECTION */}
                 <section className="relative pt-48 pb-12 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
                     <div className="max-w-5xl mx-auto text-center scroll-animate">
-                        <span className="hero-stagger uppercase tracking-[0.3em] text-xs font-bold mb-8 text-accent block">
-                            CONTACT
+                        <span className="hero-stagger inline-flex items-center gap-3 mb-6">
+                            <span className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-accent/70" />
+                            <span className="uppercase tracking-[0.25em] text-xs md:text-sm font-bold text-accent">CONTACT</span>
+                            <span className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-accent/70" />
                         </span>
-                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-8 text-foreground">
+                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6 text-foreground">
                             {language === 'nl' ? 'Plan uw gesprek.' : 'Book a call.'}
                         </h1>
                         <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-8 font-light leading-relaxed mx-auto">

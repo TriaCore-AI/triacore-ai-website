@@ -1023,10 +1023,14 @@ const CustomOplossingen = () => {
                 </div>
 
                 <div className="relative z-10 max-w-5xl mx-auto text-center w-full">
-                    <span className="hero-stagger uppercase tracking-[0.3em] text-[10px] font-bold mb-8 text-accent block">
-                        {language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}
+                    <span className="hero-stagger inline-flex items-center gap-3 mb-6">
+                        <span className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-accent/70" />
+                        <span className="uppercase tracking-[0.25em] text-xs md:text-sm font-bold text-accent">
+                            {language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}
+                        </span>
+                        <span className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-accent/70" />
                     </span>
-                    <h1 className="hero-stagger font-serif text-foreground text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-8">
+                    <h1 className="hero-stagger font-serif text-foreground text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6">
                         {language === 'nl' ? (
                             <>Uw processen geoptimaliseerd met <span className="text-accent">software op maat.</span></>
                         ) : (
