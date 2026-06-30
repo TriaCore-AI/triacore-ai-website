@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "announce": "node --env-file-if-exists=.env scripts/announce-resource.mjs",
+    "preview-emails": "node scripts/preview-emails.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -21,6 +23,7 @@
     "react-dom": "^19.2.0",
     "react-ga4": "^3.0.1",
     "react-router-dom": "^7.13.1",
+    "resend": "^4.8.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

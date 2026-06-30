@@ -99,6 +99,12 @@ export default function PrivacyPolicy() {
                                 <li>{language === 'nl' ? 'administratieve en facturatiegegevens.' : 'administrative and invoicing data.'}</li>
                             </ul>
 
+                            <h3 className="font-bold mb-2 mt-6">{language === 'nl' ? 'Wanneer u zich inschrijft op onze nieuwsbrief:' : 'When you subscribe to our newsletter:'}</h3>
+                            <ul className="list-disc ml-6 mb-6 space-y-1">
+                                <li>{language === 'nl' ? 'uw e-mailadres;' : 'your email address;'}</li>
+                                <li>{language === 'nl' ? 'uw taalvoorkeur (Nederlands of Engels).' : 'your language preference (Dutch or English).'}</li>
+                            </ul>
+
                             <h3 className="font-bold mb-2 mt-6">{language === 'nl' ? 'Via onze website (Google Analytics 4):' : 'Via our website (Google Analytics 4):'}</h3>
                             <p className="mb-2">{language === 'nl' ? 'Indien u hiervoor via de cookiebanner toestemming heeft gegeven, verzamelen wij analytische gegevens:' : 'If you have given consent via the cookie banner, we collect analytical data:'}</p>
                             <ul className="list-disc ml-6 space-y-1 font-medium mb-2">
@@ -116,6 +122,7 @@ export default function PrivacyPolicy() {
                             <p className="mb-4">{language === 'nl' ? 'Uw persoonsgegevens worden door u actief en vrijwillig verstrekt, bijvoorbeeld wanneer u:' : 'Your personal data is actively and voluntarily provided by you, for example when you:'}</p>
                             <ul className="list-disc ml-6 space-y-1">
                                 <li>{language === 'nl' ? 'het contactformulier invult;' : 'fill out the contact form;'}</li>
+                                <li>{language === 'nl' ? 'zich inschrijft op onze nieuwsbrief;' : 'subscribe to our newsletter;'}</li>
                                 <li>{language === 'nl' ? 'ons per e-mail contacteert;' : 'contact us by email;'}</li>
                                 <li>{language === 'nl' ? 'met ons samenwerkt in een professionele context.' : 'collaborate with us in a professional context.'}</li>
                             </ul>
@@ -129,6 +136,7 @@ export default function PrivacyPolicy() {
                                 <li>{language === 'nl' ? 'het opvolgen van zakelijke contacten en aanvragen;' : 'following up on business contacts and requests;'}</li>
                                 <li>{language === 'nl' ? 'het uitvoeren van onze dienstverlening;' : 'carrying out our services;'}</li>
                                 <li>{language === 'nl' ? 'klantenbeheer en communicatie;' : 'customer management and communication;'}</li>
+                                <li>{language === 'nl' ? 'het versturen van onze nieuwsbrief met resource-updates, indien u zich daarvoor heeft ingeschreven;' : 'sending our newsletter with resource updates, if you have subscribed to it;'}</li>
                                 <li>{language === 'nl' ? 'administratieve en wettelijke verplichtingen.' : 'administrative and legal obligations.'}</li>
                             </ul>
                         </section>
@@ -149,6 +157,7 @@ export default function PrivacyPolicy() {
                             <p className="mb-4">{language === 'nl' ? 'Uw persoonsgegevens blijven in principe intern en worden enkel gedeeld wanneer dat functioneel noodzakelijk is, bijvoorbeeld met:' : 'Your personal data will in principle remain internal and will only be shared when functionally necessary, for example with:'}</p>
                             <ul className="list-disc ml-6 mb-4 space-y-1">
                                 <li>{language === 'nl' ? 'interne opvolgsystemen (zoals spreadsheets of CRM-software);' : 'internal tracking systems (such as spreadsheets or CRM software);'}</li>
+                                <li>{language === 'nl' ? 'onze e-mailverzenddienst Resend, die de nieuwsbrieflijst beheert en onze e-mails verstuurt;' : 'our email delivery service Resend, which manages the newsletter list and sends our emails;'}</li>
                                 <li>{language === 'nl' ? 'technische of administratieve dienstverleners die ons ondersteunen.' : 'technical or administrative service providers who support us.'}</li>
                             </ul>
                             <p>{language === 'nl' ? 'Uw gegevens worden niet verkocht en niet gebruikt voor commerciële doeleinden van derden.' : 'Your data is not sold and is not used for commercial purposes of third parties.'}</p>
@@ -156,7 +165,8 @@ export default function PrivacyPolicy() {
 
                         <section className="scroll-animate">
                             <h2 className="text-xl font-bold mb-4">{language === 'nl' ? '8. Verwerking buiten de EU' : '8. Processing outside the EU'}</h2>
-                            <p>{language === 'nl' ? 'Indien persoonsgegevens worden verwerkt door partijen buiten de Europese Economische Ruimte, zorgen wij ervoor dat dit gebeurt met passende waarborgen in overeenstemming met de GDPR.' : 'If personal data is processed by parties outside the European Economic Area, we ensure that this is done with appropriate safeguards in accordance with the GDPR.'}</p>
+                            <p className="mb-4">{language === 'nl' ? 'Indien persoonsgegevens worden verwerkt door partijen buiten de Europese Economische Ruimte, zorgen wij ervoor dat dit gebeurt met passende waarborgen in overeenstemming met de GDPR.' : 'If personal data is processed by parties outside the European Economic Area, we ensure that this is done with appropriate safeguards in accordance with the GDPR.'}</p>
+                            <p>{language === 'nl' ? 'Concreet wordt ons e-mailverkeer voor de nieuwsbrief verwerkt door Resend, een dienstverlener gevestigd in de Verenigde Staten. Deze doorgifte gebeurt op basis van de standaardcontractbepalingen (SCC’s) van de Europese Commissie.' : 'Specifically, our newsletter email traffic is processed by Resend, a service provider based in the United States. This transfer takes place on the basis of the European Commission’s Standard Contractual Clauses (SCCs).'}</p>
                         </section>
 
                         <section className="scroll-animate">
@@ -167,6 +177,7 @@ export default function PrivacyPolicy() {
                                 <li>{language === 'nl' ? 'het onderhouden van de zakelijke relatie;' : 'maintaining the business relationship;'}</li>
                                 <li>{language === 'nl' ? 'het naleven van wettelijke bewaarplichten.' : 'compliance with legal retention obligations.'}</li>
                             </ul>
+                            <p className="mt-4 text-sm opacity-80">{language === 'nl' ? 'Gegevens van nieuwsbriefinschrijvingen bewaren wij tot u zich uitschrijft. Uitschrijven kan op elk moment via de link onderaan elke nieuwsbrief.' : 'We keep newsletter subscription data until you unsubscribe. You can unsubscribe at any time via the link at the bottom of every newsletter.'}</p>
                         </section>
 
                         <section className="scroll-animate">

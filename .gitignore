@@ -12,6 +12,25 @@ dist
 dist-ssr
 *.local
 
+# Lokale env (API-keys, o.a. Resend) — nooit naar GitHub
+.env
+.env.*
+!.env.example
+
+# Netlify CLI lokale state
+.netlify
+deno.lock
+
+# Gegenereerde mail-preview (npm run preview-emails)
+email-preview.html
+
+# Interne resources-werkmap (ideeen, research, drafts) — nooit publiceren naar GitHub.
+# Enkel de gepubliceerde output gaat live: src/data/resources.jsx + public/resources/
+Resources/
+
+# Privaat /resource commando (de trigger van het resource-systeem) — niet publiceren.
+.claude/commands/resource.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

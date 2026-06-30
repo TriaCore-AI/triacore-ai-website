@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import NewsletterSignup from './newsletter-signup';
 
 export default function Footer() {
     const { language } = useLanguage();
@@ -16,6 +17,11 @@ export default function Footer() {
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10">
+
+                {/* Newsletter signup band */}
+                <div className="mb-16 pb-16 border-b border-white/10">
+                    <NewsletterSignup variant="footer" />
+                </div>
 
                 <div className="flex flex-col lg:flex-row justify-between gap-16 mb-20">
 
@@ -56,6 +62,7 @@ export default function Footer() {
                             <h4 className="font-bold text-white text-sm tracking-widest uppercase mb-4">{language === 'nl' ? "Pagina's" : "Pages"}</h4>
                             <div className="flex flex-col gap-3">
                                 <Link to="/custom-oplossingen" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
+                                <Link to="/resources" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Resources</Link>
                                 <Link to="/team" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Team</Link>
                                 <Link to="/contact" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Contact</Link>
                             </div>
