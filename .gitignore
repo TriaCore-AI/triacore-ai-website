@@ -26,7 +26,9 @@ email-preview.html
 
 # Interne resources-werkmap (ideeen, research, drafts) — nooit publiceren naar GitHub.
 # Enkel de gepubliceerde output gaat live: src/data/resources.jsx + public/resources/
-Resources/
+# Aan de root verankerd (/) zodat public/resources/ NIET mee genegeerd wordt
+# (op Windows is gitignore hoofdletterongevoelig).
+/Resources/
 
 # Privaat /resource commando (de trigger van het resource-systeem) — niet publiceren.
 .claude/commands/resource.md
