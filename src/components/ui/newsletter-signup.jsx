@@ -11,10 +11,13 @@ import { useLanguage } from '../../context/LanguageContext';
 export default function NewsletterSignup({ variant = 'footer' }) {
     const { language } = useLanguage();
     const [status, setStatus] = useState('idle'); // idle | loading | success | error
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [botField, setBotField] = useState('');
 
-    const isValid = /\S+@\S+\.\S+/.test(email);
+    const isValid =
+        /\S+@\S+\.\S+/.test(email) && firstName.trim() !== '' && lastName.trim() !== '';
     const isDark = variant === 'footer';
 
     const handleSubmit = async (e) => {
@@ -26,11 +29,13 @@ export default function NewsletterSignup({ variant = 'footer' }) {
             const res = await fetch('/.netlify/functions/newsletter-subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, botField, language }),
+                body: JSON.stringify({ email, firstName, lastName, botField, language }),
             });
             if (res.ok) {
                 setStatus('success');
                 setEmail('');
+                setFirstName('');
+                setLastName('');
             } else {
                 setStatus('error');
             }
@@ -49,6 +54,8 @@ export default function NewsletterSignup({ variant = 'footer' }) {
             ? 'Schrijf je in om op de hoogte te blijven van onze nieuwste resources.'
             : 'Subscribe to stay up to date with our latest resources.',
         placeholder: language === 'nl' ? 'Vul je e-mailadres in' : 'Enter your email',
+        firstNamePlaceholder: language === 'nl' ? 'Voornaam' : 'First name',
+        lastNamePlaceholder: language === 'nl' ? 'Achternaam' : 'Last name',
         cta: language === 'nl' ? 'Inschrijven' : 'Subscribe',
         loading: language === 'nl' ? 'Even geduld...' : 'One moment...',
         successTitle: language === 'nl' ? 'Je staat op de lijst.' : 'You are on the list.',
@@ -70,11 +77,12 @@ export default function NewsletterSignup({ variant = 'footer' }) {
         ? 'group shrink-0 inline-flex items-center justify-center gap-2 bg-accent text-white px-7 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100'
         : 'group shrink-0 inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-4 rounded-full font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100';
 
+    const clearError = () => {
+        if (status === 'error') setStatus('idle');
+    };
+
     const Form = (
-        <form
-            onSubmit={handleSubmit}
-            className={`flex flex-col ${isDark ? 'sm:flex-row' : 'sm:flex-row'} gap-3 w-full`}
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full">
             {/* Honeypot (verborgen voor mensen, vangt bots) */}
             <input
                 type="text"
@@ -86,27 +94,50 @@ export default function NewsletterSignup({ variant = 'footer' }) {
                 className="hidden"
                 aria-hidden="true"
             />
-            <input
-                type="email"
-                required
-                autoComplete="email"
-                value={email}
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (status === 'error') setStatus('idle');
-                }}
-                placeholder={t.placeholder}
-                className={inputClasses}
-                aria-label={t.placeholder}
-            />
-            <button type="submit" disabled={!isValid || status === 'loading'} className={buttonClasses}>
-                {status === 'loading' ? t.loading : (
-                    <>
-                        {t.cta}
-                        <ArrowRight size={isDark ? 16 : 18} className="transition-transform group-hover:translate-x-0.5" />
-                    </>
-                )}
-            </button>
+            {/* Voornaam + achternaam */}
+            <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                    type="text"
+                    required
+                    autoComplete="given-name"
+                    value={firstName}
+                    onChange={(e) => { setFirstName(e.target.value); clearError(); }}
+                    placeholder={t.firstNamePlaceholder}
+                    className={inputClasses}
+                    aria-label={t.firstNamePlaceholder}
+                />
+                <input
+                    type="text"
+                    required
+                    autoComplete="family-name"
+                    value={lastName}
+                    onChange={(e) => { setLastName(e.target.value); clearError(); }}
+                    placeholder={t.lastNamePlaceholder}
+                    className={inputClasses}
+                    aria-label={t.lastNamePlaceholder}
+                />
+            </div>
+            {/* E-mail + knop */}
+            <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); clearError(); }}
+                    placeholder={t.placeholder}
+                    className={inputClasses}
+                    aria-label={t.placeholder}
+                />
+                <button type="submit" disabled={!isValid || status === 'loading'} className={buttonClasses}>
+                    {status === 'loading' ? t.loading : (
+                        <>
+                            {t.cta}
+                            <ArrowRight size={isDark ? 16 : 18} className="transition-transform group-hover:translate-x-0.5" />
+                        </>
+                    )}
+                </button>
+            </div>
         </form>
     );
 

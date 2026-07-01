@@ -101,6 +101,7 @@ export default function PrivacyPolicy() {
 
                             <h3 className="font-bold mb-2 mt-6">{language === 'nl' ? 'Wanneer u zich inschrijft op onze nieuwsbrief:' : 'When you subscribe to our newsletter:'}</h3>
                             <ul className="list-disc ml-6 mb-6 space-y-1">
+                                <li>{language === 'nl' ? 'uw naam (voornaam en achternaam);' : 'your name (first and last name);'}</li>
                                 <li>{language === 'nl' ? 'uw e-mailadres;' : 'your email address;'}</li>
                                 <li>{language === 'nl' ? 'uw taalvoorkeur (Nederlands of Engels).' : 'your language preference (Dutch or English).'}</li>
                             </ul>

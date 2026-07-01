@@ -16,7 +16,7 @@ const dataUri = (path, mime) =>
 const { resources, CATEGORIES } = await loadResources();
 const r = [...resources].sort((a, b) => (a.date < b.date ? 1 : -1))[0];
 
-const welcome = welcomeEmail('nl', { unsubscribeUrl: `${SITE_URL}/uitschrijven-voorbeeld` }).html;
+const welcome = welcomeEmail('nl', { firstName: 'Nico', unsubscribeUrl: `${SITE_URL}/uitschrijven-voorbeeld` }).html;
 const broadcast = r
     ? resourceBroadcast({
           title: r.title?.nl || r.title,

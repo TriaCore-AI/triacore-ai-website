@@ -28,6 +28,10 @@ export const handler = async (event) => {
     }
 
     const { email = '', botField = '', language = 'nl' } = data;
+    const firstName = (data.firstName || '').trim();
+    const lastName = (data.lastName || '').trim();
+    // Enkel meesturen wat ingevuld is (server blijft tolerant).
+    const nameFields = { ...(firstName && { firstName }), ...(lastName && { lastName }) };
 
     // Honeypot: bot vulde het verborgen veld in -> stilletjes ok, niets doen.
     if (botField) {
@@ -56,6 +60,7 @@ export const handler = async (event) => {
         audienceId,
         email,
         unsubscribed: false,
+        ...nameFields,
     });
 
     if (contactError) {
@@ -66,6 +71,7 @@ export const handler = async (event) => {
                 audienceId,
                 email,
                 unsubscribed: false,
+                ...nameFields,
             });
             if (updateError) {
                 console.error('Newsletter: re-subscribe (contacts.update) faalde', updateError);
@@ -79,7 +85,7 @@ export const handler = async (event) => {
     // Stap B: welkomstmail. Faalt dit, dan blijft de inschrijving toch geldig.
     try {
         const unsub = unsubscribeUrl(email, apiKey, language);
-        const mail = welcomeEmail(language, { unsubscribeUrl: unsub });
+        const mail = welcomeEmail(language, { firstName, unsubscribeUrl: unsub });
         const { error: mailError } = await resend.emails.send({
             from,
             to: email,
