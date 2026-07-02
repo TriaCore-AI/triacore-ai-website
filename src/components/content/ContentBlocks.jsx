@@ -295,35 +295,63 @@ export function ContentBlock({ block, language }) {
         case 'table': {
             const t = block[language];
             return (
-                <div className="my-10 overflow-x-auto rounded-[1.25rem] border border-foreground/10">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-foreground/[0.03]">
-                                {t.head.map((h, i) => (
-                                    <th
-                                        key={i}
-                                        className="px-5 py-3 text-[11px] uppercase tracking-[0.15em] font-bold text-accent border-b border-foreground/10"
-                                    >
-                                        {h}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {t.rows.map((row, ri) => (
-                                <tr key={ri} className="border-b border-foreground/[0.07] last:border-0">
-                                    {row.map((cell, ci) => (
-                                        <td
-                                            key={ci}
-                                            className={`px-5 py-3.5 align-top leading-relaxed font-light ${ci === 0 ? 'text-foreground/85 font-medium' : 'text-foreground/65'}`}
+                <div className="my-10">
+                    {/* Mobiel: gestapelde kaarten per rij, zodat er niets afgesneden wordt en niet gescrold hoeft te worden */}
+                    <div className="sm:hidden space-y-3">
+                        {t.rows.map((row, ri) => (
+                            <div key={ri} className="rounded-[1.25rem] border border-foreground/10 overflow-hidden">
+                                {row[0] && (
+                                    <div className="px-5 py-2.5 bg-foreground/[0.03] text-[11px] uppercase tracking-[0.15em] font-bold text-accent border-b border-foreground/10">
+                                        {row[0]}
+                                    </div>
+                                )}
+                                <div className="divide-y divide-foreground/[0.07]">
+                                    {row.slice(1).map((cell, ci) => (
+                                        <div key={ci} className="px-5 py-3 flex items-baseline gap-3">
+                                            {t.head[ci + 1] && (
+                                                <span className="shrink-0 text-[11px] uppercase tracking-[0.1em] font-bold text-foreground/40 w-16">
+                                                    {t.head[ci + 1]}
+                                                </span>
+                                            )}
+                                            <span className="text-foreground/65 font-light leading-relaxed">{cell}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Vanaf sm: klassieke tabel */}
+                    <div className="hidden sm:block overflow-x-auto rounded-[1.25rem] border border-foreground/10">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-foreground/[0.03]">
+                                    {t.head.map((h, i) => (
+                                        <th
+                                            key={i}
+                                            className="px-5 py-3 text-[11px] uppercase tracking-[0.15em] font-bold text-accent border-b border-foreground/10"
                                         >
-                                            {cell}
-                                        </td>
+                                            {h}
+                                        </th>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {t.rows.map((row, ri) => (
+                                    <tr key={ri} className="border-b border-foreground/[0.07] last:border-0">
+                                        {row.map((cell, ci) => (
+                                            <td
+                                                key={ci}
+                                                className={`px-5 py-3.5 align-top leading-relaxed font-light ${ci === 0 ? 'text-foreground/85 font-medium' : 'text-foreground/65'}`}
+                                            >
+                                                {cell}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             );
         }

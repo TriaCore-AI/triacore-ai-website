@@ -88,10 +88,10 @@ export default function Navbar() {
             {/* Mobile Drawer Overlay */}
             <div
                 onClick={() => setIsOpen(false)}
-                className={`fixed inset-0 bg-background/95 backdrop-blur-lg z-40 transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                className={`fixed inset-0 bg-background/95 backdrop-blur-lg z-40 overflow-y-auto transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                     }`}
             >
-                <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center justify-center h-full gap-8 px-6 text-xl font-medium">
+                <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center justify-center min-h-full gap-8 px-6 py-28 text-xl font-medium">
                     <Link to="/" onClick={() => { setIsOpen(false); window.scrollTo(0,0); }} className="hover:text-accent transition-colors">Home</Link>
                     <Link to="/custom-oplossingen" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
                     <Link to="/projecten" onClick={() => setIsOpen(false)} className="hover:text-accent transition-colors">{language === 'nl' ? 'Projecten' : 'Projects'}</Link>
