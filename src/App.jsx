@@ -1433,8 +1433,8 @@ function App() {
               </div>
             </div>
             <div className="flex justify-center mt-20">
-              <CTAButton to="/custom-oplossingen" variant="light">
-                {language === 'nl' ? 'Ontdek meer over custom oplossingen' : 'Discover more about custom solutions'} 
+              <CTAButton to="/custom-oplossingen" variant="light" size="sm">
+                {language === 'nl' ? 'Ontdek meer over custom oplossingen' : 'Discover more about custom solutions'}
               </CTAButton>
             </div>
           </div>
@@ -1532,7 +1532,7 @@ function App() {
             </div>
 
             <div className="flex justify-center mt-12 md:mt-16">
-              <CTAButton to="/projecten" variant="light">
+              <CTAButton to="/projecten" variant="light" size="sm">
                 {language === 'nl' ? 'Bekijk al onze projecten' : 'View all our projects'}
               </CTAButton>
             </div>
@@ -1616,7 +1616,7 @@ function App() {
             ))}
           </div>
           <div className="flex justify-center">
-            <CTAButton to="/team">{language === 'nl' ? 'Leer ons team kennen' : 'Get to know our team'}</CTAButton>
+            <CTAButton to="/team" size="sm">{language === 'nl' ? 'Leer ons team kennen' : 'Get to know our team'}</CTAButton>
           </div>
         </div>
       </section>
