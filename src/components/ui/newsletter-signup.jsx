@@ -1,24 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, X, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import CTAButton from './cta-button';
 
 // Herbruikbaar inschrijfveld voor nieuwe resources.
 // variant="footer" → compact, op donkere achtergrond (footer).
 // variant="panel"  → opvallend blok op lichte achtergrond (Resources-pagina).
 // Inschrijvingen gaan via de Netlify Function /.netlify/functions/newsletter-subscribe
 // naar een Resend Audience (lijst + automatische unsubscribe) + welkomstmail.
-export default function NewsletterSignup({ variant = 'footer' }) {
+// Na een gelukte inschrijving verschijnt een pop-up (modal) die uitlegt wat de
+// bezoeker mag verwachten.
+export default function NewsletterSignup({ variant = 'footer', hideInvite = false, align = 'center', size = 'sm' }) {
     const { language } = useLanguage();
     const [status, setStatus] = useState('idle'); // idle | loading | success | error
+    const [expanded, setExpanded] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [botField, setBotField] = useState('');
+    const [subscribedName, setSubscribedName] = useState(''); // voornaam voor de pop-up
 
     const isValid =
         /\S+@\S+\.\S+/.test(email) && firstName.trim() !== '' && lastName.trim() !== '';
     const isDark = variant === 'footer';
+
+    const closeSuccess = () => {
+        setStatus('idle');
+        setExpanded(false);
+    };
+
+    // Escape sluit de pop-up; body-scroll blokkeren zolang hij openstaat.
+    useEffect(() => {
+        if (status !== 'success') return;
+        const onKey = (e) => {
+            if (e.key === 'Escape') {
+                setStatus('idle');
+                setExpanded(false);
+            }
+        };
+        document.addEventListener('keydown', onKey);
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.style.overflow = prevOverflow;
+        };
+    }, [status]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,6 +62,7 @@ export default function NewsletterSignup({ variant = 'footer' }) {
                 body: JSON.stringify({ email, firstName, lastName, botField, language }),
             });
             if (res.ok) {
+                setSubscribedName(firstName.trim());
                 setStatus('success');
                 setEmail('');
                 setFirstName('');
@@ -58,31 +89,51 @@ export default function NewsletterSignup({ variant = 'footer' }) {
         lastNamePlaceholder: language === 'nl' ? 'Achternaam' : 'Last name',
         cta: language === 'nl' ? 'Inschrijven' : 'Subscribe',
         loading: language === 'nl' ? 'Even geduld...' : 'One moment...',
-        successTitle: language === 'nl' ? 'Je staat op de lijst.' : 'You are on the list.',
-        successBody: language === 'nl'
-            ? 'Je hoort van ons zodra er iets nieuws is.'
-            : 'We will reach out as soon as there is something new.',
         error: language === 'nl' ? 'Er ging iets mis. Probeer opnieuw.' : 'Something went wrong. Please try again.',
         consentPre: language === 'nl' ? 'Door in te schrijven ga je akkoord met ons ' : 'By subscribing you agree to our ',
         consentLink: language === 'nl' ? 'privacybeleid' : 'privacy policy',
         consentPost: language === 'nl' ? '. Uitschrijven kan altijd.' : '. You can unsubscribe anytime.',
     };
 
+    // --- Teksten voor de pop-up ---
+    const nl = language === 'nl';
+    const displayName = subscribedName
+        ? subscribedName.charAt(0).toUpperCase() + subscribedName.slice(1)
+        : '';
+    const modalT = {
+        title: nl ? 'Je bent ingeschreven!' : "You're subscribed!",
+        sub: displayName
+            ? (nl ? `Bedankt, ${displayName}!` : `Thanks, ${displayName}!`)
+            : (nl ? 'Bedankt voor je inschrijving!' : 'Thanks for subscribing!'),
+        p1: nl
+            ? 'Je krijgt zo meteen een welkomstmail in je inbox.'
+            : "You'll receive a welcome email in your inbox shortly.",
+        p2: nl
+            ? 'En vanaf nu krijg je élke nieuwe resource automatisch in je inbox, zodra we die publiceren.'
+            : 'And from now on, you get every new resource automatically in your inbox as soon as we publish it.',
+        unsub: nl
+            ? 'Als je wil uitschrijven, kan dat altijd via de link onderaan elke mail.'
+            : 'If you want to unsubscribe, you can always do so via the link at the bottom of every email.',
+        quote: nl ? 'Laten we samen vooruitdenken.' : "Let's think ahead together.",
+        button: nl ? 'Begrepen' : 'Got it',
+        close: nl ? 'Sluiten' : 'Close',
+    };
+
     // --- Stijlvarianten ---
     const inputClasses = isDark
         ? 'w-full bg-white/5 border border-white/10 rounded-full px-6 py-3.5 text-white placeholder:text-white/40 outline-none focus:bg-white/10 focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,0.6)] transition-all duration-300 text-sm'
-        : 'w-full bg-[#f8fafc] border border-slate-200 rounded-full px-6 py-4 text-foreground placeholder:text-foreground/40 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300';
+        : 'w-full bg-[#f8fafc] border border-slate-200 rounded-full px-5 py-2.5 text-sm text-foreground placeholder:text-foreground/40 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300';
 
     const buttonClasses = isDark
         ? 'group shrink-0 inline-flex items-center justify-center gap-2 bg-accent text-white px-7 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100'
-        : 'group shrink-0 inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-4 rounded-full font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100';
+        : 'group shrink-0 inline-flex items-center justify-center gap-2 bg-foreground text-background px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100';
 
     const clearError = () => {
         if (status === 'error') setStatus('idle');
     };
 
     const Form = (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 w-full">
             {/* Honeypot (verborgen voor mensen, vangt bots) */}
             <input
                 type="text"
@@ -95,7 +146,7 @@ export default function NewsletterSignup({ variant = 'footer' }) {
                 aria-hidden="true"
             />
             {/* Voornaam + achternaam */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-2.5">
                 <input
                     type="text"
                     required
@@ -118,7 +169,7 @@ export default function NewsletterSignup({ variant = 'footer' }) {
                 />
             </div>
             {/* E-mail + knop */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-2.5">
                 <input
                     type="email"
                     required
@@ -129,14 +180,20 @@ export default function NewsletterSignup({ variant = 'footer' }) {
                     className={inputClasses}
                     aria-label={t.placeholder}
                 />
-                <button type="submit" disabled={!isValid || status === 'loading'} className={buttonClasses}>
-                    {status === 'loading' ? t.loading : (
-                        <>
-                            {t.cta}
-                            <ArrowRight size={isDark ? 16 : 18} className="transition-transform group-hover:translate-x-0.5" />
-                        </>
-                    )}
-                </button>
+                {isDark ? (
+                    <button type="submit" disabled={!isValid || status === 'loading'} className={buttonClasses}>
+                        {status === 'loading' ? t.loading : (
+                            <>
+                                {t.cta}
+                                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                            </>
+                        )}
+                    </button>
+                ) : (
+                    <CTAButton type="submit" size={size} disabled={!isValid || status === 'loading'} className="shrink-0">
+                        {status === 'loading' ? t.loading : t.cta}
+                    </CTAButton>
+                )}
             </div>
         </form>
     );
@@ -155,58 +212,134 @@ export default function NewsletterSignup({ variant = 'footer' }) {
         <p className="text-[12px] mt-2 text-red-400 font-medium">{t.error}</p>
     );
 
+    const OpenButton = (
+        <CTAButton type="button" size={size} onClick={() => setExpanded(true)}>
+            {t.cta}
+        </CTAButton>
+    );
+
+    const CloseButton = (
+        <button
+            type="button"
+            onClick={() => setExpanded(false)}
+            className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-medium text-foreground/40 hover:text-foreground transition-colors"
+        >
+            <X size={12} />
+            {language === 'nl' ? 'Annuleren' : 'Cancel'}
+        </button>
+    );
+
+    // --- Pop-up (modal) na gelukte inschrijving, via portal op body ---
+    const SuccessModal = typeof document === 'undefined' ? null : createPortal(
+        <AnimatePresence>
+            {status === 'success' && (
+                <motion.div
+                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-foreground/60 backdrop-blur-sm"
+                        onClick={closeSuccess}
+                        aria-hidden="true"
+                    />
+                    {/* Kaart */}
+                    <motion.div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={modalT.title}
+                        initial={{ opacity: 0, scale: 0.94, y: 14 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.96, y: 8 }}
+                        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative w-full max-w-md bg-white rounded-[1.75rem] p-7 sm:p-9 shadow-2xl text-center"
+                    >
+                        <button
+                            type="button"
+                            onClick={closeSuccess}
+                            aria-label={modalT.close}
+                            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/5 transition-colors"
+                        >
+                            <X size={18} />
+                        </button>
+
+                        <span className="mx-auto mb-5 w-14 h-14 rounded-full bg-accent/12 text-accent flex items-center justify-center">
+                            <Check size={26} strokeWidth={2.5} />
+                        </span>
+
+                        <h3 className="font-serif text-2xl sm:text-[1.7rem] leading-tight text-foreground mb-1.5">
+                            {modalT.title}
+                        </h3>
+                        <p className="text-foreground/55 text-sm mb-6">{modalT.sub}</p>
+
+                        <div className="space-y-2.5 mb-5">
+                            <p className="text-sm text-foreground/75 leading-relaxed">{modalT.p1}</p>
+                            <p className="text-sm text-foreground/75 leading-relaxed">{modalT.p2}</p>
+                        </div>
+
+                        <p className="font-serif italic text-accent text-[15px] mb-6">{modalT.quote}</p>
+
+                        <p className="text-[12px] text-foreground/45 leading-relaxed mb-6">{modalT.unsub}</p>
+
+                        <button
+                            type="button"
+                            onClick={closeSuccess}
+                            className="w-full inline-flex items-center justify-center gap-2 bg-accent text-white px-6 py-3.5 rounded-full text-sm font-semibold hover:brightness-105 active:scale-[0.99] transition"
+                        >
+                            {modalT.button}
+                        </button>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>,
+        document.body,
+    );
+
     // =====================================================================
     // FOOTER VARIANT (donker, compact)
     // =====================================================================
     if (isDark) {
         return (
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                <div className="max-w-sm">
-                    <h4 className="font-serif text-2xl text-white mb-2">{t.title}</h4>
-                    <p className="text-sm text-white/60 font-light leading-relaxed">{t.subtitle}</p>
+            <>
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                    <div className="max-w-sm">
+                        <h4 className="font-serif text-2xl text-white mb-2">{t.title}</h4>
+                        <p className="text-sm text-white/60 font-light leading-relaxed">{t.subtitle}</p>
+                    </div>
+                    <div className="w-full lg:max-w-md">
+                        {Form}
+                        {ErrorMsg}
+                        {Consent}
+                    </div>
                 </div>
-                <div className="w-full lg:max-w-md">
-                    {status === 'success' ? (
-                        <div className="flex items-center gap-3 text-white">
-                            <span className="w-9 h-9 shrink-0 rounded-full bg-accent/20 text-accent flex items-center justify-center">
-                                <Check size={18} />
-                            </span>
-                            <div>
-                                <p className="font-semibold text-sm">{t.successTitle}</p>
-                                <p className="text-white/55 text-xs font-light">{t.successBody}</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            {Form}
-                            {ErrorMsg}
-                            {Consent}
-                        </>
-                    )}
-                </div>
-            </div>
+                {SuccessModal}
+            </>
         );
     }
 
     // =====================================================================
-    // INLINE VARIANT (heel simpel, onder de hero)
+    // INLINE VARIANT (heel simpel, onder de hero). Toont eerst enkel een
+    // CTA-knop; de velden verschijnen pas na een klik.
     // =====================================================================
     return (
-        <div className="w-full max-w-md mx-auto">
-            {status === 'success' ? (
-                <div className="flex items-center justify-center gap-3 text-foreground">
-                    <span className="w-9 h-9 shrink-0 rounded-full bg-accent/10 text-accent flex items-center justify-center">
-                        <Check size={18} />
-                    </span>
-                    <p className="font-medium">{t.successTitle}</p>
-                </div>
-            ) : (
-                <>
-                    <p className="text-foreground font-medium mb-4">{t.invite}</p>
-                    {Form}
-                    {ErrorMsg}
-                </>
-            )}
-        </div>
+        <>
+            <div className={`w-full max-w-md ${align === 'start' ? '' : 'mx-auto'}`}>
+                {expanded ? (
+                    <>
+                        {Form}
+                        {ErrorMsg}
+                        {CloseButton}
+                    </>
+                ) : (
+                    <div className={`flex flex-col ${align === 'start' ? 'items-start' : 'items-center text-center'}`}>
+                        {!hideInvite && <p className="text-foreground text-sm font-medium mb-3">{t.invite}</p>}
+                        {OpenButton}
+                    </div>
+                )}
+            </div>
+            {SuccessModal}
+        </>
     );
 }

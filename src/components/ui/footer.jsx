@@ -62,6 +62,7 @@ export default function Footer() {
                             <h4 className="font-bold text-white text-sm tracking-widest uppercase mb-4">{language === 'nl' ? "Pagina's" : "Pages"}</h4>
                             <div className="flex flex-col gap-3">
                                 <Link to="/custom-oplossingen" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}</Link>
+                                <Link to="/projecten" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">{language === 'nl' ? 'Projecten' : 'Projects'}</Link>
                                 <Link to="/resources" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Resources</Link>
                                 <Link to="/team" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Team</Link>
                                 <Link to="/contact" className="text-white/60 hover:text-accent transition-all text-sm font-medium w-max hover:translate-x-1">Contact</Link>

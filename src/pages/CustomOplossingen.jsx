@@ -1023,12 +1023,10 @@ const CustomOplossingen = () => {
                 </div>
 
                 <div className="relative z-10 max-w-5xl mx-auto text-center w-full">
-                    <span className="hero-stagger inline-flex items-center gap-3 mb-6">
-                        <span className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-accent/70" />
-                        <span className="uppercase tracking-[0.25em] text-xs md:text-sm font-bold text-accent">
-                            {language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}
-                        </span>
-                        <span className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-accent/70" />
+                    <span className="hero-stagger inline-flex items-center mb-6 px-4 py-1.5 rounded-lg border border-accent/20 bg-accent/5 font-mono uppercase tracking-[0.15em] text-xs md:text-sm font-bold text-accent">
+                        <span className="text-accent/40">[</span>
+                        {language === 'nl' ? 'Custom oplossingen' : 'Custom solutions'}
+                        <span className="text-accent/40">]</span>
                     </span>
                     <h1 className="hero-stagger font-serif text-foreground text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6">
                         {language === 'nl' ? (
@@ -1043,7 +1041,7 @@ const CustomOplossingen = () => {
                             : 'Some inefficiencies are so deep in your workflow that no standard package can remove them. Custom work that uses AI in the right place does.'}
                     </p>
                     <div className="hero-stagger flex flex-wrap gap-6 items-center justify-center">
-                        <CTAButton to="/contact" variant="primary">
+                        <CTAButton to="/contact" variant="primary" size="sm">
                             {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
                         </CTAButton>
                     </div>

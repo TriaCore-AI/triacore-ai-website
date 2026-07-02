@@ -60,8 +60,8 @@ export const resources = [
             en: 'Why AI says yes too often, and what to do about it',
         },
         description: {
-            nl: 'AI is getraind om in te stemmen, niet om eerlijk te zijn. Dat noemen we sycofantie. Wat het is, waarom het iedereen raakt, en hoe u het met één vaste projectinstructie tegengaat.',
-            en: 'AI is trained to agree, not to be honest. We call it sycophancy. What it is, why it affects everyone, and how to counter it with one fixed project instruction.',
+            nl: 'AI is getraind om in te stemmen, niet om eerlijk te zijn. Dat noemen we sycofantie, en het raakt iedereen die met AI werkt. Ontdek waarom, en hoe u het met één vaste projectinstructie voorgoed tegengaat.',
+            en: 'AI is trained to agree, not to be honest. We call it sycophancy, and it affects everyone who works with AI. Discover why, and how one fixed project instruction puts a stop to it for good.',
         },
         thumbnail: '/resources/waarom-ai-te-vaak-ja-zegt.webp',
         headerCta: {

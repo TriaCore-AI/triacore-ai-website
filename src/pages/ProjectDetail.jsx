@@ -1,22 +1,38 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { ArrowLeft, ArrowDown } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import CTAButton from '../components/ui/cta-button';
 import { useLanguage } from '../context/LanguageContext';
-import { getResourceBySlug, CATEGORIES, formatDate } from '../data/resources';
+import { getAnyProjectBySlug } from '../data/projecten';
 import { ContentBlock } from '../components/content/ContentBlocks';
 import gsap from 'gsap';
 
-export default function ResourceDetail() {
+// Playfair Display's staande "&" oogt zwaar/gedrongen — in DM Sans (de
+// site's eigen sans) is die veel cleaner. Enkel toegepast waar tekst in
+// font-serif wordt getoond.
+function withCleanAmpersand(text) {
+    return text.split('&').map((part, i, arr) =>
+        i < arr.length - 1 ? (
+            <React.Fragment key={i}>
+                {part}
+                <span className="font-sans">&amp;</span>
+            </React.Fragment>
+        ) : (
+            <React.Fragment key={i}>{part}</React.Fragment>
+        )
+    );
+}
+
+export default function ProjectDetail() {
     const { slug } = useParams();
     const { language } = useLanguage();
     const containerRef = useRef(null);
-    const resource = getResourceBySlug(slug);
+    const project = getAnyProjectBySlug(slug);
 
     useEffect(() => {
-        if (!resource) return;
+        if (!project) return;
         let ctx = gsap.context(() => {
             gsap.fromTo(
                 '.detail-stagger',
@@ -25,14 +41,12 @@ export default function ResourceDetail() {
             );
         }, containerRef);
         return () => ctx.revert();
-    }, [resource]);
+    }, [project]);
 
-    // Onbestaande slug → terug naar overzicht.
-    if (!resource) {
-        return <Navigate to="/resources" replace />;
+    // Onbestaande of nog niet beschikbare slug → terug naar overzicht.
+    if (!project) {
+        return <Navigate to="/projecten" replace />;
     }
-
-    const category = CATEGORIES[resource.category];
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
@@ -60,69 +74,57 @@ export default function ResourceDetail() {
                 <article className="max-w-3xl mx-auto px-6 md:px-8 pt-40 md:pt-48 pb-24">
                     {/* Back link */}
                     <Link
-                        to="/resources"
+                        to="/projecten"
                         className="detail-stagger inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-foreground/50 hover:text-accent transition-colors duration-300 mb-12"
                     >
                         <ArrowLeft size={14} />
-                        {language === 'nl' ? 'Alle resources' : 'All resources'}
+                        {language === 'nl' ? 'Alle projecten' : 'All projects'}
                     </Link>
 
                     {/* Header */}
                     <div className="detail-stagger flex items-center gap-4 mb-6">
-                        {category && (
-                            <span className="uppercase tracking-[0.2em] text-[10px] font-bold text-accent">
-                                {category[language]}
-                            </span>
-                        )}
+                        <img src={project.logo} alt={project.client} className="h-7 w-auto object-contain" />
                         <span className="text-foreground/30">·</span>
-                        <span className="text-[12px] text-foreground/40 font-light">
-                            {formatDate(resource.date, language)}
+                        <span className="uppercase tracking-[0.2em] text-[10px] font-bold text-accent">
+                            {project.sector[language]}
                         </span>
                     </div>
 
-                    <h1 className="detail-stagger font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-foreground mb-8">
-                        {resource.title[language]}
-                    </h1>
-
-                    <p className={`detail-stagger text-xl text-foreground/60 font-light leading-relaxed ${resource.headerCta ? 'mb-7' : 'mb-12 pb-12 border-b border-foreground/10'}`}>
-                        {resource.description[language]}
-                    </p>
-
-                    {resource.headerCta && (
-                        <div className="detail-stagger mb-12 pb-12 border-b border-foreground/10">
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    document
-                                        .getElementById(resource.headerCta.target)
-                                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                                }
-                                className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-accent text-white text-sm font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-accent/25"
-                            >
-                                {resource.headerCta[language]}
-                                <ArrowDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
-                            </button>
+                    {project.status === 'soon' ? (
+                        /* Nog geen case, enkel een duidelijke statusmelding — geen uitleg vooruitlopen. */
+                        <div className="detail-stagger py-16 md:py-20 text-center border-y border-foreground/10">
+                            <p className="font-serif text-4xl md:text-5xl tracking-tight text-foreground">
+                                {language === 'nl' ? 'Binnenkort beschikbaar' : 'Coming soon'}
+                            </p>
                         </div>
-                    )}
+                    ) : (
+                        <>
+                            <h1 className="detail-stagger font-serif text-3xl md:text-4xl lg:text-5xl leading-[1.08] tracking-tight text-foreground mb-8">
+                                {withCleanAmpersand(project.title[language])}
+                            </h1>
 
-                    {/* Content blocks */}
-                    <div className="detail-stagger">
-                        {resource.blocks.map((block, i) => (
-                            <ContentBlock key={i} block={block} language={language} />
-                        ))}
-                    </div>
+                            <p className="detail-stagger text-xl text-foreground/60 font-light leading-relaxed mb-12 pb-12 border-b border-foreground/10">
+                                {project.description[language]}
+                            </p>
+
+                            {/* Content blocks — zelfde bloksysteem als resources */}
+                            <div className="detail-stagger">
+                                {(project.blocks || []).map((block, i) => (
+                                    <ContentBlock key={i} block={block} language={language} />
+                                ))}
+                            </div>
+                        </>
+                    )}
 
                     {/* Footer CTA */}
                     <div className="mt-20 pt-12 border-t border-foreground/10 text-center">
                         <p className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-                            {language === 'nl'
-                                ? 'Hier verder over praten?'
-                                : 'Want to take this further?'}
+                            {language === 'nl' ? 'Ook processen die vastlopen?' : 'Also dealing with stuck processes?'}
                         </p>
                         <p className="text-foreground/55 font-light mb-8 max-w-lg mx-auto">
                             {language === 'nl'
-                                ? 'Wilt u dit toepassen in uw eigen bedrijf of er dieper op ingaan? Plan gerust een gesprek, we denken graag met u mee.'
-                                : 'Want to apply this in your own company or dig deeper? Book a call, we are happy to think along.'}
+                                ? 'Plan een gesprek en we denken vrijblijvend met u mee.'
+                                : 'Book a call and we will think along, no strings attached.'}
                         </p>
                         <div className="flex justify-center">
                             <CTAButton to="/contact" variant="primary">

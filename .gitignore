@@ -30,6 +30,10 @@ email-preview.html
 # (op Windows is gitignore hoofdletterongevoelig).
 /Resources/
 
+# Interne projecten/klantcases-werkmap (vaste structuur, drafts) — zelfde principe.
+# Enkel de gepubliceerde output gaat live: src/data/projecten.jsx
+/Projecten/
+
 # Privaat /resource commando (de trigger van het resource-systeem) — niet publiceren.
 .claude/commands/resource.md
 

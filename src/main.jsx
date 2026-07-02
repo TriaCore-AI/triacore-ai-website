@@ -12,6 +12,8 @@ import Contact from './pages/Contact.jsx'
 import CustomOplossingen from './pages/CustomOplossingen.jsx'
 import Resources from './pages/Resources.jsx'
 import ResourceDetail from './pages/ResourceDetail.jsx'
+import Projecten from './pages/Projecten.jsx'
+import ProjectDetail from './pages/ProjectDetail.jsx'
 import ScrollToTop from './components/ui/ScrollToTop.jsx'
 import CookieBanner from './components/ui/cookie-banner.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
@@ -30,6 +32,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/custom-oplossingen" element={<CustomOplossingen />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourceDetail />} />
+          <Route path="/projecten" element={<Projecten />} />
+          <Route path="/projecten/:slug" element={<ProjectDetail />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>

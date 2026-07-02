@@ -12,6 +12,10 @@ import CTAButton from './components/ui/cta-button';
 import { AccordionItem } from './components/ui/accordion';
 import { useLanguage } from './context/LanguageContext';
 import { useAutoImage, AutoImage } from './components/ui/auto-image';
+import croesLogo from './assets/partners/Croes NV.png';
+import amGroupLogo from './assets/partners/A&M Group.webp';
+import ResourceCarousel from './components/ui/resource-carousel';
+import NewsletterSignup from './components/ui/newsletter-signup';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -290,6 +294,50 @@ function App() {
           delay: 0.3,
           stagger: 0.2,
           ease: 'power2.out'
+        }
+      );
+
+      // Klantcases — tijdlijn tekent zich uit terwijl je scrollt
+      gsap.fromTo('.klantcases-rail-fill',
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.klantcases-track',
+            start: 'top 75%',
+            end: 'bottom 70%',
+            scrub: 0.6
+          }
+        }
+      );
+
+      const klantcaseRows = gsap.utils.toArray('.klantcases-row');
+      klantcaseRows.forEach((row, i) => {
+        gsap.fromTo(
+          row,
+          { y: 40, opacity: 0, x: i % 2 === 0 ? -24 : 24 },
+          {
+            scrollTrigger: { trigger: row, start: 'top 85%', once: true },
+            y: 0,
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+          }
+        );
+      });
+
+      gsap.fromTo('.klantcases-dot',
+        { scale: 0, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.6,
+          delay: 0.3,
+          ease: 'back.out(2)',
+          stagger: 0.3,
+          scrollTrigger: { trigger: '.klantcases-track', start: 'top 75%', once: true }
         }
       );
 
@@ -1392,13 +1440,154 @@ function App() {
           </div>
         </section>
 
-
-        <div className="h-[5vh] md:h-[10vh] pointer-events-none"></div>
-
       </div>
-      
 
+      {/* F1. KLANTCASES SECTION */}
+      <section id="klantcases" className="relative bg-dark-section py-24 md:py-32 px-6 md:px-16 lg:px-24 border-t border-white/5 overflow-hidden">
+        {/* Overgang naar wit, gecentreerd achter de kaart. De kaart zelf is
+            ondoorzichtig (zie verderop), dus deze laag schemert nergens door
+            de kaart heen — hij is alleen zichtbaar rond de kaart en helemaal
+            onderaan de sectie. Blijft donker tot ongeveer het midden van de
+            kaart, loopt daarna naar wit. "in oklab" interpolatie (CSS Color 4)
+            i.p.v. sRGB voorkomt de dofblauwgrijze band die je krijgt bij een
+            lineaire mix van heel donker naar wit. */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'linear-gradient(in oklab to bottom, #020617 0%, #020617 50%, #ffffff 78%, #ffffff 100%)' }}
+        />
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-14 md:mb-16">
+            <h2 className="hero-title text-white text-4xl md:text-5xl mb-6 scroll-animate">
+              {language === 'nl' ? 'Bewezen in de praktijk.' : 'Proven in practice.'}
+            </h2>
+            <p className="section-subtitle text-white/60 text-lg md:text-xl max-w-xl mx-auto scroll-animate">
+              {language === 'nl'
+                ? 'Bedrijven waarmee we processen herbouwden, geen losstaande experimenten.'
+                : 'Companies whose processes we rebuilt, not standalone experiments.'}
+            </p>
+          </div>
 
+          {/* Zelfde kaartstijl als de aanpak sectie hierboven, maar nu
+              volledig ondoorzichtig: geen /40 en geen backdrop-blur meer, dus
+              de kaart houdt altijd zijn eigen kleur, ongeacht wat erachter
+              gebeurt. */}
+          <div className="group/card relative bg-[#0a0a1a] border border-white/10 p-8 md:p-14">
+            <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
+            <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
+            <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
+            <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
+
+            <div className="klantcases-track relative">
+              {/* Verticale rail — vaste geleidelijn */}
+              <div
+                className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/10"
+              />
+              {/* Verticale rail — animeert mee terwijl je scrollt */}
+              <div
+                className="klantcases-rail-fill hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 origin-top"
+                style={{ background: 'linear-gradient(to bottom, transparent, rgba(98,143,105,0.9) 10%, rgba(98,143,105,0.9) 90%, transparent)' }}
+              />
+
+              <div className="space-y-12 md:space-y-16">
+                {/* Croes NV */}
+                <div className="klantcases-row scroll-animate relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+                  <div className="md:text-right md:pr-10 text-center md:text-right">
+                    <span className="text-[11px] uppercase tracking-wider text-accent font-semibold">
+                      {language === 'nl' ? 'Bouw & grondwerken' : 'Construction & earthworks'}
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-serif text-white mt-2 mb-2">Croes NV</h3>
+                    <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                      {language === 'nl'
+                        ? 'Chauffeurs vulden duizenden papieren bonnen per maand in, vaak onvolledig. Nu legt een planningsplatform en chauffeursapp alles automatisch vast.'
+                        : 'Drivers filled in thousands of paper delivery notes a month, often incomplete. Now a planning platform and driver app capture everything automatically.'}
+                    </p>
+                  </div>
+                  <div className="klantcases-dot hidden md:flex absolute left-1/2 top-1/2 w-3 h-3 rounded-full bg-accent border-4 border-[#0a0a1a] -translate-x-1/2 -translate-y-1/2" />
+                  <div className="md:pl-10 flex justify-center md:justify-start">
+                    <div className="w-full max-w-[220px] h-24 rounded-[1.5rem] bg-white/95 border border-white/10 flex items-center justify-center p-6">
+                      <img src={croesLogo} alt="Croes NV" className="max-h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* A&M Group */}
+                <div className="klantcases-row scroll-animate relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+                  <div className="md:pr-10 order-2 md:order-1 flex justify-center md:justify-end">
+                    <div className="w-full max-w-[220px] h-24 rounded-[1.5rem] bg-white/95 border border-white/10 flex items-center justify-center p-6">
+                      <img src={amGroupLogo} alt="A&M Group" className="max-h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                  <div className="klantcases-dot hidden md:flex absolute left-1/2 top-1/2 w-3 h-3 rounded-full bg-accent border-4 border-[#0a0a1a] -translate-x-1/2 -translate-y-1/2" />
+                  <div className="md:pl-10 order-1 md:order-2 text-center md:text-left">
+                    <span className="text-[11px] uppercase tracking-wider text-accent font-semibold">
+                      Automotive
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-serif text-white mt-2 mb-2">A<span className="font-sans">&amp;</span>M Group</h3>
+                    <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                      {language === 'nl' ? 'Binnenkort beschikbaar.' : 'Coming soon.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-12 md:mt-16">
+              <CTAButton to="/projecten" variant="light">
+                {language === 'nl' ? 'Bekijk al onze projecten' : 'View all our projects'}
+              </CTAButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* F2. RESOURCES SECTION */}
+      <section id="resources" className="relative py-24 md:py-32 px-6 md:px-16 lg:px-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            {/* Links op desktop, onderaan op mobiel: roterende resource */}
+            <div className="scroll-animate order-2 lg:order-1">
+              <ResourceCarousel />
+            </div>
+
+            {/* Rechts op desktop, bovenaan op mobiel: titel, uitleg en inschrijven */}
+            <div className="scroll-animate order-1 lg:order-2">
+              <div className="section-label mb-6">{language === 'nl' ? 'BLIJF OP DE HOOGTE' : 'STAY UPDATED'}</div>
+              <h2 className="hero-title text-foreground text-4xl md:text-6xl mb-6">
+                {language === 'nl' ? 'Gratis resources.' : 'Free resources.'}
+              </h2>
+              <p className="section-subtitle text-foreground/60 text-lg md:text-xl mb-8">
+                {language === 'nl'
+                  ? 'Praktische tools, promptgidsen en ideeën. Schrijf je in en ontvang een mailtje zodra er een nieuwe resource verschijnt.'
+                  : 'Practical tools, prompt guides and ideas. Subscribe and get an email the moment a new resource is published.'}
+              </p>
+              <NewsletterSignup variant="inline" hideInvite align="start" />
+
+              <Link to="/resources" className="mt-6 inline-flex items-center text-foreground/70 hover:text-accent text-lg font-medium transition-all duration-300 group/resources">
+                {language === 'nl' ? 'Bekijk alle resources' : 'View all resources'}
+                <ArrowRight size={20} className="inline-block ml-2 group-hover/resources:ml-4 transition-all duration-300" />
+              </Link>
+
+              {/* Quote van Rian */}
+              <div className="mt-10 max-w-md">
+                <p className="text-foreground/50 text-sm leading-relaxed mb-4">
+                  {language === 'nl'
+                    ? '"We willen niet alleen bedrijven vooruit helpen, maar iedereen die wil bijblijven in de AI-revolutie. Praktische tips, inzichten en AI-nieuws waarmee je zelf betere resultaten boekt, in je werk en daarbuiten."'
+                    : '"We don\'t just want to help companies move forward, but everyone who wants to keep up with the AI revolution. Practical tips to get better results yourself, in your work and beyond."'}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 grayscale bg-foreground/5">
+                    <AutoImage basePath="/team/rian" alt="Rian Mathijs" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-foreground font-medium text-sm">Rian Mathijs</p>
+                    <p className="text-foreground/40 text-[11px] uppercase tracking-wider">Co-Founder TriaCore AI</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* G. TEAM SECTION */}
       <section id="team" className="relative pt-16 md:pt-20 pb-20 px-6 md:px-16 bg-white overflow-hidden">
