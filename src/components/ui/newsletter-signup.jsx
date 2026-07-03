@@ -106,8 +106,8 @@ export default function NewsletterSignup({ variant = 'footer', hideInvite = fals
             ? (nl ? `Bedankt, ${displayName}!` : `Thanks, ${displayName}!`)
             : (nl ? 'Bedankt voor je inschrijving!' : 'Thanks for subscribing!'),
         p1: nl
-            ? 'Je krijgt zo meteen een welkomstmail in je inbox.'
-            : "You'll receive a welcome email in your inbox shortly.",
+            ? 'Je krijgt zo meteen een welkomstmail in je inbox. Kijk zeker ook even in je spam, zodat je hem niet mist.'
+            : "You'll receive a welcome email in your inbox shortly. Be sure to check your spam folder too, so you don't miss it.",
         p2: nl
             ? 'En vanaf nu krijg je élke nieuwe resource automatisch in je inbox, zodra we die publiceren.'
             : 'And from now on, you get every new resource automatically in your inbox as soon as we publish it.',
