@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
+import Seo from '../components/ui/seo';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
@@ -36,6 +37,12 @@ export default function CookiePolicy() {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+            <Seo
+                title={language === 'nl' ? 'Cookiebeleid | TriaCore AI' : 'Cookie policy | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Lees welke cookies TriaCore AI gebruikt op deze website en hoe u uw cookievoorkeuren kunt aanpassen.'
+                    : 'Read which cookies TriaCore AI uses on this website and how you can adjust your cookie preferences.'}
+            />
             <Navbar />
 
             <section className="pt-40 pb-24 px-6 flex-grow">

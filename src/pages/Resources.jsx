@@ -8,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
 import { getSortedResources, CATEGORIES, formatDate } from '../data/resources';
 import NewsletterSignup from '../components/ui/newsletter-signup';
+import Seo from '../components/ui/seo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,6 +128,13 @@ export default function Resources() {
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
+
+            <Seo
+                title={language === 'nl' ? 'Resources | TriaCore AI' : 'Resources | TriaCore AI'}
+                description={language === 'nl'
+                    ? "Gratis AI-kennis voor bedrijven: betere prompts schrijven, het juiste model kiezen en AI slim inzetten. Praktisch en in gewone taal."
+                    : "Free AI knowledge for businesses: writing better prompts, choosing the right model and using AI smartly. Practical and in plain language."}
+            />
 
             {/* NOISE OVERLAY */}
             <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">

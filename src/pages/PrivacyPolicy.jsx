@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
+import Seo from '../components/ui/seo';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
@@ -36,6 +37,12 @@ export default function PrivacyPolicy() {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+            <Seo
+                title={language === 'nl' ? 'Privacybeleid | TriaCore AI' : 'Privacy policy | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Lees hoe TriaCore AI omgaat met uw persoonsgegevens: welke gegevens we verzamelen, waarvoor en hoe u ze kunt beheren.'
+                    : 'Read how TriaCore AI handles your personal data: what data we collect, for what purpose and how you can manage it.'}
+            />
             <Navbar />
 
             <section className="pt-40 pb-24 px-6 flex-grow">

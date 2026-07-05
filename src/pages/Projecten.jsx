@@ -8,6 +8,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
 import { projecten } from '../data/projecten';
+import Seo from '../components/ui/seo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -123,6 +124,13 @@ export default function Projecten() {
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
+
+            <Seo
+                title={language === 'nl' ? 'Projecten | TriaCore AI' : 'Projects | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Ontdek hoe bedrijven als Croes NV en A&M Group hun administratie en processen optimaliseerden met TriaCore AI. Concrete klantcases met meetbaar resultaat.'
+                    : 'Discover how companies like Croes NV and A&M Group optimized their administration and processes with TriaCore AI. Concrete client cases with measurable results.'}
+            />
 
             {/* NOISE OVERLAY */}
             <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">

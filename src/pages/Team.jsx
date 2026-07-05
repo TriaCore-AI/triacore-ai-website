@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
 import { AutoImage } from '../components/ui/auto-image';
+import Seo from '../components/ui/seo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -105,6 +106,13 @@ export default function Team() {
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
+
+            <Seo
+                title={language === 'nl' ? 'Ons team | TriaCore AI' : 'Our team | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Maak kennis met het team achter TriaCore AI. Rian bewaakt de samenwerking van begin tot eind, Lucas vertaalt uw processen naar schaalbare software en AI-oplossingen.'
+                    : 'Meet the team behind TriaCore AI. Rian oversees the collaboration from start to finish, Lucas translates your processes into scalable software and AI solutions.'}
+            />
 
             {/* NOISE OVERLAY */}
             <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">

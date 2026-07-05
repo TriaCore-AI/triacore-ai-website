@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowDown } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import CTAButton from '../components/ui/cta-button';
+import Seo from '../components/ui/seo';
 import { useLanguage } from '../context/LanguageContext';
 import { getResourceBySlug, CATEGORIES, formatDate } from '../data/resources';
 import { ContentBlock } from '../components/content/ContentBlocks';
@@ -36,6 +37,12 @@ export default function ResourceDetail() {
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
+
+            <Seo
+                title={`${resource.title[language]} | TriaCore AI`}
+                description={resource.description[language]}
+                image={resource.thumbnail ? `https://triacore.be${resource.thumbnail}` : undefined}
+            />
 
             {/* NOISE OVERLAY */}
             <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">

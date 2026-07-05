@@ -5,6 +5,7 @@ import Footer from '../components/ui/footer';
 import { useLanguage } from '../context/LanguageContext';
 import CTAButton from '../components/ui/cta-button';
 import { AutoImage } from '../components/ui/auto-image';
+import Seo from '../components/ui/seo';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -1007,8 +1008,14 @@ const CustomOplossingen = () => {
 
     return (
         <div ref={containerRef} className="relative w-full min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
+            <Seo
+                title={language === 'nl' ? 'Custom oplossingen | TriaCore AI' : 'Custom solutions | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Concrete tijdswinst, gebouwd rond uw eigen processen. TriaCore AI levert maatwerksoftware met AI-integratie, automatisering, mobiele apps en webplatformen.'
+                    : 'Concrete time savings, built around your own processes. TriaCore AI delivers custom software with AI integration, automation, mobile apps and web platforms.'}
+            />
             <Navbar />
-            
+
             <MobileAppModal />
             <WebplatformModal />
             <AutomationModal />

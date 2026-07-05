@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import ContactForm from '../components/ui/contact-form';
+import Seo from '../components/ui/seo';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
@@ -60,6 +61,12 @@ export default function Contact() {
                 <rect width="100%" height="100%" filter="url(#noiseFilter)" />
             </svg>
 
+            <Seo
+                title={language === 'nl' ? 'Contact | TriaCore AI' : 'Contact | TriaCore AI'}
+                description={language === 'nl'
+                    ? 'Plan een vrijblijvend gesprek. Vertel waar uw processen vastlopen en we bekijken samen wat maatwerksoftware en AI voor uw bedrijf kunnen betekenen.'
+                    : 'Book a no obligation call. Tell us where your processes get stuck and we\'ll explore together what custom software and AI can do for your business.'}
+            />
             <Navbar />
 
             {/* GLOBAL GRID BACKGROUND (architectural style like homepage) */}

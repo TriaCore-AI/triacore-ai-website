@@ -16,6 +16,7 @@ import croesLogo from './assets/partners/Croes NV.png';
 import amGroupLogo from './assets/partners/A&M Group.webp';
 import ResourceCarousel from './components/ui/resource-carousel';
 import NewsletterSignup from './components/ui/newsletter-signup';
+import Seo from './components/ui/seo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,9 +96,6 @@ function App() {
   const heroFinalImg = useAutoImage('/media/ai_agents_hero_final', ['webp', 'png', 'jpg', 'jpeg']);
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    document.title = language === 'nl' ? 'TriaCore AI — Digitale Fundamenten' : 'TriaCore AI — Digital Foundations';
-  }, [language]);
 
   // Scroll lock while typing or when modal is open
   useEffect(() => {
@@ -832,6 +830,15 @@ function App() {
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background">
+
+      <Seo
+        title={language === 'nl'
+          ? 'TriaCore AI | De AI-partner waar groeiende bedrijven op bouwen'
+          : 'TriaCore AI | The AI partner growing companies build on'}
+        description={language === 'nl'
+          ? "TriaCore AI bouwt maatwerksoftware rond uw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's."
+          : "TriaCore AI builds custom software around your business processes and integrates AI where it truly pays off. Automation, mobile apps and web platforms for SMEs."}
+      />
 
       {/* GLOBAL NOISE OVERLAY */}
       <svg className="noise-overlay" xmlns="http://www.w3.org/2000/svg">
