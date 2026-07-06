@@ -155,16 +155,83 @@ export const projecten = [
         slug: 'am-group',
         client: 'A&M Group',
         logo: amGroupLogo,
-        status: 'soon',
+        status: 'live',
         sector: { nl: 'Automotive', en: 'Automotive' },
         title: {
             nl: 'Een schaalbaar fundament voor A&M Group',
             en: 'A scalable foundation for A&M Group',
         },
         description: {
-            nl: 'Een groeiend team en meer volume vroegen om een fundament dat niet afremt. Dat fundament bouwden we samen.',
-            en: 'A growing team and more volume called for a foundation that would not slow them down. We built that foundation together.',
+            nl: 'Meer volume vroeg om een fundament dat mee kan groeien. Dat fundament bouwden we samen.',
+            en: 'More volume called for a foundation that could grow with it. We built that foundation together.',
         },
+        blocks: [
+            {
+                type: 'heading',
+                nl: 'Uitgangspunt',
+                en: 'Starting point',
+            },
+            {
+                type: 'paragraph',
+                nl: 'A&M Group groeit hard in de automotive sector: meer volume, meer transporten, meer processen die op elkaar afgestemd moeten blijven. AI kon daar duidelijk iets betekenen, maar A&M Group wilde niet zomaar beginnen bouwen zonder eerst goed te weten waar AI concreet iets zou opleveren.',
+                en: 'A&M Group is growing fast in the automotive sector: more volume, more transports, more processes that need to stay aligned. AI could clearly play a role in that, but A&M Group did not want to start building without first knowing exactly where AI would actually pay off.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Probleem',
+                en: 'Problem',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Veel bedrijven starten met AI op basis van een aanname: een tool die ergens anders goed werkte, een idee dat aansprak, een trend die voorbijkwam. Zonder zicht op de eigen processen is het risico groot dat je bouwt op veronderstellingen in plaats van op wat er echt nodig is. Dat risico wilde A&M Group vermijden voor er één lijn code werd geschreven.',
+                en: 'Many companies start with AI based on an assumption: a tool that worked well elsewhere, an idea that sounded appealing, a trend that passed by. Without insight into your own processes, there is a real risk of building on assumptions instead of on what is actually needed. A&M Group wanted to avoid that risk before a single line of code was written.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Aanpak',
+                en: 'Approach',
+            },
+            {
+                type: 'paragraph',
+                nl: 'TriaCore voerde daarom eerst een concrete procesanalyse uit. We gingen samenzitten met het team van A&M Group, bekeken hoe ze dagelijks werken, en brachten in kaart waar de knelpunten zaten en waar AI effectief opportuniteiten bood.',
+                en: 'TriaCore therefore started with a concrete process analysis. We sat down with the A&M Group team, looked at how they work day to day, and mapped out where the bottlenecks were and where AI genuinely offered opportunities.',
+            },
+            {
+                type: 'cards',
+                items: [
+                    {
+                        icon: 'Cog',
+                        label: { nl: 'Analyse', en: 'Analysis' },
+                        nl: 'Samen met het team keken we naar de bestaande processen en waar die vastlopen of tijd kosten.',
+                        en: 'Together with the team we looked at the existing processes and where they stall or cost time.',
+                    },
+                    {
+                        icon: 'Layers',
+                        label: { nl: 'Roadmap', en: 'Roadmap' },
+                        nl: 'Op basis daarvan werkten we een concrete roadmap uit: wat we gaan bouwen, in welke volgorde, en waarom.',
+                        en: 'Based on that, we worked out a concrete roadmap: what to build, in what order, and why.',
+                    },
+                ],
+            },
+            {
+                type: 'paragraph',
+                nl: 'Zo bouwen we niet op aannames, maar op wat er echt speelt bij A&M Group. Dat is de basis voor oplossingen die renderen en die op lange termijn blijven werken.',
+                en: 'This way we build on what is actually happening at A&M Group, not on assumptions. That is the basis for solutions that pay off and keep working in the long run.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Resultaat',
+                en: 'Result',
+            },
+            {
+                type: 'paragraph',
+                nl: 'De analyse leverde een duidelijke roadmap op: concrete stappen, in de juiste volgorde, gebaseerd op wat het meeste oplevert voor A&M Group. Op basis daarvan zijn we intussen gestart met de bouw van de eerste oplossingen.',
+                en: 'The analysis resulted in a clear roadmap: concrete steps, in the right order, based on what delivers the most value for A&M Group. Building on that, we have since started building the first solutions.',
+            },
+        ],
     },
 ];
 
