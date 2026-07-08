@@ -25,7 +25,7 @@ async function confirm(question) {
 
 async function main() {
     const slugArg = process.argv[2];
-    const { resources, CATEGORIES } = await loadResources();
+    const { resources, CATEGORIES, getReadingTime } = await loadResources();
 
     if (!resources.length) {
         console.error('Geen resources gevonden in', RESOURCES_FILE);
@@ -70,6 +70,8 @@ async function main() {
         thumbnail: resource.thumbnail,
         slug: resource.slug,
         categoryLabel,
+        readingTime: getReadingTime ? getReadingTime(resource, 'nl') : undefined,
+        intro: resource.emailIntro?.nl,
     });
 
     const broadcastName = `Resource: ${resource.slug}`;

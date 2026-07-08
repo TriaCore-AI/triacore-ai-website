@@ -13,7 +13,7 @@ import { loadResources } from './load-resources.mjs';
 const dataUri = (path, mime) =>
     existsSync(path) ? `data:${mime};base64,${readFileSync(path).toString('base64')}` : '';
 
-const { resources, CATEGORIES } = await loadResources();
+const { resources, CATEGORIES, getReadingTime } = await loadResources();
 const r = [...resources].sort((a, b) => (a.date < b.date ? 1 : -1))[0];
 
 const welcome = welcomeEmail('nl', { firstName: 'Nico', unsubscribeUrl: `${SITE_URL}/uitschrijven-voorbeeld` }).html;
@@ -24,6 +24,8 @@ const broadcast = r
           thumbnail: r.thumbnail,
           slug: r.slug,
           categoryLabel: CATEGORIES[r.category]?.nl,
+          readingTime: getReadingTime ? getReadingTime(r, 'nl') : undefined,
+          intro: r.emailIntro?.nl,
       }).html
     : '<p style="color:#fff;text-align:center;">Geen resource gevonden om te tonen.</p>';
 

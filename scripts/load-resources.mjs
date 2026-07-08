@@ -14,5 +14,5 @@ export async function loadResources(file = 'src/data/resources.jsx') {
     });
     const code = result.outputFiles[0].text;
     const mod = await import('data:text/javascript;base64,' + Buffer.from(code).toString('base64'));
-    return { resources: mod.resources || [], CATEGORIES: mod.CATEGORIES || {} };
+    return { resources: mod.resources || [], CATEGORIES: mod.CATEGORIES || {}, getReadingTime: mod.getReadingTime };
 }

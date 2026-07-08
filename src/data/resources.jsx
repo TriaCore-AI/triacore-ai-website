@@ -64,6 +64,11 @@ export const resources = [
             nl: 'Wie tegen een AI praat, geeft vanzelf meer context dan wie typt. Waarom dat helpt, waarom niet elke AI het Nederlands even goed verstaat, en welke tools het verschil maken.',
             en: 'Talking to an AI gives it more context than typing does. Why that helps, why not every AI understands Dutch equally well, and which tools make the difference.',
         },
+        // Optionele pakkende openingszin, enkel voor de nieuwsbrief-mail (niet op de site).
+        emailIntro: {
+            nl: 'Tot drie keer sneller werken met AI, en meteen bruikbaardere antwoorden krijgen. Het verschil zit in hoe u uw vraag stelt.',
+            en: 'Work up to three times faster with AI, and get more usable answers right away. The difference is in how you ask.',
+        },
         thumbnail: '/resources/praat-tegen-uw-ai.webp',
         blocks: [
             {
