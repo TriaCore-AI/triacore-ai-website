@@ -6,7 +6,7 @@ import Footer from '../components/ui/footer';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../context/LanguageContext';
-import { getSortedResources, CATEGORIES, formatDate } from '../data/resources';
+import { getSortedResources, CATEGORIES, formatDate, getReadingTime } from '../data/resources';
 import NewsletterSignup from '../components/ui/newsletter-signup';
 import Seo from '../components/ui/seo';
 
@@ -72,6 +72,7 @@ function ResourceCard({ resource, language }) {
                     )}
                     <span className="text-[11px] text-foreground/40 font-light whitespace-nowrap">
                         {formatDate(resource.date, language)}
+                        {` · ${getReadingTime(resource, language)} min`}
                     </span>
                 </div>
 

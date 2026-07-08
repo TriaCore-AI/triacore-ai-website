@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { getSortedResources, CATEGORIES, formatDate } from '../../data/resources';
+import { getSortedResources, CATEGORIES, formatDate, getReadingTime } from '../../data/resources';
 
 const ROTATE_INTERVAL = 6000;
 
@@ -64,6 +64,7 @@ export default function ResourceCarousel() {
                                 )}
                                 <span className="text-[11px] text-foreground/40 font-light whitespace-nowrap">
                                     {formatDate(resource.date, language)}
+                                    {` · ${getReadingTime(resource, language)} min`}
                                 </span>
                             </div>
                             <h3 className="font-serif text-xl md:text-2xl leading-snug tracking-tight text-foreground mb-2">
