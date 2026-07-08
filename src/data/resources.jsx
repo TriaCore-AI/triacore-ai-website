@@ -552,3 +552,29 @@ export function formatDate(dateStr, language) {
         year: 'numeric',
     });
 }
+
+// Verzamelt recursief alle leesbare tekst voor één taal uit een blok-waarde.
+// Sla technische velden over (url, src, type ...) zodat die de telling niet vervuilen.
+const SKIP_KEYS = new Set(['type', 'url', 'src', 'anchor', 'icon', 'target']);
+function collectText(value, language) {
+    if (value == null) return '';
+    if (typeof value === 'string') return value + ' ';
+    if (Array.isArray(value)) return value.map((v) => collectText(v, language)).join(' ');
+    if (typeof value === 'object') {
+        // Taal-gekoppeld object ({ nl, en }) → neem enkel de actieve taal.
+        if ('nl' in value || 'en' in value) return collectText(value[language], language);
+        return Object.entries(value)
+            .filter(([k]) => !SKIP_KEYS.has(k))
+            .map(([, v]) => collectText(v, language))
+            .join(' ');
+    }
+    return '';
+}
+
+// Schat de leestijd in minuten op basis van ~200 woorden per minuut.
+// Minimaal 1 minuut. Rekent enkel de tekst van de actieve taal.
+export function getReadingTime(resource, language) {
+    const text = resource.blocks.map((b) => collectText(b, language)).join(' ');
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 200));
+}

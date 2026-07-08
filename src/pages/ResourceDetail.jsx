@@ -6,7 +6,7 @@ import Footer from '../components/ui/footer';
 import CTAButton from '../components/ui/cta-button';
 import Seo from '../components/ui/seo';
 import { useLanguage } from '../context/LanguageContext';
-import { getResourceBySlug, CATEGORIES, formatDate } from '../data/resources';
+import { getResourceBySlug, CATEGORIES, formatDate, getReadingTime } from '../data/resources';
 import { ContentBlock } from '../components/content/ContentBlocks';
 import gsap from 'gsap';
 
@@ -34,6 +34,7 @@ export default function ResourceDetail() {
     }
 
     const category = CATEGORIES[resource.category];
+    const readingTime = getReadingTime(resource, language);
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
@@ -84,6 +85,10 @@ export default function ResourceDetail() {
                         <span className="text-foreground/30">·</span>
                         <span className="text-[12px] text-foreground/40 font-light">
                             {formatDate(resource.date, language)}
+                        </span>
+                        <span className="text-foreground/30">·</span>
+                        <span className="text-[12px] text-foreground/40 font-light">
+                            {language === 'nl' ? `${readingTime} min lezen` : `${readingTime} min read`}
                         </span>
                     </div>
 
