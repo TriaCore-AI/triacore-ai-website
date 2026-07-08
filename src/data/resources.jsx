@@ -31,6 +31,7 @@
 //   { type: 'cards',      items: [{ label?:{nl,en}, nl, en }] }     — rij van kaarten (vakken)
 //   { type: 'steps',      items: [{ title:{nl,en}, nl, en }] }      — genummerde stappen
 //   { type: 'table',      nl:{head:[],rows:[[]]}, en:{head:[],rows:[[]]} } — tabel
+//   { type: 'links',      items: [{ label:{nl,en}, url }] }        — klikbare bronnenlijst (opent in nieuw tabblad)
 //   { type: 'divider' }                                            — dunne scheidingslijn (einde sectie)
 //
 // Optioneel op de resource zelf:
@@ -51,6 +52,222 @@ export const CATEGORIES = {
 };
 
 export const resources = [
+    {
+        slug: 'praat-tegen-uw-ai',
+        category: 'prompting',
+        date: '2026-07-08',
+        title: {
+            nl: 'De snelste weg naar een beter antwoord van uw AI: praten',
+            en: 'The fastest way to a better AI answer: talking',
+        },
+        description: {
+            nl: 'Wie tegen een AI praat, geeft vanzelf meer context dan wie typt. Waarom dat helpt, waarom niet elke AI het Nederlands even goed verstaat, en welke tools het verschil maken.',
+            en: 'Talking to an AI gives it more context than typing does. Why that helps, why not every AI understands Dutch equally well, and which tools make the difference.',
+        },
+        thumbnail: '/resources/praat-tegen-uw-ai.webp',
+        blocks: [
+            {
+                type: 'heading',
+                nl: 'Het begint bij de vraag',
+                en: 'It starts with the question',
+            },
+            {
+                type: 'paragraph',
+                nl: 'U typt een vraag aan een AI, kort en snel, en krijgt een antwoord dat net niet raak is. Niet omdat het model tekortschiet, maar omdat het te weinig had om mee te werken. Spreek diezelfde vraag in plaats van hem te typen, en u vertelt er vanzelf meer bij, zonder dat het u enige extra moeite kost.',
+                en: 'You type a question to an AI, short and quick, and get an answer that just misses the mark. Not because the model falls short, but because it had too little to work with. Speak that same question instead of typing it, and you naturally tell it more, without any extra effort on your part.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Context is waar het om draait',
+                en: 'Context is what matters',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Een AI geeft een beter antwoord met meer van de juiste context, niet noodzakelijk met meer tekst. Onderzoek van IBM Research en het Rensselaer Polytechnic Institute naar in context learning toont dat een model met de juiste, relevante informatie beter zijn kennis kan inzetten in plaats van te gokken. Zonder die context vult het model de gaten zelf in, en dat gaat vaker mis dan u zou denken.',
+                en: 'An AI gives a better answer with more of the right context, not necessarily with more text. Research from IBM Research and the Rensselaer Polytechnic Institute on in context learning shows that a model with the right, relevant information can draw on its knowledge better instead of guessing. Without that context, the model fills the gaps itself, and that goes wrong more often than you would think.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Meer is daarbij niet automatisch beter. Onderzoekers van Stanford University onderzochten in "Lost in the Middle" hoe taalmodellen omgaan met lange input, en stelden vast dat de prestaties net verslechteren als relevante informatie verdrinkt tussen te veel, te rommelige tekst.',
+                en: 'More is not automatically better here. Researchers at Stanford University studied how language models handle long input in "Lost in the Middle", and found that performance actually degrades once relevant information gets buried in too much, too messy text.',
+            },
+            {
+                type: 'quote',
+                nl: 'Het gaat om de juiste context, niet om de meeste.',
+                en: 'It is about the right context, not the most.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Praten geeft u vanzelf meer van die context',
+                en: 'Talking gives you more of that context, without trying',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Hier zit de simpelste winst. Onderzoekers van Stanford University vergeleken spraakinvoer met typen op een smartphone toetsenbord, en maten dat spreken ongeveer drie keer sneller gaat dan typen, met minder fouten. Net omdat het zo weinig moeite kost, voegen mensen bij het spreken zonder erbij stil te staan meer achtergrond, doel en nuance toe dan wanneer ze diezelfde boodschap zouden intypen.',
+                en: 'This is where the simplest win sits. Researchers at Stanford University compared voice input with typing on a smartphone keyboard, and measured that speaking is about three times faster than typing, with fewer errors. Precisely because it costs so little effort, people naturally add more background, goal and nuance when speaking than they would if they typed the same message.',
+            },
+            {
+                type: 'quote',
+                nl: 'Wat u niet hoeft te typen, laat u ook niet weg.',
+                en: 'What you don\'t have to type, you also don\'t leave out.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Het advies is dus eenvoudig: gebruik de spraakfunctie van uw AI, of dicteer uw prompt, in plaats van hem te typen. Het resultaat is een uitgebreidere, natuurlijkere vraag, en dus een scherper antwoord.',
+                en: 'The advice is simple, then: use your AI\'s voice mode, or dictate your prompt, instead of typing it. The result is a fuller, more natural question, and so a sharper answer.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Niet elke AI verstaat u even goed',
+                en: 'Not every AI understands you equally well',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Dat advies werkt alleen als de AI u ook goed verstaat. Daar loopt het niet overal gelijk.',
+                en: 'That advice only works if the AI actually understands you. That is not the case everywhere.',
+            },
+            {
+                type: 'cards',
+                items: [
+                    {
+                        label: { nl: 'ChatGPT', en: 'ChatGPT' },
+                        nl: 'Sterke spraakfunctie, verstaat Nederlands behoorlijk goed, ook met een lichte tongval.',
+                        en: 'Strong voice mode, understands Dutch reasonably well, even with a slight accent.',
+                    },
+                    {
+                        label: { nl: 'Claude', en: 'Claude' },
+                        nl: 'Worstelt nog met gesproken Nederlands. Wij vroegen "verstaat Claude Nederlands" en het ving iets volledig anders op.',
+                        en: 'Still struggles with spoken Dutch. We asked "does Claude understand Dutch" and it picked up something entirely different.',
+                    },
+                    {
+                        label: { nl: 'Losse dicteertool', en: 'Separate dictation tool' },
+                        nl: 'Voor talen of apps waar de ingebouwde spraakfunctie tekortschiet, een betrouwbaar alternatief.',
+                        en: 'A reliable alternative for languages or apps where the built in voice mode falls short.',
+                    },
+                ],
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Onze eigen keuze: Wispr Flow',
+                en: 'Our own choice: Wispr Flow',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Bij TriaCore gebruiken we zelf Wispr Flow. U dicteert, en het zet uw gesproken tekst om in nette, leesbare tekst, in vrijwel elke app waar u typt, ook in ChatGPT, Claude of gewoon uw mail. Zo praat u tegen elke AI, ook de tools waarvan de eigen spraakherkenning het Nederlands nog niet onder de knie heeft.',
+                en: 'At TriaCore we use Wispr Flow ourselves. You dictate, and it turns your spoken words into clean, readable text, in almost any app where you type, including ChatGPT, Claude or just your email. That way you can talk to any AI, even the ones whose own voice recognition has not mastered Dutch yet.',
+            },
+            {
+                type: 'links',
+                items: [
+                    { label: { nl: 'Ga naar Wispr Flow', en: 'Go to Wispr Flow' }, url: 'https://wisprflow.ai/' },
+                ],
+            },
+            {
+                type: 'callout',
+                nl: 'Dit is een persoonlijke voorkeur, geen samenwerking. Wij hebben geen partnerschap met Wispr Flow en krijgen er niets voor, geen commissie en geen vergoeding. We noemen het omdat het bij ons werkt, niet omdat het ons iets oplevert.',
+                en: 'This is a personal preference, not a partnership. We have no partnership with Wispr Flow and get nothing for mentioning it, no commission and no compensation. We mention it because it works for us, not because it benefits us.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Twee alternatieven om te vergelijken',
+                en: 'Two alternatives to compare',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Er bestaan meerdere gelijkaardige tools, van gevestigde bedrijven met echte gebruikers en reviews. Twee die het bekijken waard zijn, naast Wispr Flow zelf.',
+                en: 'Several similar tools exist, from established companies with real users and reviews. Two worth a look, alongside Wispr Flow itself.',
+            },
+            {
+                type: 'table',
+                nl: {
+                    head: ['', 'Superwhisper', 'Willow Voice'],
+                    rows: [
+                        ['Achter de tool', 'SuperUltra Inc. uit Toronto, opgericht door Neil Chudleigh.', 'Amerikaans bedrijf van twee oud Stanford studenten, gesteund door Y Combinator (4,2 miljoen dollar).'],
+                        ['Vertrouwen', '4,4 op 5 op de Mac App Store, 4,9 op 5 op de App Store, duizenden reviews.', '4,6 op 5 op de App Store. Klanten zoals Uber en Heidi Health.'],
+                        ['Gratis versie', 'Ja, lokale modellen zonder limiet.', 'Ja, tot 2000 woorden per week.'],
+                        ['Betaald', 'Vanaf 8,49 dollar per maand, of 249,99 dollar levenslang.', 'Vanaf 15 dollar per maand.'],
+                        ['Werkt op', 'Mac, Windows, iOS.', 'Mac, Windows, iPhone.'],
+                    ],
+                },
+                en: {
+                    head: ['', 'Superwhisper', 'Willow Voice'],
+                    rows: [
+                        ['Behind the tool', 'SuperUltra Inc. from Toronto, founded by Neil Chudleigh.', 'US company by two former Stanford students, backed by Y Combinator ($4.2 million).'],
+                        ['Trust', '4.4 out of 5 on the Mac App Store, 4.9 out of 5 on the App Store, thousands of reviews.', '4.6 out of 5 on the App Store. Customers like Uber and Heidi Health.'],
+                        ['Free version', 'Yes, local models with no limit.', 'Yes, up to 2,000 words per week.'],
+                        ['Paid', 'From $8.49 per month, or $249.99 lifetime.', 'From $15 per month.'],
+                        ['Works on', 'Mac, Windows, iOS.', 'Mac, Windows, iPhone.'],
+                    ],
+                },
+            },
+            {
+                type: 'links',
+                items: [
+                    { label: { nl: 'Superwhisper bekijken', en: 'Visit Superwhisper' }, url: 'https://superwhisper.com/' },
+                    { label: { nl: 'Willow Voice bekijken', en: 'Visit Willow Voice' }, url: 'https://willowvoice.com/' },
+                ],
+            },
+            {
+                type: 'paragraph',
+                nl: 'Wispr Flow zelf kost 15 dollar per maand, of 12 dollar per maand bij jaarlijkse betaling. Vergelijk gerust zelf welke tool bij uw manier van werken past, de functies en talen die ze ondersteunen verschillen per tool en veranderen regelmatig.',
+                en: 'Wispr Flow itself costs $15 per month, or $12 per month billed annually. Feel free to compare which tool fits how you work, the features and languages each one supports differ and change regularly.',
+            },
+            {
+                type: 'callout',
+                nl: 'Probeer het zelf. Stel een vraag die u normaal zou typen, maar spreek ze in plaats daarvan hardop uit. Kijk hoeveel achtergrond en detail u er ongemerkt aan toevoegt, en of het antwoord daardoor beter aansluit.',
+                en: 'Try it yourself. Ask a question you would normally type, but say it out loud instead. Notice how much background and detail you add without trying, and whether the answer fits better as a result.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Bronnen',
+                en: 'Sources',
+            },
+            {
+                type: 'links',
+                items: [
+                    {
+                        label: {
+                            nl: 'Stanford HCI Group, "Speech Is 3x Faster than Typing" (Ruan e.a., 2016)',
+                            en: 'Stanford HCI Group, "Speech Is 3x Faster than Typing" (Ruan et al., 2016)',
+                        },
+                        url: 'https://hci.stanford.edu/research/speech/paper/speech_paper.pdf',
+                    },
+                    {
+                        label: {
+                            nl: 'Stanford University, "Lost in the Middle: How Language Models Use Long Contexts" (Liu e.a., 2023/2024)',
+                            en: 'Stanford University, "Lost in the Middle: How Language Models Use Long Contexts" (Liu et al., 2023/2024)',
+                        },
+                        url: 'https://arxiv.org/abs/2307.03172',
+                    },
+                    {
+                        label: {
+                            nl: 'IBM Research, over in context learning',
+                            en: 'IBM Research, on in context learning',
+                        },
+                        url: 'https://research.ibm.com/blog/demystifying-in-context-learning-in-large-language-model',
+                    },
+                    {
+                        label: { nl: 'Wispr Flow', en: 'Wispr Flow' },
+                        url: 'https://wisprflow.ai/',
+                    },
+                    {
+                        label: { nl: 'Superwhisper', en: 'Superwhisper' },
+                        url: 'https://superwhisper.com/',
+                    },
+                    {
+                        label: { nl: 'Willow Voice', en: 'Willow Voice' },
+                        url: 'https://willowvoice.com/',
+                    },
+                ],
+            },
+        ],
+    },
     {
         slug: 'waarom-ai-te-vaak-ja-zegt',
         category: 'prompting',

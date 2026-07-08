@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, Monitor, Smartphone, Cog, Layers } from 'lucide-react';
+import { Copy, Check, Download, Monitor, Smartphone, Cog, Layers, ArrowUpRight } from 'lucide-react';
 
 // Optionele iconen voor het 'cards' blok (bv. platform vs app). Enkel deze
 // namen zijn beschikbaar; laat item.icon weg voor een kaart zonder icoon.
@@ -225,6 +225,30 @@ export function ContentBlock({ block, language }) {
                 </div>
             );
 
+        case 'links':
+            return (
+                <ul className="my-8 space-y-2">
+                    {block.items.map((item, i) => (
+                        <li key={i}>
+                            <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group inline-flex items-start gap-2 text-foreground/70 hover:text-accent font-light leading-relaxed transition-colors duration-300"
+                            >
+                                <ArrowUpRight
+                                    size={17}
+                                    className="mt-1 shrink-0 text-accent/60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                />
+                                <span className="underline decoration-foreground/15 underline-offset-4 group-hover:decoration-accent/50">
+                                    {item.label[language]}
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            );
+
         case 'quote':
             return (
                 <blockquote className="my-12 border-l-2 border-accent pl-6 md:pl-8">
@@ -307,13 +331,13 @@ export function ContentBlock({ block, language }) {
                                 )}
                                 <div className="divide-y divide-foreground/[0.07]">
                                     {row.slice(1).map((cell, ci) => (
-                                        <div key={ci} className="px-5 py-3 flex items-baseline gap-3">
+                                        <div key={ci} className="px-5 py-3">
                                             {t.head[ci + 1] && (
-                                                <span className="shrink-0 text-[11px] uppercase tracking-[0.1em] font-bold text-foreground/40 w-16">
+                                                <span className="block mb-1 text-[11px] uppercase tracking-[0.1em] font-bold text-foreground/40">
                                                     {t.head[ci + 1]}
                                                 </span>
                                             )}
-                                            <span className="text-foreground/65 font-light leading-relaxed">{cell}</span>
+                                            <span className="block text-foreground/65 font-light leading-relaxed">{cell}</span>
                                         </div>
                                     ))}
                                 </div>
