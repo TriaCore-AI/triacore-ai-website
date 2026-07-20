@@ -189,7 +189,7 @@ export function ContentBlock({ block, language }) {
                 <figure className="my-12">
                     <div className="overflow-hidden rounded-[1.5rem] border border-foreground/10 shadow-xl bg-[#020617]">
                         <img
-                            src={block.src}
+                            src={typeof block.src === 'string' ? block.src : block.src[language]}
                             alt={block.alt ? block.alt[language] : ''}
                             className="w-full h-auto object-cover"
                         />

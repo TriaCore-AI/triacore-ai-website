@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
@@ -53,6 +53,24 @@ function ResourceThumbnail({ resource, language }) {
     );
 }
 
+// Klein rond label, gebruikt voor de categorie- en sorteerfilters.
+function FilterPill({ active, onClick, children }) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            aria-pressed={active}
+            className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300 border ${
+                active
+                    ? 'bg-accent text-white border-accent'
+                    : 'bg-transparent text-foreground/55 border-foreground/15 hover:border-accent/40 hover:text-foreground'
+            }`}
+        >
+            {children}
+        </button>
+    );
+}
+
 function ResourceCard({ resource, language }) {
     const category = CATEGORIES[resource.category];
 
@@ -96,8 +114,20 @@ function ResourceCard({ resource, language }) {
 export default function Resources() {
     const containerRef = useRef(null);
     const { language } = useLanguage();
-    const items = getSortedResources();
+    const [activeCategory, setActiveCategory] = useState('all');
+    const [sortOrder, setSortOrder] = useState('newest'); // 'newest' | 'oldest'
 
+    const allItems = getSortedResources(); // altijd nieuwste eerst
+    // Enkel categorieën tonen die effectief een post hebben, geen lege filters.
+    const usedCategoryKeys = [...new Set(allItems.map((r) => r.category))];
+    const filteredItems = activeCategory === 'all'
+        ? allItems
+        : allItems.filter((r) => r.category === activeCategory);
+    const items = sortOrder === 'newest' ? filteredItems : [...filteredItems].reverse();
+
+    // Titel, subtitel en inschrijfblok animeren één keer bij het laden van de
+    // pagina. Los van de kaarten-animatie, zodat filteren of sorteren ze niet
+    // opnieuw laat "herladen".
     useEffect(() => {
         let ctx = gsap.context(() => {
             gsap.fromTo(
@@ -105,7 +135,16 @@ export default function Resources() {
                 { y: 40, opacity: 0 },
                 { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 0.2 }
             );
+        }, containerRef);
 
+        return () => ctx.revert();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Kaarten animeren bij elke wijziging van de getoonde lijst (taal, filter,
+    // sortering), onafhankelijk van de hero hierboven.
+    useEffect(() => {
+        let ctx = gsap.context(() => {
             gsap.utils.toArray('.resource-card').forEach((card, i) => {
                 gsap.fromTo(
                     card,
@@ -125,7 +164,7 @@ export default function Resources() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, [language]);
+    }, [language, activeCategory, sortOrder]);
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
@@ -175,6 +214,30 @@ export default function Resources() {
                         </p>
                         <div className="hero-stagger">
                             <NewsletterSignup variant="inline" hideInvite size="sm" />
+                        </div>
+
+                        <div className="hero-stagger mt-8 flex flex-wrap items-center justify-center gap-2">
+                            <FilterPill active={activeCategory === 'all'} onClick={() => setActiveCategory('all')}>
+                                {language === 'nl' ? 'Alles' : 'All'}
+                            </FilterPill>
+                            {usedCategoryKeys.map((key) => (
+                                <FilterPill
+                                    key={key}
+                                    active={activeCategory === key}
+                                    onClick={() => setActiveCategory(key)}
+                                >
+                                    {CATEGORIES[key] ? CATEGORIES[key][language] : key}
+                                </FilterPill>
+                            ))}
+
+                            <span className="hidden sm:block mx-1 h-4 w-px bg-foreground/15" aria-hidden="true" />
+
+                            <FilterPill active={sortOrder === 'newest'} onClick={() => setSortOrder('newest')}>
+                                {language === 'nl' ? 'Nieuwste eerst' : 'Newest first'}
+                            </FilterPill>
+                            <FilterPill active={sortOrder === 'oldest'} onClick={() => setSortOrder('oldest')}>
+                                {language === 'nl' ? 'Oudste eerst' : 'Oldest first'}
+                            </FilterPill>
                         </div>
                     </div>
                 </section>

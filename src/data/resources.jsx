@@ -26,6 +26,9 @@
 //   { type: 'callout',    nl, en }                                  — accent-kader (tip)
 //   { type: 'pdf',        url, label?: {nl,en} }                    — download-knop
 //   { type: 'image',      src, alt?: {nl,en}, caption?: {nl,en} }   — afbeelding (rounded, full width)
+//                 src mag één pad zijn (zelfde afbeelding in beide talen), of
+//                 { nl: '...', en: '...' } voor een taalspecifieke afbeelding
+//                 (bv. een grafiek met NL/EN tekst erin).
 //   { type: 'quote',      nl, en, source?: {nl,en} }                — pull-quote (serif, accent-rand)
 //   { type: 'definition', term:{nl,en}, kind?:{nl,en}, nl, en }     — definitie-kaart (woordenboekstijl)
 //   { type: 'cards',      items: [{ label?:{nl,en}, nl, en }] }     — rij van kaarten (vakken)
@@ -46,12 +49,200 @@
 // Algemene categorieën — gebruikt als tag op de post (nog niet navigeerbaar).
 export const CATEGORIES = {
     prompting: { nl: 'Prompting', en: 'Prompting' },
+    tools: { nl: 'Tools en modellen', en: 'Tools and models' },
+    'ai-nieuws': { nl: 'AI nieuws', en: 'AI news' },
+    automatisering: { nl: 'Automatisering', en: 'Automation' },
+    // Onderstaande zijn nog niet in gebruik door een post, maar blijven staan
+    // voor bestaand of toekomstig materiaal.
     modellen: { nl: 'Modellen', en: 'Models' },
     projectinstructies: { nl: 'Projectinstructies', en: 'Project instructions' },
     ideeen: { nl: 'Ideeën', en: 'Ideas' },
 };
 
 export const resources = [
+    {
+        slug: 'helft-vlaanderen-gebruikt-ai',
+        category: 'ai-nieuws',
+        date: '2026-07-17',
+        title: {
+            nl: 'De helft van Vlaanderen gebruikt al AI',
+            en: 'Half of Flanders already uses AI',
+        },
+        description: {
+            nl: 'AI is in twee jaar tijd bij de helft van de Vlamingen beland, sneller dan de smartphone of Netflix ooit. Op de meeste werkvloeren wordt het al gebruikt. De vraag is niet meer of AI binnenkomt, maar of er afspraken over bestaan.',
+            en: 'In just two years AI has reached half of Flanders, faster than the smartphone or Netflix ever did. On most work floors it is already in use. The question is no longer whether AI arrives, but whether anyone has agreed how.',
+        },
+        thumbnail: '/resources/helft-vlaanderen-gebruikt-ai.webp',
+        blocks: [
+            {
+                type: 'heading',
+                nl: 'In twee jaar',
+                en: 'In two years',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Een nieuwe technologie heeft meestal jaren nodig om gewoon te worden. De smartphone deed er in Vlaanderen acht over, Instagram tien. Generatieve AI deed het in twee.',
+                en: 'A new technology usually needs years to become ordinary. In Flanders the smartphone took eight, Instagram ten. Generative AI did it in two.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Die cijfers komen uit een vaste jaarlijkse meting. Ze gaan over de mensen waarmee u elke dag werkt: collega\'s, klanten, leveranciers.',
+                en: 'Those numbers come from a fixed yearly survey. They are about the people you work with every day: colleagues, customers, suppliers.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Wat de meting zegt',
+                en: 'What the survey says',
+            },
+            {
+                type: 'paragraph',
+                nl: 'De imec.digimeter, een jaarlijkse bevraging van hoe Vlaanderen met technologie omgaat, publiceerde in maart 2026 zijn achttiende editie. De sprong in AI-gebruik was de opvallendste bevinding in jaren.',
+                en: 'The imec.digimeter, an annual survey of how Flanders uses technology, published its eighteenth edition in March 2026. The jump in AI use was its most striking finding in years.',
+            },
+            {
+                type: 'list',
+                nl: [
+                    '43 procent van de Vlamingen gebruikt nu regelmatig AI, minstens één keer per maand. In 2023 was dat 18 procent, in 2024 al 28.',
+                    '11 procent gebruikt het dagelijks, bijna een verdrievoudiging op één jaar.',
+                    'Twee op de drie Vlamingen hebben ooit een tool als ChatGPT of Gemini geprobeerd.',
+                    'Bij studenten loopt het actieve gebruik op tot 81 procent.',
+                ],
+                en: [
+                    '43 percent of Flemish people now use AI regularly, at least once a month. In 2023 that was 18 percent, in 2024 already 28.',
+                    '11 percent use it daily, almost a threefold rise in one year.',
+                    'Two in three have at some point tried a tool like ChatGPT or Gemini.',
+                    'Among students, active use runs up to 81 percent.',
+                ],
+            },
+            {
+                type: 'image',
+                src: {
+                    nl: '/resources/helft-vlaanderen-gebruikt-ai-grafiek-nl.webp',
+                    en: '/resources/helft-vlaanderen-gebruikt-ai-grafiek-en.webp',
+                },
+                alt: {
+                    nl: 'Grafiek: groei van regelmatig AI-gebruik bij Vlamingen, 2023 tot 2025',
+                    en: 'Chart: growth of regular AI use among Flemish people, 2023 to 2025',
+                },
+            },
+            {
+                type: 'quote',
+                nl: 'Geen enkele technologie in deze meting bereikte de helft van Vlaanderen ooit zo snel.',
+                en: 'No technology in this survey ever reached half of Flanders this quickly.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Waarom dit een werkvloer aangaat',
+                en: 'Why this concerns a work floor',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Het makkelijke misverstand is dat AI iets is wat een bedrijf op een dag beslist in te voeren. Deze cijfers zeggen iets anders. Op de meeste werkvloeren is AI allang binnen, via de mensen die er werken.',
+                en: 'The easy misunderstanding is that AI is something a company decides to adopt one day. These numbers say otherwise. On most work floors AI arrived long ago, through the people working there.',
+            },
+            {
+                type: 'cards',
+                items: [
+                    {
+                        label: { nl: 'Klantenservice', en: 'Customer service' },
+                        nl: 'Een klantmail wordt in ChatGPT geplakt om een antwoord te laten opstellen.',
+                        en: 'A customer email gets pasted into ChatGPT to draft a reply.',
+                    },
+                    {
+                        label: { nl: 'Boekhouding', en: 'Accounting' },
+                        nl: 'Een clausule wordt door een AI laten uitleggen voor ze verwerkt wordt.',
+                        en: 'A clause gets explained by an AI before it gets processed.',
+                    },
+                    {
+                        label: { nl: 'Verkoop', en: 'Sales' },
+                        nl: 'Een offerte wordt vergeleken met wat een chatbot aanraadt.',
+                        en: 'A quote gets compared with what a chatbot suggests.',
+                    },
+                ],
+            },
+            {
+                type: 'paragraph',
+                nl: 'Dat gebeurt vandaag, of er nu beleid over bestaat of niet.',
+                en: 'That happens today, whether a policy exists for it or not.',
+            },
+            {
+                type: 'quote',
+                nl: 'Verloopt dat gebruik gepland, of gewoon in het wilde weg?',
+                en: 'Does that use follow a plan, or does it happen at random?',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Daar zit meteen een risico. Dezelfde meting toont dat 45 procent van de gebruikers hun werk sneller afrondt en 41 procent kwaliteitswinst ervaart, maar ook dat 37 procent zegt zelf minder na te denken sinds ze AI gebruiken. Snelheid zonder afspraken glijdt makkelijk af naar werk dat niemand nog echt nakijkt.',
+                en: 'That is where a risk sits. The same survey shows 45 percent of users finish their work faster and 41 percent notice a gain in quality, but also that 37 percent say they think less themselves since they started using AI. Speed without agreements slides easily into work that nobody really checks anymore.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Wat u er concreet mee doet',
+                en: 'What to actually do with this',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Er is geen AI-strategie nodig om vat te krijgen op wat er al gebeurt. Drie vragen volstaan om te zien waar u staat, of u nu meebeslist over de tools of ze gewoon gebruikt.',
+                en: 'No AI strategy is needed to get a grip on what is already happening. Three questions are enough to see where you stand, whether you help decide on the tools or simply use them.',
+            },
+            {
+                type: 'list',
+                nl: [
+                    'Wordt er openlijk gepraat over waarvoor AI gebruikt wordt? Zolang niemand het benoemt, gebeurt het ongezien en leert niemand van de ander.',
+                    'Is ergens afgesproken wat wel en niet in een AI-tool mag? Klantgegevens in een gratis chatbot plakken is een concreet lek, en meestal weet niemand dat het gebeurt.',
+                    'Wie kijkt na? Als AI een eerste versie maakt, moet iemand met kennis van zaken de laatste blijven. Ook als dat uzelf is.',
+                ],
+                en: [
+                    'Is there open conversation about what AI gets used for? As long as nobody names it, it happens unseen and nobody learns from anyone else.',
+                    'Has anyone agreed what may and may not go into an AI tool? Pasting customer data into a free chatbot is a concrete leak, and usually nobody knows it is happening.',
+                    'Who checks? If AI writes a first version, someone with real knowledge has to remain the last. Including when that someone is you.',
+                ],
+            },
+            {
+                type: 'paragraph',
+                nl: 'Het gaat om zicht krijgen op wat er al gebeurt, niet om AI te verbieden of zomaar toe te laten.',
+                en: 'This is about getting a view of what is already happening, not about forbidding AI or simply allowing it.',
+            },
+            {
+                type: 'callout',
+                nl: 'Vraag deze week aan drie collega\'s waarvoor zij AI gebruiken. Niet om te controleren, maar om te zien wat er leeft. De antwoorden verrassen bijna altijd, en ze zijn het beste startpunt voor een afspraak die klopt met de praktijk.',
+                en: 'This week, ask three colleagues what they use AI for. Not to check up on them, but to see what is alive. The answers almost always surprise, and they are the best starting point for an agreement that matches practice.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Een kanttekening bij de cijfers: de imec.digimeter meet Vlamingen als burgers, niet bedrijven. Dat 43 procent regelmatig AI gebruikt, zegt dus niet dat 43 procent van de bedrijven het structureel inzet. Het zegt iets dat minstens even belangrijk is: de mensen op en rond de werkvloer zijn er al mee vertrouwd. De vraag is wat daarmee gebeurt.',
+                en: 'One note on the figures: the imec.digimeter measures Flemish people as citizens, not businesses. That 43 percent use AI regularly does not mean 43 percent of businesses deploy it structurally. It says something at least as important: the people on and around the work floor are already familiar with it. The question is what happens with that.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Bronnen',
+                en: 'Sources',
+            },
+            {
+                type: 'links',
+                items: [
+                    {
+                        label: {
+                            nl: 'AI-gebruik maakt ongeziene sprong tot bij helft van de Vlamingen',
+                            en: 'AI use makes an unprecedented leap to half of Flanders',
+                        },
+                        url: 'https://www.imec.be/nl/press/ai-gebruik-maakt-ongeziene-sprong-tot-bij-helft-van-de-vlamingen',
+                    },
+                    {
+                        label: {
+                            nl: 'Hoe de snelle opmars van AI ook in Vlaanderen tot ongemak leidt',
+                            en: 'How the rapid rise of AI also causes unease in Flanders',
+                        },
+                        url: 'https://www.vrt.be/vrtnws/nl/2026/03/06/digimeter-2026-ai-in-vlaanderen-sterke-groei-vraagtekens/',
+                    },
+                ],
+            },
+        ],
+    },
     {
         slug: 'praat-tegen-uw-ai',
         category: 'prompting',
