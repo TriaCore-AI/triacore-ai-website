@@ -148,16 +148,17 @@ export default function Resources() {
             gsap.utils.toArray('.resource-card').forEach((card, i) => {
                 gsap.fromTo(
                     card,
-                    { y: 24, opacity: 0 },
+                    { y: 10, opacity: 0 },
                     {
                         y: 0,
                         opacity: 1,
-                        duration: 0.5,
-                        ease: 'power2.out',
-                        delay: (i % 4) * 0.05,
-                        // Triggert zodra de kaart het scherm binnenkomt (onderaan),
-                        // zodat de inhoud op tijd zichtbaar is en niet "leeg" lijkt.
-                        scrollTrigger: { trigger: card, start: 'top bottom-=40' },
+                        duration: 0.3,
+                        ease: 'power1.out',
+                        delay: (i % 4) * 0.03,
+                        // Triggert ruim voor de kaart de onderkant van het scherm bereikt,
+                        // zodat ze op mobiel al zichtbaar is tegen dat je er voorbij scrolt
+                        // in plaats van pas "in te laden" nadat je al voorbij bent.
+                        scrollTrigger: { trigger: card, start: 'top bottom-=120' },
                     }
                 );
             });
