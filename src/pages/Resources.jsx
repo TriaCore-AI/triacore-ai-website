@@ -230,6 +230,10 @@ export default function Resources() {
                                 </FilterPill>
                             ))}
 
+                            {/* Op mobiel staan de twee filtergroepen dicht op elkaar door de
+                                flex-wrap, dus krijgen ze daar een eigen, volle breedte lijntje.
+                                Vanaf 'sm' is er ruimte genoeg en volstaat de verticale streep. */}
+                            <div className="w-full h-px my-1.5 bg-foreground/10 sm:hidden" aria-hidden="true" />
                             <span className="hidden sm:block mx-1 h-4 w-px bg-foreground/15" aria-hidden="true" />
 
                             <FilterPill active={sortOrder === 'newest'} onClick={() => setSortOrder('newest')}>
