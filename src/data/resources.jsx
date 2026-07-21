@@ -69,8 +69,8 @@ export const resources = [
             en: 'Half of Flanders already uses AI',
         },
         description: {
-            nl: 'AI is in twee jaar tijd bij de helft van de Vlamingen beland, sneller dan de smartphone of Netflix ooit. Op de meeste werkvloeren wordt het al gebruikt. De vraag is niet meer of AI binnenkomt, maar of er afspraken over bestaan.',
-            en: 'In just two years AI has reached half of Flanders, faster than the smartphone or Netflix ever did. On most work floors it is already in use. The question is no longer whether AI arrives, but whether anyone has agreed how.',
+            nl: 'AI is in twee jaar tijd bij de helft van de Vlamingen beland, sneller dan de smartphone of Netflix. Op de meeste werkvloeren wordt het al gebruikt. De vraag is niet meer of AI binnenkomt, maar of er afspraken over bestaan.',
+            en: 'In just two years AI has reached half of Flanders, faster than the smartphone or Netflix. On most work floors it is already in use. The question is no longer whether AI arrives, but whether anyone has agreed how.',
         },
         thumbnail: '/resources/helft-vlaanderen-gebruikt-ai.webp',
         blocks: [
