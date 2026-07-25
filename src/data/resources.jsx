@@ -65,8 +65,8 @@ export const resources = [
         category: 'ai-nieuws',
         date: '2026-07-17',
         title: {
-            nl: 'De helft van Vlaanderen gebruikt al AI',
-            en: 'Half of Flanders already uses AI',
+            nl: 'Sneller dan de smartphone: zo snel raakte AI ingeburgerd',
+            en: 'Faster than the smartphone: how quickly AI caught on',
         },
         description: {
             nl: 'AI is in twee jaar tijd bij de helft van de Vlamingen beland, sneller dan de smartphone of Netflix. Op de meeste werkvloeren wordt het al gebruikt. De vraag is niet meer of AI binnenkomt, maar of er afspraken over bestaan.',
