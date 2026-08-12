@@ -869,6 +869,18 @@ You are an experienced [(e.g. financial advisor, marketer, lawyer)] with deep kn
                 nl: 'Toch blijven de duurste Amerikaanse modellen de norm voor het zwaarste werk. Diezelfde data toont dat Anthropic 61 procent van alle uitgaven binnenhaalt met maar 32 procent van de tokens, en meer dan 72 procent van het budget bij de meest kritieke toepassingen. Voor alledaagse taken wint de prijs. Voor het werk waar een fout echt pijn doet, kiezen bedrijven nog overwegend Amerikaans.',
                 en: 'Still, the most expensive American models remain the standard for the heaviest work. That same data shows Anthropic capturing 61 percent of all spend on just 32 percent of tokens, and more than 72 percent of the budget in the most critical use cases. For everyday tasks, price wins. For work where a mistake really hurts, businesses still lean American.',
             },
+            {
+                type: 'image',
+                src: '/resources/chinese-ai-modellen-vergelijking.webp',
+                alt: {
+                    nl: 'Amerikaanse en Chinese AI labs naast elkaar: OpenAI, Anthropic en Google tegenover DeepSeek, Z.ai en Moonshot AI',
+                    en: 'American and Chinese AI labs side by side: OpenAI, Anthropic and Google versus DeepSeek, Z.ai and Moonshot AI',
+                },
+                caption: {
+                    nl: 'De grootste Amerikaanse en Chinese AI labs naast elkaar.',
+                    en: 'The largest American and Chinese AI labs side by side.',
+                },
+            },
             { type: 'divider' },
             {
                 type: 'heading',
