@@ -25,6 +25,8 @@
 //   { type: 'prompt',     label?: {nl,en}, nl, en }                 — kopieerbaar blok (zwarte box)
 //   { type: 'callout',    nl, en }                                  — accent-kader (tip)
 //   { type: 'pdf',        url, label?: {nl,en} }                    — download-knop
+//                 url mag één pad zijn (zelfde bestand in beide talen), of
+//                 { nl: '...', en: '...' } voor een taalspecifiek bestand
 //   { type: 'image',      src, alt?: {nl,en}, caption?: {nl,en} }   — afbeelding (rounded, full width)
 //                 src mag één pad zijn (zelfde afbeelding in beide talen), of
 //                 { nl: '...', en: '...' } voor een taalspecifieke afbeelding
@@ -39,8 +41,8 @@
 //
 // Optioneel op de resource zelf:
 //   headerCta — { target, nl, en } — CTA-knop in de header die naar een anker
-//               scrolt. Geef het doelblok (bv. een 'prompt') een 'anchor' id
-//               dat overeenkomt met target.
+//               scrolt. Geef het doelblok (een 'prompt' of 'heading') een
+//               'anchor' id dat overeenkomt met target.
 //
 // SECTIE-CONVENTIE: elke sectie start met een 'heading' en eindigt met een
 // 'divider'. De laatste sectie heeft geen divider (de footer sluit af).
@@ -723,6 +725,262 @@ You are an experienced [(e.g. financial advisor, marketer, lawyer)] with deep kn
                 src: '/resources/instructie-claude-2.png',
                 alt: { nl: 'Claude, stap 2', en: 'Claude, step 2' },
                 caption: { nl: 'Stap 2', en: 'Step 2' },
+            },
+        ],
+    },
+    {
+        slug: 'chinese-ai-modellen',
+        category: 'ai-nieuws',
+        date: '2026-08-11',
+        title: {
+            nl: 'Honderden miljarden: de AI strijd tussen China en Amerika',
+            en: 'Hundreds of billions: the AI battle between China and America',
+        },
+        description: {
+            nl: 'Amerika en China investeren samen meer dan 1000 miljard dollar in AI, een strijd die nu al de rekening verandert voor een groeiend bedrijf. Wat er op het spel staat, wat het betekent voor de kosten, waar de risico\'s zitten, en hoe u er verstandig mee omgaat.',
+            en: 'The United States and China are together investing more than $1 trillion in AI, a battle that is already changing the bill for a growing business. What is at stake, what it means for costs, where the risks sit, and how to handle it wisely.',
+        },
+        thumbnail: '/resources/chinese-ai-modellen.webp',
+        blocks: [
+            {
+                type: 'paragraph',
+                nl: 'Amerika en China investeren dit jaar samen meer dan 1000 miljard dollar in AI. Beide grootmachten willen die strijd winnen, met eigen AI labs, eigen chips, en eigen regels over data en export. Wat daarbij minder verteld wordt: die strijd speelt zich niet enkel af tussen Washington en Peking. Een groeiend bedrijf dat vandaag een AI tool kiest, voelt de gevolgen daarvan nu al terug, in de rekening en in wat er technisch mogelijk is.',
+                en: 'The United States and China are together investing more than $1 trillion in AI this year. Both superpowers want to win that race, with their own AI labs, their own chips, and their own rules on data and exports. What gets left out of that story: the race does not stay confined to Washington and Beijing. A growing business choosing an AI tool today already feels the effects, in the bill and in what is technically possible.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Twee grootmachten, één race',
+                en: 'Two superpowers, one race',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Dit gaat verder dan modellen kiezen. De Verenigde Staten en China voeren allebei een nationale strategie rond AI, met astronomische bedragen erachter.',
+                en: 'This goes further than choosing a model. The United States and China are both running a national strategy around AI, with astronomical sums behind it.',
+            },
+            {
+                type: 'table',
+                nl: {
+                    head: ['', 'Verenigde Staten', 'China'],
+                    rows: [
+                        ['Investering in 2026', 'Ongeveer 805 miljard dollar, door techbedrijven zelf, zowat 2% van het bbp', 'Ongeveer 295 miljard dollar (2000 miljard yuan) over vijf jaar, een staatsplan'],
+                        ['Aanpak', 'Marktgedreven: techbedrijven investeren op eigen initiatief', 'Staatsgestuurd: centraal gepland en gefinancierd'],
+                        ['Doel', 'Wereldwijd marktleiderschap behouden', 'Wereldleider worden tegen 2030'],
+                        ['Chipstrategie', 'Eigen chips (Nvidia, AMD), wereldwijd verkocht', 'Zo veel mogelijk eigen chips (Huawei), Nvidia en AMD geweerd'],
+                    ],
+                },
+                en: {
+                    head: ['', 'United States', 'China'],
+                    rows: [
+                        ['2026 investment', 'Roughly $805 billion, from tech companies themselves, about 2% of GDP', 'Roughly $295 billion (2 trillion yuan) over five years, a state plan'],
+                        ['Approach', 'Market driven: tech companies invest on their own initiative', 'State directed: centrally planned and funded'],
+                        ['Goal', 'Keep global market leadership', 'Become world leader by 2030'],
+                        ['Chip strategy', 'Own chips (Nvidia, AMD), sold worldwide', 'As many domestic chips as possible (Huawei), Nvidia and AMD locked out'],
+                    ],
+                },
+            },
+            {
+                type: 'paragraph',
+                nl: 'Voor beide landen is dit geen bijzaak. AI geldt als een technologie die de economie van de komende decennia mee bepaalt, en geen van beide grootmachten wil daar tweede in eindigen.',
+                en: 'For both countries, this is not a side project. AI counts as a technology that will help define the economy of the coming decades, and neither superpower wants to finish second.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Waarom Chinese modellen plots zo efficiënt werden',
+                en: 'Why Chinese models suddenly became so efficient',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Die rivaliteit verklaart mee waarom Chinese modellen ineens zo goedkoop en efficiënt werden. De Verenigde Staten beperken al enkele jaren de export van de krachtigste AI chips naar China. Twee redenen liggen daaraan ten grondslag: de vrees dat die chips het Chinese leger sterker maken, en de wil om de eigen voorsprong in AI niet te laten inhalen. "No way are we going to let them catch up", zei toenmalig Amerikaans handelsminister Gina Raimondo het in 2023 ronduit. Chinese AI labs moesten daardoor vaak werken met minder krachtige hardware dan hun Amerikaanse concurrenten.',
+                en: 'That rivalry partly explains why Chinese models suddenly became so cheap and efficient. The United States has restricted exports of the most powerful AI chips to China for several years. Two reasons underpin that: concern the chips would strengthen China\'s military, and the wish to keep China from catching up on AI altogether. "No way are we going to let them catch up," then US Commerce Secretary Gina Raimondo put it bluntly in 2023. Chinese AI labs often had to work with less powerful hardware than their American competitors as a result.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Dat leidde in januari 2025 tot een opvallend moment: DeepSeek bracht een model uit dat qua prestaties in de buurt kwam van de Amerikaanse top, maar naar verluidt tegen een fractie van de gebruikelijke trainingskost, door slimmer om te springen met minder krachtige chips.',
+                en: 'That led to a notable moment in January 2025: DeepSeek released a model that came close to American frontier performance, reportedly at a fraction of the usual training cost, by working more cleverly with less powerful chips.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Verklaart dat volledig waarom Chinese modellen nu zo efficiënt zijn? Daarover verschillen onderzoekers van mening. Sommigen wijzen erop dat modellen sowieso efficiënter worden na verloop van tijd, ook bij Amerikaanse labs, los van chipbeperkingen. Wat wel duidelijk is: Chinese labs hadden minder rekenkracht ter beschikking, en moesten die optimaal benutten. Die noodzaak leverde technieken op die nu, vertaald naar lagere kosten, ook aan bedrijven ten goede komen.',
+                en: 'Does that fully explain why Chinese models are now so efficient? Researchers disagree. Some point out that models generally become more efficient over time anyway, including at American labs, regardless of chip restrictions. What is clear: Chinese labs had less computing power available, and had to make the most of it. That necessity produced techniques that now, translated into lower costs, also benefit businesses.',
+            },
+            {
+                type: 'quote',
+                nl: 'Minder krachtige chips dwongen tot een zuinigere aanpak.',
+                en: 'Fewer powerful chips forced a leaner approach.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Waarom bedrijven overstappen',
+                en: 'Why businesses are switching',
+            },
+            {
+                type: 'paragraph',
+                nl: 'De prijzen van de grote Amerikaanse labs stegen het voorbije jaar, en bedrijven werden kritischer over waarvoor ze exact betalen. Steeds meer teams sturen een taak naar het goedkoopste model dat volstaat, in plaats van standaard naar het duurste te grijpen. Vaak is dat een open source model, bijna altijd Chinees.',
+                en: 'Prices from the major American labs rose over the past year, and businesses grew more critical about exactly what they were paying for. More teams now send a task to the cheapest model that will do the job, instead of defaulting to the most expensive one. Often that is an open source model, almost always Chinese.',
+            },
+            {
+                type: 'definition',
+                term: { nl: 'Open source', en: 'Open source' },
+                kind: { nl: 'AI begrip', en: 'AI term' },
+                nl: 'Modellen waarvan de bouwstenen vrij beschikbaar zijn, in plaats van enkel toegankelijk via een betaalde dienst van de maker. Een organisatie kan zo\'n model zelf aanpassen of op eigen servers laten draaien.',
+                en: 'Models whose building blocks are freely available, instead of only accessible through a paid service from the maker. An organization can adapt such a model itself or run it on its own servers.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Vercel, een groot Amerikaans platform waarlangs bedrijven hun AI verkeer laten lopen, deelde de cijfers. Het effect is groot:',
+                en: 'Vercel, a major American platform that routes AI traffic for businesses, shared the numbers. The effect is large:',
+            },
+            {
+                type: 'cards',
+                items: [
+                    {
+                        label: { nl: '11% naar 29%', en: '11% to 29%' },
+                        nl: 'Het aandeel van open source modellen in dat verkeer, van april tot juni 2026.',
+                        en: 'The share of open source models in that traffic, from April to June 2026.',
+                    },
+                    {
+                        label: { nl: '22,6%', en: '22.6%' },
+                        nl: 'Aandeel van DeepSeek alleen al, de derde grootste aanbieder op het platform.',
+                        en: 'DeepSeek\'s share on its own, the third largest provider on the platform.',
+                    },
+                    {
+                        label: { nl: 'Lindy', en: 'Lindy' },
+                        nl: 'Dit AI bedrijf verhuisde in juni 2026 zijn volledige verkeer van Claude naar DeepSeek, met een verwachte besparing van miljoenen dollars.',
+                        en: 'This AI company moved its entire traffic from Claude to DeepSeek in June 2026, with an expected saving of millions of dollars.',
+                    },
+                ],
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Hoe goed zijn ze echt',
+                en: 'How good are they really',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Prijs alleen verklaart niet alles. Op de Artificial Analysis Intelligence Index, een onafhankelijke ranglijst die modellen test op redeneren en praktische taken, staat het Chinese Kimi K3 bij de beste modellen ter wereld, na enkele Amerikaanse toppers. GLM 5.2, van het Chinese Z.ai, haalt op codeertaken resultaten die in de buurt komen van Claude Opus, tegen een fractie van de prijs.',
+                en: 'Price alone does not explain everything. On the Artificial Analysis Intelligence Index, an independent ranking that tests models on reasoning and practical tasks, the Chinese Kimi K3 sits among the best models in the world, behind only a few American frontrunners. GLM 5.2, from China\'s Z.ai, reaches coding results close to Claude Opus, at a fraction of the price.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Toch blijven de duurste Amerikaanse modellen de norm voor het zwaarste werk. Diezelfde data toont dat Anthropic 61 procent van alle uitgaven binnenhaalt met maar 32 procent van de tokens, en meer dan 72 procent van het budget bij de meest kritieke toepassingen. Voor alledaagse taken wint de prijs. Voor het werk waar een fout echt pijn doet, kiezen bedrijven nog overwegend Amerikaans.',
+                en: 'Still, the most expensive American models remain the standard for the heaviest work. That same data shows Anthropic capturing 61 percent of all spend on just 32 percent of tokens, and more than 72 percent of the budget in the most critical use cases. For everyday tasks, price wins. For work where a mistake really hurts, businesses still lean American.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'De prijs van goedkoop: wat u moet weten over data en veiligheid',
+                en: 'The cost of cheap: what to know about data and safety',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Goedkoop en goed betekent niet automatisch veilig. Chinese AI bedrijven verwerken gebruikersdata vaak op servers in China, zonder de waarborgen die de GDPR verplicht.',
+                en: 'Cheap and good does not automatically mean safe. Chinese AI companies often process user data on servers in China, without the safeguards the GDPR requires.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Italië ging op 30 januari 2025 als eerste over tot actie: privacytoezichthouder Garante verbood DeepSeek er, nadat het bedrijf onvoldoende duidelijk maakte welke data het verzamelt, waarom, en op welke rechtsgrond, terwijl die data wel naar servers in China gaat. Duitsland volgde: op 27 juni 2025 meldde de Berlijnse privacycommissaris DeepSeek bij Apple en Google als onwettige content, nadat het bedrijf niet inging op een eerdere vraag om de dataoverdracht naar China in orde te brengen.',
+                en: 'Italy was first to act, on January 30, 2025: privacy watchdog Garante banned DeepSeek after the company failed to clarify what data it collects, why, and on what legal basis, while that data does end up on servers in China. Germany followed: on June 27, 2025, Berlin\'s data protection commissioner reported DeepSeek to Apple and Google as unlawful content, after the company did not respond to an earlier request to fix its data transfers to China.',
+            },
+            {
+                type: 'quote',
+                nl: 'Twee Europese toezichthouders zeiden al nee.',
+                en: 'Two European regulators already said no.',
+            },
+            {
+                type: 'paragraph',
+                nl: 'Dat is geen reden om Chinese modellen zomaar te mijden. Het is wel een reden om na te denken over welke data waar terechtkomt.',
+                en: 'That is not a reason to avoid Chinese models outright. It is a reason to think about which data ends up where.',
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Hoe een bedrijf hier verstandig mee omgaat',
+                en: 'How a business handles this wisely',
+            },
+            {
+                type: 'paragraph',
+                nl: 'De belangrijkste vraag is niet welk land een model maakt, maar welke data een taak nodig heeft.',
+                en: 'The main question is not which country made a model, but what data a task needs.',
+            },
+            {
+                type: 'steps',
+                items: [
+                    {
+                        title: { nl: 'Laag risico', en: 'Low risk' },
+                        nl: 'Taken zonder persoonsgegevens of vertrouwelijke bedrijfsinformatie, zoals code genereren, tekst opstellen of interne documentatie, zijn een goede kandidaat voor een goedkoper model.',
+                        en: 'Tasks without personal data or confidential business information, such as generating code, drafting text or internal documentation, are a good candidate for a cheaper model.',
+                    },
+                    {
+                        title: { nl: 'Hoog risico', en: 'High risk' },
+                        nl: 'Taken met klant of personeelsgegevens horen op infrastructuur die aantoonbaar aan de GDPR voldoet, ongeacht welk model erachter zit.',
+                        en: 'Tasks involving customer or staff data belong on infrastructure that demonstrably meets the GDPR, regardless of which model runs behind it.',
+                    },
+                    {
+                        title: { nl: 'De open source uitweg', en: 'The open source way out' },
+                        nl: 'Veel Chinese modellen zijn open source: de bouwstenen liggen vrij, en een organisatie kan ze zelf hosten op eigen of Europese servers. Dat haalt het risico van dataoverdracht naar China helemaal weg, en combineert de lage kost met controle over de data.',
+                        en: 'Many Chinese models are open source: the building blocks are freely available, and an organization can host them itself, on its own or European servers. That removes the risk of data transfer to China entirely, and combines the low cost with control over the data.',
+                    },
+                    {
+                        title: { nl: 'Routeer, kies niet één model', en: 'Route, don\'t pick one model' },
+                        nl: 'Eén model voor alles is zelden de beste keuze. Een taak routeren naar het model dat past, in plaats van altijd hetzelfde model te gebruiken, is waar de echte besparing zit.',
+                        en: 'One model for everything is rarely the best choice. Routing a task to the model that fits, instead of always using the same one, is where the real savings sit.',
+                    },
+                ],
+            },
+            { type: 'divider' },
+            {
+                type: 'heading',
+                nl: 'Bronnen',
+                en: 'Sources',
+            },
+            {
+                type: 'links',
+                items: [
+                    {
+                        label: { nl: 'Vercel, AI Gateway Production Index, juli 2026', en: 'Vercel, AI Gateway Production Index, July 2026' },
+                        url: 'https://vercel.com/blog/ai-gateway-production-index-july-2026',
+                    },
+                    {
+                        label: { nl: 'CNBC, Chinese AI models are gaining ground with U.S. companies as OpenAI, Anthropic costs surge', en: 'CNBC, Chinese AI models are gaining ground with U.S. companies as OpenAI, Anthropic costs surge' },
+                        url: 'https://www.cnbc.com/2026/07/07/chinese-ai-models-costs-us-openai-anthropic.html',
+                    },
+                    {
+                        label: { nl: 'Artificial Analysis, AI model intelligence, performance and price analysis', en: 'Artificial Analysis, AI model intelligence, performance and price analysis' },
+                        url: 'https://artificialanalysis.ai/',
+                    },
+                    {
+                        label: { nl: 'The Record, Italy blocks Chinese AI tool DeepSeek over privacy concerns (30 jan 2025)', en: 'The Record, Italy blocks Chinese AI tool DeepSeek over privacy concerns (Jan 30, 2025)' },
+                        url: 'https://therecord.media/italy-blocks-chinese-ai-tool-deepseek-over-privacy-concerns',
+                    },
+                    {
+                        label: { nl: 'CNBC, Germany tells Apple, Google to block DeepSeek AI app (27 jun 2025)', en: 'CNBC, Germany tells Apple, Google to block DeepSeek AI app (Jun 27, 2025)' },
+                        url: 'https://www.cnbc.com/2025/06/27/germany-tells-apple-google-to-block-deepseek-ai-app.html',
+                    },
+                    {
+                        label: { nl: 'Bloomberg, China plans $295 billion investment to build nationwide AI data centers (juni 2026)', en: 'Bloomberg, China plans $295 billion investment to build nationwide AI data centers (June 2026)' },
+                        url: 'https://www.bloomberg.com/news/articles/2026-06-09/china-prepares-295-billion-plan-to-fund-nationwide-ai-buildout',
+                    },
+                    {
+                        label: { nl: 'Goldman Sachs, Global AI investment is forecast to exceed $1 trillion in 2026', en: 'Goldman Sachs, Global AI investment is forecast to exceed $1 trillion in 2026' },
+                        url: 'https://www.goldmansachs.com/insights/articles/global-investment-is-forecast-to-exceed-1-trillion-in-2026',
+                    },
+                    {
+                        label: { nl: 'CNBC, Nvidia still hasn\'t sold its U.S. approved China AI chips, and it\'s worried local AI rivals could take over', en: 'CNBC, Nvidia still hasn\'t sold its U.S. approved China AI chips, and it\'s worried local AI rivals could take over' },
+                        url: 'https://www.cnbc.com/2026/02/26/nvidia-china-chip-sales-export-controls-ai-competition.html',
+                    },
+                    {
+                        label: { nl: 'MIT Technology Review, How Chinese company DeepSeek released a top AI reasoning model despite US sanctions', en: 'MIT Technology Review, How Chinese company DeepSeek released a top AI reasoning model despite US sanctions' },
+                        url: 'https://www.technologyreview.com/2025/01/24/1110526/china-deepseek-top-ai-despite-sanctions/',
+                    },
+                    {
+                        label: { nl: 'CSIS, Where the Chips Fall: U.S. Export Controls Under the Biden Administration from 2022 to 2024', en: 'CSIS, Where the Chips Fall: U.S. Export Controls Under the Biden Administration from 2022 to 2024' },
+                        url: 'https://www.csis.org/analysis/where-chips-fall-us-export-controls-under-biden-administration-2022-2024',
+                    },
+                ],
             },
         ],
     },

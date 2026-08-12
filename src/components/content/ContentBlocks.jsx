@@ -127,7 +127,7 @@ export function ContentBlock({ block, language }) {
     switch (block.type) {
         case 'heading':
             return (
-                <h2 className="font-serif text-2xl md:text-3xl tracking-tight text-foreground mt-2 mb-6">
+                <h2 id={block.anchor} className="scroll-mt-32 font-serif text-2xl md:text-3xl tracking-tight text-foreground mt-2 mb-6">
                     {block[language]}
                 </h2>
             );
@@ -170,7 +170,7 @@ export function ContentBlock({ block, language }) {
             return (
                 <div className="my-10">
                     <a
-                        href={block.url}
+                        href={typeof block.url === 'string' ? block.url : block.url[language]}
                         download
                         target="_blank"
                         rel="noopener noreferrer"
@@ -204,22 +204,22 @@ export function ContentBlock({ block, language }) {
 
         case 'definition':
             return (
-                <div className="my-12 rounded-[1.5rem] border border-foreground/10 bg-white p-8 md:p-10 shadow-sm">
+                <div className="my-10 rounded-[1.5rem] border border-foreground/10 bg-white p-6 md:p-8 shadow-sm">
                     <div className="flex items-baseline gap-3 flex-wrap">
-                        <h3 className="font-serif text-3xl md:text-4xl tracking-tight text-foreground">
+                        <h3 className="font-serif text-2xl md:text-3xl tracking-tight text-foreground">
                             {block.term[language]}
                         </h3>
                         {block.kind && (
-                            <span className="italic text-foreground/40 text-lg font-light">
+                            <span className="italic text-foreground/40 text-base font-light">
                                 {block.kind[language]}
                             </span>
                         )}
                     </div>
-                    <div className="mt-5 mb-5 h-px w-full bg-foreground/10" />
+                    <div className="mt-4 mb-4 h-px w-full bg-foreground/10" />
                     <p className="uppercase tracking-[0.2em] text-[10px] font-bold text-accent mb-2">
                         {language === 'nl' ? 'Betekenis' : 'Meaning'}
                     </p>
-                    <p className="text-foreground/70 text-lg font-light leading-relaxed">
+                    <p className="text-foreground/70 text-base font-light leading-relaxed">
                         {block[language]}
                     </p>
                 </div>

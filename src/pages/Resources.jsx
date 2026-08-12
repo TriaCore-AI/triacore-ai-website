@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowUpDown, ChevronDown } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import gsap from 'gsap';
@@ -53,21 +54,118 @@ function ResourceThumbnail({ resource, language }) {
     );
 }
 
-// Klein rond label, gebruikt voor de categorie- en sorteerfilters.
-function FilterPill({ active, onClick, children }) {
+// Eén optie in het CategoryDropdown menuutje.
+function DropdownOption({ active, onClick, children }) {
     return (
         <button
             type="button"
             onClick={onClick}
             aria-pressed={active}
-            className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300 border ${
+            className={`w-full text-left px-4 py-2 text-sm transition-colors duration-200 ${
                 active
-                    ? 'bg-accent text-white border-accent'
-                    : 'bg-transparent text-foreground/55 border-foreground/15 hover:border-accent/40 hover:text-foreground'
+                    ? 'text-accent font-semibold'
+                    : 'text-foreground/70 hover:bg-foreground/[0.03] hover:text-foreground'
             }`}
         >
             {children}
         </button>
+    );
+}
+
+// Compact dropdown menuutje voor de categoriefilter. Geen losse pill per
+// categorie meer, zodat het altijd één nette knop blijft, ongeacht hoeveel
+// categorieën er zijn of hoe smal het scherm is.
+//
+// Het paneel wordt via een portal rechtstreeks in document.body gerenderd,
+// buiten de kaartengrid om. Nodig omdat de scroll-animatie op '.resource-card'
+// een inline 'transform' achterlaat, en elk element met een transform in CSS
+// altijd zijn eigen stapel-laag krijgt, los van normale z-index regels. Zonder
+// portal kan een kaart daardoor alsnog boven het paneel getekend worden.
+function CategoryDropdown({ activeCategory, usedCategoryKeys, onSelect, language }) {
+    const [open, setOpen] = useState(false);
+    const [coords, setCoords] = useState({ top: 0, left: 0 });
+    const buttonRef = useRef(null);
+    const panelRef = useRef(null);
+
+    const toggleOpen = () => {
+        if (!open && buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setCoords({ top: rect.bottom + 8, left: rect.left + rect.width / 2 });
+        }
+        setOpen((o) => !o);
+    };
+
+    useEffect(() => {
+        if (!open) return undefined;
+
+        function handleClickOutside(e) {
+            if (
+                buttonRef.current && !buttonRef.current.contains(e.target)
+                && panelRef.current && !panelRef.current.contains(e.target)
+            ) {
+                setOpen(false);
+            }
+        }
+        // Sluit ook bij scrollen, zodat het paneel nooit los van de knop komt
+        // te hangen (het is 'fixed' t.o.v. het scherm, niet t.o.v. de knop).
+        function handleScroll() {
+            setOpen(false);
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        window.addEventListener('scroll', handleScroll, true);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            window.removeEventListener('scroll', handleScroll, true);
+        };
+    }, [open]);
+
+    const activeLabel = activeCategory === 'all'
+        ? (language === 'nl' ? 'Alles' : 'All')
+        : (CATEGORIES[activeCategory] ? CATEGORIES[activeCategory][language] : activeCategory);
+
+    return (
+        <>
+            <button
+                ref={buttonRef}
+                type="button"
+                onClick={toggleOpen}
+                aria-expanded={open}
+                className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300 border ${
+                    open
+                        ? 'border-accent/40 text-foreground'
+                        : 'bg-transparent text-foreground/55 border-foreground/15 hover:border-accent/40 hover:text-foreground'
+                }`}
+            >
+                {language === 'nl' ? 'Categorie' : 'Category'}: {activeLabel}
+                <ChevronDown size={13} className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+            </button>
+
+            {open && createPortal(
+                <div
+                    ref={panelRef}
+                    style={{ position: 'fixed', top: coords.top, left: coords.left, transform: 'translateX(-50%)' }}
+                    className="w-56 py-2 bg-white border border-foreground/10 rounded-2xl shadow-xl z-[999]"
+                >
+                    <DropdownOption
+                        active={activeCategory === 'all'}
+                        onClick={() => { onSelect('all'); setOpen(false); }}
+                    >
+                        {language === 'nl' ? 'Alles' : 'All'}
+                    </DropdownOption>
+                    {usedCategoryKeys.map((key) => (
+                        <DropdownOption
+                            key={key}
+                            active={activeCategory === key}
+                            onClick={() => { onSelect(key); setOpen(false); }}
+                        >
+                            {CATEGORIES[key] ? CATEGORIES[key][language] : key}
+                        </DropdownOption>
+                    ))}
+                </div>,
+                document.body
+            )}
+        </>
     );
 }
 
@@ -198,7 +296,7 @@ export default function Resources() {
 
             <div className="relative z-10">
                 {/* HERO SECTION */}
-                <section className="relative pt-48 pb-12 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
+                <section className="relative pt-48 pb-12 px-6 md:px-16 flex flex-col items-center justify-start">
                     <div className="max-w-5xl mx-auto text-center">
                         <span className="hero-stagger inline-flex items-center mb-6 px-4 py-1.5 rounded-lg border border-accent/20 bg-accent/5 font-mono uppercase tracking-[0.15em] text-xs md:text-sm font-bold text-accent">
                             <span className="text-accent/40">[</span>
@@ -210,39 +308,33 @@ export default function Resources() {
                         </h1>
                         <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-10 font-light leading-relaxed mx-auto">
                             {language === 'nl'
-                                ? 'Duik in praktische gidsen, promptvoorbeelden en ideeën. Onze kennis over AI, open en gratis gedeeld.'
-                                : 'Dive into practical guides, prompt examples and ideas. Our knowledge of AI, shared openly and for free.'}
+                                ? 'Praktische gidsen, prompts en AI nieuws op één plek, zodat u mee blijft zonder zelf alles op te zoeken.'
+                                : 'Practical guides, prompts and AI news in one place, so you stay current without having to look it all up yourself.'}
                         </p>
                         <div className="hero-stagger">
                             <NewsletterSignup variant="inline" hideInvite size="sm" />
                         </div>
 
-                        <div className="hero-stagger mt-8 flex flex-wrap items-center justify-center gap-2">
-                            <FilterPill active={activeCategory === 'all'} onClick={() => setActiveCategory('all')}>
-                                {language === 'nl' ? 'Alles' : 'All'}
-                            </FilterPill>
-                            {usedCategoryKeys.map((key) => (
-                                <FilterPill
-                                    key={key}
-                                    active={activeCategory === key}
-                                    onClick={() => setActiveCategory(key)}
-                                >
-                                    {CATEGORIES[key] ? CATEGORIES[key][language] : key}
-                                </FilterPill>
-                            ))}
+                        <div className="hero-stagger mt-8 flex flex-wrap items-center justify-center gap-3">
+                            <CategoryDropdown
+                                activeCategory={activeCategory}
+                                usedCategoryKeys={usedCategoryKeys}
+                                onSelect={setActiveCategory}
+                                language={language}
+                            />
 
-                            {/* Op mobiel staan de twee filtergroepen dicht op elkaar door de
-                                flex-wrap, dus krijgen ze daar een eigen, volle breedte lijntje.
-                                Vanaf 'sm' is er ruimte genoeg en volstaat de verticale streep. */}
-                            <div className="w-full h-px my-1.5 bg-foreground/10 sm:hidden" aria-hidden="true" />
-                            <span className="hidden sm:block mx-1 h-4 w-px bg-foreground/15" aria-hidden="true" />
-
-                            <FilterPill active={sortOrder === 'newest'} onClick={() => setSortOrder('newest')}>
-                                {language === 'nl' ? 'Nieuwste eerst' : 'Newest first'}
-                            </FilterPill>
-                            <FilterPill active={sortOrder === 'oldest'} onClick={() => setSortOrder('oldest')}>
-                                {language === 'nl' ? 'Oudste eerst' : 'Oldest first'}
-                            </FilterPill>
+                            {/* Sortering: één wisselknop i.p.v. twee aparte pills, toont de
+                                actieve volgorde en wisselt bij een tik. */}
+                            <button
+                                type="button"
+                                onClick={() => setSortOrder((order) => (order === 'newest' ? 'oldest' : 'newest'))}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300 border bg-transparent text-foreground/55 border-foreground/15 hover:border-accent/40 hover:text-foreground"
+                            >
+                                <ArrowUpDown size={12} />
+                                {sortOrder === 'newest'
+                                    ? (language === 'nl' ? 'Nieuwste eerst' : 'Newest first')
+                                    : (language === 'nl' ? 'Oudste eerst' : 'Oldest first')}
+                            </button>
                         </div>
                     </div>
                 </section>
