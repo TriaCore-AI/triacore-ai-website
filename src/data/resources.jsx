@@ -737,15 +737,15 @@ You are an experienced [(e.g. financial advisor, marketer, lawyer)] with deep kn
             en: 'Hundreds of billions: the AI battle between China and America',
         },
         description: {
-            nl: 'Amerika en China investeren samen meer dan 1000 miljard dollar in AI, een strijd die nu al de rekening verandert voor een groeiend bedrijf. Wat er op het spel staat, wat het betekent voor de kosten, waar de risico\'s zitten, en hoe u er verstandig mee omgaat.',
-            en: 'The United States and China are together investing more than $1 trillion in AI, a battle that is already changing the bill for a growing business. What is at stake, what it means for costs, where the risks sit, and how to handle it wisely.',
+            nl: 'Amerika en China investeren samen meer dan 1000 miljard dollar in AI, een strijd die nu al de rekening verandert voor een bedrijf dat AI wil implementeren. Wat er op het spel staat, wat het betekent voor de kosten, waar de risico\'s zitten, en hoe u er verstandig mee omgaat.',
+            en: 'The United States and China are together investing more than $1 trillion in AI, a battle that is already changing the bill for a business looking to implement AI. What is at stake, what it means for costs, where the risks sit, and how to handle it wisely.',
         },
         thumbnail: '/resources/chinese-ai-modellen.webp',
         blocks: [
             {
                 type: 'paragraph',
-                nl: 'Amerika en China investeren dit jaar samen meer dan 1000 miljard dollar in AI. Beide grootmachten willen die strijd winnen, met eigen AI labs, eigen chips, en eigen regels over data en export. Wat daarbij minder verteld wordt: die strijd speelt zich niet enkel af tussen Washington en Peking. Een groeiend bedrijf dat vandaag een AI tool kiest, voelt de gevolgen daarvan nu al terug, in de rekening en in wat er technisch mogelijk is.',
-                en: 'The United States and China are together investing more than $1 trillion in AI this year. Both superpowers want to win that race, with their own AI labs, their own chips, and their own rules on data and exports. What gets left out of that story: the race does not stay confined to Washington and Beijing. A growing business choosing an AI tool today already feels the effects, in the bill and in what is technically possible.',
+                nl: 'Amerika en China investeren dit jaar samen meer dan 1000 miljard dollar in AI. Beide grootmachten willen die strijd winnen, met eigen AI labs, eigen chips, en eigen regels over data en export. Wat daarbij minder verteld wordt: die strijd speelt zich niet enkel af tussen Washington en Peking. Een bedrijf dat vandaag AI wil implementeren, voelt de gevolgen daarvan nu al terug, in de rekening en in wat er technisch mogelijk is.',
+                en: 'The United States and China are together investing more than $1 trillion in AI this year. Both superpowers want to win that race, with their own AI labs, their own chips, and their own rules on data and exports. What gets left out of that story: the race does not stay confined to Washington and Beijing. A business looking to implement AI today already feels the effects, in the bill and in what is technically possible.',
             },
             { type: 'divider' },
             {
