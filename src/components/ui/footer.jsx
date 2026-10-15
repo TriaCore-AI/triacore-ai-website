@@ -101,7 +101,10 @@ export default function Footer() {
                 {/* Legal Bar */}
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="text-[10px] text-white/30 font-light tracking-wide flex flex-col gap-1">
-                        <div>&copy; {new Date().getFullYear()} TriaCore AI. {language === 'nl' ? 'Alle rechten voorbehouden.' : 'All rights reserved.'}</div>
+                        <div>&copy; {new Date().getFullYear()} TriaCore AI BV. {language === 'nl' ? 'Alle rechten voorbehouden.' : 'All rights reserved.'}</div>
+                        <div>
+                            {language === 'nl' ? 'Zetel' : 'Registered office'}: Berkenstraat 44, 3850 Nieuwerkerken · {language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 1042.233.821 · {language === 'nl' ? 'BTW' : 'VAT'}: BE 1042.233.821 · RPR Antwerpen, {language === 'nl' ? 'afdeling Hasselt' : 'Hasselt division'}
+                        </div>
                         <div>Site gemaakt door Lucas Curto</div>
                     </div>
                     <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-3 text-[10px] text-white/30 font-medium tracking-widest uppercase">

@@ -79,8 +79,12 @@ export default function PrivacyPolicy() {
 
                         <section className="scroll-animate">
                             <h2 className="text-xl font-bold mb-4">{language === 'nl' ? '2. Wie verwerkt uw persoonsgegevens?' : '2. Who processes your personal data?'}</h2>
-                            <p className="mb-2"><strong>TriaCore AI</strong> {language === 'nl' ? '(actief binnen het Starterslabo-traject)' : '(active within the Starterslabo trajectory)'}</p>
-                            <p className="mb-1">{language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 0876.478.439 (Starterslabo)</p>
+                            <p className="mb-2"><strong>TriaCore AI BV</strong></p>
+                            <p className="mb-1">{language === 'nl' ? 'Maatschappelijke zetel' : 'Registered office'}: Berkenstraat 44, 3850 Nieuwerkerken</p>
+                            <p className="mb-1">{language === 'nl' ? 'Kantoor' : 'Office'}: Kempische Steenweg 303, 3500 Hasselt (Corda Incubator)</p>
+                            <p className="mb-1">{language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 1042.233.821</p>
+                            <p className="mb-1">{language === 'nl' ? 'BTW nummer' : 'VAT number'}: BE 1042.233.821</p>
+                            <p className="mb-1">RPR Antwerpen, {language === 'nl' ? 'afdeling Hasselt' : 'Hasselt division'}</p>
                             <p className="mb-1">E-mail: <a href="mailto:info@triacore.be" className="text-accent underline decoration-accent/30 underline-offset-4 font-medium">info@triacore.be</a></p>
                             <p className="mb-4">Website: <a href="https://www.triacore.be" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">www.triacore.be</a></p>
                             <p className="text-sm opacity-60">{language === 'nl' ? 'Voor vragen of verzoeken met betrekking tot privacy kan u ons contacteren via bovenstaande gegevens.' : 'For questions or requests regarding privacy, you can contact us using the details above.'}</p>

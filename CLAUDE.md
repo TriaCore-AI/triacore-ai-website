@@ -9,7 +9,9 @@ Ze bouwen **maatwerksoftware rond bedrijfsprocessen** en integreren AI waar het 
 
 Missie: het onbenutte AI-potentieel van kmo's omzetten in iets concreets en meetbaars.
 
-Contactinfo: info@triacore.be | Kempische Steenweg 303, 3500 Hasselt
+Contactinfo: info@triacore.be | Kantoor: Kempische Steenweg 303, 3500 Hasselt (Corda Incubator)
+
+Juridisch: **TriaCore AI BV** | Zetel: Berkenstraat 44, 3850 Nieuwerkerken | Ondernemingsnummer en BTW: BE 1042.233.821 | RPR Antwerpen, afdeling Hasselt. Staat in de footer, de privacyverklaring en de mailfooter. Starterslabo is niet meer van toepassing.
 
 ---
 
