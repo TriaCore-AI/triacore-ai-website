@@ -117,10 +117,6 @@
     @apply leading-relaxed font-medium transition-colors duration-300;
   }
 
-  .solevo-brand {
-    @apply font-syne tracking-[-0.02em];
-  }
-
   @keyframes flow-progress {
     0% { stroke-dashoffset: 240; opacity: 0; }
     5% { opacity: 1; }

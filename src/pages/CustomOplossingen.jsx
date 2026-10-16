@@ -448,7 +448,7 @@ const DecisionCriteria = () => {
     );
 };
 
-const FacetBlock = ({ number, title, description, solevoText, visual, reverse = false, onMoreInfo }) => {
+const FacetBlock = ({ number, title, description, visual, reverse = false, onMoreInfo }) => {
     const { language } = useLanguage();
     const [isVisible, setIsVisible] = React.useState(false);
     const domRef = useRef();
@@ -509,17 +509,6 @@ const FacetBlock = ({ number, title, description, solevoText, visual, reverse = 
                     >
                         {language === 'nl' ? 'Meer info' : 'More info'} <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
                     </button>
-
-                <div className="mt-4 p-8 bg-[#628f69]/5 border border-[#628f69]/20 rounded-[2rem] relative overflow-hidden group/solevo">
-                    <div className="flex items-center gap-3 mb-6">
-                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#628f69] px-3 py-1 bg-[#628f69]/10 rounded-md border border-[#628f69]/20">
-                            {language === 'nl' ? 'CONCREET VOORBEELD SOLEVO' : 'CONCRETE EXAMPLE SOLEVO'}
-                        </span>
-                    </div>
-                    <p className="text-white/80 text-base leading-relaxed italic font-light">
-                        {solevoText}
-                    </p>
-                </div>
             </div>
         </div>
     );
@@ -1076,9 +1065,6 @@ const CustomOplossingen = () => {
                         description={language === 'nl' 
                             ? 'Van eenvoudige herhaaltaken tot complexe verwerkingen: AI wordt slim geïntegreerd waar het uw mensen tijd uitspaart en processen efficiënter maakt.'
                             : 'From simple repetitive tasks to complex processing: AI is smartly integrated where it saves your people time and makes processes more efficient.'}
-                        solevoText={language === 'nl'
-                            ? 'Planningen worden automatisch opgesteld op basis van beschikbare chauffeurs, taken en locaties. De admin wijst niet meer handmatig toe.'
-                            : 'Schedules are automatically drawn up based on available drivers, tasks, and locations. The admin no longer assigns manually.'}
                         visual={<Visual1 />}
                         reverse={false}
                         onMoreInfo={() => setIsAIModalOpen(true)}
@@ -1090,9 +1076,6 @@ const CustomOplossingen = () => {
                         description={language === 'nl'
                             ? 'Op locatie of onderweg: uw mensen kunnen hun taken volledig uitvoeren via gsm, zonder afhankelijk te zijn van kantoor.'
                             : 'On site or on the road: your people can fully perform their tasks via mobile phone, without being dependent on the office.'}
-                        solevoText={language === 'nl'
-                            ? 'Chauffeurs registreren ritten en vullen vrachtbonnen in via hun gsm. Geen papier, geen handmatige verwerking achteraf.'
-                            : 'Drivers register trips and fill out transport notes via their mobile phones. No paper, no manual processing afterwards.'}
                         visual={<Visual2 />}
                         reverse={true}
                         onMoreInfo={() => setIsMobileAppModalOpen(true)}
@@ -1104,9 +1087,6 @@ const CustomOplossingen = () => {
                         description={language === 'nl'
                             ? 'Alle lopende taken, AI-handelingen en data op één plek. Uw beheerders hebben altijd het volledige beeld, op elk moment.'
                             : 'All ongoing tasks, AI actions, and data in one place. Your administrators always have the full picture, at any moment.'}
-                        solevoText={language === 'nl'
-                            ? 'Admins zien in realtime welke taken lopen, welke chauffeurs actief zijn en welke bonnen al zijn afgerond.'
-                            : 'Admins see in real-time which tasks are running, which drivers are active, and which notes have already been completed.'}
                         visual={<Visual3 />}
                         reverse={false}
                         onMoreInfo={() => setIsWebplatformModalOpen(true)}
@@ -1118,9 +1098,6 @@ const CustomOplossingen = () => {
                         description={language === 'nl'
                             ? 'Stappen die altijd op dezelfde manier verlopen worden geautomatiseerd. Geen manuele opvolging, geen vergeten stappen, geen fouten.'
                             : 'Steps that always proceed in the same way are automated. No manual follow-up, no forgotten steps, no errors.'}
-                        solevoText={language === 'nl'
-                            ? 'Een afgesloten bon wordt automatisch omgezet naar een officiële conforme PDF. Geen manuele stap, geen fouten.'
-                            : 'A closed note is automatically converted into an official compliant PDF. No manual step, no errors.'}
                         visual={<Visual4 />}
                         reverse={true}
                         onMoreInfo={() => setIsAutomationModalOpen(true)}

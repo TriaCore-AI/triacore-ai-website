@@ -87,7 +87,7 @@ Volledig tweetalig: **NL** (primair) en **EN** via `LanguageContext`.
 
 | Route | Inhoud |
 |---|---|
-| `/` | Homepage — hero, verhaal (Solevo case), uitdagingen, aanpak, bouwblokken, team, FAQ |
+| `/` | Homepage — hero, verhaal (pers + missie), uitdagingen, aanpak, bouwblokken, team, FAQ |
 | `/team` | Uitgebreide teampagina |
 | `/contact` | Contactformulier (Netlify Forms) met topic-dropdown |
 | `/custom-oplossingen` | Uitleg custom software aanpak |
@@ -106,7 +106,7 @@ Volledig tweetalig: **NL** (primair) en **EN** via `LanguageContext`.
 - **Croes NV** (croesnv.be) — klant/partner
 - AI-tools ingezet: ChatGPT, Claude, Gemini
 
-Case study op homepage: **Solevo** — digitaal platform voor grondverzet- en sloopbedrijven (transport-notabeheer).
+**Solevo** (digitaal platform voor grondverzet- en sloopbedrijven) is tijdelijk van de site gehaald (okt 2026, juridische kwestie). Geen Solevo naam, case, link of voorbeeld op de site plaatsen tot de gebruiker dat terug aanzet. De Syne font en de map `public/images/solevo-visual/` zijn ongebruikt maar niet verwijderd.
 
 ---
 
