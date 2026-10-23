@@ -5,10 +5,11 @@
   --color-foreground: #0f172a;
   --color-accent: #628f69;
   --color-dark-section: #020617;
+  --color-paper: #f2f2f2;
 
-  --font-sans: "DM Sans", sans-serif;
-  --font-serif: "Playfair Display", serif;
-  --font-mono: "DM Sans", sans-serif;
+  --font-sans: "Jost", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-mono: "Jost", sans-serif;
   --font-syne: "Syne", sans-serif;
   
   --color-sol: #FFFFFF;
@@ -21,6 +22,11 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
+
+  /* Cormorant Garamond is dun in 400; titels staan standaard op 500 zoals in de branding */
+  .font-serif {
+    font-weight: 500;
+  }
 }
 
 .noise-overlay {
@@ -32,6 +38,28 @@
   pointer-events: none;
   z-index: 50;
   opacity: 0.05;
+}
+
+/* Voortgangslijn onder de actieve klantquote */
+@keyframes quote-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Scrolbare rij zonder zichtbare scrollbalk (de pijltjes en voortgangslijn nemen die rol over) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Korrel uit de branding (TriaCore AI 2027): fijne blauwe korrel op de lichte achtergrond.
+   Zit in de achtergrond zelf, zodat kaarten erboven glad blijven. De sterkte (42%) zit in het alfakanaal */
+.bg-grain {
+  background-color: var(--color-paper);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .06  0 0 0 0 .09  0 0 0 0 .16  0 0 0 .252 -.0756'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply;
 }
 
 ::selection {
@@ -102,7 +130,7 @@
 
   /* Typography System tokens - Colors removed from tokens for better reusability */
   .hero-title {
-    @apply font-serif leading-[1.05] tracking-tight;
+    @apply font-serif font-medium leading-[1.05] tracking-tight;
   }
 
   .section-title {

@@ -14,33 +14,29 @@ export default function CTAButton({
     size = 'md',
     variant = 'primary'
 }) {
-    // Base classes
-    const baseClasses = "group relative overflow-hidden rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] custom-bezier flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed";
+    // Rustig en slank: geen schaduw, geen opveren. Bij hover kleurt de knop zacht naar het groen
+    // en schuift het pijltje een fractie op
+    const baseClasses = "group relative inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
     const variantClasses = {
-        primary: "bg-foreground text-background shadow-foreground/10",
-        light: "bg-white text-[#080a0e] shadow-white/5 hover:text-white",
-        secondary: "bg-transparent border border-foreground/20 text-foreground shadow-none hover:border-accent hover:text-black"
+        primary: "bg-foreground text-background hover:bg-accent",
+        light: "bg-white text-foreground hover:bg-accent hover:text-white",
+        secondary: "bg-transparent border border-foreground/20 text-foreground hover:border-accent hover:text-accent"
     };
 
     const sizeClasses = {
-        sm: "px-6 py-2.5 text-sm font-medium",
-        md: "px-8 py-4 text-lg font-medium",
-        lg: "px-10 py-5 text-lg font-semibold"
+        sm: "px-5 py-2.5 text-sm",
+        md: "px-6 py-3 text-[15px]",
+        lg: "px-7 py-3.5 text-base"
     };
 
     const currentVariant = variantClasses[variant] || variantClasses.primary;
     const currentSize = sizeClasses[size] || sizeClasses.md;
 
-    // The animated background div (slides up to show the accent green color)
-    const backgroundOverlay = (
-        <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></div>
-    );
-
     const content = (
-        <span className="relative z-10 flex items-center gap-2">
+        <span className="relative flex items-center gap-2">
             {children}
-            {Icon && <Icon size={size === 'sm' ? 16 : 20} className="group-hover:translate-x-1 transition-transform" />}
+            {Icon && <Icon size={size === 'lg' ? 18 : 16} strokeWidth={1.75} className="transition-transform duration-300 group-hover:translate-x-0.5" />}
         </span>
     );
 
@@ -50,7 +46,6 @@ export default function CTAButton({
         return (
             <Link to={to} className={combinedClasses}>
                 {content}
-                {backgroundOverlay}
             </Link>
         );
     }
@@ -59,7 +54,6 @@ export default function CTAButton({
         return (
             <a href={href} className={combinedClasses}>
                 {content}
-                {backgroundOverlay}
             </a>
         );
     }
@@ -67,7 +61,6 @@ export default function CTAButton({
     return (
         <button type={type} onClick={onClick} disabled={disabled} className={combinedClasses}>
             {content}
-            {backgroundOverlay}
         </button>
     );
 }

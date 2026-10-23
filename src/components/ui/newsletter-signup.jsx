@@ -121,11 +121,11 @@ export default function NewsletterSignup({ variant = 'footer', hideInvite = fals
 
     // --- Stijlvarianten ---
     const inputClasses = isDark
-        ? 'w-full bg-white/5 border border-white/10 rounded-full px-6 py-3.5 text-white placeholder:text-white/40 outline-none focus:bg-white/10 focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,0.6)] transition-all duration-300 text-sm'
+        ? 'w-full min-w-0 bg-white/[0.04] border border-white/10 rounded-full px-5 py-2.5 text-white placeholder:text-white/35 outline-none focus:bg-white/[0.07] focus:border-white/30 transition-colors duration-300 text-sm'
         : 'w-full bg-[#f8fafc] border border-slate-200 rounded-full px-5 py-2.5 text-sm text-foreground placeholder:text-foreground/40 outline-none focus:bg-white focus:border-accent focus:shadow-[0_0_0_1px_rgba(98,143,105,1)] transition-all duration-300';
 
     const buttonClasses = isDark
-        ? 'group shrink-0 inline-flex items-center justify-center gap-2 bg-accent text-white px-7 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100'
+        ? 'group shrink-0 inline-flex items-center justify-center gap-2 bg-white text-[#020617] px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-500 hover:bg-accent hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-[#020617]'
         : 'group shrink-0 inline-flex items-center justify-center gap-2 bg-foreground text-background px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100';
 
     const clearError = () => {
@@ -298,21 +298,17 @@ export default function NewsletterSignup({ variant = 'footer', hideInvite = fals
     );
 
     // =====================================================================
-    // FOOTER VARIANT (donker, compact)
+    // FOOTER VARIANT (donker, compact): titel en uitleg boven het formulier
     // =====================================================================
     if (isDark) {
         return (
             <>
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                    <div className="max-w-sm">
-                        <h4 className="font-serif text-2xl text-white mb-2">{t.title}</h4>
-                        <p className="text-sm text-white/60 font-light leading-relaxed">{t.subtitle}</p>
-                    </div>
-                    <div className="w-full lg:max-w-md">
-                        {Form}
-                        {ErrorMsg}
-                        {Consent}
-                    </div>
+                <div>
+                    <p className="text-sm font-medium text-white">{t.title}</p>
+                    <p className="mt-1.5 mb-4 text-sm text-white/50 leading-relaxed">{t.subtitle}</p>
+                    {Form}
+                    {ErrorMsg}
+                    {Consent}
                 </div>
                 {SuccessModal}
             </>

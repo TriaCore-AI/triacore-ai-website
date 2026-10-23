@@ -1,168 +1,193 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, ArrowDown, Terminal, Layers, Activity, ShieldCheck, Shield, FileCheck, Mail, Search, Layout, RefreshCw, Star, Users, Check, Smartphone, Zap, X, Plus, Sparkles, Cog } from 'lucide-react';
-import TriacoreRadar from './components/ui/triacore-radar';
-import TriacoreRoadmap from './components/ui/triacore-roadmap';
-import TriacoreLoop from './components/ui/triacore-loop';
+import { ArrowRight } from 'lucide-react';
 import Footer from './components/ui/footer';
 import Navbar from './components/ui/navbar';
 import CTAButton from './components/ui/cta-button';
-import { AccordionItem } from './components/ui/accordion';
+import CornerTrace from './components/ui/corner-trace';
+import CardCarousel from './components/ui/card-carousel';
 import { useLanguage } from './context/LanguageContext';
-import { useAutoImage, AutoImage } from './components/ui/auto-image';
-import croesLogo from './assets/partners/Croes NV.png';
-import amGroupLogo from './assets/partners/A&M Group.webp';
-import ResourceCarousel from './components/ui/resource-carousel';
-import NewsletterSignup from './components/ui/newsletter-signup';
+import { AutoImage } from './components/ui/auto-image';
+import { projecten } from './data/projecten';
+import medtronicLogo from './assets/klantcases/medtronic.png';
+import theBoxLogo from './assets/klantcases/the-box.png';
+import naomiPhoto from './assets/quotes/naomi-clear.png';
+import QuoteStage from './components/ui/quote-stage';
+import SectionNav from './components/ui/section-nav';
+import FaqList from './components/ui/faq-list';
 import Seo from './components/ui/seo';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TypedHeroTitle = React.memo(({ language, onTypingDone, skipAnimation = false }) => {
-  const fullText1 = language === 'nl' ? "De AI-partner waar groeiende bedrijven op " : "The AI partner growing companies ";
-  const fullText2 = language === 'nl' ? "bouwen." : "build on.";
-  const totalLength = fullText1.length + fullText2.length;
-  
-  const [typedCount, setTypedCount] = useState(skipAnimation ? totalLength : 0);
-  
-  useEffect(() => {
-    if (skipAnimation) {
-      onTypingDone(true);
-      return;
-    }
+// Klanten voor wie we een workshop gaven. Ze staan bij de klantcases en in de logorij van de hero,
+// maar hebben geen eigen projectpagina
+const workshopKlanten = [
+  { key: 'medtronic', name: 'Medtronic', logo: medtronicLogo, sector: { nl: 'Medische technologie', en: 'Medical technology' } },
+  { key: 'the-box', name: 'The Box', logo: theBoxLogo, sector: { nl: 'Vastgoed', en: 'Real estate' } }
+];
 
-    if (typedCount < totalLength) {
-      const timeout = setTimeout(() => {
-        setTypedCount((prev) => prev + 1);
-      }, 60);
-      return () => clearTimeout(timeout);
-    } else {
-      setTimeout(() => {
-        onTypingDone(true);
-        sessionStorage.setItem('triacore_hero_seen', 'true');
-      }, 150);
+// Klantquotes. Een foto is optioneel. De Engelse versie staat er letterlijk zoals de klant ze gaf,
+// de Nederlandse is een vrije vertaling.
+// Plaatshouders (placeholder: true) verschijnen enkel op de lokale dev server, nooit op de echte site:
+// een verzonnen getuigenis van een echte klant mag niet live gaan.
+const klantQuotes = [
+  {
+    key: 'medtronic',
+    company: 'Medtronic',
+    logo: medtronicLogo,
+    photo: naomiPhoto,
+    name: 'Naomi Clear',
+    role: 'Business Director North Europe, UK & Ireland, Nordics, Benelux, Germany & Alpine · Neurovascular',
+    quote: {
+      nl: 'Lucas van TriaCore gaf ons Sales en Marketing team voor UKI en BeneNord een bijzonder waardevolle AI training van anderhalf uur. We gingen aan de slag met praktische toepassingen van AI, waaronder het concept van een “Second Brain”, om workflows te stroomlijnen, productiever te werken en onze dagelijkse manier van werken te verbeteren. We hebben nu een praktisch draaiboek om wat we leerden te verankeren in ons dagelijks werk. Ik kan Lucas en TriaCore van harte aanbevelen voor elk team dat echt praktisch voordeel wil halen uit AI.',
+      en: 'Lucas from TriaCore delivered an extremely valuable 90-minute AI training session to our UKI and BeneNord Sales and Marketing team. The session explored practical applications of AI, including the “Second Brain” concept, to streamline workflows, improve productivity and enhance day-to-day ways of working. We now have a practical playbook to help embed these learnings into our daily activities. I would highly recommend Lucas and TriaCore to any team looking to maximise the practical benefits of AI.'
     }
-  }, [typedCount, language, onTypingDone, skipAnimation, totalLength]);
+  },
+  {
+    key: 'croes',
+    placeholder: true,
+    company: 'Croes NV',
+    logo: projecten.find((p) => p.slug === 'croes-nv')?.logo,
+    name: 'Naam volgt',
+    role: 'Functie volgt · Croes NV',
+    quote: { nl: '[Plaatshouder] De quote van Croes NV volgt.', en: '[Placeholder] The quote from Croes NV will follow.' }
+  },
+  {
+    key: 'the-box',
+    placeholder: true,
+    company: 'The Box',
+    logo: theBoxLogo,
+    name: 'Naam volgt',
+    role: 'Functie volgt · The Box',
+    quote: { nl: '[Plaatshouder] De quote van The Box volgt.', en: '[Placeholder] The quote from The Box will follow.' }
+  }
+].filter((q) => !q.placeholder || import.meta.env.DEV);
 
-  return (
-    <h1 className="hero-title text-foreground text-4xl sm:text-5xl md:text-7xl lg:text-[5.25rem] mb-6 leading-[1.05] min-h-[1.1em] tracking-tight">
-      {language === 'nl' ? (
-        <>
-          {"De AI-partner waar groeiende bedrijven op ".substring(0, typedCount)}
-          {typedCount >= "De AI-partner waar groeiende bedrijven op ".length && (
-            <span className="text-accent whitespace-nowrap">
-              {"bouwen.".substring(0, typedCount - "De AI-partner waar groeiende bedrijven op ".length)}
-            </span>
-          )}
-        </>
-      ) : (
-        <>
-          {"The AI partner growing companies ".substring(0, typedCount)}
-          {typedCount >= "The AI partner growing companies ".length && (
-            <span className="text-accent whitespace-nowrap">
-              {"build on.".substring(0, typedCount - "The AI partner growing companies ".length)}
-            </span>
-          )}
-        </>
-      )}
-      <span className="type-cursor inline-block w-[2px] h-[0.7em] bg-accent ml-1 align-middle animate-blink" />
-    </h1>
-  );
-});
+// Veelgestelde vragen (overgenomen van de vorige homepage)
+const faqVragen = [
+  {
+    q: { nl: 'Wat kost een custom oplossing?', en: 'What does a custom solution cost?' },
+    a: {
+      nl: 'De kostprijs hangt af van de complexiteit van het probleem, het aantal gebruikers en de technieken die we inzetten. We werken nooit met een vast prijskaartje omdat elke oplossing anders is. Na een eerste gesprek maken we een duidelijke inschatting zonder verborgen kosten.',
+      en: 'The cost depends on the complexity of the problem, the number of users and the techniques we use. We never work with a fixed price tag because every solution is different. After a first conversation, we make a clear estimate without hidden costs.'
+    }
+  },
+  {
+    q: { nl: 'Hoe lang duurt het om een custom oplossing te bouwen?', en: 'How long does it take to build a custom solution?' },
+    a: {
+      nl: 'Een eerste werkende versie bouwen we doorgaans in zes tot twaalf weken. We werken iteratief: u ziet vroeg resultaat en geeft feedback voor we verder bouwen.',
+      en: 'We typically build a first working version in six to twelve weeks. We work iteratively: you see results early and give feedback before we build further.'
+    }
+  },
+  {
+    q: { nl: 'Bouwen jullie altijd custom of raden jullie soms een bestaande tool aan?', en: 'Do you always build custom or do you sometimes recommend an existing tool?' },
+    a: {
+      nl: 'Niet elk probleem vraagt om maatwerk. Als een bestaande tool uw probleem oplost, zeggen we dat eerlijk en helpen we u op weg. We bouwen een custom oplossing alleen als het de juiste keuze is.',
+      en: 'Not every problem needs custom work. If an existing tool solves your problem, we say so honestly and help you get started. We only build a custom solution when it is the right choice.'
+    }
+  },
+  {
+    q: { nl: 'Moet ik meteen een volledig systeem bouwen of kan ik stapsgewijs starten?', en: 'Do I have to build a full system right away or can I start step by step?' },
+    a: {
+      nl: 'U hoeft niet alles in één keer te bouwen. We starten vaak met één concreet proces, bewijzen de waarde en bouwen daarna verder. Zo houdt u controle over de investering en ziet u snel resultaat.',
+      en: 'You do not have to build everything at once. We often start with one concrete process, prove its value and then build further. That way you stay in control of the investment and see results quickly.'
+    }
+  },
+  {
+    q: { nl: 'Hoe beveiligen jullie de software die jullie bouwen?', en: 'How do you secure the software you build?' },
+    a: (language) => language === 'nl' ? (
+      <>Wij beveiligen onze software via <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Aikido</a>, een gespecialiseerd beveiligingsplatform dat continu onze code en systemen scant op kwetsbaarheden. Zo is uw oplossing van dag één beschermd tegen bekende risico's.</>
+    ) : (
+      <>We secure our software with <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Aikido</a>, a specialised security platform that continuously scans our code and systems for vulnerabilities. That way your solution is protected against known risks from day one.</>
+    )
+  }
+];
+
+// De secties in het snelmenu linksonder, in de volgorde van de pagina
+const snelmenu = {
+  nl: [
+    { id: 'home', label: 'Home' },
+    { id: 'klantcases', label: 'Bewezen in de praktijk' },
+    { id: 'oplossingen', label: 'Onze oplossingen' },
+    { id: 'aanpak', label: 'Onze aanpak' },
+    { id: 'quotes', label: 'Wat klanten zeggen' },
+    { id: 'team', label: 'Het team' },
+    { id: 'faq', label: 'Veelgestelde vragen' },
+    { id: 'gesprek', label: 'Plan een gesprek' }
+  ],
+  en: [
+    { id: 'home', label: 'Home' },
+    { id: 'klantcases', label: 'Proven in practice' },
+    { id: 'oplossingen', label: 'Our solutions' },
+    { id: 'aanpak', label: 'Our approach' },
+    { id: 'quotes', label: 'What clients say' },
+    { id: 'team', label: 'The team' },
+    { id: 'faq', label: 'FAQ' },
+    { id: 'gesprek', label: 'Book a call' }
+  ]
+};
+
+// Onze aanpak: de drie pijlers, één per balk van het logo
+const aanpakPijlers = {
+  nl: [
+    { word: 'Begrijpen', desc: 'We leren jouw uitdagingen echt kennen.' },
+    { word: 'Vertalen', desc: 'We vertalen jouw uitdaging naar een concreet plan.' },
+    { word: 'Waarmaken', desc: 'We realiseren je oplossing en begeleiden je onderweg.' }
+  ],
+  en: [
+    { word: 'Understand', desc: 'We get to know your challenges inside out.' },
+    { word: 'Translate', desc: 'We turn your challenge into an actionable plan.' },
+    { word: 'Deliver', desc: 'We deliver your solution and guide you along the way.' }
+  ]
+};
+
+// Maten van het logoschema in pixels, afgeleid van het logo (viewBox 406.72 x 249.46, balken 291.56 x 48.57).
+// Alles staat ten opzichte van het midden van de sectie
+// Op schermen smaller dan totalW wordt het hele schema evenredig kleiner geschaald
+const AANPAK = (() => {
+  const logoW = 440;
+  const s = logoW / 406.72;
+  const barW = 291.56 * s, barH = 48.57 * s;
+  const left = -logoW / 2;
+  const lineFrom = left + barW + 20;   // de lijn vertrekt net naast het uiteinde van de balk
+  const lineLen = 90;
+  const textFrom = lineFrom + lineLen + 20;
+  const textW = 380;
+  return {
+    barW, barH,
+    logoH: 249.46 * s,
+    bars: [
+      { left, top: 0 },
+      { left: left + 115.16 * s, top: 100.45 * s },
+      { left, top: 200.89 * s }
+    ],
+    lineFrom, lineLen, textFrom, textW,
+    totalW: 2 * (textFrom + textW)
+  };
+})();
 
 function App() {
   const { language } = useLanguage();
-  const [activePainPoint, setActivePainPoint] = useState(0);
-  const [isTypingDone, setIsTypingDone] = useState(() => {
-    return sessionStorage.getItem('triacore_hero_seen') === 'true';
-  });
-  
-  const [isMobileAppModalOpen, setIsMobileAppModalOpen] = useState(false);
-  const [isWebplatformModalOpen, setIsWebplatformModalOpen] = useState(false);
-  const [isAutomationModalOpen, setIsAutomationModalOpen] = useState(false);
-  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
-
-
-
-  const painPointsRef = useRef(null);
-  const timelineFillRef = useRef(null);
-  const teamHeroImg = useAutoImage('/team/TriaCore AI Team', ['webp', 'jpg', 'png', 'jpeg']);
-  const finalCtaImg = useAutoImage('/images/final-cta', ['webp', 'png', 'jpg', 'jpeg']);
-  const heroFinalImg = useAutoImage('/media/ai_agents_hero_final', ['webp', 'png', 'jpg', 'jpeg']);
   const containerRef = useRef(null);
+  // Of het aanpakschema al eens volledig afgespeeld is; daarna blijft het staan
+  const aanpakDone = useRef(false);
+  // Rondt het aanpakschema meteen af (gebruikt door het snelmenu); wordt gezet door de animatie hieronder
+  const finishAanpak = useRef(null);
 
-
-  // Scroll lock while typing or when modal is open
+  // Schaal van het aanpakschema: 1 als het past, kleiner op smallere schermen (192px = de zijmarges)
+  const [aanpakScale, setAanpakScale] = useState(1);
   useEffect(() => {
-    if (!isTypingDone || isMobileAppModalOpen || isWebplatformModalOpen || isAutomationModalOpen || isAIModalOpen) {
-      if (!isTypingDone) window.scrollTo(0, 0);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isTypingDone, isMobileAppModalOpen, isWebplatformModalOpen, isAutomationModalOpen, isAIModalOpen]);
+    const fit = () => setAanpakScale(Math.min(1, (document.documentElement.clientWidth - 192) / AANPAK.totalW));
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      // Hero subtitle and buttons stagger
-      gsap.fromTo(
-        '.hero-sub-stagger',
-        { y: 40 },
-        {
-          y: 0,
-          duration: 1,
-          stagger: 0.15,
-          ease: 'power3.out',
-          delay: 1.2
-        }
-      );
-
-      // Refined animations for News section (Ons verhaal) - Responsive and ultra-smooth
       let mm = gsap.matchMedia();
-
-      // Desktop (grid layout)
-      mm.add("(min-width: 1024px)", () => {
-        gsap.fromTo('.news-card-stagger',
-          { x: 40, opacity: 0 },
-          {
-            scrollTrigger: {
-              trigger: '.news-card-stagger',
-              start: 'top 85%',
-              once: true
-            },
-            x: 0,
-            opacity: 1,
-            duration: 1.2,
-            stagger: 0.15,
-            ease: 'power3.out'
-          }
-        );
-      });
-
-      // Mobile/Tablet (vertical stacked layout)
-      mm.add("(max-width: 1023px)", () => {
-        // On mobile, trigger each news card individually as they enter viewport to prevent vertical lag/glitches
-        const newsCards = gsap.utils.toArray('.news-card-stagger');
-        newsCards.forEach((card) => {
-          gsap.fromTo(card,
-            { y: 30, opacity: 0 },
-            {
-              scrollTrigger: {
-                trigger: card,
-                start: 'top 90%',
-                once: true
-              },
-              y: 0,
-              opacity: 1,
-              duration: 1.0,
-              ease: 'power3.out'
-            }
-          );
-        });
-      });
 
       // General scroll animations (movement AND opacity for smoothness)
       const scrollElements = gsap.utils.toArray('.scroll-animate');
@@ -184,1189 +209,299 @@ function App() {
         );
       });
 
-      // Specific animations for Aanpak section
-      gsap.fromTo('.scroll-card-aanpak-left', 
-        { x: -60, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: '.scroll-card-aanpak-left',
-            start: 'top 75%',
-            once: true
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1.5,
-          delay: 0.2,
-          ease: 'power3.out'
-        }
-      );
+      // Rustige scrollanimaties voor klantcases, oplossingen en team.
+      // Overal dezelfde uitloop en drie bewegingen: titels schuiven op uit een masker,
+      // lijnen tekenen zich van links naar rechts, foto's onthullen zich van onder naar boven.
+      // Wie in het systeem minder beweging vraagt, krijgt alles meteen te zien.
+      mm.add({
+        motion: '(prefers-reduced-motion: no-preference)',
+        wide: '(min-width: 768px)',
+        xl: '(min-width: 1280px)'
+      }, (context) => {
+        const { motion, wide, xl } = context.conditions;
+        if (!motion) return;
 
-      gsap.fromTo('.scroll-card-aanpak-right', 
-        { x: 60, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: '.scroll-card-aanpak-right',
-            start: 'top 75%',
-            once: true
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1.5,
-          delay: 0.2,
-          ease: 'power3.out'
-        }
-      );
+        const EASE = 'expo.out';
+        const LINE_EASE = 'power3.inOut';
+        // Tempo van alle animaties: lager is trager (1 is het originele tempo)
+        const PACE = 0.7;
+        const onEnter = (trigger, start = 'top 85%') => ({ trigger, start, once: true });
+        const reveal = (trigger, start) => gsap.timeline({ scrollTrigger: onEnter(trigger, start) }).timeScale(PACE);
 
-      gsap.fromTo('.scroll-card-aanpak-bottom', 
-        { y: 80, scale: 0.98, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: '.scroll-card-aanpak-bottom',
-            start: 'top 80%',
-            once: true
-          },
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 1.5,
-          delay: 0.3,
-          stagger: 0.2,
-          ease: 'power2.out'
-        }
-      );
-
-      // Klantcases — tijdlijn tekent zich uit terwijl je scrollt
-      gsap.fromTo('.klantcases-rail-fill',
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.klantcases-track',
-            start: 'top 75%',
-            end: 'bottom 70%',
-            scrub: 0.6
-          }
-        }
-      );
-
-      const klantcaseRows = gsap.utils.toArray('.klantcases-row');
-      klantcaseRows.forEach((row, i) => {
-        gsap.fromTo(
-          row,
-          { y: 40, opacity: 0, x: i % 2 === 0 ? -24 : 24 },
-          {
-            scrollTrigger: { trigger: row, start: 'top 85%', once: true },
-            y: 0,
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out'
-          }
-        );
-      });
-
-      gsap.fromTo('.klantcases-dot',
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.6,
-          delay: 0.3,
-          ease: 'back.out(2)',
-          stagger: 0.3,
-          scrollTrigger: { trigger: '.klantcases-track', start: 'top 75%', once: true }
-        }
-      );
-
-
-
-      // Refresh ScrollTrigger after site reveals
-      if (isTypingDone) {
-        ScrollTrigger.refresh();
-      }
-
-      // Pain points highlight logic (Split Sticky)
-      const points = gsap.utils.toArray('.pain-point-item');
-      points.forEach((point, i) => {
-        ScrollTrigger.create({
-          trigger: point,
-          start: 'top 40%',
-          end: 'bottom 60%',
-          onToggle: (self) => {
-            if (self.isActive) setActivePainPoint(i);
-          }
+        // Hero bij het laden: elke regel onthult zich vloeiend van links naar rechts, als een zachte veeg,
+        // met een kleine meegaande beweging. De clip loopt wat buiten de regel, zodat staartjes en
+        // schuine letters nooit afgeknipt worden. Daarna volgen zin, knoppen en logo's.
+        // Start pas als de lettertypes geladen zijn, anders verspringt de tekst midden in de animatie.
+        const heroTl = gsap.timeline({ paused: true });
+        gsap.utils.toArray('.hero-row').forEach((row, i) => {
+          heroTl.fromTo(row,
+            { clipPath: 'inset(-20% 100% -35% -5%)', x: -16 },
+            { clipPath: 'inset(-20% -5% -35% -5%)', x: 0, duration: 1.8, ease: 'power2.inOut', clearProps: 'clipPath' },
+            i * 0.35);
         });
+        heroTl
+          .from('.hero-fade', { y: 10, opacity: 0, duration: 1.4, ease: 'power2.out', stagger: 0.12 }, 1.1)
+          .from('.hero-logo', { opacity: 0, duration: 1.4, ease: 'power2.out', stagger: 0.1 }, 1.5);
+        const playHero = () => heroTl.play();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(playHero);
+        else playHero();
+
+        // Titelblokken: titel uit het masker, daarna de rest zacht omhoog
+        gsap.utils.toArray('[data-reveal-head]').forEach((head) => {
+          const tl = reveal(head);
+          const masks = head.querySelectorAll('.rv-mask-inner');
+          const fades = head.querySelectorAll('.rv-fade');
+          if (masks.length) tl.from(masks, { yPercent: 110, duration: 1.4, ease: EASE });
+          if (fades.length) tl.from(fades, { y: 16, opacity: 0, duration: 1.2, ease: EASE, stagger: 0.1 }, masks.length ? 0.25 : 0);
+        });
+
+        // Klantcases: kaarten komen na elkaar binnen, de lijn in elke kaart tekent zich daarna
+        gsap.utils.toArray('.klantcases-card').forEach((card, i) => {
+          // Kaarten op één rij krijgen een kleine verschuiving, zodat ze na elkaar binnenkomen
+          const offset = wide ? Math.min(i, 3) * 0.12 : 0;
+          const tl = reveal(card, 'top 88%');
+          tl.from(card, { y: 48, opacity: 0, duration: 1.4, ease: EASE }, offset);
+          const line = card.querySelector('.rv-line');
+          if (line) tl.from(line, { scaleX: 0, duration: 1.2, ease: LINE_EASE }, offset + 0.35);
+        });
+
+        // Oplossingen: per rij eerst de lijn, dan de grote titel uit het masker, dan de uitleg
+        gsap.utils.toArray('.oplossing-row').forEach((row) => {
+          const tl = reveal(row);
+          tl.from(row.querySelector('.rv-line'), { scaleX: 0, duration: 1.4, ease: LINE_EASE })
+            .from(row.querySelector('.rv-mask-inner'), { yPercent: 110, duration: 1.4, ease: EASE }, 0.3)
+            .from(row.querySelectorAll('.rv-fade'), { y: 16, opacity: 0, duration: 1.2, ease: EASE, stagger: 0.1 }, 0.45);
+        });
+        reveal('.oplossing-end', 'top 92%').from('.oplossing-end', { scaleX: 0, duration: 1.4, ease: LINE_EASE });
+        // Team: foto onthult zich van onder naar boven en zoomt tegelijk rustig uit, tekst volgt
+        gsap.utils.toArray('.team-card').forEach((card, i) => {
+          const offset = wide ? i * 0.15 : 0;
+          const tl = reveal(card, 'top 88%');
+          tl.fromTo(card.querySelector('.rv-photo'),
+            { clipPath: 'inset(100% 0% 0% 0% round 24px)' },
+            { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: 1.4, ease: 'power4.inOut' }, offset)
+            .from(card.querySelector('.rv-photo-img'), { scale: 1.25, duration: 2, ease: EASE }, offset)
+            .from(card.querySelectorAll('.rv-fade'), { y: 16, opacity: 0, duration: 1.2, ease: EASE, stagger: 0.1 }, offset + 0.7);
+        });
+
+        // Onze aanpak (grote schermen): niets staat vast, de sectie scrolt gewoon mee naar boven.
+        // Terwijl het schema door het beeld schuift, komen de pijlers er één voor één bij: de balk groeit
+        // (de middelste van rechts, richting zijn lijn naar links), de lijn loopt door en de tekst komt op.
+        // Wat er al stond, blijft volledig zichtbaar.
+        if (xl) {
+          const bars = gsap.utils.toArray('.aanpak-bar');
+          const lines = gsap.utils.toArray('.aanpak-line');
+          const texts = gsap.utils.toArray('.aanpak-text');
+          // Het verloop hangt aan de plaats van het schema in beeld: het begint zodra het schema onderaan
+          // binnenkomt en is pas af als het bijna bovenaan staat, zodat de pijlers rustig over een lange
+          // scrollafstand verschijnen. De scrub laat het zacht naijlen. Bewust subtiel: de balken groeien
+          // met een zachte start en stop, de tekst schuift maar een paar pixels en komt vooral zacht op.
+          // Eén keer volledig afgespeeld, blijft het staan: terugscrollen speelt niets meer achteruit.
+          // aanpakDone onthoudt dat ook als de animaties opnieuw opgebouwd worden (bv. bij een taalwissel)
+          const tl = gsap.timeline({
+            defaults: { ease: 'sine.inOut' },
+            paused: aanpakDone.current,
+            scrollTrigger: aanpakDone.current ? undefined : {
+              trigger: '.aanpak-diagram', start: 'top 92%', end: 'bottom 25%', scrub: 1.2,
+              onUpdate: (self) => {
+                if (self.progress < 0.97 || aanpakDone.current) return;
+                aanpakDone.current = true;
+                self.kill(false, true);
+                gsap.to(tl, { progress: 1, duration: 0.8, ease: 'sine.out' });
+              }
+            }
+          });
+          texts.forEach((text, i) => {
+            const at = `pijler${i}`;
+            const toRight = i !== 1;
+            tl.addLabel(at, i === 0 ? '+=0' : '+=0.4');
+            tl.fromTo(bars[i],
+              { scaleX: 0, opacity: 0, transformOrigin: toRight ? 'left center' : 'right center' },
+              { scaleX: 1, opacity: 1, duration: 1.6, ease: 'power2.inOut' }, at)
+              .fromTo(lines[i], { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: 'sine.inOut' }, `${at}+=1`)
+              .fromTo(text,
+                { opacity: 0, x: toRight ? -10 : 10 },
+                { opacity: 1, x: 0, duration: 1.4, ease: 'sine.out' }, `${at}+=1.5`);
+          });
+          if (aanpakDone.current) tl.progress(1);
+          finishAanpak.current = () => {
+            if (aanpakDone.current) return;
+            aanpakDone.current = true;
+            tl.scrollTrigger?.kill(false, true);
+            tl.progress(1);
+          };
+        }
+
+        // Team: de verspringende foto schuift iets trager mee, voor wat diepte
+        if (wide) {
+          gsap.fromTo('.team-parallax', { y: 40 }, {
+            y: -40,
+            ease: 'none',
+            scrollTrigger: { trigger: '#team', start: 'top bottom', end: 'bottom top', scrub: 1 }
+          });
+        }
       });
-
-
 
     }, containerRef);
     return () => ctx.revert();
-  }, [language, isTypingDone]);
-
-  const painPointsData = [
-    {
-      num: '01',
-      title: language === 'nl' ? 'AI rendeert niet.' : 'AI does not pay off.',
-      body: language === 'nl' ? 'Hier en daar wordt wat tijd gewonnen, maar de processen daarachter blijven ongewijzigd.' : 'Time is saved here and there, but the processes behind it remain unchanged.'
-    },
-    {
-      num: '02',
-      title: language === 'nl' ? 'Geen structuur in AI-gebruik.' : 'No structure in AI usage.',
-      body: language === 'nl' ? 'Elke medewerker doet zijn eigen ding met AI. Zonder gedeelde aanpak en integraties blijft het een verzameling losse gewoontes zonder impact op het geheel.' : 'Each employee does their own thing with AI. Without a shared approach and integrations, it remains a collection of loose habits without impact on the whole.'
-    },
-    {
-      num: '03',
-      title: language === 'nl' ? 'Uw systemen praten niet met elkaar.' : 'Your systems don\'t talk to each other.',
-      body: language === 'nl' ? 'Uw team schakelt tussen tools die niets van elkaar weten en typt data manueel over.' : 'Your team switches between tools that know nothing about each other and manually types data over.'
-    },
-    {
-      num: '04',
-      title: language === 'nl' ? 'Geen tool past op uw probleem.' : 'No tool fits your problem.',
-      body: language === 'nl' ? 'Uw sector heeft regels en processen die geen generieke tool begrijpt.' : 'Your sector has rules and processes that no generic tool understands.'
-    },
-    {
-      num: '05',
-      title: language === 'nl' ? 'Angst voor de foute investering.' : 'Fear of the wrong investment.',
-      body: language === 'nl' ? 'U heeft al eerder geïnvesteerd in software die beloofde het verschil te maken en tegenviel.' : 'You have previously invested in software that promised to make the difference and fell short.'
-    }
-  ];
-  
-  const MobileAppModal = () => {
-    if (!isMobileAppModalOpen) return null;
-    
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 py-12">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-500" 
-          onClick={() => setIsMobileAppModalOpen(false)}
-        />
-        
-        {/* Modal Content - White Background & Scrollable */}
-        <div className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl animate-in fade-in zoom-in duration-300 flex flex-col overflow-hidden">
-          {/* Subtle Noise Overlay for White BG */}
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-          
-          {/* Close Button - Fixed in top right */}
-          <button 
-            onClick={() => setIsMobileAppModalOpen(false)}
-            className="absolute top-6 right-6 p-4 rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-200 transition-all duration-300 z-[60]"
-            aria-label="Close"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="relative z-10 overflow-y-auto p-8 md:p-12 pt-16 md:pt-12">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">{language === 'nl' ? 'Mobiele app' : 'Mobile app'}</h2>
-            </div>
-            
-            <p className="text-slate-600 text-base font-light leading-relaxed mb-8 max-w-2xl">
-              {language === 'nl' 
-                ? 'Een mobiele app die uw mensen op locatie, onderweg of in het veld de juiste tools geeft om hun taken volledig uit te voeren via gsm.'
-                : 'A mobile app that gives your people in the field, on the road or on-site the right tools to fully perform their tasks via mobile phone.'}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Voor wie' : 'For whom'}</h3>
-                  <ul className="space-y-2">
-                    {(language === 'nl' ? [
-                      'Chauffeurs en transportmedewerkers',
-                      'Arbeiders en techniekers op locatie',
-                      'Vertegenwoordigers onderweg',
-                      'Iedereen die werkt buiten een vaste werkplek'
-                    ] : [
-                      'Drivers and transport staff',
-                      'Workers and technicians on location',
-                      'Sales reps on the road',
-                      'Anyone who works outside a fixed workplace'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#628f69]/40 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het oplevert' : 'What it delivers'}</h3>
-                  <ul className="space-y-3">
-                    {(language === 'nl' ? [
-                      'Taken worden afgerond waar ze plaatsvinden',
-                      'Geen papier en geen manuele verwerking achteraf',
-                      'Realtime data beschikbaar voor kantoor',
-                      'Minder fouten door digitale registratie op het moment zelf'
-                    ] : [
-                      'Tasks are completed where they take place',
-                      'No paper and no manual processing afterwards',
-                      'Real-time data available for the office',
-                      'Fewer errors due to digital registration at the moment itself'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <Check size={14} className="text-[#628f69] mt-1 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het doet' : 'What it does'}</h3>
-              <p className="text-slate-500 text-base font-light leading-relaxed max-w-3xl">
-                {language === 'nl'
-                  ? 'Uw mensen hebben via gsm toegang tot alles wat ze nodig hebben om hun taken ter plaatse af te ronden. Geen papier, geen telefoontjes naar kantoor, geen manuele verwerking achteraf.'
-                  : 'Your people have access via mobile phone to everything they need to complete their tasks on-site. No paper, no phone calls to the office, no manual processing afterwards.'}
-              </p>
-            </div>
-            
-            <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-              <button 
-                onClick={() => setIsMobileAppModalOpen(false)}
-                className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-full transition-all duration-300"
-              >
-                {language === 'nl' ? 'Sluiten' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-  
-  const WebplatformModal = () => {
-    if (!isWebplatformModalOpen) return null;
-    
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 py-12">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-500" 
-          onClick={() => setIsWebplatformModalOpen(false)}
-        />
-        
-        {/* Modal Content - White Background & Scrollable */}
-        <div className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl animate-in fade-in zoom-in duration-300 flex flex-col overflow-hidden">
-          {/* Subtle Noise Overlay for White BG */}
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-          
-          {/* Close Button - Fixed in top right */}
-          <button 
-            onClick={() => setIsWebplatformModalOpen(false)}
-            className="absolute top-6 right-6 p-4 rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-200 transition-all duration-300 z-[60]"
-            aria-label="Close"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="relative z-10 overflow-y-auto p-8 md:p-12 pt-16 md:pt-12">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">{language === 'nl' ? 'Webplatform' : 'Web platform'}</h2>
-            </div>
-            
-            <p className="text-slate-600 text-base font-light leading-relaxed mb-8 max-w-2xl">
-              {language === 'nl' 
-                ? 'Een centrale omgeving waar beheerders alle lopende processen, taken en data in realtime opvolgen en beheren via de browser.'
-                : 'A central environment where managers monitor and manage all ongoing processes, tasks and data in real time — accessible from any browser.'}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Voor wie' : 'For whom'}</h3>
-                  <ul className="space-y-2">
-                    {(language === 'nl' ? [
-                      'Operations managers',
-                      'Zaakvoerders die overzicht willen',
-                      'Administratieve medewerkers',
-                      'Iedereen die processen opvolgt vanuit kantoor'
-                    ] : [
-                      'Operations managers',
-                      'Business owners who want full oversight',
-                      'Administrative staff',
-                      'Anyone who manages processes from the office'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#628f69]/40 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het oplevert' : 'What it delivers'}</h3>
-                  <ul className="space-y-3">
-                    {(language === 'nl' ? [
-                      'Geen versnipperde informatie meer',
-                      'Realtime zicht op wat er gebeurt',
-                      'Minder manuele opvolging',
-                      'Betere beslissingen op basis van live data'
-                    ] : [
-                      'No more scattered information',
-                      'Real-time visibility of what is happening',
-                      'Less manual follow-up',
-                      'Better decisions based on live data'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <Check size={14} className="text-[#628f69] mt-1 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het doet' : 'What it does'}</h3>
-              <p className="text-slate-500 text-base font-light leading-relaxed max-w-3xl">
-                {language === 'nl'
-                  ? 'Uw beheerders hebben vanuit de browser een volledig beeld van wat er gebeurt in het bedrijf. Taken, statussen, AI-handelingen en data op één centrale plek, altijd up-to-date.'
-                  : 'Your managers have a complete view from the browser of what is happening in the company. Tasks, statuses, AI actions and data in one central place, always up-to-date.'}
-              </p>
-            </div>
-            
-            <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-              <button 
-                onClick={() => setIsWebplatformModalOpen(false)}
-                className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-full transition-all duration-300"
-              >
-                {language === 'nl' ? 'Sluiten' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const AutomationModal = () => {
-    if (!isAutomationModalOpen) return null;
-    
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 py-12">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-500" 
-          onClick={() => setIsAutomationModalOpen(false)}
-        />
-        
-        {/* Modal Content - White Background & Scrollable */}
-        <div className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl animate-in fade-in zoom-in duration-300 flex flex-col overflow-hidden">
-          {/* Subtle Noise Overlay for White BG */}
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-          
-          {/* Close Button - Fixed in top right */}
-          <button 
-            onClick={() => setIsAutomationModalOpen(false)}
-            className="absolute top-6 right-6 p-4 rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-200 transition-all duration-300 z-[60]"
-            aria-label="Close"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="relative z-10 overflow-y-auto p-8 md:p-12 pt-16 md:pt-12">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">{language === 'nl' ? 'Automatisering' : 'Automation'}</h2>
-            </div>
-            
-            <p className="text-slate-600 text-base font-light leading-relaxed mb-8 max-w-2xl">
-              {language === 'nl' 
-                ? 'Stappen die altijd op dezelfde manier verlopen worden volledig geautomatiseerd, zonder manuele tussenkomst of opvolging.'
-                : 'Steps that always follow the same pattern are fully automated, without manual intervention or follow-up.'}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Voor wie' : 'For whom'}</h3>
-                  <ul className="space-y-2">
-                    {(language === 'nl' ? [
-                      'Bedrijven met veel repetitieve administratieve taken',
-                      'Teams die tijd verliezen aan manuele verwerking',
-                      'Organisaties met complexe of foutgevoelige workflows',
-                      'Bedrijven die hun processen willen laten lopen zonder constante opvolging'
-                    ] : [
-                      'Companies with many repetitive administrative tasks',
-                      'Teams losing time to manual processing',
-                      'Organizations with complex or error-prone workflows',
-                      'Companies that want their processes to run without constant follow-up'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#628f69]/40 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het oplevert' : 'What it delivers'}</h3>
-                  <ul className="space-y-3">
-                    {(language === 'nl' ? [
-                      'Geen vergeten stappen meer',
-                      'Minder fouten door manuele verwerking',
-                      'Processen die doorlopen zonder manuele tussenkomst',
-                      'Meer tijd voor werk dat echt aandacht vraagt'
-                    ] : [
-                      'No more forgotten steps',
-                      'Fewer errors through manual processing',
-                      'Processes that continue without manual intervention',
-                      'More time for work that truly requires attention'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <Check size={14} className="text-[#628f69] mt-1 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het doet' : 'What it does'}</h3>
-              <p className="text-slate-500 text-base font-light leading-relaxed max-w-3xl">
-                {language === 'nl'
-                  ? 'Alles wat zich herhaalt in uw workflow wordt automatisch afgehandeld. Van documentverwerking tot meldingen en rapportage, zonder dat iemand er telkens tussen moet komen.'
-                  : 'Everything that repeats in your workflow is handled automatically. From document processing to notifications and reporting, without anyone having to intervene every time.'}
-              </p>
-            </div>
-            
-            <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-              <button 
-                onClick={() => setIsAutomationModalOpen(false)}
-                className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-full transition-all duration-300"
-              >
-                {language === 'nl' ? 'Sluiten' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const AIModal = () => {
-    if (!isAIModalOpen) return null;
-    
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 py-12">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-500" 
-          onClick={() => setIsAIModalOpen(false)}
-        />
-        
-        {/* Modal Content - White Background & Scrollable */}
-        <div className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl animate-in fade-in zoom-in duration-300 flex flex-col overflow-hidden">
-          {/* Subtle Noise Overlay for White BG */}
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-          
-          {/* Close Button - Fixed in top right */}
-          <button 
-            onClick={() => setIsAIModalOpen(false)}
-            className="absolute top-6 right-6 p-4 rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-200 transition-all duration-300 z-[60]"
-            aria-label="Close"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="relative z-10 overflow-y-auto p-8 md:p-12 pt-16 md:pt-12">
-            <div className="flex items-center gap-4 mb-3">
-              <h2 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">{language === 'nl' ? 'AI-integratie' : 'AI integration'}</h2>
-            </div>
-            <p className="text-slate-600 text-base font-light leading-relaxed mb-8 max-w-2xl">
-              {language === 'nl' 
-                ? 'AI wordt slim geïntegreerd in uw bestaande processen, daar waar het uw mensen tijd uitspaart en uw bedrijf efficiënter maakt.'
-                : 'AI is smartly integrated into your existing processes, right where it saves your people time and makes your business more efficient.'}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Voor wie' : 'For whom'}</h3>
-                  <ul className="space-y-2">
-                    {(language === 'nl' ? [
-                      'Bedrijven met repetitieve of foutgevoelige processen',
-                      'Teams die tijd verliezen aan manuele beslissingen en verwerkingen',
-                      'Organisaties die meer willen doen met dezelfde mensen',
-                      'Bedrijven die AI willen inzetten waar het echt rendeert'
-                    ] : [
-                      'Companies with repetitive or error-prone processes',
-                      'Teams losing time to manual decisions and processing',
-                      'Organisations that want to do more with the same headcount',
-                      'Businesses that want to deploy AI where it truly pays off'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#628f69]/40 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het oplevert' : 'What it delivers'}</h3>
-                  <ul className="space-y-3">
-                    {(language === 'nl' ? [
-                      'Snellere verwerking van complexe taken',
-                      'Minder fouten door manuele tussenkomst',
-                      'Processen die lopen zonder constante manuele opvolging',
-                      'Meer ruimte voor werk dat er echt toe doet'
-                    ] : [
-                      'Faster processing of complex tasks',
-                      'Fewer errors from manual intervention',
-                      'Processes that run without constant manual follow-up',
-                      'More room for work that truly matters'
-                    ]).map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-slate-500 text-base font-light leading-relaxed">
-                        <Check size={14} className="text-[#628f69] mt-1 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-[#628f69] mb-3">{language === 'nl' ? 'Wat het doet' : 'What it does'}</h3>
-              <p className="text-slate-500 text-base font-light leading-relaxed max-w-3xl">
-                {language === 'nl'
-                  ? 'AI neemt taken over die altijd op dezelfde manier verlopen, ondersteunt beslissingen op basis van data en verwerkt informatie sneller dan manueel mogelijk is. Niet als losstaand hulpmiddel, maar diep ingebouwd in de manier waarop uw bedrijf werkt.'
-                  : 'AI takes over tasks that always follow the same pattern, supports data-driven decision-making, and processes information faster than manually possible. Not as a standalone tool, but deeply embedded in how your company operates.'}
-              </p>
-            </div>
-            
-            <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-              <button 
-                onClick={() => setIsAIModalOpen(false)}
-                className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-full transition-all duration-300"
-              >
-                {language === 'nl' ? 'Sluiten' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  }, [language]);
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background">
+    <div ref={containerRef} className="relative w-full min-h-screen bg-grain text-foreground font-sans selection:bg-foreground selection:text-background">
 
       <Seo
         title={language === 'nl'
-          ? 'TriaCore AI | De AI-partner waar groeiende bedrijven op bouwen'
-          : 'TriaCore AI | The AI partner growing companies build on'}
+          ? 'TriaCore AI | AI voor operationele vooruitgang'
+          : 'TriaCore AI | AI for operational progress'}
         description={language === 'nl'
-          ? "TriaCore AI bouwt maatwerksoftware rond uw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's."
-          : "TriaCore AI builds custom software around your business processes and integrates AI where it truly pays off. Automation, mobile apps and web platforms for SMEs."}
+          ? "AI die in uw processen werkt, niet ernaast. TriaCore AI uit Hasselt bouwt software op maat, geeft AI workshops en begeleidt teams bij het inzetten van AI."
+          : "AI that works inside your processes, not next to them. TriaCore AI from Hasselt builds custom software, runs AI workshops and guides teams in putting AI to work."}
       />
 
-      {/* GLOBAL NOISE OVERLAY */}
-      <svg className="noise-overlay" xmlns="http://www.w3.org/2000/svg">
-        <filter id="noiseFilter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-      </svg>
-
       <Navbar />
-      <MobileAppModal />
-      <WebplatformModal />
-      <AutomationModal />
-      <AIModal />
+      <SectionNav
+        items={snelmenu[language]}
+        onBeforeJump={(id) => {
+          // Spring je voorbij Onze aanpak terwijl die nog niet afgespeeld is, rond ze dan eerst af,
+          // anders speelt het hele schema tussenin af en klopt de bestemming niet
+          const order = snelmenu.nl.map((s) => s.id);
+          if (order.indexOf(id) > order.indexOf('aanpak')) finishAanpak.current?.();
+        }}
+      />
 
       {/* B. HERO SECTION */}
-      <section className="relative pt-40 pb-8 px-6 md:px-16 overflow-hidden bg-background flex flex-col items-center">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-             style={{
-               backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
-               backgroundSize: '4rem 4rem'
-             }}>
-        </div>
+      {/* Rustig en links uitgelijnd: één korte titel, één zin, één knop. Onderaan stil bewijs */}
+      <section id="home" className="relative min-h-[100svh] flex flex-col overflow-x-clip px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-12 md:pb-16">
+        <div className="relative max-w-7xl mx-auto w-full flex-1 flex flex-col">
+          <div className="max-w-6xl">
+            {/* Regel per regel: elke regel komt als geheel binnen uit zijn eigen richting (data-from) */}
+            <h1 className="hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.02]">
+              <span className="hero-row block" data-from="left">
+                {language === 'nl' ? 'AI voor operationele' : 'AI for operational'}
+              </span>
+              <span className="hero-row block italic text-accent" data-from="right">
+                {language === 'nl' ? 'vooruitgang' : 'progress'}
+              </span>
+            </h1>
 
-        <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center">
-          <p className="hero-stagger section-label mb-4">
-            {language === 'nl' ? 'TriaCore AI' : 'TriaCore AI'}
-          </p>
-          <TypedHeroTitle language={language} onTypingDone={setIsTypingDone} skipAnimation={isTypingDone} />
-          
-          <div className={`transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0,0,1)] ${isTypingDone ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <p className="hero-sub-stagger max-w-3xl text-base md:text-lg text-foreground/60 mb-8 leading-relaxed font-sans">
+            <p className="hero-fade mt-8 md:mt-10 text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl">
               {language === 'nl'
-                ? 'TriaCore bouwt bedrijfssoftware op maat van uw processen en uw team. AI wordt geïntegreerd in de processen waar het echt het verschil maakt.'
-                : 'TriaCore builds custom business software tailored to your processes and team. AI is integrated where it truly makes a difference.'}
+                ? 'AI die in uw processen werkt, niet ernaast. Met software op maat, workshops en begeleiding.'
+                : 'AI that works inside your processes, not next to them. With custom software, workshops and guidance.'}
             </p>
 
-            <div className="hero-sub-stagger flex flex-wrap gap-3 items-center justify-center mb-12">
-              {[
-                { nl: 'AI-integraties', en: 'AI Integrations' },
-                { nl: 'Mobiele apps', en: 'Mobile apps' },
-                { nl: 'Webapplicaties', en: 'Web applications' },
-                { nl: 'Automatisering', en: 'Automation' }
-              ].map((badge, idx) => (
-                <span key={idx} className="px-4 py-1.5 bg-accent/5 border border-accent/10 rounded-full text-[10px] font-bold tracking-widest text-accent uppercase">
-                  {language === 'nl' ? badge.nl : badge.en}
-                </span>
-              ))}
-            </div>
-
-            <div className="hero-sub-stagger flex flex-wrap gap-8 items-center justify-center mb-16">
-              <CTAButton to="/contact" size="sm">
+            <div className="hero-fade mt-10 md:mt-12 flex flex-wrap items-center gap-x-8 gap-y-5">
+              <CTAButton to="/contact" size="md">
                 {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
               </CTAButton>
-              <a href="#aanpak" className="inline-flex items-center gap-2 text-accent hover:text-accent/80 text-base font-medium transition-all duration-300 hover:gap-4 group/aanpak">
-                {language === 'nl' ? 'Bekijk onze aanpak' : 'View our approach'} 
-                <ArrowRight size={20} className="group-hover/aanpak:translate-x-1 transition-transform" />
+              <a href="#oplossingen" className="group/hero-link inline-flex items-center gap-2 text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
+                {language === 'nl' ? 'Bekijk onze oplossingen' : 'View our solutions'}
+                <ArrowRight size={18} className="transition-transform duration-300 group-hover/hero-link:translate-x-1" />
               </a>
             </div>
-
           </div>
-        </div>
 
-        {/* PARTNERS / TRUSTED BY SECTION */}
-        <div className={`relative z-10 w-full max-w-7xl pt-12 pb-12 mx-auto transition-all duration-[1000ms] delay-500 ease-[cubic-bezier(0.2,0,0,1)] ${isTypingDone ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="flex items-center gap-6 mb-12">
-            <div className="h-px flex-1 bg-foreground/10"></div>
-            <span className="text-[11px] font-bold tracking-[0.3em] text-foreground/40 uppercase whitespace-nowrap">
-              {language === 'nl' ? 'Bedrijven die op ons bouwen' : 'Companies building with us'}
+          {/* Stil bewijs: logo's van klanten, in kleur */}
+          <div className="mt-auto pt-20 flex flex-col md:flex-row md:items-center gap-6 md:gap-12">
+            <span className="hero-fade text-sm text-foreground/50 shrink-0">
+              {language === 'nl' ? 'Onder meer voor' : 'Trusted by'}
             </span>
-            <div className="h-px flex-1 bg-foreground/10"></div>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-12 transition-all duration-1000 ease-in-out">
-            {/* 
-               DYNAMIC LOGO LOADING: 
-               Vite automatically picks up any image files in src/assets/partners/
-            */}
-            {Object.entries(import.meta.glob('./assets/partners/*.{png,jpg,jpeg,svg,webp}', { eager: true }))
-              .filter(([path]) => {
-                const filename = path.split('/').pop().toLowerCase();
-                return !filename.includes('atl');
-              })
-              .map(([path, module]) => {
-                const filename = path.split('/').pop();
-                const companyName = filename.split('.')[0];
-                
-                const partnerLinks = {
-                  'a&m group': 'https://anmgroup.be/nl/',
-                  'croes nv': 'https://www.croesnv.be/'
-                };
-                const link = partnerLinks[companyName.toLowerCase()];
-
-                const cardContent = (
-                  <>
-                    <img src={module.default} alt={companyName} className="h-full w-auto object-contain" />
-                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] md:text-[11px] text-slate-900 font-bold opacity-100 transition-all duration-300 whitespace-nowrap bg-white px-4 py-1.5 rounded-full shadow-xl border border-slate-200 z-50 capitalize">
-                      {companyName.replace(/[-_]/g, ' ')}
-                    </span>
-                  </>
-                );
-
-                if (link) {
-                  return (
-                    <a 
-                      key={path}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/partner relative h-16 md:h-20 w-auto flex flex-col items-center justify-center transition-transform hover:scale-105 duration-500 px-4 cursor-pointer"
-                    >
-                      {cardContent}
-                    </a>
-                  );
-                }
-
-                return (
-                  <div key={path} className="group/partner relative h-16 md:h-20 w-auto flex flex-col items-center justify-center transition-transform hover:scale-105 duration-500 px-4">
-                    {cardContent}
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-      </section>
-
-      {/* STAGED CONTENT CONTAINER - Smoother fade with longer duration and delay */}
-      <div className={`transition-all duration-[1500ms] delay-700 ease-in-out ${isTypingDone ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        {/* C. NEWS GRID SECTION */}
-      <section id="verhaal" className="relative pb-24 px-6 md:px-16 bg-background text-foreground overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-             style={{
-               backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
-               backgroundSize: '4rem 4rem'
-             }}>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-12 scroll-animate">
-            <span className="text-foreground/40 text-[11px] font-bold tracking-[0.2em] uppercase whitespace-nowrap">{language === 'nl' ? 'Ons verhaal tot nu' : 'Our story so far'}</span>
-            <div className="h-px w-full bg-foreground/10"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <a href="https://www.made-in.be/limburg/trio-toont-bedrijven-wat-ai-allemaal-mogelijk-maakt/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-[box-shadow] duration-500">
-              <div className="flex flex-col h-full w-full transition-transform duration-500 group-hover:-translate-y-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
-                  <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">MADE IN LIMBURG</span>
-                </div>
-                <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
-                  {language === 'nl' ? 'Trio toont bedrijven wat AI allemaal mogelijk maakt' : 'Trio shows companies what AI makes possible'}
-                </h4>
-                <p className="text-foreground/50 text-sm leading-relaxed mb-8">
-                  {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants richtten TriaCore op en ontwikkelen AI-oplossingen op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants founded TriaCore and develop custom AI solutions for companies.'}
-                </p>
-                <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
-                  <span>{language === 'nl' ? 'Lees het artikel' : 'Read the article'}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </a>
-            <a href="https://www.vrt.be/vrtmax/luister/radio/r/radio-2-middag-in-limburg~23-3/radio-2-middag-in-limburg~23-20477-0/fragment~ba9a9797-be1e-4e54-b5c9-9dff908e5e13/" target="_blank" rel="noopener noreferrer" className="news-card-stagger group rounded-[2.5rem] bg-white border border-foreground/5 p-8 flex flex-col hover:shadow-xl transition-[box-shadow] duration-500">
-              <div className="flex flex-col h-full w-full transition-transform duration-500 group-hover:-translate-y-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent/30"></div>
-                  <span className="text-accent/50 text-[10px] font-bold uppercase tracking-[0.2em]">RADIO 2</span>
-                </div>
-                <h4 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors leading-snug">
-                  {language === 'nl' ? '3 jonge Limburgers helpen uw bedrijf met AI' : '3 young Limburgers help your business with AI'}
-                </h4>
-                <p className="text-foreground/50 text-sm leading-relaxed mb-8">
-                  {language === 'nl' ? 'Rian Mathijs, Lucas Curto en Staf Wynants startten TriaCore, een onderneming die AI-oplossingen aanbiedt op maat van bedrijven.' : 'Rian Mathijs, Lucas Curto and Staf Wynants started TriaCore, a company that offers AI solutions tailored to companies.'}
-                </p>
-                <div className="mt-auto flex items-center justify-between text-foreground/20 text-[10px] font-bold uppercase tracking-widest pt-4 border-t border-foreground/5">
-                  <span>{language === 'nl' ? 'Beluister het fragment' : 'Listen to the fragment'}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </a>
-          </div>
-
-          {/* FOUNDER MISSION SECTION - Cinematic 2-column layout (Platter version) */}
-          <div className="mt-6 mb-16 scroll-animate w-full">
-            <div className="group relative overflow-hidden rounded-[2.5rem] bg-[#070b19] border border-white/5 p-8 md:p-10 transition-all duration-500 hover:bg-[#090e21]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
-                {/* Left: Photos side-by-side (Square for platter look) */}
-                <div className="flex gap-4">
-                  <div className="flex-1 aspect-square rounded-[2rem] overflow-hidden grayscale border border-white/10 shadow-2xl transition-all duration-700 hover:grayscale-0 hover:scale-[1.02]">
-                    <AutoImage basePath="/team/lucas" alt="Lucas Curto" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 aspect-square rounded-[2rem] overflow-hidden grayscale border border-white/10 shadow-2xl transition-all duration-700 hover:grayscale-0 hover:scale-[1.02]">
-                    <AutoImage basePath="/team/rian" alt="Rian Mathijs" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-
-                {/* Right: Mission content vertically stacked */}
-                <div className="flex flex-col h-full justify-center">
-                  <div className="space-y-4">
-                    <span className="text-[11px] text-white/50 uppercase tracking-[0.3em] font-bold block">
-                      {language === 'nl' ? 'De missie van twee Vlaamse twintigers' : 'The mission of two Flemish twentysomethings'}
-                    </span>
-                    <div className="h-px w-20 bg-[#628f69]"></div>
-                    <p className="text-white text-base lg:text-lg leading-relaxed font-light">
-                      {language === 'nl' 
-                        ? "De meeste bedrijven gebruiken AI vandaag aan de oppervlakte. Het echte potentieel van AI ligt dieper: in de processen die bepalen hoe snel, hoe accuraat en hoe efficiënt een organisatie werkt. Dat potentieel blijft voor de meeste bedrijven onbenut. Het omzetten in iets concreets en meetbaars, dat is wat TriaCore doet."
-                        : "Most companies use AI on the surface today. The true potential of AI lies deeper: in the processes that determine how fast, how accurate, and how efficient an organization operates. That potential remains untapped for most companies. Turning it into something concrete and measurable, that is what TriaCore does."}
-                    </p>
-                  </div>
-                  
-                  <div className="mt-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <a href="#aanpak" className="flex items-center gap-2 text-white hover:text-accent transition-all duration-300 group/cta w-fit">
-                      <span className="font-medium border-b border-transparent group-hover/cta:border-accent transition-all">
-                        {language === 'nl' ? 'Ontdek hoe we dit doen' : 'Discover how we do this'}
-                      </span>
-                      <ArrowRight size={18} className="group-hover/cta:translate-x-1 transition-transform" />
-                    </a>
-                    
-                    <div className="flex gap-6 text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">
-                      <span className="hover:text-accent transition-colors duration-300">Lucas Curto</span>
-                      <span className="hover:text-accent transition-colors duration-300">Rian Mathijs</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Follow our story - Right aligned with line to the left */}
-          <div className="flex items-center gap-6 mt-16 scroll-animate">
-            <div className="h-px w-full bg-foreground/10"></div>
-            <div className="flex items-center gap-4 whitespace-nowrap">
-              <span className="text-foreground/40 text-[11px] font-bold tracking-[0.2em] uppercase">{language === 'nl' ? 'Volg ons verhaal' : 'Follow our story'}</span>
-              <div className="flex gap-4">
-                <a href="https://www.instagram.com/triacore.ai/" target="_blank" rel="noopener noreferrer" className="text-foreground/20 hover:text-accent transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" /></svg>
-                </a>
-                <a href="https://be.linkedin.com/company/triacore-ai" target="_blank" rel="noopener noreferrer" className="text-foreground/20 hover:text-accent transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" /></svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* D. CHALLENGES (SPLIT STICKY) */}
-      <section id="uitdagingen" className="relative bg-dark-section py-32 px-6 md:px-16 lg:px-24 border-b border-white/5 overflow-visible">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-start">
-            
-            {/* Left side - Fixed/Sticky */}
-            <div className="md:sticky md:top-32 self-start text-center md:text-left flex flex-col items-center md:items-start z-10">
-              <div className="section-label mb-6">{language === 'nl' ? 'UITDAGINGEN' : 'CHALLENGES'}</div>
-              <h2 className="hero-title text-white text-4xl md:text-6xl mb-6 scroll-animate">
-                {language === 'nl' ? 'Veel bedrijven zitten met dezelfde vragen.' : 'Many companies have the same questions.'}
-              </h2>
-              <p className="section-subtitle text-white/60 text-lg md:text-xl max-w-sm mx-auto md:mx-0 scroll-animate">
-                {language === 'nl' 
-                  ? 'Dit zijn de uitdagingen die wij dagelijks tegenkomen bij bedrijven.' 
-                  : 'These are the challenges we encounter daily at companies.'}
-              </p>
-            </div>
-
-            {/* Right side - Scrolling cards */}
-            <div className="flex flex-col gap-8 pb-12 md:pb-16">
-              {painPointsData.map((pt, i) => (
-                <div 
-                  key={i} 
-                  className="pain-point-item scroll-animate group relative"
-                >
-                  {/* The Card - Now Rectangular with increased vertical breathing room */}
-                  <div className={`relative overflow-hidden rounded-none bg-[#0a0a1a]/40 backdrop-blur-xl border transition-all duration-700 pt-20 pb-24 px-10 md:pt-32 md:pb-40 md:px-16 
-                    ${activePainPoint === i ? 'border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.4)]' : 'border-white/5 opacity-40 scale-[0.98]'}`}
-                  >
-                    {/* Liquid Background Effect - Animated radial glow */}
-                    {activePainPoint === i && (
-                      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                        <div className="absolute -inset-[100%] bg-[radial-gradient(circle_at_center,rgba(98,143,105,0.12)_0%,transparent_60%)] animate-liquid-flow opacity-70" />
-                        <div className="absolute -inset-[100%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_50%)] animate-liquid-flow opacity-50" style={{ animationDirection: 'reverse', animationDuration: '20s' }} />
-                      </div>
-                    )}
-
-                    {/* Sharper Architectural Corner Accents - Closer to edges and smaller */}
-                    <div className={`absolute top-5 left-5 w-4 h-4 border-t border-l transition-all duration-700 ${activePainPoint === i ? 'border-accent/60 w-6 h-6' : 'border-white/10'}`} />
-                    <div className={`absolute top-5 right-5 w-4 h-4 border-t border-r transition-all duration-700 ${activePainPoint === i ? 'border-accent/60 w-6 h-6' : 'border-white/10'}`} />
-                    <div className={`absolute bottom-5 left-5 w-4 h-4 border-b border-l transition-all duration-700 ${activePainPoint === i ? 'border-accent/60 w-6 h-6' : 'border-white/10'}`} />
-                    <div className={`absolute bottom-5 right-5 w-4 h-4 border-b border-r transition-all duration-700 ${activePainPoint === i ? 'border-accent/60 w-6 h-6' : 'border-white/10'}`} />
-
-                    <div className="relative z-10 flex flex-col w-full">
-                      <span className={`font-mono text-[10px] uppercase tracking-[0.4em] mb-8 transition-colors duration-500 ${activePainPoint === i ? 'text-accent' : 'text-white/20'}`}>
-                        // {pt.num}
-                      </span>
-                      
-                      <h3 className={`text-xl md:text-2xl font-medium mb-4 leading-tight transition-colors duration-500 ${activePainPoint === i ? 'text-white' : 'text-white/70'}`}>
-                        {pt.title}
-                      </h3>
-                      
-                      <p className={`text-base md:text-lg font-light leading-relaxed transition-colors duration-500 ${activePainPoint === i ? 'text-white/60' : 'text-white/30'}`}>
-                        {pt.body}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            <div className="flex flex-wrap items-center gap-x-12 gap-y-6">
+              {[
+                ...projecten.map((p) => ({ name: p.client, logo: p.logo })),
+                ...workshopKlanten.map((w) => ({ name: w.name, logo: w.logo }))
+              ].map((c) => (
+                <span key={c.name} className="hero-logo inline-flex">
+                  <img
+                    src={c.logo}
+                    alt={c.name}
+                    className="h-8 md:h-10 w-auto max-w-[150px] object-contain mix-blend-multiply"
+                  />
+                </span>
               ))}
             </div>
           </div>
         </div>
       </section>
-      <div className="relative w-full bg-dark-section">
-        {/* E. SOLUTIONS (OUR APPROACH) */}
-        <section id="aanpak" className="relative pt-16 md:pt-24 pb-12 md:pb-20 bg-dark-section border-t border-white/5 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
-            <div className="max-w-4xl mx-auto text-center mb-20 md:mb-24">
-              <h2 className="hero-title text-white text-4xl md:text-6xl mb-6 scroll-animate">
-                {language === 'nl' ? 'Onze aanpak.' : 'Our approach.'}
+
+      <div>
+      {/* C2. KLANTCASES SECTION */}
+      <section id="klantcases" className="relative pt-20 md:pt-28 pb-24 md:pb-32 px-6 md:px-16 lg:px-24 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto">
+          <div data-reveal-head className="text-center mb-14 md:mb-16">
+            <div className="overflow-hidden pb-3 mb-3">
+              <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+                {language === 'nl' ? 'Bewezen in de praktijk.' : 'Proven in practice.'}
               </h2>
-              <p className="section-subtitle text-white/60 text-lg md:text-xl max-w-3xl mx-auto scroll-animate">
-                {language === 'nl' 
-                  ? 'Niet elke uitdaging vraagt om dezelfde oplossing. Wij bieden de structuur die past bij uw ambitie.' 
-                  : 'Not every challenge requires the same solution. We provide the structure that fits your ambition.'}
-              </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Card 1 — volledig breed, 3 kolommen */}
-              <div className="md:col-span-3 scroll-card-aanpak-left group relative bg-[#0a0a1a]/40 backdrop-blur-xl border border-white/10 p-10 md:p-14 flex flex-col items-center text-center justify-center min-h-[400px]">
-                <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                
-                <span className="font-mono text-[10px] uppercase tracking-[0.4em] mb-8 text-accent">
-                  // {language === 'nl' ? 'WAT IS EEN CUSTOM OPLOSSING?' : 'WHAT IS A CUSTOM SOLUTION?'}
-                </span>
-                <h3 className="text-xl md:text-2xl font-medium leading-relaxed text-white max-w-2xl">
-                  {language === 'nl' 
-                    ? 'Een custom oplossing is software op maat, volledig gebouwd rond uw processen en uw mensen. We integreren AI waar het rendeert en pakken het probleem aan dat u vandaag tijd, geld of fouten kost.'
-                    : 'A custom solution is tailored software, built entirely around your processes and your people. We integrate AI where it pays off and tackle the problem that currently costs you time, money, or errors.'}
-                </h3>
-              </div>
-
-
-              {/* Card 2 — volledig breed, 3 kolommen */}
-              <div className="md:col-span-3 scroll-card-aanpak-right group relative bg-[#0a0a1a]/40 backdrop-blur-xl border border-white/10 p-10 md:p-14 overflow-hidden">
-                <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-
-                <span className="font-mono text-[10px] uppercase tracking-[0.4em] mb-12 block text-accent">
-                  // {language === 'nl' ? 'HOE WIJ UW PROBLEEM OPLOSSEN' : 'HOW WE SOLVE YOUR PROBLEM'}
-                </span>
-                
-                <div className="flex flex-col items-center w-full py-6 md:py-10">
-                  {/* TOP FLOW - Centered Grid for perfect alignment */}
-                  <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-6 md:gap-8 w-full">
-                    {/* 01: Problem */}
-                    <div className="flex justify-center md:justify-end">
-                      <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 text-center w-full md:w-[280px] min-h-[120px] flex flex-col justify-center relative group/flow">
-                        <span className="block font-mono text-[10px] text-white/30 mb-2 tracking-[0.2em] uppercase">// 01</span>
-                        <span className="text-white font-medium text-lg md:text-xl leading-tight">{language === 'nl' ? 'Uw probleem' : 'Your problem'}</span>
-                      </div>
-                    </div>
-                    
-                    <ArrowRight size={24} className="text-white/10 mx-auto rotate-90 md:rotate-0" />
-                    
-                    {/* 02: Custom Solution + Connection Line */}
-                    <div className="flex flex-col items-center">
-                      <div className="bg-accent rounded-[2rem] p-6 text-center w-full md:w-[280px] min-h-[120px] flex flex-col justify-center shadow-2xl shadow-accent/20 relative scale-105 md:scale-110 z-10">
-                        <span className="block font-mono text-[10px] text-black/50 mb-2 tracking-[0.2em] uppercase font-bold">// 02</span>
-                        <span className="text-black font-bold text-lg md:text-xl leading-tight">{language === 'nl' ? 'Custom oplossing' : 'Custom solution'}</span>
-                      </div>
-                      {/* VERTICAL LINE - Now inside the same column for perfect alignment */}
-                      <div className="hidden md:block h-20 w-px bg-white/10 -mb-20 mt-4 relative z-0"></div>
-                    </div>
-                    
-                    <ArrowRight size={24} className="text-white/10 mx-auto rotate-90 md:rotate-0" />
-                    
-                    {/* 03: Result */}
-                    <div className="flex justify-center md:justify-start">
-                      <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 text-center w-full md:w-[280px] min-h-[120px] flex flex-col justify-center relative group/flow">
-                        <span className="block font-mono text-[10px] text-white/30 mb-2 tracking-[0.2em] uppercase">// 03</span>
-                        <span className="text-white font-medium text-lg md:text-xl leading-tight">{language === 'nl' ? 'Uw bedrijf werkt efficiënter' : 'Your business works more efficiently'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* SPACING BEFORE PILLARS */}
-                  <div className="h-24 md:h-32"></div>
-
-                  {/* SUBTITLE */}
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-16 font-bold text-center">
-                    {language === 'nl' ? 'WAT WE GEBRUIKEN OM HET PROBLEEM OP TE LOSSEN' : 'WHAT WE USE TO SOLVE THE PROBLEM'}
-                  </span>
-
-                  {/* GRID / PILLARS */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 w-full relative">
-                    {/* Connection Lines (Desktop only) */}
-                    <div className="hidden md:block absolute top-[-40px] left-1/2 -translate-x-1/2 w-[75%] h-px bg-white/10"></div>
-                    <div className="hidden md:block absolute top-[-40px] left-[12.5%] w-px h-[40px] bg-white/10"></div>
-                    <div className="hidden md:block absolute top-[-40px] left-[37.5%] w-px h-[40px] bg-white/10"></div>
-                    <div className="hidden md:block absolute top-[-40px] left-[62.5%] w-px h-[40px] bg-white/10"></div>
-                    <div className="hidden md:block absolute top-[-40px] left-[87.5%] w-px h-[40px] bg-white/10"></div>
-
-                    {[
-                      { 
-                        icon: <Sparkles size={20} />, 
-                        title: language === 'nl' ? "AI-integratie" : "AI integration", 
-                        sub: language === 'nl' ? "Slim ingebouwd" : "Smartly integrated",
-                        clickable: true,
-                        modal: 'ai'
-                      },
-                      { 
-                        icon: <Smartphone size={20} />, 
-                        title: language === 'nl' ? "Mobiele app" : "Mobile app", 
-                        sub: language === 'nl' ? "Voor taken onderweg" : "For tasks on the go",
-                        clickable: true
-                      },
-                      { 
-                        icon: <Layout size={20} />, 
-                        title: language === 'nl' ? "Webplatform" : "Web platform", 
-                        sub: language === 'nl' ? "Centraal beheer" : "Central management",
-                        clickable: true,
-                        modal: 'web'
-                      },
-                      { 
-                        icon: <Cog size={20} />, 
-                        title: language === 'nl' ? "Automatisering" : "Automation", 
-                        sub: language === 'nl' ? "Minder manueel werk" : "Less manual work",
-                        clickable: true,
-                        modal: 'auto'
-                      },
-                    ].map((item, i) => (
-                      <div 
-                        key={i} 
-                        onClick={item.clickable ? 
-                          (item.modal === 'web' ? () => setIsWebplatformModalOpen(true) : 
-                           item.modal === 'auto' ? () => setIsAutomationModalOpen(true) : 
-                           item.modal === 'ai' ? () => setIsAIModalOpen(true) :
-                           () => setIsMobileAppModalOpen(true)) 
-                          : undefined}
-                        className={`flex flex-col items-center text-center group/item transition-all duration-300 ${item.clickable ? 'cursor-pointer hover:-translate-y-1' : ''}`}
-                      >
-                        <div className={`w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-accent mb-5 group-hover/item:bg-accent/20 group-hover/item:border-accent/50 transition-all duration-500 shadow-xl shadow-black/20 ${item.clickable ? 'group-hover/item:scale-110' : ''}`}>
-                          {item.icon}
-                        </div>
-                        <span className="text-white font-medium mb-1.5 block md:text-lg group-hover/item:text-accent transition-colors duration-300">{item.title}</span>
-                        <span className="text-white/30 text-[11px] md:text-xs font-light uppercase tracking-wider mb-4 min-h-[2rem] md:min-h-[2.5rem] flex items-start justify-center px-2">
-                          {item.sub}
-                        </span>
-                        
-                        {item.clickable && (
-                          <div className="inline-flex items-center gap-2 text-accent text-[10px] font-bold uppercase tracking-widest group-hover/item:gap-4 transition-all duration-300">
-                            {language === 'nl' ? 'Meer info' : 'More info'} <ArrowRight size={14} />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 3 — breed, 3 kolommen */}
-              <div className="md:col-span-3 scroll-card-aanpak-bottom group relative bg-[#0a0a1a]/40 backdrop-blur-xl border border-white/10 py-16 px-10 md:py-24 md:px-16 flex flex-col justify-center min-h-[450px]">
-                <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-                <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-white/10 group-hover:border-accent/60 group-hover:w-6 group-hover:h-6 transition-all duration-700" />
-
-                <div className="max-w-2xl">
-                  <p className="text-white/60 italic text-lg md:text-2xl leading-relaxed mb-12">
-                    {language === 'nl'
-                      ? '"Chatten met AI is niet waar uw bedrijf het verschil mee maakt. AI die diep geïntegreerd is in uw processen, dat is waar de echte winst gemaakt wordt. Daarom bouwen wij custom oplossingen die AI enkel inzetten waar het een optimale return heeft voor uw bedrijf."'
-                      : '"Chatting with AI is not where your company makes the difference. AI that is deeply integrated into your processes, that is where the real profit is made. That is why we build custom solutions that only deploy AI where it has an optimal return for your company."'}
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 grayscale border border-white/10">
-                      <AutoImage basePath="/team/lucas" alt="Lucas Curto" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <p className="text-white font-medium text-lg">Lucas Curto</p>
-                      <p className="text-white/30 text-xs uppercase tracking-wider">co-founder TriaCore AI</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-center mt-20">
-              <CTAButton to="/custom-oplossingen" variant="light" size="sm">
-                {language === 'nl' ? 'Ontdek meer over custom oplossingen' : 'Discover more about custom solutions'}
-              </CTAButton>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      {/* F1. KLANTCASES SECTION */}
-      <section id="klantcases" className="relative bg-dark-section py-24 md:py-32 px-6 md:px-16 lg:px-24 border-t border-white/5 overflow-hidden">
-        {/* Overgang naar wit, gecentreerd achter de kaart. De kaart zelf is
-            ondoorzichtig (zie verderop), dus deze laag schemert nergens door
-            de kaart heen — hij is alleen zichtbaar rond de kaart en helemaal
-            onderaan de sectie. Blijft donker tot ongeveer het midden van de
-            kaart, loopt daarna naar wit. "in oklab" interpolatie (CSS Color 4)
-            i.p.v. sRGB voorkomt de dofblauwgrijze band die je krijgt bij een
-            lineaire mix van heel donker naar wit. */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'linear-gradient(in oklab to bottom, #020617 0%, #020617 50%, #ffffff 78%, #ffffff 100%)' }}
-        />
-        <div className="relative max-w-6xl mx-auto">
-          <div className="text-center mb-14 md:mb-16">
-            <h2 className="hero-title text-white text-4xl md:text-5xl mb-6 scroll-animate">
-              {language === 'nl' ? 'Bewezen in de praktijk.' : 'Proven in practice.'}
-            </h2>
-            <p className="section-subtitle text-white/60 text-lg md:text-xl max-w-xl mx-auto scroll-animate">
+            <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-xl mx-auto">
               {language === 'nl'
                 ? 'Bedrijven waarmee we processen herbouwden, geen losstaande experimenten.'
                 : 'Companies whose processes we rebuilt, not standalone experiments.'}
             </p>
           </div>
 
-          {/* Zelfde kaartstijl als de aanpak sectie hierboven, maar nu
-              volledig ondoorzichtig: geen /40 en geen backdrop-blur meer, dus
-              de kaart houdt altijd zijn eigen kleur, ongeacht wat erachter
-              gebeurt. */}
-          <div className="group/card relative bg-[#0a0a1a] border border-white/10 p-8 md:p-14">
-            <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
-            <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
-            <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
-            <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-white/10 group-hover/card:border-accent/60 group-hover/card:w-6 group-hover/card:h-6 transition-all duration-700" />
-
-            <div className="klantcases-track relative">
-              {/* Verticale rail — vaste geleidelijn */}
-              <div
-                className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/10"
-              />
-              {/* Verticale rail — animeert mee terwijl je scrollt */}
-              <div
-                className="klantcases-rail-fill hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 origin-top"
-                style={{ background: 'linear-gradient(to bottom, transparent, rgba(98,143,105,0.9) 10%, rgba(98,143,105,0.9) 90%, transparent)' }}
-              />
-
-              <div className="space-y-12 md:space-y-16">
-                {/* Croes NV */}
-                <div className="klantcases-row scroll-animate relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
-                  <div className="md:text-right md:pr-10 text-center md:text-right">
-                    <span className="text-[11px] uppercase tracking-wider text-accent font-semibold">
-                      {language === 'nl' ? 'Bouw & grondwerken' : 'Construction & earthworks'}
-                    </span>
-                    <h3 className="text-xl md:text-2xl font-serif text-white mt-2 mb-2">Croes NV</h3>
-                    <p className="text-white/50 text-sm md:text-base leading-relaxed">
-                      {language === 'nl'
-                        ? 'Chauffeurs vulden duizenden papieren bonnen per maand in, vaak onvolledig. Nu legt een planningsplatform en chauffeursapp alles automatisch vast.'
-                        : 'Drivers filled in thousands of paper delivery notes a month, often incomplete. Now a planning platform and driver app capture everything automatically.'}
-                    </p>
-                  </div>
-                  <div className="klantcases-dot hidden md:flex absolute left-1/2 top-1/2 w-3 h-3 rounded-full bg-accent border-4 border-[#0a0a1a] -translate-x-1/2 -translate-y-1/2" />
-                  <div className="md:pl-10 flex justify-center md:justify-start">
-                    <div className="w-full max-w-[220px] h-24 rounded-[1.5rem] bg-white/95 border border-white/10 flex items-center justify-center p-6">
-                      <img src={croesLogo} alt="Croes NV" className="max-h-10 w-auto object-contain" />
-                    </div>
-                  </div>
+          {/* Lichte kaarten naast elkaar. De projecten komen uit src/data/projecten.jsx,
+              zodat homepage en projectenpagina altijd hetzelfde vertellen. De workshopklanten
+              (zie workshopKlanten bovenaan) hebben geen projectpagina.
+              Kaarten hebben een vaste breedte en staan altijd gecentreerd; wat niet past, bereik je met de pijltjes */}
+          <CardCarousel>
+            {[
+              ...projecten.map((p) => ({
+                key: p.slug,
+                to: `/projecten/${p.slug}`,
+                logo: p.logo,
+                client: p.client,
+                sector: p.sector[language],
+                description: p.description[language],
+                cta: language === 'nl' ? 'Bekijk de case' : 'View the case'
+              })),
+              ...workshopKlanten.map((w) => ({
+                key: w.key,
+                to: '/workshops',
+                logo: w.logo,
+                client: w.name,
+                sector: w.sector[language],
+                description: language === 'nl'
+                  ? `We gaven het team van ${w.name} een workshop over AI: wat het vandaag kan en hoe je het concreet inzet in je werk.`
+                  : `We gave the ${w.name} team a workshop on AI: what it can do today and how to put it to concrete use in your work.`,
+                cta: language === 'nl' ? 'Bekijk onze workshops' : 'View our workshops'
+              }))
+            ].map((c) => (
+              <Link
+                key={c.key}
+                to={c.to}
+                className="klantcases-card group relative shrink-0 w-[82vw] sm:w-[400px] flex flex-col min-h-[360px] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-8 md:p-10 transition-colors duration-500 hover:bg-white hover:border-foreground/15"
+              >
+                <CornerTrace />
+                {/* Vaste hoogte, zodat logo's en namen over de drie kaarten op één lijn staan.
+                    Multiply laat een witte logoachtergrond wegvallen tegen de kaart */}
+                <div className="h-16 flex items-center mb-8">
+                  <img
+                    src={c.logo}
+                    alt={c.client}
+                    className="max-h-12 max-w-[140px] w-auto object-contain mix-blend-multiply"
+                  />
                 </div>
-
-                {/* A&M Group */}
-                <div className="klantcases-row scroll-animate relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
-                  <div className="md:pr-10 order-2 md:order-1 flex justify-center md:justify-end">
-                    <div className="w-full max-w-[220px] h-24 rounded-[1.5rem] bg-white/95 border border-white/10 flex items-center justify-center p-6">
-                      <img src={amGroupLogo} alt="A&M Group" className="max-h-10 w-auto object-contain" />
-                    </div>
-                  </div>
-                  <div className="klantcases-dot hidden md:flex absolute left-1/2 top-1/2 w-3 h-3 rounded-full bg-accent border-4 border-[#0a0a1a] -translate-x-1/2 -translate-y-1/2" />
-                  <div className="md:pl-10 order-1 md:order-2 text-center md:text-left">
-                    <span className="text-[11px] uppercase tracking-wider text-accent font-semibold">
-                      Automotive
-                    </span>
-                    <h3 className="text-xl md:text-2xl font-serif text-white mt-2 mb-2">A<span className="font-sans">&amp;</span>M Group</h3>
-                    <p className="text-white/50 text-sm md:text-base leading-relaxed">
-                      {language === 'nl' ? 'Binnenkort beschikbaar.' : 'Coming soon.'}
-                    </p>
-                  </div>
+                <h3 className="text-2xl font-medium text-foreground leading-tight">
+                  {c.client}
+                </h3>
+                <span className="mt-1 text-sm text-foreground/50">{c.sector}</span>
+                <span className="rv-line block h-px mt-8 bg-foreground/10 origin-left" />
+                <p className="mt-8 text-foreground/60 text-[15px] leading-relaxed">
+                  {c.description}
+                </p>
+                <div className="mt-auto pt-10 flex items-center gap-2 text-sm font-medium text-foreground/70 transition-colors duration-300 group-hover:text-accent">
+                  {c.cta}
+                  <ArrowRight size={16} className="shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
-              </div>
-            </div>
+              </Link>
+            ))}
+          </CardCarousel>
 
-            <div className="flex justify-center mt-12 md:mt-16">
-              <CTAButton to="/projecten" variant="light" size="sm">
+          <div data-reveal-head className="flex justify-center mt-12 md:mt-16">
+            <div className="rv-fade">
+              <CTAButton to="/projecten" size="sm">
                 {language === 'nl' ? 'Bekijk al onze projecten' : 'View all our projects'}
               </CTAButton>
             </div>
@@ -1374,147 +509,281 @@ function App() {
         </div>
       </section>
 
-      {/* F2. RESOURCES SECTION */}
-      <section id="resources" className="relative py-24 md:py-32 px-6 md:px-16 lg:px-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            {/* Links op desktop, onderaan op mobiel: roterende resource */}
-            <div className="scroll-animate order-2 lg:order-1">
-              <ResourceCarousel />
-            </div>
+      {/* C3. OPLOSSINGEN SECTION */}
+      {/* Grote rijen: uitleg links, titel rechts in het groot */}
+      <section id="oplossingen" className="relative pt-16 md:pt-24 pb-24 md:pb-32 px-6 md:px-16 lg:px-24">
+        <div className="relative max-w-7xl mx-auto">
+          <div data-reveal-head className="overflow-hidden pb-3 mb-11 md:mb-17">
+            <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+              {language === 'nl' ? 'Onze oplossingen.' : 'Our solutions.'}
+            </h2>
+          </div>
 
-            {/* Rechts op desktop, bovenaan op mobiel: titel, uitleg en inschrijven */}
-            <div className="scroll-animate order-1 lg:order-2">
-              <div className="section-label mb-6">{language === 'nl' ? 'BLIJF OP DE HOOGTE' : 'STAY UPDATED'}</div>
-              <h2 className="hero-title text-foreground text-4xl md:text-6xl mb-6">
-                {language === 'nl' ? 'Gratis resources.' : 'Free resources.'}
-              </h2>
-              <p className="section-subtitle text-foreground/60 text-lg md:text-xl mb-8">
-                {language === 'nl'
-                  ? 'Praktische tools, promptgidsen en ideeën. Schrijf je in en ontvang een mailtje zodra er een nieuwe resource verschijnt.'
-                  : 'Practical tools, prompt guides and ideas. Subscribe and get an email the moment a new resource is published.'}
-              </p>
-              <NewsletterSignup variant="inline" hideInvite align="start" />
+          <div>
+            {[
+              {
+                to: '/custom-oplossingen',
+                title: language === 'nl' ? 'Custom oplossingen' : 'Custom solutions',
+                desc: language === 'nl'
+                  ? 'Software rond uw processen, met AI waar het rendeert. Een platform, een app of een automatisering, gebouwd rond hoe uw bedrijf echt werkt.'
+                  : 'Software built around your processes, with AI where it pays off. A platform, an app or an automation, built around how your business really works.'
+              },
+              {
+                to: '/workshops',
+                title: 'Workshops',
+                desc: language === 'nl'
+                  ? 'Uw team leert zelf werken met AI. Praktisch, op maat van uw sector en met voorbeelden uit het eigen werk.'
+                  : 'Your team learns to work with AI themselves. Practical, tailored to your sector and with examples from their own work.'
+              },
+              {
+                to: '/contact',
+                title: language === 'nl' ? 'AI begeleiding' : 'AI guidance',
+                desc: language === 'nl'
+                  ? 'We zetten AI volledig voor u op: het juiste plan in ChatGPT of Claude, workflows en connectoren, MCP tools en skills. Zo kan uw team er meteen mee aan de slag.'
+                  : 'We set up AI for you from start to finish: the right ChatGPT or Claude plan, workflows and connectors, MCP tools and skills. So your team can get going right away.'
+              }
+            ].map((s, i) => (
+              <Link
+                key={s.to}
+                to={s.to}
+                className="oplossing-row group relative grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 py-10 md:py-14 lg:min-h-[300px]"
+              >
+                <span className="rv-line absolute inset-x-0 top-0 h-px bg-foreground/15 origin-left" />
 
-              <Link to="/resources" className="mt-6 inline-flex items-center text-foreground/70 hover:text-accent text-lg font-medium transition-all duration-300 group/resources">
-                {language === 'nl' ? 'Bekijk alle resources' : 'View all resources'}
-                <ArrowRight size={20} className="inline-block ml-2 group-hover/resources:ml-4 transition-all duration-300" />
-              </Link>
+                {/* Op gsm eerst de titel, op desktop rechts in het groot */}
+                <div className="lg:order-2 lg:col-span-7 overflow-hidden pb-[0.12em]">
+                  <h3 className="rv-mask-inner lg:text-right text-5xl md:text-7xl xl:text-8xl font-normal tracking-tight leading-[0.95] text-foreground transition-colors duration-500 group-hover:text-accent">
+                    {s.title}
+                  </h3>
+                </div>
 
-              {/* Quote van Rian */}
-              <div className="mt-10 max-w-md">
-                <p className="text-foreground/50 text-sm leading-relaxed mb-4">
-                  {language === 'nl'
-                    ? '"We willen niet alleen bedrijven vooruit helpen, maar iedereen die wil bijblijven in de AI-revolutie. Praktische tips, inzichten en AI-nieuws waarmee je zelf betere resultaten boekt, in je werk en daarbuiten."'
-                    : '"We don\'t just want to help companies move forward, but everyone who wants to keep up with the AI revolution. Practical tips to get better results yourself, in your work and beyond."'}
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 grayscale bg-foreground/5">
-                    <AutoImage basePath="/team/rian" alt="Rian Mathijs" className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <p className="text-foreground font-medium text-sm">Rian Mathijs</p>
-                    <p className="text-foreground/40 text-[11px] uppercase tracking-wider">Co-Founder TriaCore AI</p>
+                <div className="lg:order-1 lg:col-span-5 flex flex-col">
+                  <p className="rv-fade text-lg text-foreground/70 leading-relaxed max-w-sm">{s.desc}</p>
+                  <div className="rv-fade mt-8 lg:mt-auto flex items-center gap-3 text-sm text-foreground/40">
+                    <span className="tabular-nums">/{String(i + 1).padStart(2, '0')}</span>
+                    <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all duration-300 text-accent group-hover:opacity-100 group-hover:translate-x-0" />
                   </div>
                 </div>
-              </div>
+              </Link>
+            ))}
+            <span className="rv-line oplossing-end block h-px bg-foreground/15 origin-left" />
+          </div>
+        </div>
+      </section>
+
+      {/* C4. AANPAK SECTION */}
+      {/* Het logo als schema: elke balk is een pijler. Op grote schermen scrolt de sectie gewoon mee, en
+          terwijl ze door het beeld schuift, krijgt elke balk om beurten een lijn naar zijn pijler
+          (de middelste balk naar links, de andere naar rechts). Tot slot staat alles weer volledig.
+          Op kleinere schermen een gewone lijst, met de balkjes als opsommingsteken */}
+      <section id="aanpak" className="relative px-6 md:px-16 lg:px-24 py-24 md:py-32">
+        <div className="flex flex-col justify-center max-w-7xl mx-auto">
+          <div data-reveal-head className="text-center mb-14 xl:mb-16">
+            <div className="overflow-hidden pb-3">
+              <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+                {language === 'nl' ? 'Onze aanpak.' : 'Our approach.'}
+              </h2>
+            </div>
+          </div>
+
+          {/* Grote schermen: het schema, geschaald zodat het altijd past */}
+          <div className="aanpak-diagram hidden xl:block relative w-full" style={{ height: AANPAK.logoH * aanpakScale }}>
+          <div className="absolute left-1/2 top-0" style={{ width: AANPAK.totalW, height: AANPAK.logoH, marginLeft: -AANPAK.totalW / 2, transform: `scale(${aanpakScale})`, transformOrigin: 'top center' }}>
+            {AANPAK.bars.map((b, i) => (
+              <span
+                key={i}
+                className="aanpak-bar absolute rounded-full bg-foreground"
+                style={{ left: `calc(50% + ${b.left}px)`, top: b.top, width: AANPAK.barW, height: AANPAK.barH }}
+              />
+            ))}
+            {aanpakPijlers[language].map((p, i) => {
+              const toRight = i !== 1;
+              const rowY = AANPAK.bars[i].top + AANPAK.barH / 2;
+              return (
+                <React.Fragment key={p.word}>
+                  <span
+                    className="aanpak-line absolute h-px bg-foreground/25"
+                    style={{
+                      top: rowY,
+                      width: AANPAK.lineLen,
+                      left: toRight ? `calc(50% + ${AANPAK.lineFrom}px)` : `calc(50% - ${AANPAK.lineFrom + AANPAK.lineLen}px)`,
+                      transformOrigin: toRight ? 'left center' : 'right center'
+                    }}
+                  />
+                  <div
+                    className={`aanpak-text absolute ${toRight ? 'text-left' : 'text-right'}`}
+                    style={{
+                      top: rowY - 22,
+                      width: AANPAK.textW,
+                      [toRight ? 'left' : 'right']: `calc(50% + ${AANPAK.textFrom}px)`
+                    }}
+                  >
+                    <div className={`flex items-baseline gap-3 ${toRight ? '' : 'justify-end'}`}>
+                      <span className="text-base text-accent tabular-nums">/0{i + 1}</span>
+                      <span className="text-4xl font-medium text-foreground leading-[44px]">{p.word}</span>
+                    </div>
+                    <p className="mt-2 text-lg text-foreground/60 leading-relaxed">{p.desc}</p>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+          </div>
+
+          {/* Kleinere schermen: een lijst, de balkjes verspringen zoals in het logo */}
+          <div className="xl:hidden">
+            <ol data-reveal-head className="max-w-xl mx-auto space-y-10">
+              {aanpakPijlers[language].map((p, i) => (
+                <li key={p.word} className="rv-fade flex gap-5">
+                  <span className={`mt-3 h-2.5 w-12 shrink-0 rounded-full bg-foreground ${i === 1 ? 'ml-4' : 'mr-4'}`} aria-hidden="true" />
+                  <div>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-sm text-accent tabular-nums">/0{i + 1}</span>
+                      <span className="text-2xl font-medium text-foreground">{p.word}</span>
+                    </div>
+                    <p className="mt-1 text-[15px] text-foreground/60 leading-relaxed">{p.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* C5. QUOTES SECTION */}
+      {/* Eén quote tegelijk, rustig. De logo's onderaan zijn tegelijk de tabs.
+          De quote gebruikt de volle inhoudsbreedte, net als de secties erboven */}
+      <section id="quotes" className="relative pt-16 md:pt-24 pb-8 md:pb-12 px-6 md:px-16 lg:px-24">
+        <div className="relative max-w-7xl mx-auto">
+          <div data-reveal-head className="overflow-hidden pb-3 mb-6 md:mb-8">
+            <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+              {language === 'nl' ? 'Wat klanten zeggen.' : 'What clients say.'}
+            </h2>
+          </div>
+          <div data-reveal-head>
+            <div className="rv-fade">
+              <QuoteStage items={klantQuotes} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* G. TEAM SECTION */}
-      <section id="team" className="relative pt-16 md:pt-20 pb-20 px-6 md:px-16 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20 md:mb-24">
-            <h2 className="hero-title text-foreground text-4xl md:text-6xl mb-6 scroll-animate">
-              {language === 'nl' ? 'Het team achter TriaCore AI.' : 'The team behind TriaCore AI.'}
-            </h2>
-            <p className="section-subtitle text-foreground/60 text-lg md:text-xl max-w-3xl mx-auto scroll-animate">
+      {/* C6. TEAM SECTION */}
+      {/* Redactionele opmaak: titel links, twee grote portretten rechts die in hoogte verspringen.
+          De L lijn rond de foto's knipoogt naar de klantcases, zonder dezelfde kaarten te herhalen */}
+      <section id="team" className="relative pt-16 md:pt-24 pb-20 md:pb-28 px-6 md:px-16 lg:px-24">
+        <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-16 items-start">
+          <div data-reveal-head className="lg:col-span-4 lg:sticky lg:top-36">
+            <div className="overflow-hidden pb-3 mb-3">
+              <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+                {language === 'nl' ? 'Het team achter TriaCore AI.' : 'The team behind TriaCore AI.'}
+              </h2>
+            </div>
+            <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-sm">
               {language === 'nl' ? 'Een complementair team dat structuur brengt in elke implementatie.' : 'A complementary team that brings structure to every implementation.'}
             </p>
+            <div className="rv-fade mt-10 flex">
+              <CTAButton to="/team" size="sm">{language === 'nl' ? 'Leer ons team kennen' : 'Get to know our team'}</CTAButton>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mb-16 px-4 md:px-0 max-w-4xl mx-auto">
+
+          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-14 sm:gap-10 md:gap-14">
             {[
-              { name: "Rian", role: language === 'nl' ? "Sales & Klantrelaties" : "Sales & Client Relations", image: "/team/rian", desc: language === 'nl' ? "Eerste aanspreekpunt voor klanten en zorgt voor duidelijke afstemming en opvolging." : "First point of contact for clients, ensuring clear alignment and follow-up." },
-              { name: "Lucas", role: language === 'nl' ? "Operationeel & Technische Architectuur" : "Operations & Technical Architecture", image: "/team/lucas", desc: language === 'nl' ? "Ontwerpt de technische architectuur en schaalbare AI-systemen." : "Designs the technical architecture and scalable AI systems." }
+              { name: 'Lucas Curto', role: language === 'nl' ? 'Operationeel & Technische Architectuur' : 'Operations & Technical Architecture', image: '/team/lucas', desc: language === 'nl' ? 'Ontwerpt de technische architectuur en schaalbare AI-systemen.' : 'Designs the technical architecture and scalable AI systems.' },
+              { name: 'Rian Mathijs', role: language === 'nl' ? 'Sales & Klantrelaties' : 'Sales & Client Relations', image: '/team/rian', desc: language === 'nl' ? 'Eerste aanspreekpunt voor klanten en zorgt voor duidelijke afstemming en opvolging.' : 'First point of contact for clients, ensuring clear alignment and follow-up.' }
             ].map((member, i) => (
-              <div key={i} className="group bg-white p-8 rounded-[2.5rem] border border-foreground/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-foreground/5 flex flex-col items-center text-center">
-                <div className="w-48 h-48 mb-8 rounded-full overflow-hidden border-2 border-foreground/5 shadow-inner">
-                  <AutoImage basePath={member.image} alt={member.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out scale-110 group-hover:scale-100" />
+              <Link
+                key={member.name}
+                to="/team"
+                className={`team-card group block ${i === 1 ? 'team-parallax sm:mt-28' : ''}`}
+              >
+                <div className="relative">
+                  <div className="rv-photo aspect-[4/5] rounded-3xl overflow-hidden bg-foreground/5">
+                    <div className="rv-photo-img w-full h-full">
+                      <AutoImage
+                        basePath={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover grayscale transition duration-700 ease-out group-hover:grayscale-0 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  </div>
+                  <CornerTrace />
                 </div>
-                <h3 className="section-title text-foreground text-2xl mb-1">{member.name}</h3>
-                <div className="section-label mb-4">{member.role}</div>
-                <p className="text-foreground/60 leading-relaxed">{member.desc}</p>
-              </div>
+                <div className="rv-fade mt-8 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-2xl font-medium text-foreground leading-tight">{member.name}</h3>
+                    <span className="mt-1 block text-sm text-foreground/50">{member.role}</span>
+                  </div>
+                  <ArrowRight size={18} className="mt-1.5 shrink-0 text-foreground/30 transition-all duration-300 group-hover:text-accent group-hover:translate-x-1" />
+                </div>
+                <p className="rv-fade mt-5 text-foreground/60 text-[15px] leading-relaxed max-w-sm">
+                  {member.desc}
+                </p>
+              </Link>
             ))}
-          </div>
-          <div className="flex justify-center">
-            <CTAButton to="/team" size="sm">{language === 'nl' ? 'Leer ons team kennen' : 'Get to know our team'}</CTAButton>
           </div>
         </div>
       </section>
 
-      {/* H. FAQ SECTION */}
-      <section id="faq" className="pt-20 pb-32 px-6 md:px-16 relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto relative z-20">
-          <div className="text-center mb-20 md:mb-24 scroll-animate">
-            <h2 className="hero-title text-foreground text-4xl md:text-6xl mb-6">
-              {language === 'nl' ? 'Veelgestelde vragen' : 'Frequently Asked Questions'}
+      {/* C7. FAQ SECTION */}
+      {/* Vijf korte vragen die mensen tegenhouden om contact op te nemen, vlak voor de oproep */}
+      <section id="faq" className="relative pt-8 pb-8 md:pb-12 px-6 md:px-16 lg:px-24">
+        <div className="relative max-w-7xl mx-auto">
+          <div data-reveal-head className="overflow-hidden pb-3 mb-8 md:mb-12">
+            <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+              {language === 'nl' ? 'Veelgestelde vragen.' : 'Frequently asked questions.'}
             </h2>
-            <p className="section-subtitle text-foreground/60 text-lg md:text-xl max-w-3xl mx-auto">
-              {language === 'nl' ? 'De antwoorden op uw vragen over onze aanpak en technologie.' : 'Answers to your questions about our approach and technology.'}
-            </p>
           </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 gap-4">
-            <AccordionItem title={language === 'nl' ? "Wat kost een custom oplossing?" : "What does a custom solution cost?"}>
-              {language === 'nl' 
-                ? "De kostprijs hangt af van de complexiteit van het probleem, het aantal gebruikers en de technieken die we inzetten. We werken nooit met een vast prijskaartje omdat elke oplossing anders is. Na een eerste gesprek maken we een duidelijke inschatting zonder verborgen kosten." 
-                : "The cost price depends on the complexity of the problem, the number of users, and the techniques we deploy. We never work with a fixed price tag because every solution is different. After an initial conversation, we make a clear estimate without hidden costs."}
-            </AccordionItem>
-            <AccordionItem title={language === 'nl' ? "Hoe lang duurt het om een custom oplossing te bouwen?" : "How long does it take to build a custom solution?"}>
-              {language === 'nl' 
-                ? "Een eerste werkende versie bouwen we doorgaans in zes tot twaalf weken. We werken iteratief: u ziet vroeg resultaat en geeft feedback voor we verder bouwen." 
-                : "We typically build an initial working version in six to twelve weeks. We work iteratively: you see results early and provide feedback before we build further."}
-            </AccordionItem>
-            <AccordionItem title={language === 'nl' ? "Bouwen jullie altijd custom of raden jullie soms een bestaande tool aan?" : "Do you always build custom or do you sometimes recommend an existing tool?"}>
-              {language === 'nl' 
-                ? "Niet elk probleem vraagt om maatwerk. Als een bestaande tool uw probleem oplost, zeggen we dat eerlijk en helpen we u op weg. We bouwen een custom oplossing alleen als het de juiste keuze is." 
-                : "Not every problem requires custom work. If an existing tool solves your problem, we say so honestly and help you get started. We only build a custom solution if it is the right choice."}
-            </AccordionItem>
-            <AccordionItem title={language === 'nl' ? "Wat gebeurt er als mijn bedrijf groeit of iets wil aanpassen?" : "What happens if my company grows or wants to adjust something?"}>
-              {language === 'nl' 
-                ? "Uw oplossing is gebouwd om mee te groeien. We documenteren alles en bouwen zo dat aanpassingen en uitbreidingen later mogelijk zijn zonder alles opnieuw te bouwen." 
-                : "Your solution is built to grow with you. We document everything and build it so that adjustments and expansions are possible later without having to rebuild everything."}
-            </AccordionItem>
-            <AccordionItem title={language === 'nl' ? "Moet ik meteen een volledig systeem bouwen of kan ik stapsgewijs starten?" : "Do I have to build a full system immediately or can I start step-by-step?"}>
-              {language === 'nl' 
-                ? "U hoeft niet alles in één keer te bouwen. We starten vaak met één concreet proces, bewijzen de waarde en bouwen daarna verder. Zo houdt u controle over de investering en ziet u snel resultaat." 
-                : "You don't have to build everything at once. We often start with one concrete process, prove the value, and then build further. This way you maintain control over the investment and see results quickly."}
-            </AccordionItem>
-            <AccordionItem title={language === 'nl' ? "Hoe beveiligen jullie de software die jullie bouwen?" : "How do you secure the software you build?"}>
-              {language === 'nl' 
-                ? (
-                  <span>
-                    Wij beveiligen onze software via <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-[#628f69] hover:underline font-medium">Aikido</a>, een gespecialiseerd beveiligingsplatform dat continu onze code en systemen scant op kwetsbaarheden. Zo is uw oplossing van dag één beschermd tegen bekende risico's.
-                  </span>
-                )
-                : (
-                  <span>
-                    We secure our software via <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-[#628f69] hover:underline font-medium">Aikido</a>, a specialized security platform that continuously scans our code and systems for vulnerabilities. This way your solution is protected against known risks from day one.
-                  </span>
-                )}
-            </AccordionItem>
+          <div data-reveal-head>
+            <FaqList
+              items={faqVragen.map((f) => ({
+                q: f.q[language],
+                a: typeof f.a === 'function' ? f.a(language) : f.a[language]
+              }))}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* C8. OPROEP SECTION */}
+      {/* De afsluiter: één duidelijke volgende stap, met een gezicht als eerste aanspreekpunt */}
+      <section id="gesprek" className="relative pt-16 md:pt-24 pb-24 md:pb-32 px-6 md:px-16 lg:px-24">
+        <div data-reveal-head className="relative max-w-4xl mx-auto text-center">
+          <div className="overflow-hidden pb-3 mb-3">
+            <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+              {language === 'nl' ? 'Klaar voor de volgende stap?' : 'Ready for the next step?'}
+            </h2>
+          </div>
+          <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-xl mx-auto">
+            {language === 'nl'
+              ? 'Vertel ons hoe uw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.'
+              : 'Tell us how your business works. We listen first, then show you what is possible.'}
+          </p>
+          <div className="rv-fade mt-10 flex justify-center">
+            <CTAButton to="/contact" size="md">
+              {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
+            </CTAButton>
+          </div>
+          <div className="rv-fade mt-14 flex justify-center">
+            <div className="inline-flex items-center gap-4 text-left">
+              <div className="w-12 h-12 shrink-0 rounded-full overflow-hidden bg-foreground/5">
+                <AutoImage basePath="/team/rian" alt="Rian Mathijs" className="w-full h-full object-cover grayscale" />
+              </div>
+              <div>
+                <p className="text-base font-medium text-foreground leading-tight">
+                  Rian Mathijs <span className="font-normal text-foreground/50">· {language === 'nl' ? 'uw eerste aanspreekpunt' : 'your first point of contact'}</span>
+                </p>
+                <p className="mt-1 text-sm text-foreground/60">
+                  <a href="mailto:rian.mathijs@triacore.be" className="hover:text-accent transition-colors">rian.mathijs@triacore.be</a>
+                  <span className="mx-2 text-foreground/30">·</span>
+                  <a href="tel:+32499874662" className="hover:text-accent transition-colors">0499 87 46 62</a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
-
-
-      </div> {/* END STAGED CONTENT CONTAINER */}
+      </div>
       <Footer />
     </div>
   );
