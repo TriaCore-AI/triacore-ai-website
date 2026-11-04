@@ -10,7 +10,7 @@ import { ToolVisual, ToolStage, ToolWindow } from './tool-visual-parts';
 
 const WINDOWS = {
     wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14 },
-    narrow: { W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13 }
+    narrow: { W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13 }
 };
 
 // ---------- Leert van uw planner: de voorgestelde transporten, de aanpassing, en wat de AI onthoudt ----------
@@ -18,16 +18,17 @@ const WINDOWS = {
 const LEARN_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
-        x: 42, w: 636, firstRow: 88, rowH: 46, rowGap: 6, buttonW: 78, wideRow: true,
+        x: 42, w: 636, rows: 4, firstRow: 88, rowH: 46, rowGap: 6, buttonW: 78, wideRow: true,
         // Het puntje van het paneel wijst naar de knop van het gekozen transport
         panel: { left: 250, right: 8, top: 298, caret: 379, pad: 14 },
         fonts: { truck: 12.5, route: 11.5, load: 14, button: 10.5, title: 14.5, text: 12 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, firstRow: 72, rowH: 46, rowGap: 5, buttonW: 62, wideRow: false,
-        panel: { left: 26, right: 6, top: 279, caret: 307, pad: 13 },
-        fonts: { truck: 11.5, route: 10, load: 13, button: 9.5, title: 14, text: 12 }
+        // Op gsm: twee transporten in plaats van vier, en het paneel zonder het opschrift bij de opmerking
+        x: 26, w: 348, rows: 2, firstRow: 66, rowH: 48, rowGap: 6, buttonW: 70, wideRow: false, compact: true,
+        panel: { left: 20, right: 4, top: 180, caret: 311, pad: 13 },
+        fonts: { truck: 13, route: 11.5, load: 14, button: 11, title: 14.5, text: 12.5 }
     }
 };
 
@@ -128,8 +129,8 @@ function AdjustPanel({ layout, t }) {
                 <span className="flex items-center rounded-md border border-accent font-medium text-foreground" style={{ height: u(26), paddingLeft: u(10), paddingRight: u(10) }}>18 t</span>
             </div>
 
-            <p className="text-foreground/70" style={{ marginTop: u(9), marginBottom: u(4), fontSize: u(fonts.text - 1) }}>{t.note}</p>
-            <div className="flex items-center rounded-md border border-foreground/15 text-foreground whitespace-nowrap" style={{ height: u(32), paddingLeft: u(10), fontSize: u(fonts.text + 0.5) }}>
+            {!layout.compact && <p className="text-foreground/70" style={{ marginTop: u(9), marginBottom: u(4), fontSize: u(fonts.text - 1) }}>{t.note}</p>}
+            <div className="flex items-center rounded-md border border-foreground/15 text-foreground whitespace-nowrap" style={{ marginTop: layout.compact ? u(9) : 0, height: u(32), paddingLeft: u(10), fontSize: u(fonts.text + 0.5) }}>
                 {t.feedback}
             </div>
 
@@ -150,11 +151,11 @@ function AdjustPanel({ layout, t }) {
 }
 
 function LearnStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, firstRow, rowH, rowGap } = layout;
+    const { W, H, win, pad, heading, sub, rows, firstRow, rowH, rowGap } = layout;
     return (
         <ToolStage W={W} H={H}>
             <ToolWindow win={win} pad={pad} heading="Planning" sub={t.sub} headingSize={heading} subSize={sub} />
-            {TRANSPORTS.map((transport, i) => (
+            {TRANSPORTS.slice(-rows).map((transport, i) => (
                 <TransportRow key={transport.nr} transport={transport} top={firstRow + i * (rowH + rowGap)} layout={layout} t={t} />
             ))}
             <AdjustPanel layout={layout} t={t} />

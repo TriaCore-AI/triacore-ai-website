@@ -36,10 +36,10 @@ const DRIVER_LAYOUTS = {
         note: false
     },
     narrow: {
-        W: 400, H: 500,
+        W: 400, H: 400,
         office: null,
         arrow: null,
-        phone: { x: 72, y: 10, w: 256, h: 480 },
+        phone: { x: 70, y: 8, w: 260, h: 384 },
         note: true
     }
 };
@@ -124,16 +124,21 @@ function DriverStage({ layout, t, language }) {
                             <span className="text-foreground/60">{time}</span>
                         </div>
                     ))}
-                    <div className="flex items-center border-t border-foreground/[0.07] whitespace-nowrap" style={{ height: u(32), gap: u(8), fontSize: u(12) }}>
-                        <span className="shrink-0 rounded-full border border-foreground/30" style={{ width: u(14), height: u(14) }} />
-                        <span className="text-foreground/70">{t.signed}</span>
-                    </div>
+                    {/* Op gsm enkel wat de boodschap draagt: de rit, wat afgevinkt is, en dat het op kantoor staat */}
+                    {!note && (
+                        <div className="flex items-center border-t border-foreground/[0.07] whitespace-nowrap" style={{ height: u(32), gap: u(8), fontSize: u(12) }}>
+                            <span className="shrink-0 rounded-full border border-foreground/30" style={{ width: u(14), height: u(14) }} />
+                            <span className="text-foreground/70">{t.signed}</span>
+                        </div>
+                    )}
                 </div>
 
-                <div className="rounded-lg border border-foreground/[0.09]" style={{ marginTop: u(8), padding: `${u(8)} ${u(11)}` }}>
-                    <span className="block text-foreground/60" style={{ fontSize: u(10.5) }}>{t.next}</span>
-                    <span className="block text-foreground" style={{ marginTop: u(1) }}><Route from={destination} to="Genk" size={12} /></span>
-                </div>
+                {!note && (
+                    <div className="rounded-lg border border-foreground/[0.09]" style={{ marginTop: u(8), padding: `${u(8)} ${u(11)}` }}>
+                        <span className="block text-foreground/60" style={{ fontSize: u(10.5) }}>{t.next}</span>
+                        <span className="block text-foreground" style={{ marginTop: u(1) }}><Route from={destination} to="Genk" size={12} /></span>
+                    </div>
+                )}
 
                 {note && (
                     <div className="flex items-start rounded-lg border border-accent" style={{ marginTop: u(8), padding: `${u(8)} ${u(10)}`, gap: u(7) }}>
@@ -159,17 +164,17 @@ export function PlanningDriverVisual() {
 const CHECK_LAYOUTS = {
     wide: {
         W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14,
-        // Alle drie de dagen uit de gegevens
-        columns: [0, 1, 2], gridY: 66, dayH: 24, rowH: 58, cardH: 50, nameW: 72, gap: 6,
+        // Alle drie de dagen en alle chauffeurs uit de gegevens
+        columns: [0, 1, 2], rows: [0, 1, 2, 3], gridY: 66, dayH: 24, rowH: 58, cardH: 50, nameW: 72, gap: 6,
         panel: { left: 120, right: 8, top: 354, pad: 14 },
         fonts: { route: 11, meta: 10.5, title: 16, text: 12 }
     },
     narrow: {
-        W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13,
-        // Op gsm enkel de twee dagen met een fout
-        columns: [1, 2], gridY: 58, dayH: 22, rowH: 50, cardH: 44, nameW: 30, gap: 5,
-        panel: { left: 26, right: 6, top: 302, pad: 13 },
-        fonts: { route: 10.5, meta: 10, title: 15.5, text: 11.5 }
+        W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13,
+        // Op gsm enkel de twee dagen en de twee chauffeurs met een fout
+        columns: [1, 2], rows: [1, 2], gridY: 56, dayH: 22, rowH: 54, cardH: 46, nameW: 30, gap: 6,
+        panel: { left: 20, right: 4, top: 200, pad: 13 },
+        fonts: { route: 11.5, meta: 11, title: 15.5, text: 12 }
     }
 };
 
@@ -230,7 +235,7 @@ function CheckTrip({ trip, fonts, t }) {
 }
 
 function CheckStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, columns, gridY, dayH, rowH, cardH, nameW, gap, panel, fonts } = layout;
+    const { W, H, win, pad, heading, sub, columns, rows, gridY, dayH, rowH, cardH, nameW, gap, panel, fonts } = layout;
     const template = `repeat(${columns.length}, 1fr)`;
     return (
         <ToolStage W={W} H={H}>
@@ -239,7 +244,7 @@ function CheckStage({ layout, t }) {
                     <div className="grid" style={{ marginLeft: u(nameW), gridTemplateColumns: template, columnGap: u(gap), height: u(dayH) }}>
                         {columns.map((c) => <span key={c} className="font-medium text-foreground" style={{ fontSize: u(11.5), paddingLeft: u(2) }}>{t.days[c]}</span>)}
                     </div>
-                    {ROWS.map((row) => (
+                    {rows.map((r) => ROWS[r]).map((row) => (
                         <div key={row.name} className="flex items-center border-t border-foreground/[0.08]" style={{ height: u(rowH) }}>
                             <div className="flex items-center shrink-0" style={{ width: u(nameW), gap: u(6) }}>
                                 <span className="flex items-center justify-center shrink-0 rounded-full border border-foreground/20 text-foreground/70" style={{ width: u(22), height: u(22), fontSize: u(8.5) }}>{row.initials}</span>

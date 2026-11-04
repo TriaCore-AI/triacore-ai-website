@@ -10,7 +10,7 @@ import { ToolVisual, ToolStage, ToolWindow, AssistantCard, AssistantTitle, ChatW
 
 const WINDOWS = {
     wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14 },
-    narrow: { W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13 }
+    narrow: { W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13 }
 };
 
 function SmallCheck() {
@@ -26,16 +26,17 @@ function SmallCheck() {
 const SORT_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
-        x: 42, w: 636, firstRow: 88, rowH: 46, rowGap: 6, chipW: 104, sideBySide: true,
+        x: 42, w: 636, show: [0, 1, 2, 3], firstRow: 88, rowH: 46, rowGap: 6, chipW: 104, sideBySide: true,
         // Het puntje van de kaart wijst naar het document waar de AI over twijfelt
         bubble: { left: 250, right: 8, top: 310, caret: 342, title: 16, text: 12, pad: 14 },
         fonts: { file: 12, seen: 12.5, data: 10.5, chip: 11 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, firstRow: 72, rowH: 50, rowGap: 5, chipW: 84, sideBySide: false,
-        bubble: { left: 26, right: 6, top: 300, caret: 296, title: 16, text: 12, pad: 14 },
-        fonts: { file: 11.5, seen: 11.5, data: 10.5, chip: 10 }
+        // Op gsm drie bestanden in plaats van vier: twee geordende en dat waarover de AI twijfelt
+        x: 26, w: 348, show: [0, 1, 3], firstRow: 66, rowH: 48, rowGap: 5, chipW: 84, sideBySide: false,
+        bubble: { left: 20, right: 4, top: 226, caret: 302, title: 16, text: 12.5, pad: 14 },
+        fonts: { file: 12, seen: 13, data: 11.5, chip: 11 }
     }
 };
 
@@ -99,11 +100,11 @@ function SortRow({ item, top, layout }) {
 }
 
 function SortStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, firstRow, rowH, rowGap, bubble } = layout;
+    const { W, H, win, pad, heading, sub, show, firstRow, rowH, rowGap, bubble } = layout;
     return (
         <ToolStage W={W} H={H}>
             <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub} />
-            {t.files.map((item, i) => (
+            {show.map((f) => t.files[f]).map((item, i) => (
                 <SortRow key={item.file} item={item} top={firstRow + i * (rowH + rowGap)} layout={layout} />
             ))}
             <AssistantCard bubble={bubble} label={t.assistant}>
@@ -128,7 +129,7 @@ export function DocumentSortVisual() {
 
 const ASK_LAYOUTS = {
     wide: { ...WINDOWS.wide, bubble: 480, title: 15, text: 12.5, rowH: 36 },
-    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12, rowH: 34 }
+    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12.5, rowH: 34, compact: true }
 };
 
 const ASK_TEXT = {
@@ -157,10 +158,10 @@ const ASK_TEXT = {
 };
 
 function AskStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, bubble, title, text, rowH } = layout;
+    const { W, H, win, pad, heading, sub, bubble, title, text, rowH, compact } = layout;
     return (
         <ToolStage W={W} H={H}>
-            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder}>
+            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder} compact={compact}>
                 <ChatFromPerson label={t.person}>{t.question}</ChatFromPerson>
 
                 <ChatFromAi label={t.assistant} width={bubble}>
@@ -193,15 +194,16 @@ export function DocumentAskVisual() {
 const MISSING_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
-        x: 42, w: 636, top: 80, headH: 30, rowH: 50, nameW: 96, columns: 4,
+        x: 42, w: 636, top: 80, headH: 30, rowH: 50, nameW: 96, columns: 4, people: [0, 1, 2, 3, 4],
         summary: { top: 386, h: 62 },
         fonts: { head: 11.5, name: 12.5, tag: 11, title: 15, text: 12 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, top: 62, headH: 30, rowH: 46, nameW: 58, columns: 3,
-        summary: { top: 330, h: 104 },
-        fonts: { head: 10.5, name: 11.5, tag: 10, title: 14.5, text: 11.5 }
+        // Op gsm drie chauffeurs en drie documenten, waaronder de twee die ontbreken
+        x: 26, w: 348, top: 64, headH: 28, rowH: 50, nameW: 66, columns: 3, people: [0, 2, 3],
+        summary: { top: 252, h: 92 },
+        fonts: { head: 11.5, name: 13, tag: 11, title: 15.5, text: 12.5 }
     }
 };
 
@@ -236,7 +238,7 @@ const STAFF = [
 ];
 
 function MissingStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, x, w, top, headH, rowH, nameW, columns, summary, fonts } = layout;
+    const { W, H, win, pad, heading, sub, x, w, top, headH, rowH, nameW, columns, people, summary, fonts } = layout;
     const shown = t.columns.slice(0, columns);
     const template = `${u(nameW)} repeat(${columns}, 1fr)`;
     return (
@@ -248,7 +250,7 @@ function MissingStage({ layout, t }) {
                     <span />
                     {shown.map((col) => <span key={col} className="whitespace-nowrap">{col}</span>)}
                 </div>
-                {STAFF.map((person) => (
+                {people.map((p) => STAFF[p]).map((person) => (
                     <div key={person.name} className="grid items-center border-t border-foreground/[0.08]" style={{ gridTemplateColumns: template, height: u(rowH) }}>
                         <span className="font-medium text-foreground whitespace-nowrap" style={{ fontSize: u(fonts.name) }}>{person.name}</span>
                         {shown.map((col, c) => (
@@ -281,15 +283,16 @@ export function DocumentMissingVisual() {
 const EXPIRY_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
-        x: 42, w: 636, firstRow: 88, rowH: 56, rowGap: 6, stacked: false,
+        x: 42, w: 636, rows: 3, firstRow: 88, rowH: 56, rowGap: 6, stacked: false,
         mail: { left: 250, right: 8, top: 298, pad: 16, title: 15 },
         fonts: { name: 13, date: 12, status: 11.5 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, firstRow: 72, rowH: 58, rowGap: 5, stacked: true,
-        mail: { left: 26, right: 6, top: 274, pad: 14, title: 14.5 },
-        fonts: { name: 12, date: 11.5, status: 10.5 }
+        // Op gsm twee rijen in plaats van drie
+        x: 26, w: 348, rows: 2, firstRow: 66, rowH: 62, rowGap: 6, stacked: true,
+        mail: { left: 20, right: 4, top: 208, pad: 14, title: 14.5 },
+        fonts: { name: 13, date: 12, status: 11.5 }
     }
 };
 
@@ -332,12 +335,12 @@ function ExpiryStatus({ item, size }) {
 }
 
 function ExpiryStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, x, w, firstRow, rowH, rowGap, stacked, mail, fonts } = layout;
+    const { W, H, win, pad, heading, sub, x, w, rows, firstRow, rowH, rowGap, stacked, mail, fonts } = layout;
     return (
         <ToolStage W={W} H={H}>
             <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub} />
 
-            {t.items.map((item, i) => (
+            {t.items.slice(0, rows).map((item, i) => (
                 <div
                     key={item.name}
                     className={`absolute flex items-center rounded-lg bg-white border whitespace-nowrap ${item.sent ? 'border-accent' : 'border-foreground/[0.08]'}`}

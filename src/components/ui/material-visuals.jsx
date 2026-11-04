@@ -10,7 +10,7 @@ import { ToolVisual, ToolStage, ToolWindow, PhoneFrame, AssistantCard, Assistant
 
 const WINDOWS = {
     wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14 },
-    narrow: { W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13 }
+    narrow: { W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13 }
 };
 
 function SmallCheck() {
@@ -57,8 +57,8 @@ const PHOTO_LAYOUTS = {
     },
     narrow: {
         ...WINDOWS.narrow,
-        frames: { top: 72, h: 150, labelH: 22, left: 26, right: 206, w: 168 },
-        bubble: { left: 26, right: 6, top: 262, caret: 264, title: 19, text: 12, pad: 14 }
+        frames: { top: 64, h: 136, labelH: 22, left: 26, right: 206, w: 168 },
+        bubble: { left: 20, right: 4, top: 212, caret: 270, title: 18, text: 12.5, pad: 14 }
     }
 };
 
@@ -122,7 +122,7 @@ export function MaterialPhotoVisual() {
 
 const ASK_LAYOUTS = {
     wide: { ...WINDOWS.wide, bubble: 480, title: 15, text: 12.5, rowH: 36 },
-    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12, rowH: 34 }
+    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12.5, rowH: 36, compact: true }
 };
 
 const ASK_TEXT = {
@@ -149,10 +149,10 @@ const ASK_TEXT = {
 };
 
 function AskStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, bubble, title, text, rowH } = layout;
+    const { W, H, win, pad, heading, sub, bubble, title, text, rowH, compact } = layout;
     return (
         <ToolStage W={W} H={H}>
-            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder}>
+            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder} compact={compact}>
                 <ChatFromPerson label={t.person}>{t.question}</ChatFromPerson>
                 <ChatFromAi label={t.assistant} width={bubble}>
                     <p className="font-medium text-foreground tracking-tight" style={{ fontSize: u(title), lineHeight: 1.25 }}>{t.answer}</p>
@@ -188,10 +188,10 @@ const SCAN_LAYOUTS = {
         codeOnPhone: false
     },
     narrow: {
-        W: 400, H: 500,
+        W: 400, H: 400,
         tag: null,
         arrow: null,
-        phone: { x: 72, y: 10, w: 256, h: 480 },
+        phone: { x: 70, y: 8, w: 260, h: 384 },
         codeOnPhone: true
     }
 };
@@ -281,7 +281,7 @@ export function MaterialScanVisual() {
 
 const ALERT_LAYOUTS = {
     wide: { ...WINDOWS.wide, x: 42, w: 636, firstRow: 96, rowH: 96, rowGap: 12, title: 15, text: 12 },
-    narrow: { ...WINDOWS.narrow, x: 26, w: 348, firstRow: 72, rowH: 104, rowGap: 8, title: 14, text: 11.5 }
+    narrow: { ...WINDOWS.narrow, x: 26, w: 348, firstRow: 66, rowH: 88, rowGap: 8, title: 14.5, text: 12 }
 };
 
 const ALERT_TEXT = {

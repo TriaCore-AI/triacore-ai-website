@@ -20,11 +20,12 @@ const LAYOUTS = {
         fonts: { route: 10.5, meta: 10, name: 11, day: 11, heading: 22, week: 14 }
     },
     narrow: {
-        W: 400, H: 500, days: 3, rows: 6,
-        win: { x: 14, y: 14, w: 372, h: 450 },
-        pad: 12, nameW: 34, gap: 5, rowH: 58, cardH: 50, gridY: 74,
-        bubble: { left: 26, right: 6, top: 72, caret: 298, title: 23, text: 12, pad: 16 },
-        fonts: { route: 12.5, meta: 11, name: 11, day: 12, heading: 21, week: 13 }
+        // Op gsm: twee dagen en twee chauffeurs, met de kaart eronder in plaats van erover
+        W: 400, H: 400, days: 2, rows: 2,
+        win: { x: 12, y: 12, w: 376, h: 368 },
+        pad: 14, nameW: 34, gap: 6, rowH: 56, cardH: 48, gridY: 76,
+        bubble: { left: 20, right: 4, top: 206, caret: 60, title: 18, text: 12.5, pad: 14 },
+        fonts: { route: 12.5, meta: 11.5, name: 11, day: 12.5, heading: 20, week: 13 }
     }
 };
 
@@ -38,6 +39,7 @@ const TEXT = {
         assistant: 'AI-assistent',
         title: 'Dit is de optimale planning voor deze week.',
         basis: 'Ik heb deze planning ingesteld op basis van:',
+        basisShort: 'Op basis van beschikbaarheid, belading en routes.',
         reasons: ['Beschikbaarheid van de chauffeurs', 'Optimale belading van de vrachtwagens', 'Optimale routes', 'Rijtijden en openingsuren'],
         accept: 'Neem over',
         adjust: 'Pas handmatig aan'
@@ -51,6 +53,7 @@ const TEXT = {
         assistant: 'AI assistant',
         title: 'This is the optimal planning for this week.',
         basis: 'I set up this planning based on:',
+        basisShort: 'Based on availability, load and routes.',
         reasons: ['Driver availability', 'Optimal truck loading', 'Optimal routes', 'Driving times and opening hours'],
         accept: 'Accept',
         adjust: 'Adjust manually'
@@ -69,7 +72,7 @@ const DRIVERS = [
 
 const initials = (name) => name.replace('.', '').split(' ').map((part) => part[0]).join('');
 
-function Trip({ trip, fonts, compact, off }) {
+function Trip({ trip, fonts, off }) {
     if (!trip) {
         return (
             <div className="h-full flex items-center rounded-md bg-foreground/[0.035] text-foreground/35" style={{ paddingLeft: u(9), fontSize: u(fonts.meta) }}>
@@ -82,7 +85,7 @@ function Trip({ trip, fonts, compact, off }) {
         <div className="relative h-full flex flex-col justify-center overflow-hidden rounded-md bg-white border border-foreground/[0.08]" style={{ paddingLeft: u(9) }}>
             <span aria-hidden="true" className="absolute left-0 inset-y-0 bg-accent" style={{ width: u(2) }} />
             <span className="flex items-center whitespace-nowrap text-foreground leading-tight" style={{ fontSize: u(fonts.route), gap: u(3) }}>
-                {compact ? to : <>{from}<ArrowRight strokeWidth={1.75} style={{ width: u(9), height: u(9) }} />{to}</>}
+                {from}<ArrowRight strokeWidth={1.75} style={{ width: u(9), height: u(9) }} />{to}
             </span>
             <span className="whitespace-nowrap text-foreground/50 leading-tight" style={{ marginTop: u(2), fontSize: u(fonts.meta) }}>
                 {time}, {load} t
@@ -137,7 +140,6 @@ function Stage({ layout, t }) {
                                         key={c}
                                         trip={trip}
                                         fonts={fonts}
-                                        compact={compact}
                                         off={t.off}
                                     />
                                 ))}
@@ -150,18 +152,24 @@ function Stage({ layout, t }) {
             {/* De assistent: een dropdown onder zijn knop */}
             <AssistantCard bubble={bubble} label={t.assistant}>
                 <AssistantTitle bubble={bubble}>{t.title}</AssistantTitle>
-                <p className="text-foreground/70" style={{ marginTop: u(7), fontSize: u(bubble.text) }}>{t.basis}</p>
-
-                <div style={{ marginTop: u(5) }}>
-                    {t.reasons.map((reason) => (
-                        <div key={reason} className="flex items-center text-foreground/70" style={{ gap: u(7), marginTop: u(3), fontSize: u(bubble.text) }}>
-                            <span className="flex items-center justify-center shrink-0 rounded-full bg-accent text-white" style={{ width: u(13), height: u(13) }}>
-                                <Check strokeWidth={3} style={{ width: u(8), height: u(8) }} />
-                            </span>
-                            {reason}
+                {/* Op gsm één zin in plaats van de lijst met redenen */}
+                {compact ? (
+                    <p className="text-foreground/70" style={{ marginTop: u(6), fontSize: u(bubble.text), lineHeight: 1.3 }}>{t.basisShort}</p>
+                ) : (
+                    <>
+                        <p className="text-foreground/70" style={{ marginTop: u(7), fontSize: u(bubble.text) }}>{t.basis}</p>
+                        <div style={{ marginTop: u(5) }}>
+                            {t.reasons.map((reason) => (
+                                <div key={reason} className="flex items-center text-foreground/70" style={{ gap: u(7), marginTop: u(3), fontSize: u(bubble.text) }}>
+                                    <span className="flex items-center justify-center shrink-0 rounded-full bg-accent text-white" style={{ width: u(13), height: u(13) }}>
+                                        <Check strokeWidth={3} style={{ width: u(8), height: u(8) }} />
+                                    </span>
+                                    {reason}
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </>
+                )}
 
                 <AssistantActions bubble={bubble} primary={t.accept} secondary={t.adjust} />
             </AssistantCard>

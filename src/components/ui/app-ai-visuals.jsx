@@ -20,10 +20,10 @@ const PHOTO_LAYOUTS = {
         thumb: false
     },
     narrow: {
-        W: 400, H: 500,
+        W: 400, H: 400,
         paper: null,
         arrow: null,
-        phone: { x: 72, y: 10, w: 256, h: 480 },
+        phone: { x: 70, y: 8, w: 260, h: 384 },
         thumb: true
     }
 };
@@ -118,7 +118,8 @@ function Phone({ phone, thumb, t }) {
                 <Sparkles strokeWidth={1.5} style={{ width: u(12), height: u(12) }} />{t.filled}
             </p>
             <div className="rounded-lg bg-white border border-foreground/[0.09]" style={{ paddingLeft: u(10), paddingRight: u(10) }}>
-                {fieldsOf(t).map(([label, value], i) => (
+                {/* Op gsm drie velden in plaats van vier */}
+                {fieldsOf(t).filter(([label]) => !thumb || label !== t.material).map(([label, value], i) => (
                     <div key={label} className={`flex items-center justify-between whitespace-nowrap ${i ? 'border-t border-foreground/[0.07]' : ''}`} style={{ height: u(35) }}>
                         <span className="text-foreground/60" style={{ fontSize: u(11) }}>{label}</span>
                         <span className="font-medium text-foreground" style={{ fontSize: u(12) }}>{value}</span>
@@ -129,7 +130,7 @@ function Phone({ phone, thumb, t }) {
             {/* Wat de AI opmerkt, terwijl de chauffeur nog ter plaatse is */}
             <div className="rounded-lg border border-accent bg-white" style={{ marginTop: u(10), padding: `${u(9)} ${u(10)}` }}>
                 <p className="font-medium text-foreground tracking-tight" style={{ fontSize: u(13), lineHeight: 1.25 }}>{t.missing}</p>
-                <p className="text-foreground/70" style={{ marginTop: u(3), fontSize: u(11), lineHeight: 1.3 }}>{t.missingNext}</p>
+                {!thumb && <p className="text-foreground/70" style={{ marginTop: u(3), fontSize: u(11), lineHeight: 1.3 }}>{t.missingNext}</p>}
             </div>
 
             <span className="flex items-center justify-center shrink-0 mt-auto rounded-lg bg-foreground text-white font-medium" style={{ height: u(36), fontSize: u(12) }}>{t.again}</span>
@@ -161,8 +162,9 @@ export function AppPhotoVisual() {
 // ---------- Stel vragen aan uw registraties: de vraag vanop kantoor en het antwoord, met de bonnen erbij ----------
 
 const ASK_LAYOUTS = {
-    wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14, bubble: 480, title: 15, text: 12.5, rowH: 31, showDay: true },
-    narrow: { W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13, bubble: 314, title: 14.5, text: 12, rowH: 30, showDay: false }
+    wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14, bubble: 480, title: 15, text: 12.5, rowH: 31, showDay: true, slips: 4 },
+    // Op gsm twee bonnen in plaats van vier, zonder de dag en zonder de balk om te typen
+    narrow: { W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13, bubble: 314, title: 14.5, text: 12.5, rowH: 30, showDay: false, slips: 2, compact: true }
 };
 
 const ASK_TEXT = {
@@ -176,6 +178,7 @@ const ASK_TEXT = {
         answer: 'Deze week ging er 73,2 ton naar werf Noord.',
         bon: 'Bon',
         days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag'],
+        moreSlips: 'En nog 2 bonnen',
         fine: 'Alle bonnen zijn in orde.',
         subcontractors: 'Karim B. en Els M. zijn onderaannemers.'
     },
@@ -189,6 +192,7 @@ const ASK_TEXT = {
         answer: '73.2 tonnes went to Site North this week.',
         bon: 'Slip',
         days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+        moreSlips: 'And 2 more slips',
         fine: 'All slips are in order.',
         subcontractors: 'Karim B. and Els M. are subcontractors.'
     }
@@ -202,16 +206,16 @@ const SLIPS = [
 ];
 
 function AskStage({ layout, t, language }) {
-    const { W, H, win, pad, heading, sub, bubble, title, text, rowH, showDay } = layout;
+    const { W, H, win, pad, heading, sub, bubble, title, text, rowH, showDay, slips, compact } = layout;
     return (
         <ToolStage W={W} H={H}>
-            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder}>
+            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder} compact={compact}>
                 <ChatFromPerson label={t.office}>{t.question}</ChatFromPerson>
 
                 <ChatFromAi label={t.assistant} width={bubble}>
                     <p className="font-medium text-foreground tracking-tight" style={{ fontSize: u(title), lineHeight: 1.25 }}>{t.answer}</p>
                     <div style={{ marginTop: u(8) }}>
-                        {SLIPS.map((slip, i) => (
+                        {SLIPS.slice(0, slips).map((slip, i) => (
                             <div key={slip.nr} className="flex items-center border-t border-foreground/[0.08] whitespace-nowrap" style={{ height: u(rowH), gap: u(8), fontSize: u(text) }}>
                                 <FileText strokeWidth={1.5} className="shrink-0 text-foreground/60" style={{ width: u(14), height: u(14) }} />
                                 <span className="shrink-0 text-foreground/60" style={{ width: u(74) }}>{t.bon} {slip.nr}</span>
@@ -221,6 +225,9 @@ function AskStage({ layout, t, language }) {
                                 <span className="shrink-0 text-right font-medium text-foreground" style={{ width: u(44) }}>{slip[language]}</span>
                             </div>
                         ))}
+                        {slips < SLIPS.length && (
+                            <p className="border-t border-foreground/[0.08] text-foreground/60 flex items-center" style={{ height: u(rowH - 4), fontSize: u(text) }}>{t.moreSlips}</p>
+                        )}
                     </div>
 
                     {/* In één oogopslag: is alles in orde, en wie reed er als onderaannemer */}

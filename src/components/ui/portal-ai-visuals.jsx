@@ -10,7 +10,7 @@ import { ToolVisual, ToolStage, ToolWindow, AssistantCard, AssistantTitle, Assis
 
 const WINDOWS = {
     wide: { W: 720, H: 540, win: { x: 26, y: 26, w: 668, h: 450 }, pad: 16, heading: 22, sub: 14 },
-    narrow: { W: 400, H: 500, win: { x: 14, y: 14, w: 372, h: 450 }, pad: 12, heading: 21, sub: 13 }
+    narrow: { W: 400, H: 400, win: { x: 12, y: 12, w: 376, h: 368 }, pad: 14, heading: 20, sub: 13 }
 };
 
 function SmallCheck() {
@@ -26,16 +26,17 @@ function SmallCheck() {
 const CHECK_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
-        x: 42, w: 636, applicantY: 84, firstRow: 134, rowH: 46, rowGap: 6, short: false,
+        x: 42, w: 636, docs: [0, 1, 2], applicantY: 84, firstRow: 134, rowH: 46, rowGap: 6, short: false,
         // Het puntje van de kaart wijst naar het document dat niet in orde is
         bubble: { left: 250, right: 8, top: 304, caret: 340, title: 20, text: 12, pad: 14 },
         fonts: { name: 12.5, status: 11.5 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, applicantY: 66, firstRow: 110, rowH: 44, rowGap: 5, short: true,
-        bubble: { left: 26, right: 6, top: 266, caret: 290, title: 19, text: 12, pad: 14 },
-        fonts: { name: 11.5, status: 10.5 }
+        // Op gsm twee documenten in plaats van drie: een dat in orde is en het rijbewijs
+        x: 26, w: 348, docs: [1, 2], applicantY: 62, firstRow: 104, rowH: 44, rowGap: 6, short: true,
+        bubble: { left: 20, right: 4, top: 210, caret: 303, title: 19, text: 12.5, pad: 14 },
+        fonts: { name: 13, status: 12 }
     }
 };
 
@@ -77,7 +78,7 @@ const CHECK_TEXT = {
 };
 
 function CheckStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, x, w, applicantY, firstRow, rowH, rowGap, short, bubble, fonts } = layout;
+    const { W, H, win, pad, heading, sub, x, w, docs, applicantY, firstRow, rowH, rowGap, short, bubble, fonts } = layout;
     return (
         <ToolStage W={W} H={H}>
             <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub} />
@@ -90,7 +91,7 @@ function CheckStage({ layout, t }) {
                 </div>
             </div>
 
-            {t.docs.map((doc, i) => (
+            {docs.map((d) => t.docs[d]).map((doc, i) => (
                 <div
                     key={doc.name}
                     className={`absolute flex items-center rounded-lg bg-white border whitespace-nowrap ${doc.expired ? 'border-accent' : 'border-foreground/[0.08]'}`}
@@ -122,7 +123,7 @@ export function PortalCheckVisual() {
 
 const ASK_LAYOUTS = {
     wide: { ...WINDOWS.wide, bubble: 480, title: 15, text: 12.5, nameW: 64, rowH: 36 },
-    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12, nameW: 46, rowH: 34 }
+    narrow: { ...WINDOWS.narrow, bubble: 314, title: 14.5, text: 12.5, nameW: 50, rowH: 36, compact: true }
 };
 
 const ASK_TEXT = {
@@ -151,10 +152,10 @@ const ASK_TEXT = {
 };
 
 function AskStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, bubble, title, text, nameW, rowH } = layout;
+    const { W, H, win, pad, heading, sub, bubble, title, text, nameW, rowH, compact } = layout;
     return (
         <ToolStage W={W} H={H}>
-            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder}>
+            <ChatWindow win={win} pad={pad} heading={t.heading} sub={t.assistant} headingSize={heading} subSize={sub} placeholder={t.placeholder} compact={compact}>
                 <ChatFromPerson label={t.person}>{t.question}</ChatFromPerson>
 
                 <ChatFromAi label={t.assistant} width={bubble}>
@@ -194,8 +195,9 @@ const ROUTE_LAYOUTS = {
     },
     narrow: {
         ...WINDOWS.narrow,
-        x: 26, w: 348, firstRow: 70, rowH: 92, rowGap: 8, stacked: true, leftW: 348,
-        noteY: 384
+        // Op gsm per rij enkel de aanvraag en de bestemming, zonder wie ze stuurde en zonder het dossier
+        x: 26, w: 348, firstRow: 70, rowH: 56, rowGap: 8, stacked: true, leftW: 348,
+        noteY: 272
     }
 };
 
@@ -248,13 +250,13 @@ function RouteStage({ layout, t }) {
                     </span>
                 );
 
-                // Op gsm staat alles in één kaart onder elkaar
+                // Op gsm staat alles in één kaart, op één regel
                 if (stacked) {
                     return (
-                        <div key={row.title} className="absolute flex items-center justify-between rounded-lg bg-white border border-foreground/[0.08] whitespace-nowrap" style={{ left: u(x), top: u(top), width: u(w), height: u(rowH), paddingLeft: u(12), paddingRight: u(12), gap: u(8) }}>
-                            <span className="min-w-0">{request}</span>
+                        <div key={row.title} className="absolute flex items-center rounded-lg bg-white border border-foreground/[0.08] whitespace-nowrap" style={{ left: u(x), top: u(top), width: u(w), height: u(rowH), paddingLeft: u(12), paddingRight: u(12), gap: u(8) }}>
+                            <span className="flex-1 min-w-0 font-medium text-foreground" style={{ fontSize: u(13) }}>{row.title}</span>
                             <ArrowRight strokeWidth={1.5} className="shrink-0 text-foreground/40" style={{ width: u(14), height: u(14) }} />
-                            <span className="shrink-0">{target}</span>
+                            <span className="flex items-center shrink-0 text-foreground" style={{ gap: u(6), fontSize: u(13) }}><SmallCheck />{row.to}</span>
                         </div>
                     );
                 }
@@ -290,13 +292,16 @@ export function PortalRouteVisual() {
 const FOLLOW_LAYOUTS = {
     wide: {
         ...WINDOWS.wide,
+        steps: [0, 1, 2, 3],
         line: { x: 42, top: 112, w: 280, rowH: 76 },
         mail: { left: 340, right: 8, top: 150, pad: 16, title: 15 }
     },
     narrow: {
         ...WINDOWS.narrow,
-        line: { x: 26, top: 72, w: 348, rowH: 49 },
-        mail: { left: 26, right: 6, top: 282, pad: 14, title: 14.5 }
+        // Op gsm drie stappen in plaats van vier
+        steps: [0, 2, 3],
+        line: { x: 26, top: 70, w: 348, rowH: 46 },
+        mail: { left: 20, right: 4, top: 214, pad: 14, title: 14.5 }
     }
 };
 
@@ -334,7 +339,7 @@ const FOLLOW_TEXT = {
 };
 
 function FollowStage({ layout, t }) {
-    const { W, H, win, pad, heading, sub, line, mail } = layout;
+    const { W, H, win, pad, heading, sub, steps, line, mail } = layout;
     return (
         <ToolStage W={W} H={H}>
             <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub} />
@@ -342,7 +347,7 @@ function FollowStage({ layout, t }) {
             {/* De tijdlijn: de lijn loopt van het eerste tot het laatste bolletje */}
             <div className="absolute" style={{ left: u(line.x), top: u(line.top), width: u(line.w) }}>
                 <span aria-hidden="true" className="absolute w-px bg-foreground/15" style={{ left: u(7), top: u(8), bottom: u(line.rowH - 14) }} />
-                {t.steps.map((step) => (
+                {steps.map((s) => t.steps[s]).map((step) => (
                     <div key={step.date} className="relative flex items-start" style={{ height: u(line.rowH), gap: u(11) }}>
                         {step.done
                             ? <SmallCheck />

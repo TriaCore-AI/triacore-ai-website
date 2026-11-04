@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 // Alle panelen staan in dezelfde rastercel op elkaar, zodat de hoogte niet verspringt bij het wisselen.
 // Zonder eigen visual toont een paneel een rustige plaatshouder. Op gsm schuift de rij met namen opzij.
 // Bij het binnenscrollen komen de namen op, tekent de lijn zich en komt het paneel op.
-export default function SolutionPicker({ items, label, placeholder, aiLabel, moreLabel }) {
+export default function SolutionPicker({ items, label, placeholder, aiLabel, moreLabel, prevLabel, nextLabel }) {
     const ref = useRef(null);
     const scrollerRef = useRef(null);
     const tabRefs = useRef([]);
@@ -114,6 +115,8 @@ export default function SolutionPicker({ items, label, placeholder, aiLabel, mor
                         placeholder={placeholder}
                         aiLabel={aiLabel}
                         moreLabel={moreLabel}
+                        prevLabel={prevLabel}
+                        nextLabel={nextLabel}
                     />
                 ))}
             </div>
@@ -130,20 +133,22 @@ const CARD_COUNT = 4;
 
 // Eén paneel: links de kop, de uitleg en de interface, rechts de kaartjes. Heeft elke AI-actie een eigen visual,
 // dan wisselen die vanzelf. De groene lijn onderaan het kaartje toont hoe lang de actie nog in beeld blijft.
-// Met de muis op het paneel of de toetsenbordfocus erin blijft alles staan, en wie op een actie klikt of tikt,
-// houdt die in beeld tot hij zelf een andere kiest. Het wisselen loopt enkel als de visual in beeld is, en niet
-// bij wie minder beweging vraagt.
-function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
+// Enkel met de muis op een kaartje of op de visual, of met de toetsenbordfocus op een kaartje, blijft het staan.
+// Is de muis daar weg, dan loopt het wisselen meteen weer verder, ook na een klik. Tikken op gsm toont die actie
+// en het wisselen loopt daarna gewoon door. Het wisselen loopt enkel als de visual in beeld is, en niet bij wie
+// minder beweging vraagt. Op gsm past dat niet op één scherm: daar vloeit de visual over in de uitleg van de
+// actie in beeld, met pijltjes (zie MobileCaption).
+function Panel({ item, on, placeholder, aiLabel, moreLabel, prevLabel, nextLabel }) {
     const rotates = Boolean(item.ai?.some((a) => a.visual));
     const count = item.ai?.length ?? 0;
     const [current, setCurrent] = useState(0);
     const [held, setHeld] = useState(false);
-    const [pinned, setPinned] = useState(false);
     const [inView, setInView] = useState(false);
     const slotRef = useRef(null);
     const lineRefs = useRef([]);
+    const mobileLineRef = useRef(null);
     const tweenRef = useRef(null);
-    const running = rotates && on && inView && !held && !pinned;
+    const running = rotates && on && inView && !held;
 
     useEffect(() => {
         if (!rotates || !slotRef.current) return undefined;
@@ -156,7 +161,7 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
     useEffect(() => {
         if (!rotates || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
         const tween = gsap.fromTo(
-            lineRefs.current[current],
+            [lineRefs.current[current], mobileLineRef.current],
             { scaleX: 0 },
             { scaleX: 1, duration: HOLD_SECONDS, ease: 'none', paused: true, onComplete: () => setCurrent((c) => (c + 1) % count) }
         );
@@ -176,24 +181,23 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
             return;
         }
         tween.pause();
-        if (pinned || tween.progress() === 0) gsap.set(lineRefs.current[current], { scaleX: 1 });
-    }, [running, pinned, current]);
+        if (tween.progress() === 0) gsap.set([lineRefs.current[current], mobileLineRef.current], { scaleX: 1 });
+    }, [running, current]);
 
-    const hold = rotates ? {
+    // Vasthouden kan met de muis of het toetsenbord. Een klik met de muis geeft de knop ook focus, maar die telt
+    // niet mee: anders bleef alles staan tot er ergens anders geklikt werd
+    const hold = {
         onPointerEnter: (e) => { if (e.pointerType === 'mouse') setHeld(true); },
         onPointerLeave: (e) => { if (e.pointerType === 'mouse') setHeld(false); },
-        onFocus: () => setHeld(true),
+        onFocus: (e) => { if (e.target.matches(':focus-visible')) setHeld(true); },
         onBlur: () => setHeld(false)
-    } : {};
+    };
 
     const choose = {
         current,
+        hold,
         setLine: (i, el) => { lineRefs.current[i] = el; },
-        onHover: setCurrent,
-        onPick: (i) => {
-            setCurrent(i);
-            setPinned(true);
-        }
+        show: setCurrent
     };
     const emptyCards = Math.max(0, CARD_COUNT - count);
 
@@ -204,13 +208,13 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
             aria-labelledby={`sp-tab-${item.key}`}
             aria-hidden={!on}
             inert={!on}
-            {...hold}
             className={`[grid-area:1/1] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 lg:items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-3 pointer-events-none'}`}
         >
             <div className="lg:col-span-6">
                 <h3 className="text-2xl font-medium text-foreground leading-tight">{item.lead}</h3>
                 <p className="mt-4 text-base md:text-lg text-foreground/70 leading-relaxed">{item.desc}</p>
-                <div ref={slotRef} className="relative mt-6 aspect-[4/5] sm:aspect-[4/3] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] overflow-hidden flex items-center justify-center">
+                {/* Op gsm vervaagt de onderkant van de visual in de pagina, net onder de knoppen in de visuals */}
+                <div ref={slotRef} {...(rotates ? hold : {})} className="relative mt-6 max-sm:[mask-image:linear-gradient(to_bottom,#000_95%,transparent)] aspect-square sm:aspect-[4/3] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] overflow-hidden flex items-center justify-center">
                     {rotates
                         ? item.ai.map((a, i) => (
                             // De nieuwe visual komt boven de vorige op, en die verdwijnt pas als de overgang klaar is
@@ -224,9 +228,18 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
                         ))
                         : (item.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
                 </div>
+                <MobileCaption
+                    items={item.ai}
+                    current={current}
+                    lineRef={mobileLineRef}
+                    onStep={(step) => setCurrent((c) => (c + step + count) % count)}
+                    prevLabel={prevLabel}
+                    nextLabel={nextLabel}
+                />
             </div>
 
-            <div className="lg:col-span-6">
+            {/* Vanaf tablet de vier kaartjes; op gsm staat enkel het kaartje onder de visual */}
+            <div className="hidden sm:block lg:col-span-6">
                 <h4 className="text-xl font-medium text-foreground leading-tight">{aiLabel}</h4>
                 <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 sm:auto-rows-fr gap-4">
                     {item.ai.map((a, i) => <AiCard key={a.name} item={a} index={i} choose={rotates ? choose : null} />)}
@@ -236,6 +249,55 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
                     ))}
                 </ul>
                 {moreLabel && <p className="mt-5 text-base text-foreground/60">{moreLabel}</p>}
+            </div>
+        </div>
+    );
+}
+
+// Op gsm: de uitleg van de actie in beeld, zonder eigen kader. De onderkant van de visual vervaagt in de pagina
+// en de uitleg staat daar rechtstreeks onder, zodat ze één geheel vormen. Bovenaan een streepje per actie, waarvan
+// dat van de actie in beeld groen volloopt. De teksten staan op elkaar in dezelfde rastercel, zodat de hoogte niet
+// verspringt bij het wisselen. De pijltjes kiezen de vorige of de volgende
+function MobileCaption({ items, current, lineRef, onStep, prevLabel, nextLabel }) {
+    const arrow = 'flex items-center justify-center w-11 h-11 -my-1.5 text-foreground focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-accent';
+    const ring = 'flex items-center justify-center w-8 h-8 rounded-full border border-foreground/15';
+    return (
+        <div className="sm:hidden relative z-20 mt-1">
+            <div aria-hidden="true" className="flex gap-1.5">
+                {items.map((item, i) => (
+                    <span key={item.name} className="relative flex-1 h-0.5 overflow-hidden rounded-full bg-foreground/15">
+                        {i === current && <span ref={lineRef} className="absolute inset-0 bg-accent origin-left" />}
+                    </span>
+                ))}
+            </div>
+
+            <div className="relative mt-3">
+                <div className="grid">
+                    {items.map((item, i) => {
+                        const Icon = item.icon;
+                        const active = i === current;
+                        return (
+                            <div key={item.name} aria-hidden={!active} className={`[grid-area:1/1] transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-0'}`}>
+                                <span className="flex items-center gap-2 h-8">
+                                    <Icon strokeWidth={1.5} className="w-[18px] h-[18px] shrink-0 text-accent" />
+                                    <span className={`rounded-full border px-2 py-px text-[11px] whitespace-nowrap ${item.isAi ? 'border-accent/40 text-accent' : 'border-foreground/15 text-foreground/60'}`}>
+                                        {item.kind}
+                                    </span>
+                                </span>
+                                <span className="mt-2 block text-lg font-medium text-foreground leading-snug">{item.name}</span>
+                                <span className="mt-1 block text-[15px] text-foreground/60 leading-snug">{item.desc}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="absolute right-0 top-0 flex -mr-1.5">
+                    <button type="button" aria-label={prevLabel} onClick={() => onStep(-1)} className={arrow}>
+                        <span className={ring}><ArrowLeft strokeWidth={1.75} className="w-4 h-4" /></span>
+                    </button>
+                    <button type="button" aria-label={nextLabel} onClick={() => onStep(1)} className={arrow}>
+                        <span className={ring}><ArrowRight strokeWidth={1.75} className="w-4 h-4" /></span>
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -276,9 +338,16 @@ function AiCard({ item, index, choose }) {
             <button
                 type="button"
                 aria-pressed={active}
-                onClick={() => choose.onPick(index)}
-                onFocus={() => choose.onHover(index)}
-                onPointerEnter={(e) => { if (e.pointerType === 'mouse') choose.onHover(index); }}
+                {...choose.hold}
+                onClick={() => choose.show(index)}
+                onFocus={(e) => {
+                    choose.hold.onFocus(e);
+                    if (e.target.matches(':focus-visible')) choose.show(index);
+                }}
+                onPointerEnter={(e) => {
+                    choose.hold.onPointerEnter(e);
+                    if (e.pointerType === 'mouse') choose.show(index);
+                }}
                 className={`relative block w-full h-full overflow-hidden rounded-2xl bg-white border p-5 text-left transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${active ? 'border-accent/40' : 'border-foreground/[0.07]'}`}
             >
                 <CardBody item={item} />

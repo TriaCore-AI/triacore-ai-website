@@ -399,6 +399,8 @@ export default function CustomOplossingen() {
                                 ? <>Wat automatisering en <span className="text-accent">AI</span> voor u doen</>
                                 : <>What automation and <span className="text-accent">AI</span> do for you</>}
                             moreLabel={nl ? 'En nog veel meer...' : 'And much more...'}
+                            prevLabel={nl ? 'Vorig voorbeeld' : 'Previous example'}
+                            nextLabel={nl ? 'Volgend voorbeeld' : 'Next example'}
                             items={oplossingen.map((o) => ({
                                 key: o.key,
                                 name: o.name[language],

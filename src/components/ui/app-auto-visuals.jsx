@@ -26,9 +26,9 @@ const TAP_LAYOUTS = {
         phone: { x: 406, y: 22, w: 252, h: 496 }
     },
     narrow: {
-        W: 400, H: 500,
+        W: 400, H: 400,
         side: null,
-        phone: { x: 72, y: 10, w: 256, h: 480 }
+        phone: { x: 70, y: 8, w: 260, h: 384 }
     }
 };
 
@@ -143,9 +143,10 @@ const FIELD_LAYOUTS = {
         rowH: 56, label: 11, value: 13, title: 19
     },
     narrow: {
-        W: 400, H: 500,
-        phones: [{ x: 8, y: 30, w: 186, h: 440 }, { x: 206, y: 30, w: 186, h: 440 }],
-        rowH: 54, label: 10.5, value: 12, title: 16
+        // Op gsm één gsm in plaats van twee: de keuze bovenaan toont dat elk soort werk eigen velden heeft
+        W: 400, H: 400,
+        phones: [{ x: 70, y: 8, w: 260, h: 384 }],
+        rowH: 48, label: 11, value: 13, title: 18, single: true
     }
 };
 
@@ -183,11 +184,19 @@ const FIELD_TEXT = {
 };
 
 function FieldPhone({ phone, form, layout, t }) {
-    const { rowH, label, value, title } = layout;
+    const { rowH, label, value, title, single } = layout;
     const complete = form.fields.every(([, val]) => val);
     return (
         <PhoneFrame phone={phone}>
-            <p className="font-medium text-foreground tracking-tight" style={{ marginTop: u(14), marginBottom: u(10), fontSize: u(title) }}>{form.title}</p>
+            {single ? (
+                <div className="grid grid-cols-2 rounded-lg bg-foreground/[0.05] whitespace-nowrap" style={{ marginTop: u(14), marginBottom: u(10), padding: u(3), fontSize: u(12) }}>
+                    {t.forms.map((option) => (
+                        <span key={option.title} className={`flex items-center justify-center rounded-md ${option === form ? 'bg-white font-medium text-foreground' : 'text-foreground/60'}`} style={{ height: u(26) }}>{option.title}</span>
+                    ))}
+                </div>
+            ) : (
+                <p className="font-medium text-foreground tracking-tight" style={{ marginTop: u(14), marginBottom: u(10), fontSize: u(title) }}>{form.title}</p>
+            )}
             {form.fields.map(([name, val]) => (
                 <div
                     key={name}
@@ -212,7 +221,9 @@ function FieldPhone({ phone, form, layout, t }) {
 function FieldStage({ layout, t }) {
     return (
         <ToolStage W={layout.W} H={layout.H}>
-            {t.forms.map((form, i) => <FieldPhone key={form.title} phone={layout.phones[i]} form={form} layout={layout} t={t} />)}
+            {layout.single
+                ? <FieldPhone phone={layout.phones[0]} form={t.forms[1]} layout={layout} t={t} />
+                : t.forms.map((form, i) => <FieldPhone key={form.title} phone={layout.phones[i]} form={form} layout={layout} t={t} />)}
         </ToolStage>
     );
 }

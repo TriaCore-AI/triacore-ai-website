@@ -118,19 +118,22 @@ export function PhoneFrame({ phone, children }) {
 }
 
 // Een chat in het venster van de tool: de berichten in het midden en onderaan de balk om te typen.
-// De AI staat links, de mens rechts, zoals in elke chat.
-export function ChatWindow({ win, pad, heading, sub, headingSize, subSize, placeholder, children }) {
+// De AI staat links, de mens rechts, zoals in elke chat. Met compact (op gsm) valt de balk weg, zodat de berichten
+// de ruimte krijgen.
+export function ChatWindow({ win, pad, heading, sub, headingSize, subSize, placeholder, compact, children }) {
     return (
         <ToolWindow win={win} pad={pad} heading={heading} sub={sub} headingSize={headingSize} subSize={subSize}>
-            <div className="absolute flex flex-col justify-center" style={{ left: u(pad), right: u(pad), top: u(60), bottom: u(pad + 52), gap: u(14) }}>
+            <div className="absolute flex flex-col justify-center" style={{ left: u(pad), right: u(pad), top: u(60), bottom: u(compact ? pad : pad + 52), gap: u(14) }}>
                 {children}
             </div>
-            <div className="absolute flex items-center justify-between rounded-xl bg-white border border-foreground/15" style={{ left: u(pad), right: u(pad), bottom: u(pad), height: u(44), paddingLeft: u(14), paddingRight: u(7) }}>
-                <span className="text-foreground/50 whitespace-nowrap" style={{ fontSize: u(12.5) }}>{placeholder}</span>
-                <span className="flex items-center justify-center shrink-0 rounded-lg bg-foreground text-white" style={{ width: u(30), height: u(30) }}>
-                    <ArrowUp strokeWidth={2} style={{ width: u(14), height: u(14) }} />
-                </span>
-            </div>
+            {!compact && (
+                <div className="absolute flex items-center justify-between rounded-xl bg-white border border-foreground/15" style={{ left: u(pad), right: u(pad), bottom: u(pad), height: u(44), paddingLeft: u(14), paddingRight: u(7) }}>
+                    <span className="text-foreground/50 whitespace-nowrap" style={{ fontSize: u(12.5) }}>{placeholder}</span>
+                    <span className="flex items-center justify-center shrink-0 rounded-lg bg-foreground text-white" style={{ width: u(30), height: u(30) }}>
+                        <ArrowUp strokeWidth={2} style={{ width: u(14), height: u(14) }} />
+                    </span>
+                </div>
+            )}
         </ToolWindow>
     );
 }
