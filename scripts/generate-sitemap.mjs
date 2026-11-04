@@ -1,8 +1,7 @@
 // Genereert public/sitemap.xml op basis van de statische routes plus alle
-// gepubliceerde resources en projecten. Draait automatisch voor elke build
-// (zie "prebuild" in package.json) zodat de sitemap nooit achterloopt.
+// gepubliceerde projecten. Draait automatisch voor elke build
+// (zie "build" in package.json) zodat de sitemap nooit achterloopt.
 import { writeFile } from 'fs/promises';
-import { loadResources } from './load-resources.mjs';
 import { build } from 'esbuild';
 
 const SITE_URL = 'https://triacore.be';
@@ -32,7 +31,6 @@ const STATIC_ROUTES = [
     { path: '/team', priority: '0.6', changefreq: 'monthly' },
     { path: '/contact', priority: '0.7', changefreq: 'monthly' },
     { path: '/projecten', priority: '0.8', changefreq: 'weekly' },
-    { path: '/resources', priority: '0.8', changefreq: 'weekly' },
     { path: '/privacybeleid', priority: '0.3', changefreq: 'yearly' },
     { path: '/cookiebeleid', priority: '0.3', changefreq: 'yearly' },
 ];
@@ -49,16 +47,10 @@ function urlEntry(loc, { priority, changefreq, lastmod }) {
 }
 
 async function main() {
-    const { resources } = await loadResources();
     const projecten = await loadProjecten();
 
     const entries = [
         ...STATIC_ROUTES.map((r) => urlEntry(r.path, r)),
-        ...resources.map((r) => urlEntry(`/resources/${r.slug}`, {
-            priority: '0.6',
-            changefreq: 'monthly',
-            lastmod: r.date,
-        })),
         ...projecten
             .filter((p) => p.status === 'live')
             .map((p) => urlEntry(`/projecten/${p.slug}`, { priority: '0.7', changefreq: 'monthly' })),

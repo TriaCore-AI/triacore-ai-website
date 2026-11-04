@@ -132,17 +132,16 @@ Volledig tweetalig: **NL** (primair) en **EN** via `LanguageContext`.
 
 React 19 · React Router 7 · Vite 7 · Tailwind CSS 4 · GSAP 3 · Framer Motion · Lucide React
 Hosting/forms: Netlify | Animaties: scroll-triggered GSAP + Framer Motion
-E-mail/nieuwsbrief: Resend (via Netlify Function)
+Uitschrijflink vroegere nieuwsbrief: Resend (via Netlify Function)
 
 ---
 
 ## Nieuwsbrief (Resend)
 
-Inschrijving (footer + Resources-pagina) gaat via `netlify/functions/newsletter-subscribe.js`
-naar een Resend Audience + automatische welkomstmail. Een nieuwe resource aankondigen =
-`npm run announce -- <slug>`, dat enkel een **concept** in Resend maakt; verzenden gebeurt altijd
-handmatig door de gebruiker na review van de HTML. Mail-opmaak: `lib/email-template.js`.
-Preview: `npm run preview-emails`. Volledige uitleg: privé `Resources/_nieuwsbrief.md`.
+**Resources en de nieuwsbriefinschrijving vallen weg in het herontwerp** (beslissing Lucas, 4 november 2026). Op `staging`
+zijn ze verwijderd; `/resources` stuurt door naar de homepage. Enkel de uitschrijflink blijft
+(`netlify/functions/newsletter-unsubscribe.js`) voor wie in oude mails nog wil uitschrijven. Op `main` staat de oude
+opzet nog tot het herontwerp live gaat. Niet opnieuw toevoegen tenzij de gebruiker dat vraagt.
 
 ---
 

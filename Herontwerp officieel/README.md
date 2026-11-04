@@ -27,7 +27,7 @@ lokaal (dev server)  →  staging (GitHub, bewaren)  →  main (GitHub, live via
 | Stap | Wat |
 |---|---|
 | **Lokaal** | Alles wordt gebouwd en bekeken op de dev server, meestal **http://localhost:5175/**. Wie bouwt, kijkt zelf in de browser; Claude opent geen browser. |
-| **staging** | De werkbranch van het herontwerp. Af en toe committen en pushen naar `origin/staging` om werk te bewaren. Raakt de live site niet. |
+| **staging** | De werkbranch van het herontwerp. Af en toe committen en pushen naar `origin/staging` om werk te bewaren. Raakt de live site niet. Online te bekijken met wachtwoord op https://triacore-staging.netlify.app (apart Netlify-project, sinds 4 november 2026). |
 | **main** | Gekoppeld aan Netlify (site "triacore" → triacore.be). Pas mergen en pushen als het herontwerp live mag, en enkel na uitdrukkelijke bevestiging. |
 
 - **Nooit pushen zonder expliciete bevestiging.** Ook niet naar `staging`.
@@ -81,12 +81,12 @@ De belangrijkste regels:
 Van boven naar onder:
 
 1. **Hero:** gecentreerd en schermvullend. "AI voor operationele *vooruitgang*", één zin, de knop "Plan een gesprek", een tekstlink naar de oplossingen, en de klantlogo's in kleur ("Onder meer voor"), die op gsm op één lijn doorschuiven. De titel veegt regel per regel binnen. Daarachter een 3D-scène (`hero-scene.jsx`): een staaf van draaiende schijven voor een muur met raamlicht, en onder de muis schuiven schijven zacht uit de rij. De testversie en de andere varianten staan in `Herontwerp officieel/hero-3d/` (dit is scène 12).
-2. **Bewezen in de praktijk:** klantkaarten (Croes NV, A&M Group, Medtronic, The Box) in een rij met pijltjes. Slepen, vegen, hover op een vervaagde kaart en pijltjes werken allemaal.
+2. **Bewezen in de praktijk:** klantkaarten (Croes NV, A&M Group, Medtronic, The Box) in een rij met pijltjes. Slepen, vegen, hover op een vervaagde kaart en pijltjes werken allemaal. Op gsm is het een veegrij (`veeg-rij.jsx`): de bezoeker veegt zelf, de kaart klikt in het midden vast en er is geen vervaging of automatische beweging.
 3. **Onze oplossingen:** drie grote rijen (custom oplossingen, workshops, AI-begeleiding) die naar hun pagina linken.
-4. **Onze aanpak:** het logo als schema. Elke balk is een pijler (Begrijpen, Vertalen, Waarmaken) en verschijnt één voor één terwijl je scrolt. Speelt één keer, zet niets vast.
+4. **Onze aanpak:** het logo als schema. Elke balk is een pijler (Begrijpen, Vertalen, Waarmaken) en verschijnt één voor één terwijl je scrolt. Speelt één keer, zet niets vast. Onder 1280 pixels (`aanpak-klein.jsx`) klappen de balken van het logo tijdens het scrollen één voor één open tot hun pijler, en de vorige klapt dicht. Niets staat vast en terugscrollen werkt omgekeerd.
 5. **Wat klanten zeggen:** één quote tegelijk met de bedrijfslogo's als tabs. Nu de quotes van Naomi Clear (Medtronic) en Alain Vangeebergen (planner, Croes NV, zonder foto).
 6. **Het team:** drie grote portretten in een zigzag (Lucas linksboven, Rian rechts en lager, Jorn links onder Lucas).
-7. **Veelgestelde vragen:** vijf vragen in een rustige lijst.
+7. **Veelgestelde vragen:** zes vragen in een rustige lijst.
 8. **Klaar voor de volgende stap?:** de afsluitende oproep met Rian als aanspreekpunt.
 
 Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vloeiende overgang naar de donkere footer.
@@ -100,7 +100,7 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 | Team (`/team`) | Header, Lucas, Rian en Jorn met portret, uitleg en contact |
 | Contact (`/contact`) | Header, links Rian en Lucas met gegevens, rechts het formulier |
 | Custom oplossingen, Workshops, AI-begeleiding | Enkel de header; worden nu uitgewerkt in de drie chats |
-| Resources, privacybeleid, cookiebeleid | Nog in de **oude** stijl |
+| Privacybeleid, cookiebeleid | Nog in de **oude** stijl |
 
 **Menubalk:** Oplossingen (dropdown met de drie pagina's) · Projecten · Team · Contact.
 
@@ -130,7 +130,8 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 - **Solevo** staat niet op de site (juridische kwestie). Geen naam, case of link plaatsen.
 - **Klantlogo's** staan in `src/assets/klantcases/`, de foto van Naomi in `src/assets/quotes/`.
 - **Sitemap:** nieuwe routes toevoegen in `scripts/generate-sitemap.mjs`; de build maakt `public/sitemap.xml` opnieuw.
-- **Tekstblokken van cases en resources** (`src/components/content/ContentBlocks.jsx`) hebben twee stijlen: `theme="nieuw"` (casepagina's) en de klassieke (resources, tot die herwerkt worden).
+- **Tekstblokken van de cases** (`src/components/content/ContentBlocks.jsx`): `theme="nieuw"`; bloktypes zonder eigen versie vallen terug op de klassieke stijl.
+- **Resources en nieuwsbrief zijn weg** (beslissing 4 november 2026): de pagina's, de inschrijving en de aankondigingsscripts. `/resources` en alles eronder sturen door naar de homepage (`public/_redirects`). Enkel de uitschrijflink (`newsletter-unsubscribe.js`, `lib/unsubscribe.js`, `lib/email-template.js`) blijft, voor wie in oude mails nog wil uitschrijven.
 - De oude pagina Custom oplossingen staat als archief in `src/pages/CustomOplossingenOud.jsx` (niet gekoppeld aan een route).
 
 ---
@@ -139,9 +140,9 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 
 - De drie oplossingspagina's uitwerken (bezig).
 - Quote van The Box verzamelen (naam, functie, quote). De quote van Croes NV laten nakijken door Alain Vangeebergen (samengevoegd uit zijn vragenlijst en licht geredigeerd).
-- Resources, resourcedetail, privacybeleid en cookiebeleid naar de nieuwe stijl.
+- Privacybeleid en cookiebeleid naar de nieuwe stijl. Het privacybeleid vermeldt nog de nieuwsbrief: aanpassen zodra beslist is wat er met de bestaande inschrijvingen in Resend gebeurt.
 - `CLAUDE.md` bijwerken naar de nieuwe stijl en pagina's zodra het herontwerp vastligt.
-- Opruimen: `tailwind.config.js` (niet meer gebruikt), het lettertype Syne (enkel voor Solevo), en de nieuwsbriefmails (`lib/email-template.js`) die nog Playfair en DM Sans gebruiken.
+- Opruimen: `tailwind.config.js` (niet meer gebruikt), en het lettertype Syne (enkel voor Solevo).
 - Hogere resolutie van de teamfoto's (nu 512 × 512).
 - Eventueel: één zin met sectoren bij custom oplossingen, en een korte animatievideo over het bedrijf (idee: zelf maken met Remotion in `C:\TriaCore AI\Remotion`).
 - Na het live zetten: het contactformulier testen, en alles nakijken op gsm.

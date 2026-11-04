@@ -8,9 +8,7 @@
     "build": "node scripts/generate-sitemap.mjs && vite build",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "announce": "node --env-file-if-exists=.env scripts/announce-resource.mjs",
-    "preview-emails": "node scripts/preview-emails.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

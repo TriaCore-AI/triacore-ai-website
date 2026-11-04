@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 // Alle panelen staan in dezelfde rastercel op elkaar, zodat de hoogte niet verspringt bij het wisselen.
 // Zonder eigen visual toont een paneel een rustige plaatshouder. Op gsm schuift de rij met namen opzij.
 // Bij het binnenscrollen komen de namen op, tekent de lijn zich en komt het paneel op.
-export default function SolutionPicker({ items, label, placeholder, aiLabel }) {
+export default function SolutionPicker({ items, label, placeholder, aiLabel, moreLabel }) {
     const ref = useRef(null);
     const scrollerRef = useRef(null);
     const tabRefs = useRef([]);
@@ -113,6 +113,7 @@ export default function SolutionPicker({ items, label, placeholder, aiLabel }) {
                         on={i === active}
                         placeholder={placeholder}
                         aiLabel={aiLabel}
+                        moreLabel={moreLabel}
                     />
                 ))}
             </div>
@@ -123,12 +124,16 @@ export default function SolutionPicker({ items, label, placeholder, aiLabel }) {
 // Hoelang één AI-actie in beeld blijft voor de volgende aan de beurt is
 const HOLD_SECONDS = 9;
 
-// Eén paneel: links de interface, rechts de kop, de uitleg en de AI-toepassingen. Heeft elke AI-actie een
-// eigen visual, dan wisselen die vanzelf. De groene lijn naast de actie toont hoe lang die nog in beeld blijft.
+// Altijd vier kaartjes per paneel, zodat elke tab dezelfde vorm heeft. Zijn er minder acties, dan blijven de
+// andere kaartjes leeg.
+const CARD_COUNT = 4;
+
+// Eén paneel: links de kop, de uitleg en de interface, rechts de kaartjes. Heeft elke AI-actie een eigen visual,
+// dan wisselen die vanzelf. De groene lijn onderaan het kaartje toont hoe lang de actie nog in beeld blijft.
 // Met de muis op het paneel of de toetsenbordfocus erin blijft alles staan, en wie op een actie klikt of tikt,
 // houdt die in beeld tot hij zelf een andere kiest. Het wisselen loopt enkel als de visual in beeld is, en niet
 // bij wie minder beweging vraagt.
-function Panel({ item, on, placeholder, aiLabel }) {
+function Panel({ item, on, placeholder, aiLabel, moreLabel }) {
     const rotates = Boolean(item.ai?.some((a) => a.visual));
     const count = item.ai?.length ?? 0;
     const [current, setCurrent] = useState(0);
@@ -152,8 +157,8 @@ function Panel({ item, on, placeholder, aiLabel }) {
         if (!rotates || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
         const tween = gsap.fromTo(
             lineRefs.current[current],
-            { scaleY: 0 },
-            { scaleY: 1, duration: HOLD_SECONDS, ease: 'none', paused: true, onComplete: () => setCurrent((c) => (c + 1) % count) }
+            { scaleX: 0 },
+            { scaleX: 1, duration: HOLD_SECONDS, ease: 'none', paused: true, onComplete: () => setCurrent((c) => (c + 1) % count) }
         );
         tweenRef.current = tween;
         return () => {
@@ -171,7 +176,7 @@ function Panel({ item, on, placeholder, aiLabel }) {
             return;
         }
         tween.pause();
-        if (pinned || tween.progress() === 0) gsap.set(lineRefs.current[current], { scaleY: 1 });
+        if (pinned || tween.progress() === 0) gsap.set(lineRefs.current[current], { scaleX: 1 });
     }, [running, pinned, current]);
 
     const hold = rotates ? {
@@ -183,13 +188,14 @@ function Panel({ item, on, placeholder, aiLabel }) {
 
     const choose = {
         current,
-        lineRefs,
+        setLine: (i, el) => { lineRefs.current[i] = el; },
         onHover: setCurrent,
         onPick: (i) => {
             setCurrent(i);
             setPinned(true);
         }
     };
+    const emptyCards = Math.max(0, CARD_COUNT - count);
 
     return (
         <div
@@ -201,80 +207,87 @@ function Panel({ item, on, placeholder, aiLabel }) {
             {...hold}
             className={`[grid-area:1/1] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 lg:items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-3 pointer-events-none'}`}
         >
-            <div ref={slotRef} className="relative lg:col-span-7 aspect-[4/5] sm:aspect-[4/3] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] overflow-hidden flex items-center justify-center">
-                {rotates
-                    ? item.ai.map((a, i) => (
-                        // De nieuwe visual komt boven de vorige op, en die verdwijnt pas als de overgang klaar is
-                        <div
-                            key={a.name}
-                            aria-hidden={i !== current}
-                            className={`absolute inset-0 flex items-center justify-center transition-opacity ${i === current ? 'z-10 opacity-100 duration-700' : 'z-0 opacity-0 duration-0 delay-700'}`}
-                        >
-                            {a.visual || <span className="text-sm text-foreground/40">{placeholder}</span>}
-                        </div>
-                    ))
-                    : (item.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
-            </div>
-
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-6">
                 <h3 className="text-2xl font-medium text-foreground leading-tight">{item.lead}</h3>
                 <p className="mt-4 text-base md:text-lg text-foreground/70 leading-relaxed">{item.desc}</p>
+                <div ref={slotRef} className="relative mt-6 aspect-[4/5] sm:aspect-[4/3] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] overflow-hidden flex items-center justify-center">
+                    {rotates
+                        ? item.ai.map((a, i) => (
+                            // De nieuwe visual komt boven de vorige op, en die verdwijnt pas als de overgang klaar is
+                            <div
+                                key={a.name}
+                                aria-hidden={i !== current}
+                                className={`absolute inset-0 flex items-center justify-center transition-opacity ${i === current ? 'z-10 opacity-100 duration-700' : 'z-0 opacity-0 duration-0 delay-700'}`}
+                            >
+                                {a.visual || <span className="text-sm text-foreground/40">{placeholder}</span>}
+                            </div>
+                        ))
+                        : (item.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
+                </div>
+            </div>
 
-                {item.ai?.length > 0 && (
-                    <div className="relative mt-10 pt-9">
-                        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-foreground/10" />
-                        <h4 className="text-xl font-medium text-foreground leading-tight">{aiLabel}</h4>
-                        <AiFeatures items={item.ai} choose={rotates ? choose : null} />
-                    </div>
-                )}
+            <div className="lg:col-span-6">
+                <h4 className="text-xl font-medium text-foreground leading-tight">{aiLabel}</h4>
+                <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 sm:auto-rows-fr gap-4">
+                    {item.ai.map((a, i) => <AiCard key={a.name} item={a} index={i} choose={rotates ? choose : null} />)}
+                    {/* De lege kaartjes houden de vorm gelijk; op gsm staan de kaartjes onder elkaar en vallen ze weg */}
+                    {Array.from({ length: emptyCards }, (_, i) => (
+                        <li key={i} aria-hidden="true" className="hidden sm:block rounded-2xl bg-white border border-foreground/[0.07]" />
+                    ))}
+                </ul>
+                {moreLabel && <p className="mt-5 text-base text-foreground/60">{moreLabel}</p>}
             </div>
         </div>
     );
 }
 
-// De AI-toepassingen van één tool: telkens de naam met de uitleg eronder, en links een dunne verticale lijn.
-// Hoort er per actie een visual bij, dan is elke actie een knop die haar visual toont.
-function AiFeatures({ items, choose }) {
-    if (choose) {
+// Icoon, soort (AI of automatisering), titel en omschrijving van een kaartje
+function CardBody({ item }) {
+    const Icon = item.icon;
+    return (
+        <>
+            <span className="flex items-start justify-between gap-3">
+                <span className="flex items-center justify-center shrink-0 w-9 h-9 rounded-full border border-foreground/15 text-accent">
+                    <Icon strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                </span>
+                <span className={`rounded-full border px-2.5 py-0.5 text-xs whitespace-nowrap ${item.isAi ? 'border-accent/40 text-accent' : 'border-foreground/15 text-foreground/60'}`}>
+                    {item.kind}
+                </span>
+            </span>
+            <span className="mt-4 block text-base font-medium text-foreground leading-snug">{item.name}</span>
+            <span className="mt-2 block text-[15px] text-foreground/60 leading-relaxed">{item.desc}</span>
+        </>
+    );
+}
+
+// Eén toepassing als wit kaartje. Hoort er per actie een visual bij, dan is het kaartje een knop die haar toont.
+function AiCard({ item, index, choose }) {
+    if (!choose) {
         return (
-            <ul className="mt-6 space-y-5">
-                {items.map((a, i) => {
-                    const active = i === choose.current;
-                    return (
-                        <li key={a.name}>
-                            <button
-                                type="button"
-                                aria-pressed={active}
-                                onClick={() => choose.onPick(i)}
-                                onFocus={() => choose.onHover(i)}
-                                onPointerEnter={(e) => { if (e.pointerType === 'mouse') choose.onHover(i); }}
-                                className="relative block w-full pl-6 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-                            >
-                                <span aria-hidden="true" className="absolute left-0 top-1 bottom-1 w-px bg-foreground/15" />
-                                <span
-                                    ref={(el) => { choose.lineRefs.current[i] = el; }}
-                                    aria-hidden="true"
-                                    className={`absolute left-0 top-1 bottom-1 w-px bg-accent origin-top transition-opacity duration-300 ${active ? 'opacity-100' : 'opacity-0'}`}
-                                />
-                                <span className={`block text-base font-medium leading-snug transition-colors duration-300 ${active ? 'text-foreground' : 'text-foreground/70'}`}>{a.name}</span>
-                                <span className={`mt-1 block text-[15px] leading-relaxed transition-colors duration-300 ${active ? 'text-foreground/70' : 'text-foreground/60'}`}>{a.desc}</span>
-                            </button>
-                        </li>
-                    );
-                })}
-            </ul>
+            <li className="rounded-2xl bg-white border border-foreground/[0.07] p-5">
+                <CardBody item={item} />
+            </li>
         );
     }
 
+    const active = index === choose.current;
     return (
-        <ul className="mt-6 space-y-5">
-            {items.map((a) => (
-                <li key={a.name} className="relative pl-6">
-                    <span aria-hidden="true" className="absolute left-0 top-1 bottom-1 w-px bg-foreground/15" />
-                    <span className="block text-base font-medium text-foreground leading-snug">{a.name}</span>
-                    <span className="mt-1 block text-[15px] text-foreground/60 leading-relaxed">{a.desc}</span>
-                </li>
-            ))}
-        </ul>
+        <li>
+            <button
+                type="button"
+                aria-pressed={active}
+                onClick={() => choose.onPick(index)}
+                onFocus={() => choose.onHover(index)}
+                onPointerEnter={(e) => { if (e.pointerType === 'mouse') choose.onHover(index); }}
+                className={`relative block w-full h-full overflow-hidden rounded-2xl bg-white border p-5 text-left transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${active ? 'border-accent/40' : 'border-foreground/[0.07]'}`}
+            >
+                <CardBody item={item} />
+                <span
+                    ref={(el) => { choose.setLine(index, el); }}
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 bottom-0 h-0.5 bg-accent origin-left transition-opacity duration-300 ${active ? 'opacity-100' : 'opacity-0'}`}
+                />
+            </button>
+        </li>
     );
 }

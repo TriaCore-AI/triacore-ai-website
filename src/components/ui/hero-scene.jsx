@@ -13,7 +13,10 @@ const SCENE = {
   muis: [0.15, 0.06],
   schijven: 64
 };
-const INTRO = 3.2;
+// Het binnenkomen: de schijven draaien vlot in en vertragen zacht tot hun eindstand. Ze starten iets voorbij
+// de vlakke stand (uIn onder 0), zodat ze nog op volle snelheid draaien als de fade-in van de canvas af is
+const INTRO = 2.2;
+const INTRO_VAN = -0.3;
 const TIK_ACTIEF = 1000 / 61;
 // In rust schuift enkel het raamlicht, heel traag: daarvoor volstaan een paar beelden per seconde
 const TIK_RUST = 1000 / 12;
@@ -22,7 +25,7 @@ const norm = (v) => {
   const l = Math.hypot(v[0], v[1], v[2]);
   return [v[0] / l, v[1] / l, v[2] / l];
 };
-const zacht = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const uitloop = (x) => 1 - Math.pow(1 - x, 3);
 
 // Welke schijf ligt onder de muis? Zelfde vorm en draaiing als map() in de shader.
 // Geeft het nummer van de schijf terug, of null als de muis naast de staaf staat
@@ -167,7 +170,7 @@ export default function HeroScene() {
 
       const teken = () => {
         gl.uniform1f(u.uT, stil ? 8 : klok + 8);
-        gl.uniform1f(u.uIn, stil ? 1 : zacht(Math.min(klok / INTRO, 1)));
+        gl.uniform1f(u.uIn, stil ? 1 : INTRO_VAN + (1 - INTRO_VAN) * uitloop(Math.min(klok / INTRO, 1)));
         gl.uniform2f(u.uM, m.x, m.y);
         gl.uniform3f(u.uRo, SCENE.ro[0] + m.x * SCENE.muis[0], SCENE.ro[1] + m.y * SCENE.muis[1], SCENE.ro[2]);
         gl.drawArrays(gl.TRIANGLES, 0, 3);

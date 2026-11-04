@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import NewsletterSignup from './newsletter-signup';
 
 // Overgang van de lichte pagina naar de donkere footer: een verloop dat volgens een zachte
 // S-curve van doorzichtig naar #020617 gaat. Door de vele tussenstappen is er nergens een begin of
@@ -16,8 +15,8 @@ const FADE_TO_DARK = `linear-gradient(to bottom, ${FADE_STOPS.map(([p, a]) => `r
 
 const linkClass = 'text-sm text-white/55 hover:text-white transition-colors duration-300 w-max';
 
-// Compacte, rustige footer: links het merk, in het midden de pagina's en de contactgegevens,
-// rechts de nieuwsbrief. Onderaan één regel met de wettelijke gegevens.
+// Compacte, rustige footer: links het merk, rechts de pagina's en de contactgegevens.
+// Onderaan één regel met de wettelijke gegevens.
 export default function Footer() {
     const { language } = useLanguage();
     const nl = language === 'nl';
@@ -49,14 +48,13 @@ export default function Footer() {
                     </div>
 
                     {/* Pagina's en contact */}
-                    <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+                    <div className="lg:col-span-6 lg:col-start-7 grid grid-cols-2 gap-8">
                         <div className="flex flex-col gap-2.5">
                             <p className="text-sm font-medium text-white mb-1.5">{nl ? "Pagina's" : 'Pages'}</p>
                             <Link to="/custom-oplossingen" className={linkClass}>{nl ? 'Custom tools' : 'Custom tools'}</Link>
                             <Link to="/workshops" className={linkClass}>Workshops</Link>
                             <Link to="/ai-begeleiding" className={linkClass}>{nl ? 'AI-begeleiding' : 'AI guidance'}</Link>
                             <Link to="/projecten" className={linkClass}>{nl ? 'Projecten' : 'Projects'}</Link>
-                            <Link to="/resources" className={linkClass}>Resources</Link>
                             <Link to="/team" className={linkClass}>Team</Link>
                             <Link to="/contact" className={linkClass}>Contact</Link>
                         </div>
@@ -69,11 +67,6 @@ export default function Footer() {
                                 Kempische Steenweg 303<br />3500 Hasselt · Corda Incubator
                             </p>
                         </div>
-                    </div>
-
-                    {/* Nieuwsbrief */}
-                    <div className="lg:col-span-4">
-                        <NewsletterSignup variant="footer" />
                     </div>
                 </div>
 

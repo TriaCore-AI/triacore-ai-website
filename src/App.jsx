@@ -8,6 +8,8 @@ import Navbar from './components/ui/navbar';
 import CTAButton from './components/ui/cta-button';
 import CornerTrace from './components/ui/corner-trace';
 import CardCarousel from './components/ui/card-carousel';
+import VeegRij from './components/ui/veeg-rij';
+import AanpakKlein from './components/ui/aanpak-klein';
 import { useLanguage } from './context/LanguageContext';
 import { AutoImage } from './components/ui/auto-image';
 import { projecten } from './data/projecten';
@@ -73,6 +75,13 @@ const klantQuotes = [
 // Veelgestelde vragen (overgenomen van de vorige homepage)
 const faqVragen = [
   {
+    q: { nl: 'Waarom zouden we niet gewoon ChatGPT gebruiken?', en: 'Why wouldn\'t we just use ChatGPT?' },
+    a: {
+      nl: 'Voor veel taken is dat een prima begin, en we leren uw team graag hoe het er meer uit haalt. Maar een proces met veel mensen, stappen en gegevens lost u niet op met één prompt. Daarvoor is meer structuur nodig, en soms een tool op maat.',
+      en: 'For many tasks that is a great start, and we are happy to teach your team how to get more out of it. But a process with many people, steps and data is not something you solve with one prompt. That takes more structure, and sometimes a custom tool.'
+    }
+  },
+  {
     q: { nl: 'Wat kost een custom tool?', en: 'What does a custom tool cost?' },
     a: {
       nl: 'De kostprijs hangt af van de complexiteit van het probleem, het aantal gebruikers en de technieken die we inzetten. We werken nooit met een vast prijskaartje omdat elke tool anders is. Na een eerste gesprek maken we een duidelijke inschatting zonder verborgen kosten.',
@@ -101,14 +110,34 @@ const faqVragen = [
     }
   },
   {
-    q: { nl: 'Hoe beveiligen jullie de software die jullie bouwen?', en: 'How do you secure the software you build?' },
-    a: (language) => language === 'nl' ? (
-      <>Wij beveiligen onze software via <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Aikido</a>, een gespecialiseerd beveiligingsplatform dat continu onze code en systemen scant op kwetsbaarheden. Zo is uw tool van dag één beschermd tegen bekende risico's.</>
-    ) : (
-      <>We secure our software with <a href="https://www.aikido.dev/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Aikido</a>, a specialised security platform that continuously scans our code and systems for vulnerabilities. That way your tool is protected against known risks from day one.</>
-    )
+    q: { nl: 'Werkt dit samen met de systemen die we al gebruiken?', en: 'Does this work with the systems we already use?' },
+    a: {
+      nl: 'Dat bekijken we altijd vooraf. Waar het kan, koppelen we aan uw bestaande systemen, zodat uw team gegevens niet dubbel hoeft in te geven.',
+      en: 'We always check that up front. Where possible, we connect to your existing systems, so your team does not have to enter data twice.'
+    }
   }
 ];
+
+// De klantkaarten op de homepage: op gsm een veegrij, vanaf tablet de doorlopende rij.
+// Dezelfde grens (768px) als de hero en de scrollanimaties
+function KlantenRij({ kaarten }) {
+  const [gsm, setGsm] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = (e) => setGsm(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  if (gsm) {
+    return <VeegRij>{kaarten.map((c) => <ClientCard key={c.key} card={c} compact />)}</VeegRij>;
+  }
+  return (
+    <CardCarousel autoplay={42} controls={false}>
+      {kaarten.map((c) => <ClientCard key={c.key} card={c} className="shrink-0 w-[400px]" />)}
+    </CardCarousel>
+  );
+}
 
 // De secties in het snelmenu linksonder, in de volgorde van de pagina
 const snelmenu = {
@@ -457,12 +486,8 @@ function App() {
 
           {/* Lichte kaarten naast elkaar. De lijst komt uit src/data/klanten.jsx (projecten en
               workshopklanten), zodat homepage en projectenpagina altijd hetzelfde tonen.
-              Kaarten hebben een vaste breedte; wat niet past, bereik je met de pijltjes */}
-          <CardCarousel autoplay={42} controls={false}>
-            {klantKaarten(language).map((c) => (
-              <ClientCard key={c.key} card={c} className="shrink-0 w-[82vw] sm:w-[400px]" />
-            ))}
-          </CardCarousel>
+              Op de computer schuift de rij vanzelf, op gsm veegt de bezoeker er zelf door */}
+          <KlantenRij kaarten={klantKaarten(language)} />
 
           <div data-reveal-head className="flex justify-center mt-12 md:mt-16">
             <div className="rv-fade">
@@ -540,7 +565,7 @@ function App() {
       {/* Het logo als schema: elke balk is een pijler. Op grote schermen scrolt de sectie gewoon mee, en
           terwijl ze door het beeld schuift, krijgt elke balk om beurten een lijn naar zijn pijler
           (de middelste balk naar links, de andere naar rechts). Tot slot staat alles weer volledig.
-          Op kleinere schermen een gewone lijst, met de balkjes als opsommingsteken */}
+          Op kleinere schermen klapt elke balk tijdens het scrollen open tot zijn pijler */}
       <section id="aanpak" className="relative px-6 md:px-16 lg:px-24 py-24 md:py-32">
         <div className="flex flex-col justify-center max-w-7xl mx-auto">
           <div data-reveal-head className="text-center mb-14 xl:mb-16">
@@ -595,23 +620,8 @@ function App() {
           </div>
           </div>
 
-          {/* Kleinere schermen: een lijst, de balkjes verspringen zoals in het logo */}
-          <div className="xl:hidden">
-            <ol data-reveal-head className="max-w-xl mx-auto space-y-10">
-              {aanpakPijlers[language].map((p, i) => (
-                <li key={p.word} className="rv-fade flex gap-5">
-                  <span className={`mt-3 h-2.5 w-12 shrink-0 rounded-full bg-foreground ${i === 1 ? 'ml-4' : 'mr-4'}`} aria-hidden="true" />
-                  <div>
-                    <div className="flex items-baseline gap-3">
-                      <span className="text-sm text-accent tabular-nums">/0{i + 1}</span>
-                      <span className="text-2xl font-medium text-foreground">{p.word}</span>
-                    </div>
-                    <p className="mt-1 text-[15px] text-foreground/60 leading-relaxed">{p.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
+          {/* Kleinere schermen: het logo, waarvan de balken tijdens het scrollen één voor één openklappen */}
+          <AanpakKlein pijlers={aanpakPijlers[language]} />
         </div>
       </section>
 

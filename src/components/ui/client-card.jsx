@@ -6,12 +6,12 @@ import CornerTrace from './corner-trace';
 // Een klantkaart (homepage en projectenpagina): logo, naam, sector, een dunne lijn, korte uitleg en
 // een link onderaan. Licht, zonder schaduw; bij hover wordt de kaart wit en tekent de L lijn zich.
 // De lijn heeft de klasse rv-line, zodat een scrollanimatie ze kan laten tekenen.
-// Geef via className de breedte mee die de plek nodig heeft.
-export default function ClientCard({ card, className = '' }) {
+// Geef via className de breedte mee die de plek nodig heeft. compact geeft minder binnenmarge, voor smalle kaarten.
+export default function ClientCard({ card, className = '', compact = false }) {
     return (
         <Link
             to={card.to}
-            className={`klantcases-card group relative flex flex-col min-h-[360px] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-8 md:p-10 transition-colors duration-500 hover:bg-white hover:border-foreground/15 ${className}`}
+            className={`klantcases-card group relative flex flex-col min-h-[360px] rounded-3xl bg-[#fafafa] border border-foreground/[0.07] ${compact ? 'p-6' : 'p-8 md:p-10'} transition-colors duration-500 hover:bg-white hover:border-foreground/15 ${className}`}
         >
             <CornerTrace />
             {/* Vaste hoogte, zodat logo's en namen over de kaarten op één lijn staan.

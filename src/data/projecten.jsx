@@ -16,8 +16,7 @@
 //                 detailpagina.
 //
 // Optioneel op 'live' projecten:
-//   blocks      — inhoud van de detailpagina, exact hetzelfde bloksysteem
-//                 als resources (zie src/data/resources.jsx en
+//   blocks      — inhoud van de detailpagina (zie
 //                 src/components/content/ContentBlocks.jsx). Vaste
 //                 structuur en schrijfwijze: zie Projecten/_template.md
 //                 (privé werkmap, niet op GitHub).

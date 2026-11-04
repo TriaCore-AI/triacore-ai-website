@@ -13,11 +13,12 @@ import { AutoImage } from '../components/ui/auto-image';
 import { useLanguage } from '../context/LanguageContext';
 import useReveal from '../hooks/use-reveal';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BellRing, Brain, CalendarCheck, Camera, FileCheck, FileSearch, FolderInput, MessageCircle } from 'lucide-react';
 import { projecten } from '../data/projecten';
 import PlanningVisual from '../components/ui/planning-visual';
 import { PlanningLearnVisual, PlanningAskVisual } from '../components/ui/planning-ai-visuals';
-import DocumentVisual from '../components/ui/document-visual';
+import { AppPhotoVisual, AppAskVisual } from '../components/ui/app-ai-visuals';
+import { DocumentSortVisual, DocumentReadVisual, DocumentAskVisual } from '../components/ui/document-ai-visuals';
 import PortalVisual from '../components/ui/portal-visual';
 
 // De secties in het snelmenu linksonder, in de volgorde van de pagina (ids staan op de secties zelf)
@@ -40,9 +41,10 @@ const snelmenu = {
     ]
 };
 
-// De vier tools in de kiezer. `desc` beschrijft de software, `ai` wat de AI erin doet
-// (een tool kan meerdere AI-toepassingen hebben). Heeft een AI-toepassing een eigen `visual`, dan wisselen die
-// in de kiezer vanzelf. Anders toont de tool haar eigen `visual`, of zonder visual nog een plaatshouder.
+// De tools in de kiezer. `desc` beschrijft de software, `ai` wat automatisering en AI erin doen: elk wordt een
+// wit kaartje, dus hou de tekst kort (maximaal vier regels). Het pilletje op het kaartje zegt AI, tenzij
+// `automation` aanstaat: vaste regels zijn geen AI. Heeft een toepassing een eigen `visual`, dan wisselen
+// die in de kiezer vanzelf. Anders toont de tool haar eigen `visual`, of zonder visual nog een plaatshouder.
 const oplossingen = [
     {
         key: 'planning',
@@ -54,14 +56,16 @@ const oplossingen = [
         },
         ai: [
             {
+                icon: CalendarCheck,
                 name: { nl: 'Planningsvoorstel', en: 'Planning proposal' },
                 visual: <PlanningVisual />,
                 desc: {
-                    nl: 'Stelt een planning voor op basis van beschikbaarheid, belading en routes, ook als er onderweg iets wijzigt. Ook rijtijden, openingsuren en andere regels van uw bedrijf neemt de AI mee. U beslist wat er doorgaat.',
-                    en: 'Proposes a planning based on availability, load and routes, even when something changes along the way. The AI also takes driving times, opening hours and your company\'s other rules into account. You decide what goes ahead.'
+                    nl: 'Plant op basis van beschikbaarheid, belading, routes en uw regels, ook bij wijzigingen. U beslist.',
+                    en: 'Plans based on availability, load, routes and your rules, even when things change. You decide.'
                 }
             },
             {
+                icon: Brain,
                 name: { nl: 'Leert van uw planner', en: 'Learns from your planner' },
                 visual: <PlanningLearnVisual />,
                 desc: {
@@ -70,11 +74,12 @@ const oplossingen = [
                 }
             },
             {
+                icon: MessageCircle,
                 name: { nl: 'Stel vragen aan uw planning', en: 'Ask your planning questions' },
                 visual: <PlanningAskVisual />,
                 desc: {
-                    nl: 'U vraagt in gewone taal wie morgen nog ruimte heeft of hoeveel er deze week vervoerd werd, en de AI antwoordt meteen.',
-                    en: 'You ask in plain language who still has room tomorrow or how much was transported this week, and the AI answers right away.'
+                    nl: 'U vraagt in gewone taal wie morgen nog ruimte heeft, en de AI antwoordt meteen.',
+                    en: 'You ask in plain language who still has room tomorrow, and the AI answers right away.'
                 }
             }
         ]
@@ -84,29 +89,26 @@ const oplossingen = [
         name: { nl: 'App voor op de baan', en: 'App for the road' },
         lead: { nl: 'Wat onderweg gebeurt, staat meteen op kantoor.', en: 'What happens on the road reaches the office right away.' },
         desc: {
-            nl: 'Uw chauffeurs, technici en verkopers registreren bonnen en ronden taken af, ook zonder bereik. De app synchroniseert vanzelf zodra er weer verbinding is, en niets moet achteraf nog overgetypt worden.',
-            en: 'Your drivers, technicians and sales reps register notes and complete tasks, even without reception. The app syncs by itself as soon as there is a connection again, and nothing needs retyping afterwards.'
+            nl: 'Uw chauffeurs, technici en verkopers registreren hun werk in de app, ook zonder bereik. Op kantoor komt alles vanzelf binnen, en niemand moet nog iets overtypen.',
+            en: 'Your drivers, technicians and sales reps register their work in the app, even without reception. Everything reaches the office by itself, and nobody has to retype anything.'
         },
         ai: [
             {
-                name: { nl: 'Controle bij het indienen', en: 'Check on submission' },
+                icon: Camera,
+                name: { nl: 'Foto wordt bon', en: 'Photo becomes slip' },
+                visual: <AppPhotoVisual />,
                 desc: {
-                    nl: 'Merkt op wat ontbreekt of niet klopt, nog voor de registratie op kantoor is.',
-                    en: 'Spots what is missing or does not add up, before the registration reaches the office.'
+                    nl: 'Leest een foto van een bon en vult de velden in. Ontbreekt er iets, dan ziet uw chauffeur het meteen.',
+                    en: 'Reads a photo of a slip and fills in the fields. If something is missing, your driver sees it right away.'
                 }
             },
             {
-                name: { nl: 'Factuurvoorstel', en: 'Invoice proposal' },
+                icon: MessageCircle,
+                name: { nl: 'Stel vragen aan uw registraties', en: 'Ask your records questions' },
+                visual: <AppAskVisual />,
                 desc: {
-                    nl: 'Zet uit de registraties een factuur of afrekening klaar. U kijkt na en keurt goed.',
-                    en: 'Prepares an invoice or settlement from the registrations. You review and approve.'
-                }
-            },
-            {
-                name: { nl: 'Offerte ter plaatse', en: 'Quote on site' },
-                desc: {
-                    nl: 'Maakt uit wat de verkoper ingeeft meteen een offerte op, klaar om te versturen.',
-                    en: 'Turns what the sales rep enters into a quote right away, ready to send.'
+                    nl: 'Zie op kantoor in één oogopslag, voor de juiste periode en chauffeurs, of alles in orde is.',
+                    en: 'See at a glance at the office, for the right period and drivers, whether everything is in order.'
                 }
             }
         ]
@@ -114,32 +116,37 @@ const oplossingen = [
     {
         key: 'documenten',
         name: { nl: 'Documentbeheer', en: 'Document management' },
-        visual: <DocumentVisual />,
         lead: { nl: 'Elk document meteen terug te vinden.', en: 'Every document, found in seconds.' },
         desc: {
-            nl: 'Alles wat verspreid op schijven en in mappen staat, komt samen in één geordend archief, met rollen en een logboek van wie wat deed. Het origineel blijft altijd onaangeroerd.',
-            en: 'Everything scattered across drives and folders comes together in one organised archive, with roles and a log of who did what. The original always stays untouched.'
+            nl: 'Alles wat nu verspreid of ongeordend staat, komt samen in één doorzoekbare kennisbank. Zo vinden uw medewerkers altijd alles terug en verliezen ze geen tijd meer aan zoeken.',
+            en: 'Everything that is now scattered or unorganised comes together in one searchable knowledge base. So your employees always find everything and no longer lose time searching.'
         },
         ai: [
             {
+                icon: FolderInput,
                 name: { nl: 'Automatisch ordenen', en: 'Automatic sorting' },
+                visual: <DocumentSortVisual />,
                 desc: {
-                    nl: 'Leest elk nieuw document, herkent wat het is en zet het op de juiste plaats. Twijfelt ze, dan kijkt een mens het na.',
-                    en: 'Reads every new document, recognises what it is and puts it in the right place. When in doubt, a person checks it.'
+                    nl: 'Leest elk nieuw document en zet het op de juiste plaats. Twijfelt de AI, dan kijkt een mens het na.',
+                    en: 'Reads every new document and puts it in the right place. If the AI is unsure, a person checks it.'
                 }
             },
             {
+                icon: FileSearch,
                 name: { nl: 'Gegevens uitlezen', en: 'Data extraction' },
+                visual: <DocumentReadVisual />,
                 desc: {
-                    nl: 'Haalt datums, bedragen en vervaldagen uit elk document, zodat u geen vervaldatum meer mist.',
-                    en: 'Pulls dates, amounts and expiry dates from every document, so you never miss a deadline again.'
+                    nl: 'Haalt datums en bedragen uit elk document, en geeft een seintje voor een keuring of contract vervalt.',
+                    en: 'Pulls dates and amounts from every document, and reminds you before an inspection or contract expires.'
                 }
             },
             {
-                name: { nl: 'Vragen aan uw documenten', en: 'Ask your documents' },
+                icon: MessageCircle,
+                name: { nl: 'Stel vragen aan uw documenten', en: 'Ask your documents questions' },
+                visual: <DocumentAskVisual />,
                 desc: {
-                    nl: 'Vraag welke keuringen volgende maand vervallen en u krijgt de lijst, met de documenten erbij.',
-                    en: 'Ask which inspections expire next month and you get the list, with the documents attached.'
+                    nl: 'U vraagt welke keuringen volgende maand vervallen, en de AI antwoordt meteen, met de documenten erbij.',
+                    en: 'You ask which inspections expire next month, and the AI answers right away, with the documents attached.'
                 }
             }
         ]
@@ -148,24 +155,43 @@ const oplossingen = [
         key: 'portaal',
         name: { nl: 'Klantenportaal', en: 'Client portal' },
         visual: <PortalVisual />,
-        lead: { nl: 'Externen werken in uw omgeving, onder uw regels.', en: 'External parties work in your environment, under your rules.' },
+        lead: { nl: 'Klanten en partners werken mee, onder uw regels.', en: 'Clients and partners work along, under your rules.' },
         desc: {
-            nl: 'Klanten, onderaannemers en leveranciers krijgen een eigen toegang. Ze registreren, vragen aan of volgen op wat hen aanbelangt, en u bepaalt wie wat ziet. Zo gaan er minder mails en bijlagen heen en weer.',
-            en: 'Clients, subcontractors and suppliers get their own access. They register, request or follow up on what concerns them, and you decide who sees what. That means fewer emails and attachments going back and forth.'
+            nl: 'Klanten, onderaannemers en leveranciers krijgen een eigen toegang en zien enkel wat hen aanbelangt. Zo gaan er minder mails en bijlagen heen en weer.',
+            en: 'Clients, subcontractors and suppliers get their own access and only see what concerns them. That means fewer emails and attachments going back and forth.'
         },
         ai: [
             {
-                name: { nl: 'Vragen van externen', en: 'Questions from partners' },
+                icon: FileCheck,
+                name: { nl: 'Aanmeldingen nakijken', en: 'Checking submissions' },
                 desc: {
-                    nl: 'Beantwoordt de vragen die klanten en partners het vaakst stellen, op basis van uw eigen regels en documenten.',
-                    en: 'Answers the questions clients and partners ask most often, based on your own rules and documents.'
+                    nl: 'Leest wat een partner indient, zoals een attest, en merkt op wat ontbreekt of vervallen is. U beslist.',
+                    en: 'Reads what a partner submits, such as a certificate, and spots what is missing or expired. You decide.'
                 }
             },
             {
-                name: { nl: 'Aanmelden en goedkeuren', en: 'Onboarding and approval' },
+                icon: FolderInput,
+                name: { nl: 'Alles in het juiste dossier', en: 'Everything in the right file' },
                 desc: {
-                    nl: 'Controleert wat een partner indient, zoals een nieuwe chauffeur, en zet het klaar om goed te keuren.',
-                    en: 'Checks what a partner submits, such as a new driver, and prepares it for approval.'
+                    nl: 'Zet wat een partner oplaadt vanzelf in het juiste dossier, zonder doorsturen of overzetten.',
+                    en: 'Puts what a partner uploads in the right file by itself, without forwarding or transferring.'
+                }
+            },
+            {
+                icon: BellRing,
+                automation: true,
+                name: { nl: 'Vanzelf herinneren', en: 'Automatic reminders' },
+                desc: {
+                    nl: 'Vraagt partners op tijd om een nieuw attest. Niemand moet er nog achteraan bellen.',
+                    en: 'Asks partners for a new certificate in time. Nobody has to chase it by phone anymore.'
+                }
+            },
+            {
+                icon: MessageCircle,
+                name: { nl: 'Antwoord op de vragen van uw partners', en: 'Answers to your partners\' questions' },
+                desc: {
+                    nl: 'Antwoordt in gewone taal, met enkel wat die partner mag zien. Anders gaat de vraag naar uw team.',
+                    en: 'Answers in plain language, with only what that partner may see. Otherwise the question goes to your team.'
                 }
             }
         ]
@@ -180,13 +206,7 @@ const oplossingen = [
         },
         ai: [
             {
-                name: { nl: 'Vragen aan uw materiaal', en: 'Ask your equipment' },
-                desc: {
-                    nl: 'Vraag in gewone taal waar de minikraan staat of wat er volgende week nog vrij is.',
-                    en: 'Ask in plain language where the mini excavator is or what is still free next week.'
-                }
-            },
-            {
+                icon: Camera,
                 name: { nl: 'Foto bij uitgifte en terugkomst', en: 'Photo on handover and return' },
                 desc: {
                     nl: 'Vergelijkt de foto\'s van voor en na en wijst op nieuwe schade. U beslist wat ermee gebeurt.',
@@ -194,10 +214,20 @@ const oplossingen = [
                 }
             },
             {
+                icon: BellRing,
+                automation: true,
                 name: { nl: 'Waarschuwen voor wat stilligt of te laat is', en: 'Alerts for what sits idle or runs late' },
                 desc: {
                     nl: 'Meldt een verhuur die over tijd is, of een machine die al weken ongebruikt op een werf staat.',
                     en: 'Flags a rental that is overdue, or a machine that has been sitting unused on a site for weeks.'
+                }
+            },
+            {
+                icon: MessageCircle,
+                name: { nl: 'Stel vragen aan uw materiaal', en: 'Ask your equipment questions' },
+                desc: {
+                    nl: 'U vraagt in gewone taal waar de minikraan staat of wat er volgende week nog vrij is.',
+                    en: 'You ask in plain language where the mini excavator is or what is still free next week.'
                 }
             }
         ]
@@ -304,15 +334,23 @@ export default function CustomOplossingen() {
                             label={nl ? 'Onze tools' : 'Our tools'}
                             placeholder={nl ? 'Visual volgt' : 'Visual coming soon'}
                             aiLabel={nl
-                                ? <>Wat de <span className="text-accent">AI</span> voor u doet</>
-                                : <>What the <span className="text-accent">AI</span> does for you</>}
+                                ? <>Wat automatisering en <span className="text-accent">AI</span> voor u doen</>
+                                : <>What automation and <span className="text-accent">AI</span> do for you</>}
+                            moreLabel={nl ? 'En nog veel meer...' : 'And much more...'}
                             items={oplossingen.map((o) => ({
                                 key: o.key,
                                 name: o.name[language],
                                 lead: o.lead[language],
                                 desc: o.desc[language],
                                 visual: o.visual,
-                                ai: o.ai.map((a) => ({ name: a.name[language], desc: a.desc[language], visual: a.visual }))
+                                ai: o.ai.map((a) => ({
+                                    name: a.name[language],
+                                    desc: a.desc[language],
+                                    visual: a.visual,
+                                    icon: a.icon,
+                                    isAi: !a.automation,
+                                    kind: a.automation ? (nl ? 'Automatisering' : 'Automation') : 'AI'
+                                }))
                             }))}
                         />
 

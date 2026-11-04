@@ -6,9 +6,7 @@ import { Copy, Check, Download, Monitor, Smartphone, Cog, Layers, Users, Buildin
 const CARD_ICONS = { Monitor, Smartphone, Cog, Layers, Users, Building2, CalendarDays };
 
 // --- BLOCK RENDERERS ---
-// Gedeeld door Resources (ResourceDetail.jsx) en Projecten (ProjectDetail.jsx),
-// zodat beide detailpagina's exact dezelfde bloktypes en opmaak gebruiken.
-// Bloktypes technisch gedocumenteerd bovenaan src/data/resources.jsx.
+// Gebruikt door de casepagina's (ProjectDetail.jsx).
 
 // Rendert **vette** stukken als echte vetletters. De ruwe tekst (mét de
 // sterretjes) wordt nog steeds gekopieerd, zodat ChatGPT/Claude het als
@@ -124,7 +122,7 @@ function PromptBlock({ block, language }) {
 }
 
 // theme="nieuw" geeft de blokken de stijl van de nieuwe site (rustige lijnen, lichte kaarten, geen labels
-// in hoofdletters). Voorlopig enkel gebruikt op de casepagina's; de resources houden de klassieke stijl.
+// in hoofdletters). De casepagina's gebruiken die stijl; bloktypes zonder eigen versie vallen terug op de klassieke.
 export function ContentBlock({ block, language, theme = 'klassiek' }) {
     if (theme === 'nieuw') {
         const nieuw = renderNieuw(block, language);

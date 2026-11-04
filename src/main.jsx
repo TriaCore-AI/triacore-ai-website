@@ -10,8 +10,6 @@ import CookiePolicy from './pages/CookiePolicy.jsx'
 import Contact from './pages/Contact.jsx'
 
 import CustomOplossingen from './pages/CustomOplossingen.jsx'
-import Resources from './pages/Resources.jsx'
-import ResourceDetail from './pages/ResourceDetail.jsx'
 import Projecten from './pages/Projecten.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import Workshops from './pages/Workshops.jsx'
@@ -32,8 +30,6 @@ createRoot(document.getElementById('root')).render(
           <Route path="/cookiebeleid" element={<CookiePolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/custom-oplossingen" element={<CustomOplossingen />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/resources/:slug" element={<ResourceDetail />} />
           <Route path="/projecten" element={<Projecten />} />
           <Route path="/projecten/:slug" element={<ProjectDetail />} />
           <Route path="/workshops" element={<Workshops />} />

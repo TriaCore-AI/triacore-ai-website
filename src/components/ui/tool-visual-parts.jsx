@@ -149,15 +149,3 @@ export function ChatFromPerson({ label, children }) {
         </div>
     );
 }
-
-// Een klein los kaartje dat aan een rij hangt en onderaan buiten het venster mag vallen
-export function FloatingCard({ left, top, width, padding, children }) {
-    return (
-        <div
-            className="absolute bg-white border border-foreground/[0.08]"
-            style={{ left: u(left), top: u(top), width: u(width), padding: u(padding), borderRadius: u(9), boxShadow: `0 ${u(10)} ${u(26)} ${u(-12)} rgba(15,23,42,0.24)` }}
-        >
-            {children}
-        </div>
-    );
-}
