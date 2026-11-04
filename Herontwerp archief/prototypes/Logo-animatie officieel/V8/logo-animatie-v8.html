@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v8-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v8-core.js"></script>
+<script>
+  // V8: V7 met rastervloer, gevolgd door de drie pijlers en de naam met de slogan.
+  // ?lang=en voor de Engelse woorden. De toets G zet het raster aan of uit.
+  TriaLogoV8({ raster: true });
+</script>
+</body>
+</html>

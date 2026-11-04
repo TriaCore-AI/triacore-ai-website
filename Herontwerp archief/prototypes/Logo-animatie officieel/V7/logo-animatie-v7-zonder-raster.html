@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V7 zonder raster</title>
+<link rel="stylesheet" href="v7-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v7-core.js"></script>
+<script>
+  // V7 zonder rastervloer. De toets G zet het raster aan om te vergelijken.
+  TriaLogoV7({ raster: false });
+</script>
+</body>
+</html>

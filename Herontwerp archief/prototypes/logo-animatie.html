@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore logo animatie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font-family: var(--sans);
+    font-size: var(--fs-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 4px; }
+
+  /* ---------- Bedieningsbalk van het prototype ---------- */
+  .top {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 12px 24px;
+    align-items: center; justify-content: space-between;
+    padding: 14px var(--gutter);
+    background: var(--bg);
+    border-bottom: var(--hairline);
+  }
+  .top-l { display: flex; align-items: baseline; gap: 14px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .seg {
+    display: flex; padding: 3px;
+    border: var(--hairline); border-radius: var(--radius-pill);
+    background: var(--surface);
+  }
+  .seg button, .ghost {
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-meta);
+    letter-spacing: .02em; padding: 7px 14px; border-radius: var(--radius-pill);
+  }
+  .seg button {
+    color: var(--sub);
+    transition: color var(--dur-micro) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+  }
+  .seg button:hover { color: var(--text); }
+  .seg button[aria-pressed="true"] { background: var(--navy); color: var(--text-inv); }
+  .ghost {
+    border: var(--hairline); color: var(--text);
+    transition: border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+  }
+  .ghost:hover { border-color: var(--navy); }
+  .ghost[aria-pressed="true"] { border-color: var(--green); color: var(--green-dim); }
+
+  /* ---------- Het podium ---------- */
+  .stage {
+    --m: clamp(200px, 30vw, 380px);          /* breedte van het beeldmerk */
+    --u: calc(var(--m) / 406.72);             /* één eenheid uit het originele SVG */
+    --labels-w: calc(var(--u) * 48 + 300px);  /* ruimte voor de pijlers rechts */
+
+    --bar: var(--green);
+    --bar-active: var(--green);
+    --p-name: var(--text);
+    --p-sub: var(--sub);
+    --p-num: var(--green-dim);
+    --p-link: var(--line);
+    --p-link-active: var(--green);
+    --ai: var(--green);
+
+    position: relative;
+    min-height: min(88vh, 880px);
+    display: grid; place-items: center;
+    padding: clamp(56px, 9vw, 128px) var(--gutter);
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color var(--dur-reveal) var(--ease-in-out), color var(--dur-reveal) var(--ease-in-out);
+  }
+  .stage.is-dark {
+    --bar: var(--text-inv);
+    --bar-active: var(--green-lt);
+    --p-name: var(--text-inv);
+    --p-sub: var(--sub-inv);
+    --p-num: var(--green-lt);
+    --p-link: var(--line-inv);
+    --p-link-active: var(--green-lt);
+    --ai: var(--green-lt);
+    background: var(--navy);
+    color: var(--text-inv);
+  }
+
+  .lockup { position: relative; padding-right: var(--labels-w); }
+
+  .mark {
+    position: relative;
+    width: var(--m);
+    height: calc(var(--u) * 249.46);
+  }
+  /* houdt de hover vast terwijl je naar de pijlers beweegt */
+  .mark::after {
+    content: ""; position: absolute; z-index: 0;
+    left: 100%; top: -12%; bottom: -12%; width: var(--labels-w);
+  }
+
+  .bar {
+    position: absolute; z-index: 1;
+    left: calc(var(--u) * var(--x));
+    top: calc(var(--u) * var(--y));
+    width: calc(var(--u) * 291.56);
+    height: calc(var(--u) * 48.57);
+    transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+  }
+  .bar:focus-visible { outline-offset: 10px; border-radius: var(--radius-pill); }
+  .b1 { --x: 0;      --y: 0; }
+  .b2 { --x: 115.16; --y: 100.45; }
+  .b3 { --x: 0;      --y: 200.89; }
+  /* grotere raakzone dan de balk zelf */
+  .bar::before {
+    content: ""; position: absolute;
+    inset: calc(var(--u) * -25.9) calc(var(--u) * -12);
+  }
+  .fill {
+    position: absolute; inset: 0;
+    border-radius: var(--radius-pill);
+    background: var(--bar);
+    transition: background-color var(--dur-hover) var(--ease-out);
+    will-change: transform, clip-path;
+  }
+  .mark.pre .fill { opacity: 0; }
+
+  .mark[data-active] .bar { opacity: .16; }
+  .mark[data-active="0"] .b1,
+  .mark[data-active="1"] .b2,
+  .mark[data-active="2"] .b3 { opacity: 1; transform: translateX(calc(var(--u) * 12)); }
+  .mark[data-active="0"] .b1 .fill,
+  .mark[data-active="1"] .b2 .fill,
+  .mark[data-active="2"] .b3 .fill { background: var(--bar-active); }
+
+  /* ---------- De pijlers ---------- */
+  .pillar {
+    --end: 291.56;
+    position: absolute; z-index: 2;
+    left: calc(var(--u) * (var(--end) + 16));
+    top: calc(var(--u) * (var(--y) + 24.285));
+    display: flex; align-items: center;
+    opacity: 0;
+    transform: translate(calc(var(--shift-s) * -1), -50%);
+    transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+    transition-delay: calc(var(--i) * var(--stagger));
+    pointer-events: none;
+  }
+  .p1 { --i: 0; --y: 0; }
+  .p2 { --i: 1; --y: 100.45; --end: 406.72; }
+  .p3 { --i: 2; --y: 200.89; }
+  .mark[data-active] .pillar { opacity: .32; transform: translate(0, -50%); pointer-events: auto; }
+  .mark[data-active="0"] .p1,
+  .mark[data-active="1"] .p2,
+  .mark[data-active="2"] .p3 { opacity: 1; }
+
+  .link {
+    display: block; height: 1px;
+    width: calc(var(--u) * (454.72 - var(--end) - 34));
+    margin-right: calc(var(--u) * 18);
+    background: var(--p-link);
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+    transition-delay: calc(var(--i) * var(--stagger));
+  }
+  .mark[data-active] .link { transform: scaleX(1); }
+  .mark[data-active="0"] .p1 .link,
+  .mark[data-active="1"] .p2 .link,
+  .mark[data-active="2"] .p3 .link { background: var(--p-link-active); }
+
+  .ptext { position: relative; display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+  .pnum {
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-eyebrow);
+    letter-spacing: .15em; color: var(--p-num);
+  }
+  .pname {
+    font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; line-height: 1;
+    font-size: clamp(26px, calc(var(--u) * 44), 44px);
+    color: var(--p-name);
+  }
+  .pdesc {
+    position: absolute; left: 0; top: calc(100% + 8px);
+    font-size: 15px; color: var(--p-sub);
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+  }
+  .mark[data-active="0"] .p1 .pdesc,
+  .mark[data-active="1"] .p2 .pdesc,
+  .mark[data-active="2"] .p3 .pdesc { opacity: 1; transform: none; transition-delay: 80ms; }
+
+  /* ---------- Woordmerk ---------- */
+  .wordmark {
+    margin-top: calc(var(--u) * 72);
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(30px, calc(var(--u) * 62), 62px);
+    line-height: 1; letter-spacing: -.01em; white-space: nowrap;
+  }
+  .wordmark .ai { color: var(--ai); transition: color var(--dur-reveal) var(--ease-in-out); }
+  .wordmark .ch {
+    display: inline-block; opacity: 0;
+    transform: translateY(.28em); filter: blur(6px);
+  }
+  .wordmark.is-in .ch {
+    opacity: 1; transform: none; filter: blur(0);
+    transition:
+      opacity 800ms var(--ease-out) calc(var(--d) * 1ms),
+      transform 1000ms var(--ease-out) calc(var(--d) * 1ms),
+      filter 800ms var(--ease-out) calc(var(--d) * 1ms);
+  }
+  .wordmark.no-t .ch { transition: none; }
+
+  /* ---------- Hint ---------- */
+  .hint {
+    position: absolute; left: 50%; bottom: clamp(24px, 4vw, 40px);
+    display: flex; align-items: center; gap: 10px;
+    transform: translate(-50%, 6px); opacity: 0;
+    transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out), color var(--dur-reveal) var(--ease-in-out);
+  }
+  .stage.is-dark .hint { color: var(--sub-inv); }
+  .hint.is-in { opacity: 1; transform: translate(-50%, 0); }
+  .hint::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); animation: pulse 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+
+  /* ---------- Pijlers op een gsm ---------- */
+  .panel { display: none; }
+
+  @media (max-width: 760px) {
+    .stage { --m: min(62vw, 260px); }
+    .lockup { padding-right: 0; }
+    .mark::after, .pillar { display: none; }
+    .panel {
+      display: block; margin-top: 32px; min-height: 76px;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+    }
+    .panel.is-on { opacity: 1; transform: none; }
+    .panel .pname { font-size: 30px; }
+    .panel .pdesc { position: static; display: block; margin-top: 8px; opacity: 1; transform: none; }
+  }
+
+  /* ---------- Toelichting ---------- */
+  .section { max-width: var(--maxw); margin: 0 auto; padding: var(--section) var(--gutter); }
+  .section + .section { padding-top: 0; }
+  .head .title { font-size: var(--fs-h2); margin-top: 14px; }
+  .head .lead { margin-top: 20px; }
+
+  .cols {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    margin-top: 56px; border-top: var(--hairline);
+  }
+  .cols.two { grid-template-columns: repeat(2, 1fr); margin-top: 0; border-top: 0; }
+  .col {
+    position: relative; text-align: left;
+    padding: 28px 32px 36px 0;
+  }
+  .col + .col { padding-left: 32px; border-left: var(--hairline); }
+  .cols.two .col { padding-top: 40px; }
+  button.col::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 2px;
+    background: var(--green);
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  button.col[aria-current="true"]::before { transform: scaleX(1); }
+  .col h3, .col .h {
+    font-family: var(--serif); font-weight: 600; font-size: var(--fs-h3);
+    line-height: 1.15; margin: 12px 0 10px;
+  }
+  .col .h, .col .p { display: block; }
+  .col p, .col .p { color: var(--sub); }
+  .col .go {
+    display: inline-flex; gap: 8px; margin-top: 18px;
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-meta);
+    letter-spacing: .02em; color: var(--green-dim);
+  }
+  .col .go span { transition: transform var(--dur-hover) var(--ease-out); }
+  button.col:hover .go span { transform: translateX(4px); }
+
+  @media (max-width: 860px) {
+    .cols, .cols.two { grid-template-columns: 1fr; }
+    .col + .col { padding-left: 0; border-left: 0; border-top: var(--hairline); }
+  }
+
+  /* ---------- Het logo als menuknop ---------- */
+  .mock {
+    position: relative; margin-top: 56px; height: 440px;
+    border: var(--hairline); border-radius: var(--radius-l);
+    overflow: hidden; background: var(--surface);
+  }
+  .mock-bar {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px; padding: 0 20px 0 28px;
+    border-bottom: var(--hairline); background: var(--surface); color: var(--text);
+    transition: background-color var(--dur-reveal) var(--ease-out), color var(--dur-reveal) var(--ease-out), border-color var(--dur-reveal) var(--ease-out);
+  }
+  .mock-name { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: -.01em; }
+  .mock-name span { color: var(--green); transition: color var(--dur-reveal) var(--ease-out); }
+  .mock-links {
+    display: flex; gap: 32px; margin-left: auto; margin-right: 28px;
+    font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .01em;
+    transition: opacity var(--dur-hover) var(--ease-out);
+  }
+  .mock-links a { position: relative; color: var(--sub); text-decoration: none; transition: color var(--dur-micro) var(--ease-out); }
+  .mock-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px;
+    background: var(--green); transform: scaleX(0); transform-origin: left center;
+    transition: transform var(--dur-hover) var(--ease-out);
+  }
+  .mock-links a:hover { color: var(--text); }
+  .mock-links a:hover::after { transform: scaleX(1); }
+
+  .menu { --mu: calc(30px / 406.72); position: relative; width: 54px; height: 48px; border-radius: var(--radius-s); }
+  .menu .mk { position: absolute; left: 12px; top: 50%; width: 30px; height: calc(var(--mu) * 249.46); transform: translateY(-50%); }
+  .menu i {
+    position: absolute;
+    left: calc(var(--mu) * var(--x)); top: calc(var(--mu) * var(--y));
+    width: calc(var(--mu) * 291.56); height: calc(var(--mu) * 48.57);
+    border-radius: var(--radius-pill); background: var(--green);
+    transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out), background-color var(--dur-reveal) var(--ease-out);
+  }
+  .menu i:nth-child(1) { --x: 0;      --y: 0; }
+  .menu i:nth-child(2) { --x: 115.16; --y: 100.45; }
+  .menu i:nth-child(3) { --x: 0;      --y: 200.89; }
+  .menu:hover i:nth-child(2) { transform: translateX(calc(var(--mu) * -115.16)); }
+  .mock.is-open .menu i { background: var(--text-inv); }
+  .mock.is-open .menu i:nth-child(1) { transform: translate(calc(var(--mu) * 57.58), calc(var(--mu) * 100.45)) rotate(45deg); }
+  .mock.is-open .menu i:nth-child(2) { transform: translateX(calc(var(--mu) * 57.58)) scaleX(0); opacity: 0; }
+  .mock.is-open .menu i:nth-child(3) { transform: translate(calc(var(--mu) * 57.58), calc(var(--mu) * -100.44)) rotate(-45deg); }
+
+  .mock.is-open .mock-bar { background: var(--navy); color: var(--text-inv); border-color: var(--line-inv); }
+  .mock.is-open .mock-name span { color: var(--green-lt); }
+  .mock.is-open .mock-links { opacity: 0; pointer-events: none; }
+
+  .mock-body { display: grid; place-items: center; height: calc(100% - 76px); }
+
+  .mock-menu {
+    position: absolute; z-index: 1; inset: 76px 0 0 0;
+    padding: 36px 28px;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+    background: var(--navy); color: var(--text-inv);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 800ms var(--ease-out);
+  }
+  .mock.is-open .mock-menu { clip-path: inset(0 0 0 0); }
+  .mock-menu a {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 4.4vw, 48px);
+    line-height: 1.12; color: var(--text-inv); text-decoration: none; width: fit-content;
+    opacity: 0; transform: translateY(var(--shift-m));
+    transition: opacity 600ms var(--ease-out), transform 900ms var(--ease-out), color var(--dur-micro) var(--ease-out);
+  }
+  .mock.is-open .mock-menu a { opacity: 1; transform: none; transition-delay: calc(160ms + var(--i) * var(--stagger)), calc(160ms + var(--i) * var(--stagger)), 0ms; }
+  .mock-menu a:hover { color: var(--green-lt); }
+
+  @media (max-width: 760px) {
+    .mock-links { display: none; }
+  }
+
+  /* Minder beweging gevraagd: alleen het eindbeeld */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0ms !important;
+      transition-delay: 0ms !important;
+      animation: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-l">
+    <span class="eyebrow">Prototype</span>
+    <span class="meta">Logo animatie, voorstel van 2 oktober</span>
+  </div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Variant">
+      <button data-v="split" aria-pressed="true">Eén lijn die splitst</button>
+      <button data-v="dots" aria-pressed="false">Punten die uitrekken</button>
+      <button data-v="gather" aria-pressed="false">Samenkomen</button>
+    </div>
+    <button class="ghost" id="replay">Opnieuw afspelen</button>
+    <button class="ghost" id="theme" aria-pressed="false">Donker</button>
+    <button class="ghost" id="tour" aria-pressed="false">Rondgang</button>
+  </div>
+</header>
+
+<main>
+  <section class="stage" id="stage">
+    <div class="lockup">
+      <div class="mark pre" id="mark">
+        <div class="bar b1" tabindex="0" role="button" aria-label="Begrijpen"><span class="fill"></span></div>
+        <div class="bar b2" tabindex="0" role="button" aria-label="Vertalen"><span class="fill"></span></div>
+        <div class="bar b3" tabindex="0" role="button" aria-label="Waarmaken"><span class="fill"></span></div>
+
+        <div class="pillar p1" data-i="0"><span class="link"></span><div class="ptext"><span class="pnum">01</span><span class="pname">Begrijpen</span><span class="pdesc">Eerst het probleem, dan de oplossing.</span></div></div>
+        <div class="pillar p2" data-i="1"><span class="link"></span><div class="ptext"><span class="pnum">02</span><span class="pname">Vertalen</span><span class="pdesc">Eerlijk over wat AI kan, en wat niet.</span></div></div>
+        <div class="pillar p3" data-i="2"><span class="link"></span><div class="ptext"><span class="pnum">03</span><span class="pname">Waarmaken</span><span class="pdesc">Tot het in de praktijk draait.</span></div></div>
+      </div>
+
+      <div class="wordmark" id="wordmark" aria-label="TriaCore AI"></div>
+
+      <div class="panel" id="panel" aria-live="polite">
+        <div class="ptext"><span class="pnum"></span><span class="pname"></span></div>
+        <span class="pdesc"></span>
+      </div>
+    </div>
+
+    <p class="hint meta" id="hint">Beweeg over de balken</p>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <p class="eyebrow">Wat je ziet</p>
+      <h2 class="title">Drie balken. <em>Eén kern.</em></h2>
+      <p class="lead">Drie manieren waarop het logo samenkomt, en daarna dezelfde hover: elke balk is een pijler. Klik op een variant om ze af te spelen.</p>
+    </div>
+
+    <div class="cols">
+      <button class="col" data-v="split" aria-current="true">
+        <span class="eyebrow">Variant 01</span>
+        <span class="h">Eén lijn die splitst</span>
+        <span class="p">Eerst één balk: de kern. Die splitst in drie, en de middelste schuift opzij. Het verhaal van de naam, zonder één woord.</span>
+        <span class="go">Afspelen <span>→</span></span>
+      </button>
+      <button class="col" data-v="dots" aria-current="false">
+        <span class="eyebrow">Variant 02</span>
+        <span class="h">Punten die uitrekken</span>
+        <span class="p">Drie punten onder elkaar rekken uit tot balken. De middelste komt als laatste en schuift naar zijn plek. Rustig en voorspelbaar.</span>
+        <span class="go">Afspelen <span>→</span></span>
+      </button>
+      <button class="col" data-v="gather" aria-current="false">
+        <span class="eyebrow">Variant 03</span>
+        <span class="h">Samenkomen</span>
+        <span class="p">Drie losse, onscherpe balken vallen scherp samen in het logo. Het meest filmisch, maar ook het minst eigen aan ons verhaal.</span>
+        <span class="go">Afspelen <span>→</span></span>
+      </button>
+    </div>
+
+    <div class="cols two">
+      <div class="col">
+        <span class="eyebrow">De hover</span>
+        <h3>Elke balk is een pijler</h3>
+        <p>Boven begrijpen, midden vertalen, onder waarmaken. De middelste balk staat verschoven, als een brug tussen de andere twee. De actieve balk schuift iets op en krijgt een lijn naar zijn pijler. De andere twee worden stil.</p>
+      </div>
+      <div class="col">
+        <span class="eyebrow">Rustig blijven</span>
+        <h3>Voor iedereen, ook op een gsm</h3>
+        <p>Wie op zijn toestel minder beweging vraagt, ziet meteen het eindbeeld. Op een gsm werkt alles met een tik, en de pijlers verschijnen onder het logo. De intro speelt één keer per bezoek.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <p class="eyebrow">Een idee voor de navigatie</p>
+      <h2 class="title">Het logo is <em>het menu.</em></h2>
+      <p class="lead">Drie balken lijken op een menuknop. Beweeg erover en ze lijnen uit. Klik, en ze worden een kruisje. Op de homepage krimpt het grote logo uit de header bij het scrollen tot deze knop.</p>
+    </div>
+
+    <div class="mock" id="mock">
+      <div class="mock-bar">
+        <span class="mock-name">TriaCore <span>AI</span></span>
+        <nav class="mock-links" aria-label="Voorbeeldmenu">
+          <a href="#" onclick="return false">Aanbod</a>
+          <a href="#" onclick="return false">Projecten</a>
+          <a href="#" onclick="return false">Over ons</a>
+          <a href="#" onclick="return false">Resources</a>
+        </nav>
+        <button class="menu" id="menu" aria-label="Menu" aria-expanded="false"><span class="mk"><i></i><i></i><i></i></span></button>
+      </div>
+      <div class="mock-body"><p class="meta">Klik op het logo rechtsboven</p></div>
+      <nav class="mock-menu" aria-label="Volledig menu">
+        <a href="#" onclick="return false" style="--i:0">Aanbod</a>
+        <a href="#" onclick="return false" style="--i:1">Projecten</a>
+        <a href="#" onclick="return false" style="--i:2">Over ons</a>
+        <a href="#" onclick="return false" style="--i:3">Resources</a>
+        <a href="#" onclick="return false" style="--i:4">Contact</a>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // Maten uit het originele logo (SVG van 1000 op 1000, bijgesneden tot de drie balken)
+  const SVG_W = 406.72;
+  const BAR_W = 291.56;
+  const BAR_H = 48.57;
+  const MID_X = 115.16;
+  const ROW = 100.45;
+
+  const PILLARS = [
+    { n: '01', t: 'Begrijpen', d: 'Eerst het probleem, dan de oplossing.' },
+    { n: '02', t: 'Vertalen',  d: 'Eerlijk over wat AI kan, en wat niet.' },
+    { n: '03', t: 'Waarmaken', d: 'Tot het in de praktijk draait.' },
+  ];
+
+  const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const EASE_IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)';
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const stage = document.getElementById('stage');
+  const mark = document.getElementById('mark');
+  const bars = [...mark.querySelectorAll('.bar')];
+  const fills = [...mark.querySelectorAll('.fill')];
+  const pillars = [...mark.querySelectorAll('.pillar')];
+  const wordmark = document.getElementById('wordmark');
+  const panel = document.getElementById('panel');
+  const hint = document.getElementById('hint');
+  const tourBtn = document.getElementById('tour');
+
+  let variant = 'split';
+  let running = [];
+  let timers = [];
+  let ready = false;
+  let hinted = false;
+  let tourTimer = null;
+
+  // Woordmerk opbouwen, letter per letter
+  const word = [['TriaCore', ''], [' ', ''], ['AI', 'ai']];
+  let k = 0;
+  word.forEach(([text, cls]) => {
+    const group = document.createElement('span');
+    if (cls) group.className = cls;
+    [...text].forEach(ch => {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.setAttribute('aria-hidden', 'true');
+      s.textContent = ch === ' ' ? ' ' : ch;
+      s.style.setProperty('--d', k++ * 38);
+      group.appendChild(s);
+    });
+    wordmark.appendChild(group);
+  });
+
+  const clip = (l, r) => `inset(0px ${r}px 0px ${l}px round 999px)`;
+
+  // Variant 01: één balk verschijnt vanuit het midden, splitst in drie, de middelste schuift opzij
+  function split(u) {
+    const w = BAR_W * u, cx = (MID_X / 2) * u, dy = ROW * u;
+    const starts = [[cx, dy], [-cx, 0], [cx, -dy]];
+    return fills.map((el, i) => {
+      const [sx, sy] = starts[i];
+      return el.animate([
+        { offset: 0,    transform: `translate(${sx}px, ${sy}px)`, clipPath: clip(w / 2, w / 2), easing: EASE_OUT },
+        { offset: 0.34, transform: `translate(${sx}px, ${sy}px)`, clipPath: clip(0, 0), easing: 'linear' },
+        { offset: 0.42, transform: `translate(${sx}px, ${sy}px)`, clipPath: clip(0, 0), easing: EASE_IN_OUT },
+        { offset: 0.72, transform: `translate(${sx}px, 0px)`,     clipPath: clip(0, 0), easing: EASE_OUT },
+        { offset: 1,    transform: 'translate(0px, 0px)',         clipPath: clip(0, 0) },
+      ], { duration: 1800, fill: 'backwards' });
+    });
+  }
+
+  // Variant 02: drie punten onder elkaar rekken uit, de middelste als laatste
+  function dots(u) {
+    const w = BAR_W * u, h = BAR_H * u, mx = MID_X * u;
+    const cfg = [{ d: 0, sx: 0 }, { d: 220, sx: -mx }, { d: 100, sx: 0 }];
+    return fills.map((el, i) => {
+      const { d, sx } = cfg[i];
+      el.style.transformOrigin = `${h / 2}px 50%`;
+      return el.animate([
+        { offset: 0,    opacity: 0, transform: `translate(${sx}px, 0px) scale(0.2)`, clipPath: clip(0, w - h), easing: EASE_OUT },
+        { offset: 0.22, opacity: 1, transform: `translate(${sx}px, 0px) scale(1)`,   clipPath: clip(0, w - h), easing: 'linear' },
+        { offset: 0.36, opacity: 1, transform: `translate(${sx}px, 0px) scale(1)`,   clipPath: clip(0, w - h), easing: EASE_OUT },
+        { offset: 1,    opacity: 1, transform: 'translate(0px, 0px) scale(1)',       clipPath: clip(0, 0) },
+      ], { duration: 1700, delay: d, fill: 'backwards' });
+    });
+  }
+
+  // Variant 03: drie losse, onscherpe balken vallen samen
+  function gather(u) {
+    const cfg = [
+      { x: -70, y: -60, r: -7, d: 0 },
+      { x: 110, y: 22,  r: 5,  d: 140 },
+      { x: -40, y: 72,  r: 3,  d: 60 },
+    ];
+    return fills.map((el, i) => {
+      const c = cfg[i];
+      return el.animate([
+        { offset: 0,    opacity: 0, transform: `translate(${c.x * u}px, ${c.y * u}px) rotate(${c.r}deg)`, filter: 'blur(14px)', easing: EASE_OUT },
+        { offset: 0.45, opacity: 1 },
+        { offset: 1,    opacity: 1, transform: 'translate(0px, 0px) rotate(0deg)', filter: 'blur(0px)' },
+      ], { duration: 1600, delay: c.d, fill: 'backwards' });
+    });
+  }
+
+  const VARIANTS = { split, dots, gather };
+
+  function cancelAll() {
+    running.forEach(a => a.cancel());
+    running = [];
+    timers.forEach(clearTimeout);
+    timers = [];
+  }
+
+  function resetWordmark() {
+    wordmark.classList.add('no-t');
+    wordmark.classList.remove('is-in');
+    void wordmark.offsetWidth;
+    wordmark.classList.remove('no-t');
+  }
+
+  function becomeReady() {
+    ready = true;
+    if (!hinted) hint.classList.add('is-in');
+  }
+
+  function play() {
+    cancelAll();
+    stopTour();
+    setActive(null);
+    ready = false;
+    hint.classList.remove('is-in');
+    resetWordmark();
+    fills.forEach(f => { f.style.transformOrigin = ''; });
+
+    if (reduce.matches) {
+      mark.classList.remove('pre');
+      wordmark.classList.add('is-in');
+      becomeReady();
+      return;
+    }
+
+    const u = mark.getBoundingClientRect().width / SVG_W;
+    running = VARIANTS[variant](u);
+    mark.classList.remove('pre');
+
+    const end = Math.max(...running.map(a => a.effect.getComputedTiming().endTime));
+    timers.push(setTimeout(() => wordmark.classList.add('is-in'), end * 0.7));
+    timers.push(setTimeout(becomeReady, end + 300));
+  }
+
+  // Actieve pijler
+  function setActive(i) {
+    if (i === null || i === undefined) {
+      mark.removeAttribute('data-active');
+      panel.classList.remove('is-on');
+      return;
+    }
+    mark.dataset.active = i;
+    const p = PILLARS[i];
+    panel.querySelector('.pnum').textContent = p.n;
+    panel.querySelector('.pname').textContent = p.t;
+    panel.querySelector('.pdesc').textContent = p.d;
+    panel.classList.add('is-on');
+  }
+
+  function userTouched() {
+    stopTour();
+    hinted = true;
+    hint.classList.remove('is-in');
+  }
+
+  const hoverTargets = [...bars, ...pillars];
+  hoverTargets.forEach(el => {
+    const i = el.classList.contains('bar') ? bars.indexOf(el) : Number(el.dataset.i);
+    el.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'touch' || !ready) return;
+      userTouched();
+      setActive(i);
+    });
+    el.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'touch' || !ready) return;
+      userTouched();
+      setActive(mark.dataset.active === String(i) ? null : i);
+    });
+  });
+  bars.forEach((b, i) => {
+    b.addEventListener('focus', () => { if (ready) { userTouched(); setActive(i); } });
+    b.addEventListener('blur', () => setActive(null));
+  });
+  mark.addEventListener('pointerleave', e => {
+    if (e.pointerType === 'touch' || tourTimer) return;
+    setActive(null);
+  });
+
+  // Rondgang: de pijlers lopen vanzelf rond
+  function startTour() {
+    let n = 0;
+    setActive(n);
+    tourTimer = setInterval(() => { n = (n + 1) % 3; setActive(n); }, 2400);
+    tourBtn.setAttribute('aria-pressed', 'true');
+    hint.classList.remove('is-in');
+  }
+  function stopTour() {
+    if (!tourTimer) return;
+    clearInterval(tourTimer);
+    tourTimer = null;
+    tourBtn.setAttribute('aria-pressed', 'false');
+    setActive(null);
+  }
+  tourBtn.addEventListener('click', () => (tourTimer ? stopTour() : startTour()));
+
+  // Variant kiezen
+  function choose(v) {
+    variant = v;
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+    document.querySelectorAll('button.col').forEach(b => b.setAttribute('aria-current', String(b.dataset.v === v)));
+    play();
+  }
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => choose(b.dataset.v)));
+  document.querySelectorAll('button.col').forEach(b => b.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduce.matches ? 'auto' : 'smooth' });
+    choose(b.dataset.v);
+  }));
+  document.getElementById('replay').addEventListener('click', play);
+
+  // Licht of donker podium
+  const themeBtn = document.getElementById('theme');
+  themeBtn.addEventListener('click', () => {
+    const dark = stage.classList.toggle('is-dark');
+    themeBtn.setAttribute('aria-pressed', String(dark));
+  });
+
+  // Menuknop
+  const mock = document.getElementById('mock');
+  const menu = document.getElementById('menu');
+  menu.addEventListener('click', () => {
+    const open = mock.classList.toggle('is-open');
+    menu.setAttribute('aria-expanded', String(open));
+  });
+
+  // Start zodra de fonts er zijn, zodat het woordmerk niet verspringt
+  const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise(r => setTimeout(r, 900))]).then(() => setTimeout(play, 250));
+})();
+</script>
+</body>
+</html>

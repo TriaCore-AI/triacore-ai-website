@@ -1,0 +1,159 @@
+/* Gedeelde stijl voor de vijf scrollvarianten. De tokens komen uit ../../stijl/tokens.css */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #05080F; color: var(--text-inv); }
+body { font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--green-lt); outline-offset: 4px; border-radius: 4px; }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ---------- De vastgezette hero: de pagina scrolt, het beeld blijft staan ---------- */
+.pin { position: relative; }
+.stage {
+  --p: 0;
+  position: sticky; top: 0; height: 100vh; overflow: hidden;
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #152036 0%, #0B1220 48%, #05080F 100%);
+}
+.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.gl.is-pointer { cursor: pointer; }
+.veil {
+  position: absolute; inset: 0; z-index: 1; background: #05080F; pointer-events: none;
+  opacity: 1; transition: opacity 2200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stage.is-on .veil { opacity: 0; }
+.stage.is-fast .veil { transition-duration: 500ms; }
+
+/* na de intro: één golf */
+.wave {
+  opacity: 0; transform: translateY(8px); pointer-events: none;
+  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1), transform 1100ms var(--ease-out);
+}
+.stage.is-done .wave { opacity: 1; transform: none; pointer-events: auto; }
+
+/* ---------- Navigatie: enkel een knop en het logo als menu ---------- */
+.nav { position: absolute; top: 0; left: 0; right: 0; z-index: 8; }
+.nav.wave { transform: translateY(-8px); }
+.nav .wrap { height: 84px; display: flex; align-items: center; justify-content: flex-end; gap: 24px; }
+.btn-s {
+  display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px;
+  border-radius: var(--radius-s); background: var(--green); color: var(--white);
+  font-family: var(--brand); font-weight: 600; font-size: 13px; letter-spacing: .02em;
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.btn-s:hover { background: var(--green-dim); }
+.arr { display: inline-block; transition: transform var(--dur-hover) var(--ease-out); }
+.btn-s:hover .arr, .btn:hover .arr, .tlink:hover .arr { transform: translateX(4px); }
+
+.menu { --mu: calc(26px / 406.72); position: relative; width: 26px; height: calc(var(--mu) * 249.46); }
+.menu::before { content: ""; position: absolute; inset: -12px; }
+.menu i {
+  position: absolute; left: calc(var(--mu) * var(--x)); top: calc(var(--mu) * var(--y));
+  width: calc(var(--mu) * 291.56); height: calc(var(--mu) * 48.57);
+  border-radius: var(--radius-pill); background: var(--text-inv);
+  transition: transform var(--dur-hover) var(--ease-out), background-color var(--dur-reveal) var(--ease-out);
+}
+.menu i:nth-child(1) { --x: 0;      --y: 0; }
+.menu i:nth-child(2) { --x: 115.16; --y: 100.45; }
+.menu i:nth-child(3) { --x: 0;      --y: 200.89; }
+.menu:hover i:nth-child(2) { transform: translateX(calc(var(--mu) * -115.16)); }
+
+/* ---------- Pijlers bij hover, zoals in de basis ---------- */
+.guide { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; }
+.guide-line {
+  position: absolute; left: 0; top: 0; height: 1px; width: var(--w, 120px);
+  background: linear-gradient(90deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, .22));
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1) 80ms, background-color var(--dur-hover) var(--ease-out);
+}
+.guide-line::before {
+  content: ""; position: absolute; left: -2px; top: -2px; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--text-inv); opacity: 0; transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.guide-label {
+  position: absolute; top: 0; left: calc(var(--w, 120px) + 18px);
+  display: flex; align-items: baseline; gap: 12px; white-space: nowrap;
+  opacity: 0; transform: translate(-8px, -50%);
+  transition: opacity 360ms cubic-bezier(0.4, 0, 0.2, 1), transform 520ms var(--ease-out);
+}
+.guide-num { font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; color: var(--green-lt); }
+.guide-word {
+  font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.01em;
+  font-size: clamp(24px, 2.2vw, 34px); color: var(--text-inv); transition: opacity var(--dur-hover) var(--ease-out);
+}
+.guide.is-on .guide-line, .guide.is-shown .guide-line { transform: scaleX(1); transition: transform 900ms var(--ease-out); }
+.guide.is-on .guide-line::before { opacity: 1; }
+.guide.is-shown:not(.is-on) .guide-line { background: rgba(255, 255, 255, .14); }
+.guide.is-on .guide-label, .guide.is-shown .guide-label {
+  opacity: 1; transform: translate(0, -50%);
+  transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 140ms, transform 800ms var(--ease-out) 140ms;
+}
+.guide.is-shown:not(.is-on) .guide-word { opacity: .5; }
+
+/* ---------- Onderaan: de naam als ondertekening, verdwijnt zodra je scrolt ---------- */
+.sign {
+  position: absolute; left: 0; right: 0; bottom: clamp(32px, 7vh, 72px); z-index: 3;
+  padding: 0 var(--gutter); text-align: center; pointer-events: none;
+  opacity: calc(1 - var(--p) * 10);
+}
+.sign .name { font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.01em; font-size: clamp(30px, 3vw, 46px); }
+.sign .ai { color: var(--green-lt); }
+.sign .ch { display: inline-block; opacity: 0; transform: translateY(.35em); filter: blur(6px); }
+.stage.show-sign .sign .ch {
+  opacity: 1; transform: none; filter: blur(0);
+  transition:
+    opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--d) * 1ms),
+    transform 1400ms var(--ease-out) calc(var(--d) * 1ms),
+    filter 1100ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--d) * 1ms);
+}
+.tagline { margin-top: 14px; font-size: clamp(16px, 1.3vw, 20px); letter-spacing: .01em; color: var(--sub-inv); opacity: 0; transform: translateY(6px); }
+.stage.show-sign .tagline { opacity: 1; transform: none; transition: opacity 1400ms cubic-bezier(0.4, 0, 0.2, 1) 750ms, transform 1600ms var(--ease-out) 750ms; }
+
+/* ---------- Scrollhint ---------- */
+.hint-wrap { position: absolute; right: var(--gutter); bottom: 34px; z-index: 3; opacity: calc(1 - var(--p) * 10); }
+.hint { display: flex; align-items: center; gap: 12px; font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .08em; color: var(--sub-soft-inv); }
+.hint-line { position: relative; width: 1px; height: 44px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+.hint-line::after {
+  content: ""; position: absolute; left: 0; top: 0; width: 1px; height: 14px; background: var(--text-inv);
+  animation: drip 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes drip { 0% { transform: translateY(-14px); } 70%, 100% { transform: translateY(44px); } }
+
+.nogl { position: absolute; inset: 0; z-index: 9; display: none; place-items: center; text-align: center; padding: var(--gutter); }
+.nogl.is-on { display: grid; }
+
+/* ---------- Gedeelde onderdelen voor de varianten ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 22px;
+  border-radius: var(--radius-s); background: var(--green); color: var(--white);
+  font-family: var(--brand); font-weight: 600; font-size: 15px; letter-spacing: .02em;
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.btn:hover { background: var(--green-dim); }
+.tlink { position: relative; display: inline-flex; gap: 8px; font-family: var(--brand); font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--text-inv); }
+.tlink::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--sub-inv);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.tlink:hover::after { transform: scaleX(1); }
+
+/* ---------- De sectie na de hero ---------- */
+.next { background: var(--bg); color: var(--text); min-height: 100vh; display: grid; align-items: center; padding: var(--section) 0; }
+.next .eyebrow { color: var(--green-dim); }
+.next .big {
+  margin-top: 22px; max-width: 16em;
+  font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -.015em;
+  font-size: clamp(34px, 4.6vw, 68px);
+}
+.next .big em { font-style: normal; color: var(--green); }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1), transform 1400ms var(--ease-out); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (max-width: 760px) {
+  .guide { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+}

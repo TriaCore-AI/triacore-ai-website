@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore hero variant A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #05080F; color: var(--text-inv); }
+  body { font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--green-lt); outline-offset: 4px; border-radius: 4px; }
+
+  /* De golf na de intro: elk element komt op met een kleine vertraging na het vorige */
+  .wave {
+    opacity: 0; transform: translateY(8px);
+    transition:
+      opacity 900ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--o, 0) * 70ms),
+      transform 1100ms var(--ease-out) calc(var(--o, 0) * 70ms);
+    pointer-events: none;
+  }
+  .hero.is-done .wave { opacity: 1; transform: none; pointer-events: auto; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; height: 100vh; min-height: 620px; overflow: hidden;
+    background: radial-gradient(ellipse 80% 70% at 38% 42%, #152036 0%, #0B1220 48%, #05080F 100%);
+  }
+  #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #gl.is-pointer { cursor: pointer; }
+  .veil {
+    position: absolute; inset: 0; background: #05080F; pointer-events: none;
+    opacity: 1; transition: opacity 2200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hero.is-on .veil { opacity: 0; }
+  .hero.is-fast .veil { transition-duration: 500ms; }
+
+  /* ---------- Navigatie ---------- */
+  .nav { position: absolute; top: 0; left: 0; right: 0; z-index: 4; }
+  .nav .wrap { height: 84px; display: flex; align-items: center; justify-content: space-between; }
+  .nav.wave { transform: translateY(-8px); }
+  .brand { font-family: var(--serif); font-weight: 600; font-size: 21px; letter-spacing: -.01em; }
+  .brand span { color: var(--green-lt); }
+  .nav-r { display: flex; align-items: center; gap: 32px; }
+  .nav-links { display: flex; gap: 30px; font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .01em; }
+  .nav-links a, .lang a { position: relative; color: var(--sub-inv); transition: color var(--dur-micro) var(--ease-out); }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--green-lt);
+    transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+  }
+  .nav-links a:hover { color: var(--text-inv); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .lang { display: flex; gap: 6px; font-family: var(--brand); font-weight: 600; font-size: 12px; letter-spacing: .08em; color: var(--sub-soft-inv); }
+  .lang .on { color: var(--text-inv); }
+
+  /* het logo als menuknop: bij hover lijnen de balken uit */
+  .menu { --mu: calc(26px / 406.72); position: relative; width: 26px; height: calc(var(--mu) * 249.46); }
+  .menu::before { content: ""; position: absolute; inset: -12px; }
+  .menu i {
+    position: absolute; left: calc(var(--mu) * var(--x)); top: calc(var(--mu) * var(--y));
+    width: calc(var(--mu) * 291.56); height: calc(var(--mu) * 48.57);
+    border-radius: var(--radius-pill); background: var(--text-inv);
+    transition: transform var(--dur-hover) var(--ease-out);
+  }
+  .menu i:nth-child(1) { --x: 0;      --y: 0; }
+  .menu i:nth-child(2) { --x: 115.16; --y: 100.45; }
+  .menu i:nth-child(3) { --x: 0;      --y: 200.89; }
+  .menu:hover i:nth-child(2) { transform: translateX(calc(var(--mu) * -115.16)); }
+
+  /* ---------- De drie pijlers: altijd zichtbaar, helder bij hover ---------- */
+  .guide { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; }
+  .guide-line {
+    position: absolute; left: 0; top: 0; height: 1px; width: var(--w, 120px);
+    background: rgba(255, 255, 255, .14);
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform 1100ms var(--ease-out) calc(var(--o, 0) * 70ms), background-color var(--dur-hover) var(--ease-out);
+  }
+  .hero.is-done .guide-line { transform: scaleX(1); }
+  .guide-line::before {
+    content: ""; position: absolute; left: -2px; top: -2px; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--text-inv); opacity: 0; transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .guide.is-on .guide-line { background: linear-gradient(90deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .3)); }
+  .guide.is-on .guide-line::before { opacity: 1; }
+  .guide-label {
+    position: absolute; top: 0; left: calc(var(--w, 120px) + 18px);
+    display: flex; align-items: baseline; gap: 12px; white-space: nowrap;
+    transform: translateY(-50%);
+  }
+  .guide-in { display: flex; align-items: baseline; gap: 12px; }
+  .hero.is-done .guide .wave { pointer-events: none; }  /* de muis blijft bij het 3D-beeld, zodat de hover niet wegvalt */
+  .guide-num { font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; color: var(--green-lt); }
+  .guide-word {
+    font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.01em;
+    font-size: clamp(24px, 2.2vw, 34px); color: var(--text-inv);
+    opacity: .5; transition: opacity var(--dur-hover) var(--ease-out);
+  }
+  .guide.is-on .guide-word { opacity: 1; }
+
+  /* ---------- Slogan en acties onder het logo ---------- */
+  .copy { position: absolute; left: 0; top: 0; z-index: 3; }
+  .mrow { display: none; }
+  .slogan {
+    font-family: var(--serif); font-weight: 600; line-height: 1.1; letter-spacing: -.01em;
+    font-size: clamp(28px, 2.9vw, 44px);
+  }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 30px; margin-top: 32px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 22px;
+    border-radius: var(--radius-s); background: var(--green); color: var(--white);
+    font-family: var(--brand); font-weight: 600; font-size: 15px; letter-spacing: .02em;
+    transition: background-color var(--dur-micro) var(--ease-out);
+  }
+  .btn:hover { background: var(--green-dim); }
+  .arr { display: inline-block; transition: transform var(--dur-hover) var(--ease-out); }
+  .btn:hover .arr, .tlink:hover .arr { transform: translateX(4px); }
+  .tlink {
+    position: relative; display: inline-flex; gap: 8px;
+    font-family: var(--brand); font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--text-inv);
+  }
+  .tlink::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--sub-inv);
+    transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+  }
+  .tlink:hover::after { transform: scaleX(1); }
+
+  /* ---------- Onderrand: klanten en scrollhint ---------- */
+  .foot { position: absolute; left: 0; right: 0; bottom: 34px; z-index: 3; }
+  .foot .wrap { display: flex; align-items: flex-end; justify-content: space-between; }
+  .clients { display: flex; align-items: baseline; gap: 16px; }
+  .clients .eyebrow { color: var(--green-lt); }
+  .clients .names { font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .01em; color: var(--sub-inv); }
+  .scroll { display: flex; align-items: center; gap: 12px; font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .08em; color: var(--sub-soft-inv); }
+  .scroll-line { position: relative; width: 1px; height: 44px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+  .scroll-line::after {
+    content: ""; position: absolute; left: 0; top: 0; width: 1px; height: 14px; background: var(--text-inv);
+    animation: drip 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  @keyframes drip { 0% { transform: translateY(-14px); } 70%, 100% { transform: translateY(44px); } }
+
+  .nogl { position: absolute; inset: 0; display: none; place-items: center; text-align: center; padding: var(--gutter); }
+  .nogl.is-on { display: grid; }
+
+  /* ---------- De volgende sectie: licht, als contrast ---------- */
+  .next { background: var(--bg); color: var(--text); min-height: 100vh; display: grid; align-items: center; padding: var(--section) 0; }
+  .next .eyebrow { color: var(--green-dim); }
+  .next .big {
+    margin-top: 22px; max-width: 18em;
+    font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -.015em;
+    font-size: clamp(34px, 4.6vw, 68px);
+  }
+  .next .big em { font-style: normal; color: var(--green); }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1), transform 1400ms var(--ease-out); }
+  .reveal.is-in { opacity: 1; transform: none; }
+
+  /* ---------- Smal scherm ---------- */
+  @media (max-width: 760px) {
+    .nav-links, .lang { display: none; }
+    .guide { display: none; }
+    .copy { left: 0 !important; right: 0; text-align: center; padding: 0 var(--gutter); }
+    .mrow {
+      display: flex; justify-content: center; gap: 18px; margin-bottom: 22px;
+      font-family: var(--brand); font-weight: 600; font-size: var(--fs-eyebrow);
+      letter-spacing: .15em; text-transform: uppercase; color: var(--sub-soft-inv);
+    }
+    .mrow span { transition: color var(--dur-hover) var(--ease-out); }
+    .mrow span.is-on { color: var(--green-lt); }
+    .actions { justify-content: center; }
+    .foot .wrap { justify-content: center; }
+    .scroll { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <canvas id="gl" aria-label="The TriaCore AI logo in light titanium: three bars, for understand, translate and deliver"></canvas>
+  <div class="veil"></div>
+
+  <header class="nav wave" style="--o:0">
+    <div class="wrap">
+      <a class="brand" href="#">TriaCore <span>AI</span></a>
+      <div class="nav-r">
+        <nav class="nav-links" aria-label="Main">
+          <a href="#">Services</a>
+          <a href="#">Work</a>
+          <a href="#">About</a>
+          <a href="#">Resources</a>
+        </nav>
+        <div class="lang"><a href="#">NL</a><span>/</span><a class="on" href="#">EN</a></div>
+        <button class="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="guide" style="--o:1"><span class="guide-line"></span><span class="guide-label"><span class="guide-in wave" style="--o:2"><span class="guide-num">/01</span><span class="guide-word">Understand</span></span></span></div>
+  <div class="guide" style="--o:2"><span class="guide-line"></span><span class="guide-label"><span class="guide-in wave" style="--o:3"><span class="guide-num">/02</span><span class="guide-word">Translate</span></span></span></div>
+  <div class="guide" style="--o:3"><span class="guide-line"></span><span class="guide-label"><span class="guide-in wave" style="--o:4"><span class="guide-num">/03</span><span class="guide-word">Deliver</span></span></span></div>
+
+  <div class="copy" id="copy">
+    <div class="mrow wave" style="--o:3" aria-hidden="true"><span>Understand</span><span>Translate</span><span>Deliver</span></div>
+    <h1 class="slogan wave" style="--o:5">At the core of innovation</h1>
+    <div class="actions wave" style="--o:6">
+      <a class="btn" href="#">Book a call <span class="arr">→</span></a>
+      <a class="tlink" href="#">See our work <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="wrap">
+      <div class="clients wave" style="--o:8"><span class="eyebrow">Clients</span><span class="names">Croes&nbsp;&nbsp;·&nbsp;&nbsp;A&amp;M Group</span></div>
+      <div class="scroll wave" style="--o:9" aria-hidden="true"><span>Scroll</span><span class="scroll-line"></span></div>
+    </div>
+  </div>
+
+  <div class="nogl" id="nogl"><p class="meta">This browser cannot show 3D. Open the prototype in Chrome, Edge, Firefox or Safari.</p></div>
+</section>
+
+<section class="next">
+  <div class="wrap reveal">
+    <p class="eyebrow">Our mission</p>
+    <p class="big">Understand challenges down to their core, <em>and translate them into intelligent solutions that empower businesses.</em></p>
+  </div>
+</section>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+// Een easing zoals cubic-bezier() in CSS
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = t => ((ax * t + bx) * t + cx) * t;
+  const sy = t => ((ay * t + by) * t + cy) * t;
+  const dx = t => (3 * ax * t + 2 * bx) * t + cx;
+  return x => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const e = sx(t) - x, d = dx(t);
+      if (Math.abs(e) < 1e-6 || Math.abs(d) < 1e-6) break;
+      t -= e / d;
+    }
+    return sy(clamp(t));
+  };
+}
+const glide = bezier(0.37, 0, 0.22, 1);   // traag vertrekken, lang uitglijden
+const soft = bezier(0.4, 0, 0.2, 1);      // voor het licht
+
+// ---------- Het logo, in eenheden van 100 uit de originele SVG ----------
+const BAR_W = 2.9156, BAR_H = 0.4857;
+const DX = 0.5758, DY = 1.00445;
+const BARS = [{ x: -DX, y: DY }, { x: DX, y: 0 }, { x: -DX, y: -DY }];
+const LOGO_H = 2 * DY + BAR_H;
+const LOGO_W = 2 * DX + BAR_W;
+const DEPTH = 0.2, BEVEL = 0.035;
+
+// ---------- De tijdlijn, in seconden ----------
+const T_CAM = 5.6;    // de camera glijdt van de rand naar het volledige logo
+const T_WAVE = 5.0;   // de rest komt op, terwijl de camera nog de laatste centimeters uitglijdt
+const ONCE_PER_VISIT = false;  // op de echte site: true, dan ziet een bezoeker de intro één keer per bezoek
+
+const hero = document.getElementById('hero');
+const canvas = document.getElementById('gl');
+const copy = document.getElementById('copy');
+const guides = [...document.querySelectorAll('.guide')];
+const mrow = [...document.querySelectorAll('.mrow span')];
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+} catch (e) {
+  document.getElementById('nogl').classList.add('is-on');
+  throw e;
+}
+const DPR_MAX = Math.min(window.devicePixelRatio, 1.75);
+let dpr = DPR_MAX;
+renderer.setPixelRatio(dpr);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+
+// ---------- Een donkere studio met lichtstroken: dat is wat het metaal weerspiegelt ----------
+function studio() {
+  const s = new THREE.Scene();
+  s.background = new THREE.Color(0x06090f);
+  const strip = (w, h, k, x, y, z) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k), side: THREE.DoubleSide })
+    );
+    m.position.set(x, y, z);
+    m.lookAt(0, 0, 0);
+    s.add(m);
+  };
+  strip(14, 0.9, 7, 0, 6, 3);
+  strip(0.8, 9, 4.5, -7, 0.5, 2);
+  strip(0.6, 9, 3, 7.5, 0, -1);
+  strip(18, 2.5, 1.3, 0, -6, 5);
+  strip(5, 3.5, 2.2, 0, 1, 9);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  return pmrem.fromScene(s, 0.02).texture;
+}
+const env = studio();
+
+// ---------- De drie balken ----------
+function capsule(w, h) {
+  const r = h / 2, x0 = -w / 2 + r, x1 = w / 2 - r;
+  const s = new THREE.Shape();
+  s.moveTo(x0, -r);
+  s.lineTo(x1, -r);
+  s.absarc(x1, 0, r, -Math.PI / 2, Math.PI / 2, false);
+  s.lineTo(x0, r);
+  s.absarc(x0, 0, r, Math.PI / 2, Math.PI * 1.5, false);
+  return s;
+}
+const barGeo = new THREE.ExtrudeGeometry(capsule(BAR_W - 2 * BEVEL, BAR_H - 2 * BEVEL), {
+  depth: DEPTH, bevelEnabled: true, bevelThickness: BEVEL, bevelSize: BEVEL,
+  bevelSegments: 10, curveSegments: 48,
+});
+barGeo.center();
+
+const bars = BARS.map((b, i) => {
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color('#F2F2F2'), metalness: 1, roughness: 0.3,
+    anisotropy: 0.45, envMap: env, envMapIntensity: 1.2,
+  });
+  const mesh = new THREE.Mesh(barGeo, mat);
+  mesh.position.set(b.x, b.y, 0);
+  mesh.userData.i = i;
+  scene.add(mesh);
+  return { mesh, mat, glint: 0 };
+});
+
+// ---------- Camera en indeling ----------
+const FOV = 26;
+const camera = new THREE.PerspectiveCamera(FOV, 1, 0.03, 200);
+const camPath = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()], false, 'centripetal');
+const aimPath = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()], false, 'centripetal');
+let W = 0, H = 0, mobile = false, lane = null;
+
+function layout() {
+  W = hero.clientWidth;
+  H = hero.clientHeight;
+  renderer.setSize(W, H, false);
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+  mobile = W < 760;
+
+  // het logo staat links in de inhoudskolom, op een gsm in het midden
+  const gutter = clamp(W * 0.05, 16, 64);
+  const left = Math.max(0, (W - 1240) / 2) + gutter;
+  const hL = mobile ? Math.min(W * 0.34, 160) : clamp(H * 0.26, 150, 280);
+  const ppu = hL / LOGO_H;                     // pixels per eenheid in het eindbeeld
+  const wL = LOGO_W * ppu;
+  const cx = mobile ? W / 2 : left + wL / 2;   // middelpunt van het logo op het scherm
+  const cy = H * (mobile ? 0.3 : 0.4);
+
+  const tn = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+  const dist = (H / ppu) / (2 * tn);
+  const camX = (W / 2 - cx) / ppu;
+  const camY = (cy - H / 2) / ppu;
+
+  camPath.points[0].set(1.75, 1.32, 0.62);
+  camPath.points[1].set(lerp(1.6, camX, 0.35), 0.55, dist * 0.32);
+  camPath.points[2].set(camX, camY, dist);
+  aimPath.points[0].set(0.15, 1.0, 0);
+  aimPath.points[1].set(lerp(0.1, camX, 0.35), 0.25, 0);
+  aimPath.points[2].set(camX, camY, 0);
+  camPath.updateArcLengths();
+  aimPath.updateArcLengths();
+
+  // waar de balken in het eindbeeld staan: de voorkant ligt iets dichter bij de camera
+  const f = dist / (dist - DEPTH / 2);
+  const sx = x => W / 2 + (x - camX) * ppu * f;
+  const sy = y => H / 2 - (y - camY) * ppu * f;
+  const xStart = BARS.map(b => sx(b.x - BAR_W / 2));
+  const xEnd = BARS.map(b => sx(b.x + BAR_W / 2));
+  const yMid = BARS.map(b => sy(b.y));
+  const labelX = left + wL + clamp(W * 0.09, 90, 180);
+  lane = { xStart, yMid, labelX, band: Math.abs(yMid[1] - yMid[0]) / 2 };
+
+  guides.forEach((el, i) => {
+    const x0 = xEnd[i] + 14;
+    el.style.transform = `translate3d(${x0}px, ${yMid[i]}px, 0)`;
+    el.style.setProperty('--w', `${Math.max(24, labelX - x0)}px`);
+  });
+
+  // slogan en acties onder het logo, links uitgelijnd met de balken
+  const bottom = sy(-DY - BAR_H / 2);
+  copy.style.left = mobile ? '0px' : `${xStart[0]}px`;
+  copy.style.transform = `translate3d(0, ${bottom + (mobile ? 36 : 56)}px, 0)`;
+}
+layout();
+window.addEventListener('resize', layout);
+
+// ---------- Interactie ----------
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2(9, 9);
+let active = null;
+
+function setActive(i) {
+  if (i === active) return;
+  active = i;
+  guides.forEach((el, n) => el.classList.toggle('is-on', n === i));
+  mrow.forEach((el, n) => el.classList.toggle('is-on', n === i));
+}
+function pick(e) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(bars.map(b => b.mesh), false)[0];
+  return hit ? hit.object.userData.i : null;
+}
+// van de balk tot voorbij het woord blijft de hover actief, ook op het woord zelf
+function onLane(e) {
+  if (!lane || mobile) return null;
+  const r = canvas.getBoundingClientRect();
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  for (let i = 0; i < 3; i++) {
+    if (x >= lane.xStart[i] && x <= lane.labelX + 300 && Math.abs(y - lane.yMid[i]) <= lane.band) {
+      return i;
+    }
+  }
+  return null;
+}
+
+let t = 0, fast = false, done = false;
+
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch' || !done) return;
+  let i = pick(e);
+  if (i === null) i = onLane(e);
+  canvas.classList.toggle('is-pointer', i !== null);
+  setActive(i);
+});
+canvas.addEventListener('pointerleave', () => { setActive(null); canvas.classList.remove('is-pointer'); });
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch' || !done) return;
+  const i = pick(e);
+  setActive(i === active ? null : i);
+});
+
+// Wie scrolt, klikt of een toets indrukt tijdens de intro, spoelt die vlot door naar het eindbeeld
+function skip() {
+  if (t < T_CAM && !fast) {
+    fast = true;
+    hero.classList.add('is-fast');
+  }
+}
+['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, skip, { passive: true }));
+
+// De volgende sectie komt op als ze in beeld schuift
+const io = new IntersectionObserver(entries => entries.forEach(en => {
+  if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+}), { threshold: 0.3 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ---------- De lus ----------
+const aim = new THREE.Vector3();
+const upStart = new THREE.Vector3(0.22, 1, 0).normalize();
+const upEnd = new THREE.Vector3(0, 1, 0);
+let last = performance.now();
+let slow = 1 / 60;
+
+function frame(now) {
+  const raw = (now - last) / 1000;
+  const dt = Math.min(0.05, raw);
+  last = now;
+  t += dt * (fast ? 7 : 1);
+  if (t >= T_CAM) fast = false;
+
+  // haalt de computer de 60 beelden per seconde niet, dan iets minder pixels
+  if (raw < 0.25) slow = lerp(slow, raw, 0.05);
+  if (slow > 1 / 45 && dpr > 1) {
+    dpr = Math.max(1, dpr - 0.25);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(W, H, false);
+    slow = 1 / 60;
+  }
+
+  // de enige beweging: de camera, van de rand naar het geheel
+  const e = glide(clamp(t / T_CAM));
+  camPath.getPointAt(e, camera.position);
+  aimPath.getPointAt(e, aim);
+  camera.up.copy(upStart).lerp(upEnd, e).normalize();
+  camera.lookAt(aim);
+
+  // het enige effect: een lichtstreep over het metaal, en een eigen streep op de balk onder de muis
+  const sweep = lerp(-1.6, 0.32, soft(clamp(t / (T_CAM + 0.4))));
+  const damp = 1 - Math.exp(-dt * 3.5);
+  bars.forEach((b, i) => {
+    b.glint = lerp(b.glint, active === i ? 0.7 : 0, damp);
+    b.mat.envMapRotation.set(0, sweep + b.glint, 0);
+  });
+
+  if (!done && t >= T_WAVE) {
+    done = true;
+    hero.classList.add('is-done');
+    if (ONCE_PER_VISIT) { try { sessionStorage.setItem('triacore-intro', '1'); } catch (err) { /* geen opslag, geen probleem */ } }
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+let seen = false;
+if (ONCE_PER_VISIT) { try { seen = sessionStorage.getItem('triacore-intro') === '1'; } catch (err) { seen = false; } }
+if (reduce || seen) t = T_CAM;
+
+const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+Promise.race([fontsReady, new Promise(r => setTimeout(r, 900))]).then(() => {
+  last = performance.now();
+  layout();
+  hero.classList.add('is-on');
+  if (reduce || seen) hero.classList.add('is-fast');
+  requestAnimationFrame(frame);
+});
+</script>
+</body>
+</html>

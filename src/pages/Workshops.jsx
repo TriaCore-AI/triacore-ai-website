@@ -1,62 +1,59 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
-import gsap from 'gsap';
+import SectionNav from '../components/ui/section-nav';
+import WorkshopsHero from '../components/workshops/workshops-hero';
+import WorkshopsProbleem from '../components/workshops/workshops-probleem';
+import WorkshopsLeren from '../components/workshops/workshops-leren';
+import WorkshopsQuotes from '../components/workshops/workshops-quotes';
+import WorkshopsOfferte from '../components/workshops/workshops-offerte';
+import useReveal from '../components/workshops/use-reveal';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function Workshops() {
-    const containerRef = useRef(null);
-    const { language } = useLanguage();
+// De secties in het snelmenu linksonder, in de volgorde van de pagina (ids staan op de secties zelf)
+const snelmenu = {
+    nl: [
+        { id: 'workshops', label: 'Workshops' },
+        { id: 'uitdaging', label: 'De uitdaging' },
+        { id: 'leren', label: 'Wat uw team leert' },
+        { id: 'quotes', label: 'Wat klanten zeggen' },
+        { id: 'offerte', label: 'Offerte aanvragen' }
+    ],
+    en: [
+        { id: 'workshops', label: 'Workshops' },
+        { id: 'uitdaging', label: 'The challenge' },
+        { id: 'leren', label: 'What your team learns' },
+        { id: 'quotes', label: 'What clients say' },
+        { id: 'offerte', label: 'Request a quote' }
+    ]
+};
 
-    useEffect(() => {
-        let ctx = gsap.context(() => {
-            gsap.fromTo(
-                '.hero-stagger',
-                { y: 40, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    stagger: 0.15,
-                    ease: 'power3.out',
-                    delay: 0.2
-                }
-            );
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
+// Workshops, in de nieuwe stijl. De scrollanimaties van alle secties komen uit useReveal (blokken met
+// data-reveal); het snelmenu linksonder is hetzelfde als op de homepage
+export default function Workshops() {
+    const { language } = useLanguage();
+    const nl = language === 'nl';
+    const mainRef = useRef(null);
+    useReveal(mainRef);
 
     return (
-        <div ref={containerRef} className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-
+        <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
             <Seo
-                title={language === 'nl' ? 'Workshops | TriaCore AI' : 'Workshops | TriaCore AI'}
-                description={language === 'nl'
-                    ? 'Praktische AI workshops van TriaCore AI voor uw team.'
-                    : 'Practical AI workshops by TriaCore AI for your team.'}
+                title="Workshops | TriaCore AI"
+                description={nl
+                    ? 'Praktische AI-workshops van TriaCore AI: uw team leert zelf werken met AI, op maat van uw sector en met voorbeelden uit het eigen werk.'
+                    : 'Practical AI workshops by TriaCore AI: your team learns to work with AI themselves, tailored to your sector and with examples from their own work.'}
             />
             <Navbar />
-
-            <main className="relative z-10 flex flex-col w-full flex-grow">
-                {/* HEADER */}
-                <section className="relative pt-48 pb-32 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
-                    <div className="max-w-5xl mx-auto text-center">
-                        <span className="hero-stagger inline-flex items-center mb-6 px-4 py-1.5 rounded-lg border border-accent/20 bg-accent/5 font-mono uppercase tracking-[0.15em] text-xs md:text-sm font-bold text-accent">
-                            <span className="text-accent/40">[</span>WORKSHOPS<span className="text-accent/40">]</span>
-                        </span>
-                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6 text-foreground">
-                            {language === 'nl' ? 'Workshops.' : 'Workshops.'}
-                        </h1>
-                        <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-8 font-light leading-relaxed mx-auto">
-                            {language === 'nl'
-                                ? 'Praktische AI workshops voor uw team.'
-                                : 'Practical AI workshops for your team.'}
-                        </p>
-                    </div>
-                </section>
+            <SectionNav items={snelmenu[language]} />
+            <main ref={mainRef} className="relative flex-grow">
+                <WorkshopsHero />
+                <WorkshopsProbleem />
+                <WorkshopsLeren />
+                <WorkshopsQuotes />
+                <WorkshopsOfferte />
             </main>
-
             <Footer />
         </div>
     );

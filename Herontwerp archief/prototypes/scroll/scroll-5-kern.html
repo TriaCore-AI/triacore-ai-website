@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll 5 door de kern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../stijl/tokens.css">
+<link rel="stylesheet" href="scroll-core.css">
+<style>
+  /* Achter het logo: licht. --light gaat van 0 naar 1 terwijl de camera tussen de balken door gaat. */
+  .through {
+    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+    padding: 0 var(--gutter); text-align: center; pointer-events: none;
+    background: var(--bg); color: var(--text);
+    opacity: var(--light, 0);
+  }
+  .through-in {
+    --q: clamp(0, calc((var(--light, 0) - .6) * 2.5), 1);
+    opacity: var(--q); transform: translateY(calc(18px - 18px * var(--q)));
+  }
+  .through .eyebrow { color: var(--green-dim); }
+  .through .big {
+    margin: 22px auto 0; max-width: 17em;
+    font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -.015em;
+    font-size: clamp(32px, 4.2vw, 62px);
+  }
+  .through .big em { font-style: normal; color: var(--green); }
+  .stage.is-light .menu i { background: var(--navy); }
+</style>
+</head>
+<body>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="through">
+      <div class="through-in">
+        <p class="eyebrow">Our mission</p>
+        <p class="big">Understand challenges down to their core, <em>and translate them into intelligent solutions that empower businesses.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap reveal">
+    <p class="eyebrow">Selected work · Croes NV</p>
+    <p class="big">From paper delivery notes <em>to a real time overview.</em></p>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="scroll-core.js"></script>
+<script>
+  // Idee 5: bij het scrollen vliegt de camera door de opening tussen de bovenste en de middelste balk.
+  // Aan de andere kant is het licht, en daar staat de missie.
+  TriaHero({
+    scroll: 1.6,
+    frame(c) {
+      const e = c.E.inout(c.clamp(c.p / 0.85));
+      const gapY = c.DY / 2;                                         // midden van de opening
+      const y = c.lerp(c.base.y, gapY, c.E.glide(c.clamp(e * 1.8)));  // eerst op hoogte komen
+      const z = c.lerp(c.base.dist, -4, e);
+      c.camPos.set(0, y, z);
+      c.aim.set(0, y, z - 10);
+      const light = c.smooth(1.4, -0.4, z);                           // de opening vult zich met licht
+      c.stage.style.setProperty('--light', light.toFixed(4));
+      c.stage.classList.toggle('is-light', light > 0.5);
+      c.canvasOpacity = 1 - c.smooth(0.85, 1, light);
+    },
+  });
+</script>
+</body>
+</html>

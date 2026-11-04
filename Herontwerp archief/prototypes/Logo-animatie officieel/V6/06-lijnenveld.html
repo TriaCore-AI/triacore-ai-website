@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 06 lijnenveld</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 06. Lijnenveld: de ruimte zit vol dunne, afgeronde horizontale lijnen op verschillende
+  // dieptes, in dezelfde vorm als de balken. Bij elke camerabeweging schuiven ze mee.
+  TriaLogoV6({
+    setup(c) {
+      const { THREE } = c;
+      c.scene.fog = new THREE.Fog(0x0B1220, 6, 44);
+      const rnd = c.seeded(7);
+      const mat = new THREE.MeshStandardMaterial({
+        color: '#cfd5df', metalness: 1, roughness: 0.35, envMap: c.env, envMapIntensity: 0.9,
+      });
+      const LENGTHS = [1.4, 2.4, 3.8, 5.6];
+      const per = LENGTHS.map(() => []);
+      let placed = 0, tries = 0;
+      while (placed < 280 && tries < 20000) {
+        tries++;
+        const x = (rnd() - 0.5) * 60, y = (rnd() - 0.5) * 30, z = -38 + rnd() * 52;
+        if (Math.hypot(x, y, z) < 8.5) continue;                       // niet rond het logo
+        if (z > 0 && Math.abs(x) < 6 && Math.abs(y) < 3.8) continue;   // niet voor het eindbeeld
+        per[Math.floor(rnd() * LENGTHS.length)].push([x, y, z]);
+        placed++;
+      }
+      const m4 = new THREE.Matrix4(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, Math.PI / 2));
+      LENGTHS.forEach((L, b) => {
+        const geo = new THREE.CapsuleGeometry(0.035, L, 4, 10);
+        const inst = new THREE.InstancedMesh(geo, mat, per[b].length);
+        per[b].forEach(([x, y, z], i) => {
+          m4.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(1, 1, 1));
+          inst.setMatrixAt(i, m4);
+        });
+        c.scene.add(inst);
+      });
+    },
+  });
+</script>
+</body>
+</html>

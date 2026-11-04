@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore AI | Software op maat V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../stijl/tokens.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+
+<!-- De navigatie, zoals op de homepage: zwevend, donker op de hero, licht zodra de pagina licht wordt -->
+<header class="nav" id="nav">
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu openen">
+    <span class="menu-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="menu-label">Menu</span>
+  </button>
+  <div class="nav-right">
+    <div class="nav-lang" role="group" aria-label="Taal">
+      <button type="button" class="is-on">NL</button><span>/</span><button type="button" disabled title="De Engelse tekst volgt als de inhoud vastligt">EN</button>
+    </div>
+    <a class="btn small" href="https://triacore.be/contact">Contact
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+  </div>
+</header>
+
+<div class="menu-scrim" id="menuScrim"></div>
+<nav class="menu" id="menu" aria-label="Hoofdmenu">
+  <ol class="menu-list">
+    <li><a href="../../Hero/V2/index.html"><span class="m-name">Home</span></a></li>
+    <li><a href="#top" class="is-here"><span class="m-name">Software op maat</span></a></li>
+    <li><a href="#"><span class="m-name">AI-oplossingen</span></a></li>
+    <li><a href="#"><span class="m-name">Workshops</span></a></li>
+    <li><a href="https://triacore.be/team"><span class="m-name">Team</span></a></li>
+    <li><a href="https://triacore.be/contact"><span class="m-name">Contact</span></a></li>
+  </ol>
+  <div class="menu-foot">
+    <a href="mailto:info@triacore.be">info@triacore.be</a>
+    <span>Kempische Steenweg 303, 3500 Hasselt</span>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- De hero: links de tekst, rechts het logo in 3D boven de rastervloer. Bij het openen zie je op elk
+       scherm alleen blauw; pas aan het einde van de hero kleurt de pagina zacht naar licht. -->
+  <section class="hero" id="hero">
+    <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1 class="title hero-title">Software op maat.<br><em>Rond hoe jij werkt.</em></h1>
+        <p class="lead hero-lead">Een tool die gebouwd wordt rond hoe jouw bedrijf werkt. Voor wie buiten werkt, voor kantoor en voor de zaakvoerder.</p>
+        <div class="hero-actions">
+          <a class="btn" href="https://triacore.be/contact">Plan een gesprek
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+      <!-- de uitlegvideo (nog een plaatshouder): staat schuin in 3D, kantelt mee met de muis, en bij hover
+           schuift er een groen lijnkader achter uit, zoals bij het team op de homepage -->
+      <div class="hero-visual" id="heroVisual">
+        <div class="video-tilt" id="videoTilt">
+          <span class="video-frame" aria-hidden="true"></span>
+          <button class="video" type="button" aria-label="Video: wat is software op maat? De video is in de maak.">
+            <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.5 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+            <span class="video-caption"><span>Wat is software op maat?</span><span class="video-meta">Video, in de maak</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wat we bouwen: drie categorieën naast elkaar. Op het eerste gezicht alleen het nummer, de naam en
+       één regel. Wat er mogelijk is, komt pas bij hover (op een gsm: tikken). Komt op met het licht. -->
+  <section class="next build" id="wat">
+    <div class="build-head">
+      <h2 class="title build-title">Wat we bouwen.</h2>
+      <p class="build-intro">Software op maat kan veel zijn. Meestal valt het onder één van deze drie.</p>
+    </div>
+    <ol class="build-list">
+      <li class="kind open">
+        <button class="kind-head" type="button" aria-expanded="true">
+          <span class="kind-num">/01</span>
+          <span class="kind-name">Digitaliseren<span class="kind-plus" aria-hidden="true"></span></span>
+          <span class="kind-line">Van papier en Excel naar één digitale basis.</span>
+        </button>
+        <div class="kind-more"><div>
+          <ul class="kind-items">
+            <li>Formulieren, bonnen en lijsten worden schermen die iedereen invult.</li>
+            <li>Je geeft alles één keer in, en het staat overal goed.</li>
+            <li>Op kantoor, onderweg of op de werf: dezelfde informatie, op hetzelfde moment.</li>
+            <li>Elke rol ziet precies wat bij zijn werk hoort.</li>
+          </ul>
+        </div></div>
+      </li>
+      <li class="kind">
+        <button class="kind-head" type="button" aria-expanded="false">
+          <span class="kind-num">/02</span>
+          <span class="kind-name">Verbinden<span class="kind-plus" aria-hidden="true"></span></span>
+          <span class="kind-line">Meer uit de software die je al hebt.</span>
+        </button>
+        <div class="kind-more"><div>
+          <ul class="kind-items">
+            <li>Je ERP blijft. Wij bouwen wat het mist, en koppelen eraan.</li>
+            <li>Eenvoudige schermen bovenop je pakket, met alleen wat je mensen nodig hebben.</li>
+            <li>Je programma's wisselen zelf gegevens uit.</li>
+            <li>Losse tools werken samen als één geheel.</li>
+          </ul>
+        </div></div>
+      </li>
+      <li class="kind">
+        <button class="kind-head" type="button" aria-expanded="false">
+          <span class="kind-num">/03</span>
+          <span class="kind-name">Overzien<span class="kind-plus" aria-hidden="true"></span></span>
+          <span class="kind-line">Alles op één plek, zodat je ziet hoe het loopt.</span>
+        </button>
+        <div class="kind-more"><div>
+          <ul class="kind-items">
+            <li>Gegevens uit al je systemen samen op één plek.</li>
+            <li>Per klant, project of voertuig vind je alles meteen terug.</li>
+            <li>In één oogopslag zie je hoe het ervoor staat.</li>
+            <li>Wat aandacht vraagt, zie je op tijd.</li>
+          </ul>
+        </div></div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Hoe het verloopt (zoals Palantir): links blijven de stappenbalk en de grote titel staan, rechts komt per
+       stap één zin en een kader voorbij. De haakjes en de lange lijn schuiven mee met de stap waar je bent. -->
+  <section class="steps" id="verloop">
+    <h2 class="title steps-title">Hoe het verloopt.</h2>
+    <div class="steps-grid">
+      <div class="steps-left">
+        <div class="track" id="track" aria-hidden="true">
+          <span class="track-n is-on">01</span><span class="track-l is-long"></span>
+          <span class="track-n">02</span><span class="track-l"></span>
+          <span class="track-n">03</span><span class="track-l"></span>
+          <span class="track-n">04</span>
+        </div>
+        <div class="step-titles" aria-hidden="true">
+          <p class="step-big is-on">We luisteren eerst.</p>
+          <p class="step-big">We meten wat het kost.</p>
+          <p class="step-big">Je ziet het werken.</p>
+          <p class="step-big">We bouwen, en blijven.</p>
+        </div>
+      </div>
+      <ol class="steps-right">
+        <li class="step-panel is-on">
+          <h3 class="step-big-m">We luisteren eerst.</h3>
+          <p class="step-say">Een gesprek over hoe je bedrijf werkt, en waar het vandaag wringt.</p>
+          <ul class="step-box"><li>Binnen 48 uur een volgende stap</li></ul>
+        </li>
+        <li class="step-panel">
+          <h3 class="step-big-m">We meten wat het kost.</h3>
+          <p class="step-say">We lopen mee, vragen voorbeelden op, en brengen in kaart wat het probleem je nu kost.</p>
+          <ul class="step-box">
+            <li>Waar nodig een dag meelopen</li>
+            <li>Documenten en voorbeelden</li>
+            <li>Een schatting van de tijd die het nu kost</li>
+          </ul>
+        </li>
+        <li class="step-panel">
+          <h3 class="step-big-m">Je ziet het werken.</h3>
+          <p class="step-say">Je ziet een werkende demo rond jouw probleem, en krijgt een voorstel met prijs en planning.</p>
+          <ul class="step-box">
+            <li>Een demo rond je eigen probleem</li>
+            <li>Een voorstel met prijs en planning</li>
+          </ul>
+        </li>
+        <li class="step-panel">
+          <h3 class="step-big-m">We bouwen, en blijven.</h3>
+          <p class="step-say">We bouwen snel en gebruiksvriendelijk, en begeleiden je team na de oplevering.</p>
+          <ul class="step-box">
+            <li>Twee maanden intensief</li>
+            <li>Daarna maandelijks support en updates</li>
+            <li>Achteraf: wat er veranderde</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Twee wegen verder, zoals Palantir zijn twee grote acties toont: links wat we al bouwden (naar de
+       pagina met projecten), rechts wat er nog kan (opent een paneel met het overzicht). -->
+  <section class="paths" id="verder">
+    <div class="paths-grid">
+      <a class="path" href="#" id="pathBuilt">
+        <span class="path-frame" aria-hidden="true"></span>
+        <span class="path-card path-light">
+          <span class="path-visual" aria-hidden="true">
+            <!-- een schets van een platform op een laptop (A&M) en een app op een gsm (Croes) -->
+            <span class="dev-laptop">
+              <span class="dev-screen">
+                <span class="ui-side"></span>
+                <span class="ui-board">
+                  <span class="ui-col"><i></i><i class="on"></i><i></i></span>
+                  <span class="ui-col"><i></i><i></i></span>
+                  <span class="ui-col"><i class="on"></i><i></i><i></i></span>
+                </span>
+              </span>
+              <span class="dev-base"></span>
+            </span>
+            <span class="dev-phone">
+              <span class="ui-bar"></span>
+              <span class="ui-row"></span><span class="ui-row"></span><span class="ui-row short"></span>
+              <span class="ui-go">Start</span>
+            </span>
+          </span>
+          <span class="path-logos" aria-hidden="true">
+            <img src="../../Hero/V2/assets/croes.png" alt="" class="logo-croes">
+            <img src="../../Hero/V2/assets/am-group.webp" alt="" class="logo-am">
+          </span>
+          <span class="path-foot">
+            <span class="title path-title">Wat we al bouwden.</span>
+            <span class="path-link">Bekijk onze projecten
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+          </span>
+        </span>
+      </a>
+
+      <button class="path" type="button" id="pathMore" aria-haspopup="dialog" aria-controls="more">
+        <span class="path-frame on-dark" aria-hidden="true"></span>
+        <span class="path-card path-dark">
+          <span class="path-marquee" aria-hidden="true">
+            <span class="mq-row"><span class="mq-track" data-row="0"></span></span>
+            <span class="mq-row rev"><span class="mq-track" data-row="1"></span></span>
+            <span class="mq-row"><span class="mq-track" data-row="2"></span></span>
+          </span>
+          <span class="path-foot">
+            <span class="title path-title">Wat er nog kan.</span>
+            <span class="path-link">Ontdek de mogelijkheden
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- Het overzicht van wat er nog kan: een paneel dat van onder over de pagina schuift -->
+<div class="more-scrim" id="moreScrim"></div>
+<div class="more" id="more" role="dialog" aria-modal="true" aria-labelledby="moreTitle" aria-hidden="true">
+  <div class="more-inner">
+    <div class="more-head">
+      <h2 class="title more-title" id="moreTitle">Wat er nog kan.</h2>
+      <button class="more-close" type="button" id="moreClose" aria-label="Sluiten">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <p class="more-intro">Een greep uit wat software op maat kan zijn, per soort.</p>
+    <div class="more-cols">
+      <div class="more-col">
+        <p class="more-kind"><span>/01</span> Digitaliseren</p>
+        <ul class="more-list">
+          <li><b>Registratie-app voor buitenwerk</b><span>Ritten, uren en bonnen meteen digitaal.</span></li>
+          <li><b>Inspectie-app</b><span>Checklists, foto's en handtekeningen op de werf.</span></li>
+          <li><b>Planningsbord</b><span>Mensen, voertuigen en machines op één bord.</span></li>
+          <li><b>Offerte- en calculatietool</b><span>Van een Excel-rekenblad naar een tool die iedereen gebruikt.</span></li>
+          <li><b>Portaal voor klanten of onderaannemers</b><span>Aanvragen en opvolgen op één plek.</span></li>
+        </ul>
+      </div>
+      <div class="more-col">
+        <p class="more-kind"><span>/02</span> Verbinden</p>
+        <ul class="more-list">
+          <li><b>Een eenvoudig scherm op je ERP</b><span>Alleen de knoppen die je mensen nodig hebben.</span></li>
+          <li><b>Een aanvulling op je pakket</b><span>Wat je ERP of software mist, erbij gebouwd.</span></li>
+          <li><b>Koppelingen tussen programma's</b><span>Gegevens gaan vanzelf van het ene naar het andere.</span></li>
+        </ul>
+      </div>
+      <div class="more-col">
+        <p class="more-kind"><span>/03</span> Overzien</p>
+        <ul class="more-list">
+          <li><b>Documentenzoeker</b><span>Elk document meteen terug, per klant, project of voertuig.</span></li>
+          <li><b>Dashboard voor de zaakvoerder</b><span>Hoe elke werf, wagen of ploeg ervoor staat.</span></li>
+          <li><b>Opvolging van materieel en termijnen</b><span>Keuringen, onderhoud en attesten op tijd.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="more-foot">
+      <p class="more-ask">Iets anders in gedachten? <em>Vertel het ons.</em></p>
+      <a class="btn" href="https://triacore.be/contact">Plan een gesprek
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="page.js"></script>
+<script src="hero-scene.js"></script>
+</body>
+</html>

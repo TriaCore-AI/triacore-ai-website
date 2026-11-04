@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 07 tunnel</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 07. De spleet wordt een tunnel: shot 1 duikt in de spleet en vliegt door. Achter het logo
+  // loopt een smalle gang tussen twee wanden van titanium, met licht aan het einde. Daar valt de knip.
+  TriaLogoV6({
+    shots(SHOTS) {
+      const s = SHOTS[0];
+      s.dur = 3.1;
+      s.ease = x => Math.pow(Math.min(1, Math.max(0, x)), 2.2);
+      s.to = { ...s.to, d: -0.32 };
+    },
+    setup(c) {
+      const { THREE } = c;
+      const az = c.rad(30), el = c.rad(18);
+      const dir = new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+      const up = new THREE.Vector3(0, 1, 0).addScaledVector(dir, -dir.y).normalize();
+      const side = new THREE.Vector3().crossVectors(up, dir).normalize();
+      const basis = new THREE.Matrix4().makeBasis(side, up, dir);
+      const gap = new THREE.Vector3(0.25, c.GAP_Y, 0);
+      const LEN = 16, HALF = 0.27;
+      c.tunnel = new THREE.Group();
+      [-1, 1].forEach(sgn => {
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.05, LEN), c.titanium());
+        wall.quaternion.setFromRotationMatrix(basis);
+        wall.position.copy(gap).addScaledVector(dir, -LEN / 2 - 0.2).addScaledVector(up, sgn * HALF);
+        c.tunnel.add(wall);
+      });
+      const light = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.5), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      light.quaternion.setFromRotationMatrix(basis);
+      light.position.copy(gap).addScaledVector(dir, -LEN - 0.2);
+      c.tunnel.add(light);
+      c.scene.add(c.tunnel);
+    },
+    frame(c, f) {
+      c.tunnel.visible = f.shot === 0;   // de gang hoort enkel bij het eerste shot
+    },
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ varianten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Tien varianten voor de FAQ, in de lijn van de oplossingen (Palantir): lijnen, veel ruimte, weinig vormen.
+   Titel in Playfair Display, vragen in DM Sans 500, antwoorden in DM Sans, nummers in Space Grotesk.
+   Los van de site. De vragen en antwoorden zijn concept. */
+:root {
+  --green: #628F69; --green-dim: #557A5B; --green-lt: #8FB495;
+  --navy: #0F172A; --bg: #F2F2F2; --line: #D9D9D6; --line-inv: rgba(255, 255, 255, .14);
+  --sub: rgba(15, 23, 42, .62); --sub-soft: rgba(15, 23, 42, .42); --sub-inv: rgba(255, 255, 255, .68);
+  --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", system-ui, sans-serif; --brand: "Space Grotesk", "DM Sans", sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1); --dur: 420ms;
+  --gutter: clamp(16px, 5vw, 64px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--navy); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+
+.bar {
+  position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 4px 14px;
+  padding: 14px var(--gutter); background: rgba(242, 242, 242, .9); border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  font-family: var(--brand); font-weight: 500; font-size: 13px;
+}
+.bar a { color: var(--sub); text-decoration: none; }
+.bar a:hover { color: var(--navy); }
+.intro { max-width: 1640px; margin: 0 auto; padding: 56px var(--gutter) 0; }
+.intro h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 3.6vw, 48px); letter-spacing: -.01em; }
+.intro p { margin-top: 10px; max-width: 48em; color: var(--sub); font-size: 17px; line-height: 1.5; }
+
+.variant { padding: 96px var(--gutter) 0; scroll-margin-top: 40px; }
+.variant > * { max-width: 1640px; margin-left: auto; margin-right: auto; }
+.v-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 14px 18px; margin-bottom: 48px; background: #E8E8E5; border-radius: 10px; }
+.v-head b { font-family: var(--brand); font-weight: 600; font-size: 14px; color: var(--green-dim); }
+.v-head h2 { font-family: var(--brand); font-weight: 600; font-size: 17px; }
+.v-head span { color: var(--sub); font-size: 15px; }
+
+/* ---------- Gemeenschappelijk ---------- */
+.faq-title { font-family: var(--serif); font-weight: 600; line-height: 1.04; letter-spacing: -.015em; font-size: clamp(34px, 4.6vw, 64px); }
+.faq-title em { font-style: normal; color: var(--green); }
+.q { font-family: var(--sans); font-weight: 500; letter-spacing: -.015em; line-height: 1.25; font-size: clamp(20px, 1.6vw, 26px); }
+.a { font-family: var(--sans); font-size: clamp(16px, 1.15vw, 18px); line-height: 1.55; color: var(--sub); max-width: 38em; }
+.a .todo { color: var(--green-dim); }
+.num { font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .04em; color: var(--sub-soft); transition: color var(--dur) var(--ease); }
+/* het antwoord schuift open: van 0 naar zijn eigen hoogte */
+.drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 520ms var(--ease); }
+.drawer > div { overflow: hidden; }
+.open .drawer { grid-template-rows: 1fr; }
+/* de plus: wordt een min als de vraag open staat */
+.plus { position: relative; flex: none; width: 18px; height: 18px; }
+.plus::before, .plus::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; transition: transform var(--dur) var(--ease); }
+.plus::after { transform: rotate(90deg); }
+.open .plus::after { transform: rotate(90deg) scaleX(0); }
+/* een rij: de lijn eronder kleurt groen bij hover, zoals bij de oplossingen */
+.row { position: relative; border-top: 1px solid var(--line); }
+.rows > .row:last-child { border-bottom: 1px solid var(--line); }
+.row::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; z-index: 1; background: var(--green);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur) var(--ease);
+}
+.row:hover::after, .row.open::after { transform: scaleX(1); }
+.row:hover .num, .row.open .num { color: var(--green-dim); }
+.head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 0; }
+
+/* ---------- 01 Titel links, vragen rechts ---------- */
+.v1 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+.v1 .faq-title { position: sticky; top: 100px; }
+.v1 .a { padding-bottom: 28px; }
+
+/* ---------- 02 Genummerde rijen ---------- */
+.v2 .faq-title { margin-bottom: 48px; }
+.v2 .head { display: grid; grid-template-columns: 96px 1fr 18px; }
+.v2 .a { padding: 0 0 30px 96px; }
+
+/* ---------- 03 Groot en open ---------- */
+.v3 .faq-title { margin-bottom: 48px; }
+.v3 .q { font-size: clamp(26px, 3vw, 46px); letter-spacing: -.025em; }
+.v3 .head { padding: 34px 0; }
+.v3 .plus { width: 26px; height: 26px; }
+.v3 .drawer > div { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.v3 .a { grid-column: 2; padding-bottom: 40px; font-size: clamp(17px, 1.3vw, 20px); }
+
+/* ---------- 04 Twee kolommen ---------- */
+.v4 .faq-title { margin-bottom: 48px; }
+.v4 .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 clamp(32px, 4vw, 72px); align-items: start; }
+.v4 .q { font-size: clamp(18px, 1.4vw, 22px); }
+.v4 .a { padding-bottom: 26px; }
+
+/* ---------- 05 Index met antwoord ---------- */
+.v5 .faq-title { margin-bottom: 48px; }
+.v5 .index { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+.v5 .list { border-top: 1px solid var(--line); }
+.v5 .pick { position: relative; width: 100%; display: flex; align-items: baseline; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); color: var(--sub-soft); transition: color var(--dur) var(--ease); }
+.v5 .pick .q { font-size: clamp(18px, 1.35vw, 22px); transition: transform var(--dur) var(--ease); }
+.v5 .pick::before { content: ""; position: absolute; left: 0; top: 50%; width: 0; height: 3px; margin-top: -1.5px; border-radius: 2px; background: var(--green); transition: width var(--dur) var(--ease); }
+.v5 .pick:hover { color: var(--navy); }
+.v5 .pick.on { color: var(--navy); }
+.v5 .pick.on::before { width: 18px; }
+.v5 .pick.on .num, .v5 .pick.on .q { transform: translateX(30px); }
+.v5 .pick .num { transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+.v5 .shown { position: sticky; top: 100px; padding-top: 6px; }
+.v5 .shown .q { font-size: clamp(26px, 2.6vw, 40px); letter-spacing: -.025em; }
+.v5 .shown .a { margin-top: 20px; font-size: clamp(17px, 1.3vw, 20px); }
+.v5 .shown.swap { animation: swap 520ms var(--ease); }
+@keyframes swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------- 06 Navy ---------- */
+.v6 { background: var(--navy); color: #fff; padding-bottom: 120px; margin-top: 96px; }
+.v6 .v-head { background: rgba(255, 255, 255, .08); }
+.v6 .v-head h2 { color: #fff; }
+.v6 .v-head span { color: var(--sub-inv); }
+.v6 .v-head b, .v6 .faq-title em { color: var(--green-lt); }
+.v6 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+.v6 .row { border-color: var(--line-inv); }
+.v6 .rows > .row:last-child { border-bottom-color: var(--line-inv); }
+.v6 .row::after { background: var(--green-lt); }
+.v6 .a { color: var(--sub-inv); padding-bottom: 28px; }
+
+/* ---------- 07 In groepen ---------- */
+.v7 .faq-title { margin-bottom: 48px; }
+.v7 .group { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: clamp(24px, 4vw, 72px); padding-bottom: 40px; }
+.v7 .g-name { padding-top: 28px; border-top: 1px solid var(--navy); font-family: var(--brand); font-weight: 500; font-size: 15px; }
+.v7 .rows > .row:first-child { border-top-color: var(--navy); }
+.v7 .a { padding-bottom: 28px; }
+
+/* ---------- 08 Rij die oplicht ---------- */
+.v8 .faq-title { margin-bottom: 48px; }
+.v8 .row { transition: background var(--dur) var(--ease); }
+.v8 .row:hover, .v8 .row.open { background: #E9E9E6; }
+.v8 .row::after { display: none; }
+.v8 .head { padding: 28px 24px; }
+.v8 .arrow { width: 22px; height: 22px; flex: none; transition: transform var(--dur) var(--ease); }
+.v8 .open .arrow { transform: rotate(90deg); }
+.v8 .a { padding: 0 24px 30px; }
+
+/* ---------- 09 Alles open ---------- */
+.v9 .faq-title { margin-bottom: 48px; }
+.v9 .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(24px, 4vw, 72px); padding: 30px 0 34px; }
+.v9 .q { display: flex; gap: 18px; align-items: baseline; }
+
+/* ---------- 10 Groene balk ---------- */
+.v10 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+.v10 .row { border-top: 0; }
+.v10 .rows > .row:last-child { border-bottom: 0; }
+.v10 .row::after { display: none; }
+.v10 .head { justify-content: flex-start; padding: 16px 0; color: var(--sub-soft); transition: color var(--dur) var(--ease); }
+.v10 .head:hover, .v10 .open .head { color: var(--navy); }
+.v10 .tick { flex: none; width: 0; height: 3px; border-radius: 2px; background: var(--green); transition: width var(--dur) var(--ease), margin var(--dur) var(--ease); margin-right: -24px; }
+.v10 .open .tick { width: 22px; margin-right: 0; }
+.v10 .head:hover .tick { width: 10px; margin-right: -12px; }
+.v10 .open .head:hover .tick { width: 22px; margin-right: 0; }
+.v10 .a { padding: 0 0 22px 46px; }
+
+@media (max-width: 899px) {
+  .v1 .split, .v6 .split, .v10 .split, .v4 .cols, .v5 .index, .v7 .group, .v9 .row { grid-template-columns: 1fr; }
+  .v1 .faq-title, .v6 .faq-title, .v10 .faq-title { position: static; margin-bottom: 16px; }
+  .v3 .drawer > div { grid-template-columns: 1fr; }
+  .v3 .a { grid-column: 1; }
+  .v2 .head { grid-template-columns: 56px 1fr 18px; }
+  .v2 .a { padding-left: 56px; }
+  .v5 .shown { position: static; }
+}
+.end { height: 160px; }
+</style>
+</head>
+<body>
+
+<nav class="bar" id="jump"></nav>
+<header class="intro">
+  <h1>FAQ: tien varianten</h1>
+  <p>Telkens dezelfde zes vragen, in de lijn van de oplossingen: lijnen, ruimte, weinig vormen. Klik op een vraag om ze te openen. De antwoorden zijn concept uit de vault; het antwoord over gegevens is nog te bevestigen.</p>
+</header>
+<main id="variants"></main>
+<div class="end"></div>
+
+<script>
+  const QA = [
+    ['Hoe begint een samenwerking?', 'Met een gesprek. We luisteren naar hoe je bedrijf werkt en waar het vandaag wringt. Binnen 48 uur hoor je van ons wat de volgende stap is.'],
+    ['Moeten we al met AI bezig zijn?', 'Je start waar je nu staat. Vaak begint het bij je gegevens: die brengen we eerst samen op één plek. Daarop bouwt AI verder.'],
+    ['Werkt het samen met onze bestaande programma\'s?', 'Ja. We bouwen rond je processen en koppelen met de programma\'s die je al gebruikt, ook met je ERP.'],
+    ['Wat gebeurt er na de oplevering?', 'Twee maanden begeleiden we je team intensief. Daarna blijven we je partner, met maandelijkse support, updates en onderhoud.'],
+    ['Hoe gaan jullie om met onze gegevens?', '<span class="todo">Antwoord te bevestigen: staat nog niet in de vault.</span>'],
+    ['Wat kost het?', 'Elk project start met een eenmalige prijs voor wat we bouwen, op maat van je vraag. Daarna loopt een vaste maandelijkse begeleiding: support, updates, onderhoud en het AI-verbruik.'],
+  ];
+  const TITLE = 'Vragen die we <em>vaak krijgen.</em>';
+  const nr = i => `/0${i + 1}`;
+  const plus = '<span class="plus" aria-hidden="true"></span>';
+  const arrow = '<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
+  // één uitklaprij; de eerste staat open, zodat je meteen ziet hoe een antwoord eruitziet
+  const row = (inner, a, i, open = i === 0) => `
+    <div class="row${open ? ' open' : ''}">
+      <button class="head" type="button" aria-expanded="${open}">${inner}</button>
+      <div class="drawer"><div><p class="a">${a}</p></div></div>
+    </div>`;
+  const accordion = (make, list = QA, offset = 0) =>
+    `<div class="rows">${list.map(([q, a], i) => row(make(q, i + offset), a, i + offset)).join('')}</div>`;
+  const basic = (q) => `<span class="q">${q}</span>${plus}`;
+
+  const VARIANTS = [
+    ['Titel links, vragen rechts', 'De titel blijft links staan terwijl je scrolt; rechts uitklaprijen met een plus. De basis, zoals Palantir.',
+      () => `<div class="split"><h3 class="faq-title">${TITLE}</h3>${accordion(basic)}</div>`],
+    ['Genummerde rijen', 'Over de volle breedte, met /01 tot /06 vooraan, net als bij de oplossingen.',
+      () => `<h3 class="faq-title">${TITLE}</h3>${accordion((q, i) => `<span class="num">${nr(i)}</span><span class="q">${q}</span>${plus}`)}`],
+    ['Groot en open', 'De vragen in groot formaat; het antwoord opent in de rechterhelft. Het meest editoriaal.',
+      () => `<h3 class="faq-title">${TITLE}</h3>${accordion(basic)}`],
+    ['Twee kolommen', 'De vragen in twee kolommen naast elkaar: compact, alles in één oogopslag.',
+      () => `<h3 class="faq-title">${TITLE}</h3><div class="cols">${accordion(basic, QA.slice(0, 3))}${accordion(basic, QA.slice(3), 3)}</div>`],
+    ['Index met antwoord', 'Links de lijst met vragen, rechts groot het gekozen antwoord. Een groen balkje toont welke vraag open staat.',
+      () => `<h3 class="faq-title">${TITLE}</h3><div class="index"><div class="list">${QA.map(([q], i) => `<button class="pick${i ? '' : ' on'}" type="button" data-i="${i}"><span class="num">${nr(i)}</span><span class="q">${q}</span></button>`).join('')}</div><div class="shown"><p class="q">${QA[0][0]}</p><p class="a">${QA[0][1]}</p></div></div>`],
+    ['Navy', 'Variant 01 op een navy vlak: een donkere pauze tussen het team en de grote CTA\'s.',
+      () => `<div class="split"><h3 class="faq-title">${TITLE}</h3>${accordion(basic)}</div>`],
+    ['In groepen', 'De vragen gegroepeerd per onderwerp, met de groep links. Handig als de lijst later groeit.',
+      () => `<h3 class="faq-title">${TITLE}</h3>${[['Samenwerking', [0, 3]], ['Je bedrijf en je gegevens', [1, 2, 4]], ['Prijs', [5]]].map(([g, ids]) => `<div class="group"><span class="g-name">${g}</span><div class="rows">${ids.map((k, j) => row(basic(QA[k][0]), QA[k][1], k, k === 0)).join('')}</div></div>`).join('')}`],
+    ['Rij die oplicht', 'De hele rij licht zacht op bij hover; een pijl draait naar beneden als de vraag open staat.',
+      () => `<h3 class="faq-title">${TITLE}</h3>${accordion((q) => `<span class="q">${q}</span>${arrow}`)}`],
+    ['Alles open', 'Geen uitklappen: vraag links, antwoord rechts, alles meteen leesbaar. Ook het sterkst voor Google.',
+      () => `<h3 class="faq-title">${TITLE}</h3><div class="rows">${QA.map(([q, a], i) => `<div class="row"><p class="q"><span class="num">${nr(i)}</span>${q}</p><p class="a">${a}</p></div>`).join('')}</div>`],
+    ['Groene balk', 'Zonder lijnen tussen de vragen: de open vraag krijgt een groen balkje, zoals het snelmenu. Het meest minimaal.',
+      () => `<div class="split"><h3 class="faq-title">${TITLE}</h3>${accordion((q) => `<span class="tick" aria-hidden="true"></span><span class="q">${q}</span>`)}</div>`],
+  ];
+  const n2 = n => String(n).padStart(2, '0');
+  document.getElementById('jump').innerHTML = VARIANTS.map(([t], i) => `<a href="#v${i + 1}">${n2(i + 1)} ${t}</a>`).join('');
+  document.getElementById('variants').innerHTML = VARIANTS.map(([t, about, html], i) => `
+    <section class="variant v${i + 1}" id="v${i + 1}">
+      <div class="v-head"><b>${n2(i + 1)}</b><h2>${t}</h2><span>${about}</span></div>
+      <div class="body">${html()}</div>
+    </section>`).join('');
+
+  // uitklappen: binnen één variant staat er telkens één vraag open
+  document.addEventListener('click', e => {
+    const head = e.target.closest('.head');
+    if (head) {
+      const r = head.parentElement, scope = r.closest('.variant'), wasOpen = r.classList.contains('open');
+      scope.querySelectorAll('.row.open').forEach(x => { x.classList.remove('open'); x.querySelector('.head').setAttribute('aria-expanded', 'false'); });
+      if (!wasOpen) { r.classList.add('open'); head.setAttribute('aria-expanded', 'true'); }
+      return;
+    }
+    // variant 05: een vraag kiezen toont rechts het antwoord
+    const pick = e.target.closest('.pick');
+    if (pick) {
+      const scope = pick.closest('.index'), i = +pick.dataset.i, shown = scope.querySelector('.shown');
+      scope.querySelectorAll('.pick').forEach(p => p.classList.toggle('on', p === pick));
+      shown.innerHTML = `<p class="q">${QA[i][0]}</p><p class="a">${QA[i][1]}</p>`;
+      shown.classList.remove('swap'); void shown.offsetWidth; shown.classList.add('swap');
+    }
+  });
+</script>
+</body>
+</html>

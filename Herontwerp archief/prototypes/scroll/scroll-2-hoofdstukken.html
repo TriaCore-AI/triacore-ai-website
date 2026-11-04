@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll 2 drie hoofdstukken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../stijl/tokens.css">
+<link rel="stylesheet" href="scroll-core.css">
+<style>
+  /* De hoofdstukken staan onder het logo, gecentreerd. Elk hoofdstuk kent zijn eigen focus --f0, --f1, --f2. */
+  .chapters { position: absolute; left: 0; right: 0; top: 0; z-index: 5; pointer-events: none; will-change: transform; }
+  .chapter {
+    position: absolute; left: 0; right: 0; top: 0; padding: 0 var(--gutter); text-align: center;
+    opacity: var(--f); transform: translateY(calc(14px - 14px * var(--f)));
+  }
+  .chapter:nth-child(1) { --f: var(--f0, 0); }
+  .chapter:nth-child(2) { --f: var(--f1, 0); }
+  .chapter:nth-child(3) { --f: var(--f2, 0); }
+  .ch-head { display: inline-flex; align-items: baseline; gap: 16px; }
+  .ch-num { font-family: var(--brand); font-weight: 500; font-size: 15px; letter-spacing: .04em; color: var(--green-lt); }
+  .ch-word { font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.015em; font-size: clamp(40px, 4.6vw, 72px); }
+  .ch-text { margin: 18px auto 0; max-width: 30em; font-size: clamp(16px, 1.3vw, 20px); color: var(--sub-inv); }
+
+  /* voortgang: drie streepjes rechts, het actieve kleurt */
+  .steps {
+    position: absolute; right: var(--gutter); top: 50%; z-index: 5; transform: translateY(-50%);
+    display: grid; gap: 10px; opacity: clamp(0, calc(var(--p) * 12), 1);
+  }
+  .steps i { display: block; width: 18px; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, .18); }
+  .steps i:nth-child(1) { background: color-mix(in srgb, var(--green-lt) calc(var(--f0, 0) * 100%), rgba(255, 255, 255, .18)); }
+  .steps i:nth-child(2) { background: color-mix(in srgb, var(--green-lt) calc(var(--f1, 0) * 100%), rgba(255, 255, 255, .18)); }
+  .steps i:nth-child(3) { background: color-mix(in srgb, var(--green-lt) calc(var(--f2, 0) * 100%), rgba(255, 255, 255, .18)); }
+</style>
+</head>
+<body>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="chapters" id="chapters">
+      <div class="chapter">
+        <div class="ch-head"><span class="ch-num">/01</span><span class="ch-word">Understand</span></div>
+        <p class="ch-text">We find what really holds a business back, before we propose anything.</p>
+      </div>
+      <div class="chapter">
+        <div class="ch-head"><span class="ch-num">/02</span><span class="ch-word">Translate</span></div>
+        <p class="ch-text">We say honestly what AI can do for you, and what it cannot.</p>
+      </div>
+      <div class="chapter">
+        <div class="ch-head"><span class="ch-num">/03</span><span class="ch-word">Deliver</span></div>
+        <p class="ch-text">We stay until it works in practice, where it saves time or money.</p>
+      </div>
+    </div>
+    <div class="steps" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap reveal">
+    <p class="eyebrow">Selected work · Croes NV</p>
+    <p class="big">From paper delivery notes <em>to a real time overview.</em></p>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="scroll-core.js"></script>
+<script>
+  // Idee 2: het logo blijft in het midden. Elke derde van de scroll licht één balk op:
+  // die komt naar voren en krijgt een lichtstreep, de andere worden stil, en zijn pijler staat eronder.
+  const chapters = document.getElementById('chapters');
+
+  TriaHero({
+    scroll: 3,
+    frame(c) {
+      const f = [0.2, 0.5, 0.8].map(m => c.smooth(m - 0.16, m - 0.06, c.p) * (1 - c.smooth(m + 0.06, m + 0.16, c.p)));
+      const any = Math.max(...f);
+      c.bars.forEach((b, i) => {
+        b.mesh.position.z += f[i] * 0.55;
+        b.mesh.position.x += f[i] * 0.12;
+        c.glint[i] = f[i] * 0.8;
+        c.dim[i] = any * (1 - f[i]);
+      });
+      f.forEach((x, i) => c.stage.style.setProperty(`--f${i}`, x.toFixed(4)));
+    },
+    overlay(c) {
+      const [, yb] = c.project(0, -c.DY - c.BAR_H / 2, c.DEPTH / 2);
+      chapters.style.transform = `translate3d(0, ${yb + 52}px, 0)`;
+    },
+  });
+</script>
+</body>
+</html>

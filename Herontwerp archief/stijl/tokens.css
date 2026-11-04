@@ -1,0 +1,119 @@
+/* =============================================================
+   TriaCore stijl: tokens voor het herontwerp
+   Voorstel 2026-10-02. Uitleg en keuzes: stijl.md (zelfde map).
+   Elk prototype in Herontwerp/prototypes/ laadt dit bestand.
+   ============================================================= */
+
+:root {
+  /* Merk */
+  --green:      #628F69;  /* het enige accent */
+  --green-dim:  #557A5B;  /* groen op licht: kleine tekst, labels, knop bij hover */
+  --green-lt:   #8FB495;  /* groen op donker */
+
+  /* Neutralen */
+  --navy:       #0F172A;  /* tekst op licht, en de donkere achtergrond */
+  --navy-deep:  #111827;  /* laag achter navy */
+  --bg:         #F2F2F2;  /* de standaard achtergrond */
+  --surface:    #FBFBFA;  /* kaart of vlak op de achtergrond */
+  --white:      #FFFFFF;  /* drager voor logo's en foto's */
+  --line:       #D9D9D6;  /* lijnen, randen, raster */
+  --line-inv:   rgba(255, 255, 255, .14);
+
+  /* Tekst op licht */
+  --text:       #0F172A;
+  --sub:        rgba(15, 23, 42, .62);
+  --sub-soft:   rgba(15, 23, 42, .42);
+
+  /* Tekst op donker */
+  --text-inv:      #FFFFFF;
+  --sub-inv:       rgba(255, 255, 255, .68);
+  --sub-soft-inv:  rgba(255, 255, 255, .45);
+
+  /* Fonts: elk een vaste rol */
+  --serif: "Playfair Display", Georgia, "Times New Roman", serif;           /* titels, cijfers */
+  --sans:  "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* lopende tekst */
+  --brand: "Space Grotesk", "DM Sans", system-ui, sans-serif;               /* labels, knoppen, UI */
+
+  /* Typeschaal */
+  --fs-display: clamp(44px, 7.2vw, 108px);
+  --fs-h2:      clamp(34px, 4.6vw, 64px);
+  --fs-h3:      clamp(22px, 2.2vw, 30px);
+  --fs-lead:    clamp(17px, 1.35vw, 20px);
+  --fs-body:    16px;
+  --fs-meta:    13px;
+  --fs-eyebrow: 11px;
+
+  /* Vorm */
+  --radius-s:    6px;    /* knoppen, velden */
+  --radius-m:    8px;    /* kaarten */
+  --radius-l:    14px;   /* grote beeldkaarten */
+  --radius-pill: 999px;  /* badges, chips, de balken van het logo */
+  --hairline:    1px solid var(--line);
+
+  /* Ruimte */
+  --gutter:  clamp(16px, 5vw, 64px);
+  --section: clamp(96px, 13vw, 192px);
+  --maxw:    1240px;
+
+  /* Beweging */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);   /* standaard: snel erin, traag eruit */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* alleen voor wat van plaats wisselt */
+  --dur-micro:   160ms;   /* kleur, onderlijning, focus */
+  --dur-hover:   420ms;   /* kaart, balk, pijl */
+  --dur-reveal:  900ms;   /* sectie, titel, beeld */
+  --dur-scene:   1700ms;  /* logo-intro: één keer per bezoek */
+  --stagger:     70ms;
+  --shift-s:     8px;
+  --shift-m:     24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-hover:  0ms;
+    --dur-reveal: 0ms;
+    --dur-scene:  0ms;
+    --stagger:    0ms;
+    --shift-s:    0px;
+    --shift-m:    0px;
+  }
+}
+
+/* Tekststijlen */
+.eyebrow {
+  font-family: var(--brand);
+  font-weight: 600;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--green-dim);
+}
+.on-dark .eyebrow { color: var(--green-lt); }
+
+.title {
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+.title em { font-style: normal; color: var(--green); }
+.on-dark .title em { color: var(--green-lt); }
+
+.lead {
+  font-family: var(--sans);
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--sub);
+  max-width: 34em;
+}
+.on-dark .lead { color: var(--sub-inv); }
+
+.meta {
+  font-family: var(--brand);
+  font-weight: 500;
+  font-size: var(--fs-meta);
+  letter-spacing: .01em;
+  color: var(--sub);
+}
+.on-dark .meta { color: var(--sub-inv); }
+
+.amp { font-family: var(--sans); font-weight: 500; }

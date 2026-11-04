@@ -1,0 +1,431 @@
+/* =============================================================
+   AI-oplossingen V1: de pagina over AI-oplossingen. Nu alleen de hero, overgenomen van Software op maat V4:
+   de uitlegvideo schuin in 3D, de rastervloer van de homepage, en de overgang van blauw naar licht. Kleuren, fonts en tempo uit ../../../stijl/tokens.css.
+   page.js zet twee waarden: --page (de kleur van de pagina) en --light (0 = blauw, 1 = licht).
+   ============================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --light: 0; }
+html, body { background: var(--page, #0B1220); }
+body { color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body.menu-open { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+:focus-visible { outline: 1px solid var(--green-lt); outline-offset: 3px; border-radius: 3px; }
+
+/* ---------- De knop, zoals op de homepage ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: var(--radius-s);
+  background: var(--green); color: var(--white);
+  font-family: var(--brand); font-weight: 600; font-size: 14px; letter-spacing: .02em;
+  transition: background var(--dur-micro) var(--ease-out);
+}
+.btn svg { width: 14px; height: 14px; transition: transform var(--dur-hover) var(--ease-out); }
+.btn:hover { background: var(--green-dim); }
+.btn:hover svg { transform: translateX(4px); }
+.btn.small { padding: 10px 16px; font-size: 13px; }
+
+/* ---------- De navigatie: zwevend, donker op blauw, licht zodra de pagina licht wordt ---------- */
+.nav {
+  position: fixed; top: 12px; left: clamp(12px, 3vw, 48px); right: clamp(12px, 3vw, 48px); z-index: 30;
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px clamp(14px, 1.6vw, 22px);
+  color: var(--text-inv); transition: color var(--dur-hover) var(--ease-out);
+}
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius-m);
+  background: rgba(15, 23, 42, .42); border: 1px solid rgba(255, 255, 255, .08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2);
+  transition: background var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.nav.on-light { color: var(--text); }
+.nav.on-light::before { background: rgba(222, 222, 219, .72); border-color: rgba(15, 23, 42, .06); }
+body.menu-open .nav { color: var(--text-inv); }
+body.menu-open .nav::before { opacity: 0; }
+.nav-right { display: flex; align-items: center; gap: 22px; }
+.menu-btn { display: flex; align-items: center; gap: 14px; padding: 6px 0; }
+.menu-mark { position: relative; width: 30.7px; height: 18.8px; }
+.menu-mark i {
+  position: absolute; left: 0; width: 22px; height: 3.66px; border-radius: 2px; background: currentColor;
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-micro) var(--ease-out);
+}
+.menu-mark i:nth-child(1) { top: 0; }
+.menu-mark i:nth-child(2) { top: 7.58px; transform: translateX(8.69px); }
+.menu-mark i:nth-child(3) { top: 15.16px; }
+.menu-btn:hover .menu-mark i:nth-child(2) { transform: none; }
+body.menu-open .menu-mark i:nth-child(1) { transform: translateY(7.58px) rotate(45deg); }
+body.menu-open .menu-mark i:nth-child(2) { opacity: 0; transform: none; }
+body.menu-open .menu-mark i:nth-child(3) { transform: translateY(-7.58px) rotate(-45deg); }
+.menu-label { font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+.nav-lang { display: flex; align-items: center; gap: 4px; font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; }
+.nav-lang span { opacity: .35; }
+.nav-lang button { padding: 6px 4px; opacity: .45; }
+.nav-lang button.is-on { opacity: 1; }
+.nav-lang button:disabled { cursor: default; }
+
+/* ---------- Het menu: een zijbalk van links ---------- */
+.menu-scrim {
+  position: fixed; inset: 0; z-index: 20; background: rgba(5, 8, 15, .55);
+  opacity: 0; pointer-events: none; transition: opacity 500ms var(--ease-out);
+}
+.menu {
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 25;
+  width: min(540px, 100vw); padding: 104px var(--gutter) 40px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--navy); color: var(--text-inv);
+  transform: translateX(-100%); visibility: hidden;
+  transition: transform 700ms var(--ease-out), visibility 0s linear 700ms;
+}
+body.menu-open .menu-scrim { opacity: 1; pointer-events: auto; }
+body.menu-open .menu { transform: none; visibility: visible; transition: transform 700ms var(--ease-out), visibility 0s; }
+.menu-list { list-style: none; }
+.menu-list a { position: relative; display: block; padding: 16px 0 14px; border-top: 1px solid var(--line-inv); }
+.menu-list a::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green-lt);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:hover::before, .menu-list a.is-here::before { transform: scaleX(1); }
+.menu-list li:last-child a { border-bottom: 1px solid var(--line-inv); }
+.m-name {
+  display: inline-block; font-family: var(--sans); font-weight: 500; letter-spacing: -.02em; line-height: 1.1;
+  font-size: clamp(28px, 2.6vw, 36px); transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:hover .m-name { transform: translateX(var(--shift-s)); }
+.menu-foot { display: grid; gap: 6px; margin-top: 40px; }
+.menu-foot a, .menu-foot span { font-size: 15px; color: var(--sub-inv); }
+.menu-foot a:hover { color: var(--text-inv); }
+
+/* ---------- De hero ---------- */
+/* Minstens één scherm hoog, zodat je bij het openen alleen blauw ziet. Past de tekst niet (een gsm),
+   dan wordt de hero langer en blijf je blauw tot het einde ervan. */
+.hero {
+  position: relative; overflow: hidden; color: var(--text-inv);
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: clamp(112px, 12vw, 140px) var(--gutter) clamp(56px, 7vw, 96px);
+}
+/* het logo in 3D, over de hele hero (hero-scene.js) */
+.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+/* een zacht licht rond het logo, dat met de pagina mee wegvaagt */
+.hero-glow {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 55% 60% at 72% 42%, rgba(38, 58, 96, .55) 0%, rgba(11, 18, 32, 0) 70%);
+  opacity: calc(1 - var(--light));
+}
+.hero-grid {
+  position: relative; z-index: 1; width: 100%; max-width: 1640px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 80px); align-items: center;
+}
+/* de tekst vaagt weg terwijl de pagina licht wordt, zodat wit nooit op licht staat */
+.hero-copy { opacity: calc(1 - var(--light) * 1.6); }
+.hero-title { font-size: clamp(40px, 4.8vw, 80px); }
+.hero-lead { margin-top: 24px; max-width: 30em; color: var(--sub-inv); }
+.hero-actions { margin-top: 34px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+/* ---------- De video (plaatshouder): schuin in 3D, kantelt mee met de muis ---------- */
+/* page.js zet --rx en --ry: in rust staat de video licht schuin, bij hover volgt ze de muis.
+   Het groene lijnkader ligt erachter en schuift bij hover uit, zoals bij het team op de homepage. */
+.hero-visual { perspective: 1600px; opacity: calc(1 - var(--light) * 1.6); }
+.video-tilt {
+  --rx: 4deg; --ry: -10deg;
+  position: relative; transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 900ms var(--ease-out);
+}
+.video-tilt.is-live { transition: transform 160ms linear; }   /* tijdens het volgen van de muis: meteen mee */
+.video {
+  position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: var(--radius-l); border: 1px solid var(--line-inv);
+  background: radial-gradient(ellipse 70% 70% at 50% 45%, #1C2B47 0%, #0D1424 100%);
+  box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .75);
+}
+/* een fijn raster in de video, zoals de vloer */
+.video::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 0%, transparent 75%);
+}
+.video-play {
+  position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35); color: var(--white);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: transform var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.video-play svg { width: 26px; height: 26px; margin-left: 3px; }
+.video:hover .video-play { transform: scale(1.08); background: var(--green); border-color: var(--green); }
+.video-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 18px 22px; font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .02em; color: var(--text-inv);
+}
+.video-meta { color: var(--sub-soft-inv); font-size: 13px; }
+/* het groene lijnkader: verborgen achter de video, schuift bij hover naar rechtsonder uit (hoe ver: --frame) */
+.video-frame {
+  --frame: 16px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green-lt); border-radius: var(--radius-l);
+  opacity: 0; transform: translate3d(0, 0, -1px); pointer-events: none;
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.video-tilt:hover .video-frame, .video-tilt:focus-within .video-frame { opacity: 1; transform: translate3d(var(--frame), var(--frame), -1px); }
+/* zonder muis: het kader staat er altijd */
+@media (hover: none) { .video-frame { opacity: 1; transform: translate3d(12px, 12px, -1px); } }
+
+/* de tekst en de knoppen komen zacht na elkaar binnen */
+.hero-copy > * { opacity: 0; transform: translateY(14px); filter: blur(5px); animation: hero-in 1400ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+.hero-copy > :nth-child(2) { animation-delay: 250ms; }
+.hero-copy > :nth-child(3) { animation-delay: 500ms; }
+@keyframes hero-in { to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- De eerste sectie na de hero: komt op met het licht ---------- */
+.next { min-height: 90vh; padding: clamp(96px, 12vw, 180px) var(--gutter); }   /* genoeg pagina om helemaal licht te worden */
+.next > * { max-width: 1640px; margin-left: auto; margin-right: auto; opacity: var(--light); transform: translateY(calc((1 - var(--light)) * 24px)); }
+
+/* ---------- Eén grote zin over het volledige scherm (zoals Palantir) ---------- */
+/* DM Sans 500, want Playfair is alleen voor de hero en de titels van secties. De tweede regel in een groen verloop.
+   Onderaan klein de zin over twee regels (de eerste lichter) en de vraag om te scrollen. */
+/* De sectie is een paar schermen hoog; het beeld (.claim-stick) blijft staan terwijl je erdoor scrolt. page.js zet per regel
+   --w (0 tot 1: hoe ver ze binnengeveegd is), op de tweede regel --c (0: alleen de laatste letters groen, 1: alles groen) en op
+   de voet --f (0 tot 1). */
+.next.claim { min-height: 0; height: 340vh; padding: 0 var(--gutter); }   /* vier stappen: wat langer om door te scrollen */
+.claim-stick {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: clamp(96px, 12vw, 140px) 0 clamp(28px, 4vw, 48px);
+}
+.claim-big {
+  flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  font-family: var(--sans); font-weight: 500; letter-spacing: -.045em; line-height: 1.04; font-size: clamp(44px, 7.4vw, 128px);
+}
+/* binnenvegen: een zachte rand schuift van links naar rechts over de regel, en de regel glijdt een beetje mee */
+.claim-line {
+  --w: 0; display: block; padding-bottom: .08em;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--w) * 135% - 35%), transparent calc(var(--w) * 135%));
+  mask-image: linear-gradient(90deg, #000 calc(var(--w) * 135% - 35%), transparent calc(var(--w) * 135%));
+  transform: translateX(calc((1 - var(--w)) * -36px));
+}
+/* de tweede regel: navy met de laatste letters al groen; het groen loopt over de hele regel naarmate --c stijgt */
+.claim-grad {
+  --c: 0;
+  background-image: linear-gradient(90deg, var(--navy) 0%, var(--navy) 38%, #4E7656 52%, #628F69 66%, #8FB495 86%, #7FAFA6 100%);
+  background-size: 200% 100%; background-position: calc(var(--c) * 100%) 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.claim-foot { --f: 0; display: grid; justify-items: center; gap: 26px; opacity: var(--f); transform: translateY(calc((1 - var(--f)) * 14px)); }
+.claim-small { display: grid; font-size: clamp(17px, 1.3vw, 21px); line-height: 1.4; color: var(--sub); }
+.claim-small span:first-child { color: var(--sub-soft); }
+.claim-scroll {
+  display: grid; justify-items: center; gap: 8px;
+  font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .06em; color: var(--sub);
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.claim-scroll svg { width: 18px; height: 18px; animation: claim-nudge 2.4s var(--ease-in-out) infinite; }
+.claim-scroll:hover { color: var(--green-dim); }
+@keyframes claim-nudge { 0%, 100% { transform: none; } 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .claim-scroll svg { animation: none; } }
+
+/* ---------- Zo bouwen wij AI: het schema in een kaart ---------- */
+/* Gekozen uit Schema varianten (05b Zoom). harness.js bouwt de kaart: tabs bovenaan, links een camera boven een kleine
+   mindmap, rechts de uitleg. Een licht raster ligt over de linkerkant van de kaart, ook achter de tabs, en vaagt naar
+   rechts weg. Bij hover schuift het groene lijnkader achter de kaart uit. */
+.harness { padding: clamp(72px, 9vw, 140px) var(--gutter) clamp(56px, 7vw, 112px); }   /* de quote volgt meteen */
+.harness > * { max-width: 1640px; margin-left: auto; margin-right: auto; }
+.harness-head { margin-bottom: clamp(40px, 5vw, 72px); }
+.harness-title { font-size: var(--fs-h2); }
+.harness-intro { margin-top: 16px; max-width: 30em; font-size: var(--fs-lead); line-height: 1.5; color: var(--sub); }
+.hwrap { position: relative; }
+.hframe {
+  --frame: 14px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green); border-radius: var(--radius-l);
+  opacity: 0; pointer-events: none; transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.hwrap:hover .hframe { opacity: 1; transform: translate(var(--frame), var(--frame)); }
+.hcard {
+  position: relative; overflow: hidden; color: var(--text);
+  padding: clamp(18px, 2.4vw, 40px) clamp(24px, 3.6vw, 60px); border-radius: var(--radius-l); background: var(--surface); border: 1px solid var(--line);
+}
+.hcard::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(15, 23, 42, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, .055) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: -1px -1px;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 22%, transparent 68%);
+  mask-image: linear-gradient(to right, #000 0%, #000 22%, transparent 68%);
+}
+.hcard > * { position: relative; }
+
+/* de tabs, met een groen streepje dat meeschuift */
+.htabs { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.htab {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 6px 16px; text-align: center;
+  font-weight: 500; font-size: 15px; color: var(--sub-soft); transition: color var(--dur-hover) var(--ease-out);
+}
+.htab svg { width: 24px; height: 24px; transition: transform var(--dur-hover) var(--ease-out); }
+.htab.is-on { color: var(--text); }
+.htab.is-on svg { color: var(--green); transform: translateY(-3px); }
+.htab:focus-visible { outline: 1px solid var(--green); outline-offset: -4px; }
+.hbar { position: absolute; left: 0; bottom: -1px; height: 2px; background: var(--green); transition: transform 520ms var(--ease-out), width 520ms var(--ease-out); }
+
+.hbody { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 96px); align-items: center; padding-top: clamp(16px, 2vw, 32px); }
+
+/* het beeld: .zcol is de plek in de kolom, .zs loopt links in de rand van de kaart en rechts in de opening door
+   (--bl, --br) en vaagt daar over een lange strook weg; .zw is de mindmap, harness.js schuift en zoomt ze */
+/* ook boven en onder loopt het beeld door (--bt, --bb), onderaan tot in de rand van de kaart */
+.zcol { --bl: 48px; --br: 120px; --bt: 16px; --bb: 40px; position: relative; width: 100%; aspect-ratio: 1 / .72; }
+.zs {
+  position: absolute; top: calc(-1 * var(--bt)); bottom: calc(-1 * var(--bb)); left: calc(-1 * var(--bl)); right: calc(-1 * var(--br)); overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--bl) + 24px), #000 calc(100% - var(--br) - 60px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 calc(var(--bt) + 10px), #000 calc(100% - var(--bb) - 10px), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--bl) + 24px), #000 calc(100% - var(--br) - 60px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 calc(var(--bt) + 10px), #000 calc(100% - var(--bb) - 10px), transparent 100%);
+  mask-composite: intersect;
+}
+.zw { position: absolute; left: 0; top: 0; transform-origin: 0 0; transition: transform 1000ms var(--ease-in-out); }
+.zl { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.zl line { stroke: rgba(15, 23, 42, .18); stroke-width: 1.4; transition: stroke var(--dur-hover) var(--ease-out), opacity 600ms var(--ease-out); }
+.zl line.is-on { stroke: var(--green); stroke-width: 2; }
+.hcard.is-zoomed .zl line:not(.is-on) { opacity: .35; }
+.zn { position: absolute; transform: translate(-50%, -50%); transition: opacity 600ms var(--ease-out); }
+/* het model: een navy cirkel met het AI-sterretje en de naam */
+.zn-model {
+  display: grid; place-content: center; justify-items: center; gap: 8px; width: 132px; height: 132px; border-radius: 50%;
+  background: var(--navy); color: var(--text-inv); box-shadow: 0 24px 48px -24px rgba(15, 23, 42, .55);
+}
+.zn-model svg { width: 30px; height: 30px; color: var(--green-lt); }
+.zn-model b { font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+/* de zes: een rechthoekig kaartje met eerst het icoon en dan de naam */
+.zn-part {
+  display: flex; align-items: center; gap: 12px; padding: 8px 18px 8px 8px; border-radius: 12px; white-space: nowrap;
+  background: var(--white); border: 1px solid var(--line); box-shadow: 0 14px 30px -22px rgba(15, 23, 42, .35);
+  transition: opacity 600ms var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.zn-part i {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9px;
+  background: rgba(98, 143, 105, .1); color: var(--green-dim);
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.zn-part svg { width: 18px; height: 18px; }
+.zn-part b { font-weight: 500; font-size: 15px; letter-spacing: -.01em; color: var(--text); }
+.zn-part.is-on { border-color: var(--green); box-shadow: 0 18px 36px -22px rgba(15, 23, 42, .45); }
+.zn-part.is-on i { background: var(--green); color: var(--white); }
+/* ingezoomd: de andere onderdelen vagen weg, het model blijft */
+.hcard.is-zoomed .zn-part:not(.is-on) { opacity: .25; }
+
+/* rechts: de naam en de uitleg, in het midden van de rechterhelft */
+.hpanel { justify-self: center; max-width: 27em; transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.hpanel.swap { opacity: 0; transform: translateY(6px); }
+.hp-name { font-weight: 500; font-size: clamp(32px, 2.8vw, 46px); letter-spacing: -.03em; line-height: 1; }
+.hp-text { margin-top: 18px; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.6; color: var(--sub); }
+
+@media (max-width: 1099px) {
+  .hbody { grid-template-columns: minmax(0, 1fr); }
+  .zcol { --bl: 16px; --br: 16px; --bt: 0px; --bb: 0px; }
+  .hpanel { justify-self: start; }
+}
+@media (max-width: 760px) {
+  .htabs { grid-template-columns: repeat(7, 96px); overflow-x: auto; scrollbar-width: none; }
+  .zcol { aspect-ratio: 1; }   /* op een gsm een vierkant beeld, zodat de kaartjes groot genoeg blijven */
+  .htab { white-space: nowrap; font-size: 14px; }
+}
+
+/* ---------- Binnenvegen met het scrollen (data-swipe): dezelfde zachte rand als de grote zin ---------- */
+.swipe {
+  --w: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--w) * 135% - 35%), transparent calc(var(--w) * 135%));
+  mask-image: linear-gradient(90deg, #000 calc(var(--w) * 135% - 35%), transparent calc(var(--w) * 135%));
+  transform: translateX(calc((1 - var(--w)) * -28px));
+}
+
+/* ---------- Wat het oplevert: vijf rijen "van ... naar ..." ---------- */
+/* Links klein waar je vandaan komt, een dun pijltje, rechts groot (DM Sans 500) waar je naartoe gaat. */
+.gains { padding: clamp(48px, 6vw, 96px) var(--gutter) clamp(56px, 7vw, 112px); }
+.gains > * { max-width: 1640px; margin-left: auto; margin-right: auto; }
+.gains-head { margin-bottom: clamp(36px, 4.5vw, 64px); }
+.gains-title { font-size: var(--fs-h2); }
+.gains-intro { margin-top: 16px; max-width: 30em; font-size: var(--fs-lead); line-height: 1.5; color: var(--sub); }
+.gains-list { list-style: none; border-top: 1px solid var(--line); }
+/* de lijnen staan onder elke rij; bij hover kleurt de onderlijn van de rij groen */
+.gain {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1.7fr); align-items: center; gap: 24px;
+  padding: clamp(20px, 2.2vw, 30px) 0; border-bottom: 1px solid var(--line);
+}
+.gain::before {   /* de groene lijn bij hover: onder de rij, zodat ze de rij onderstreept (Lucas, 2026-10-08) */
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; z-index: 1; height: 1.5px; background: var(--green);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.gain-from { font-size: clamp(16px, 1.25vw, 20px); color: var(--sub-soft); transition: color var(--dur-hover) var(--ease-out); }
+.gain-arrow { display: block; width: 40px; color: var(--sub-soft); transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out); }
+.gain-arrow svg { display: block; width: 100%; height: auto; }
+.gain-to {
+  font-weight: 500; letter-spacing: -.025em; line-height: 1.15; font-size: clamp(26px, 2.7vw, 44px);
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+.gain:hover::before { transform: scaleX(1); }
+.gain:hover .gain-from { color: var(--green-dim); }
+.gain:hover .gain-arrow { color: var(--green); transform: translateX(6px); }
+.gain:hover .gain-to { transform: translateX(8px); }
+@media (max-width: 760px) {
+  .gain { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .gain-arrow { display: none; }
+}
+
+/* ---------- Een quote van Lucas, met de weg naar onze kijk op AI ---------- */
+/* Groot in DM Sans 500 (geen Playfair binnen een sectie), het eerste aanhalingsteken groen. Eronder een lijn met de foto
+   (zwart-wit, zoals het team op de homepage), naam en rol, en rechts de link. Komt zacht op (data-reveal, page.js). */
+.quote { padding: clamp(24px, 4vw, 64px) var(--gutter) clamp(120px, 14vw, 200px); }
+.q { max-width: 1640px; margin: 0 auto; }
+.q-text {
+  position: relative; isolation: isolate;   /* een eigen laag, zodat het openingsteken achter de tekst blijft en niet achter de pagina */
+  max-width: 22em; font-family: var(--sans); font-weight: 500; letter-spacing: -.025em; line-height: 1.2;
+  font-size: clamp(28px, 3.1vw, 48px);
+}
+/* de getekende aanhalingstekens: groter dan de tekst, doorzichtig groen. Het openingsteken ligt linksboven half achter
+   de tekst, het sluitteken staat na het laatste woord. Bij hover schuiven ze uit elkaar en komen ze iets naar voren. */
+.q-mark {
+  fill: var(--green); opacity: .2; pointer-events: none;
+  transition: transform 800ms var(--ease-out), opacity 800ms var(--ease-out);
+}
+.q-open { position: absolute; z-index: -1; left: -.6em; top: -.85em; width: 2.4em; height: auto; }
+.q-close { display: inline-block; width: 1.4em; height: auto; margin-left: .15em; vertical-align: -.2em; transform: rotate(180deg); }
+.q-text:hover .q-open { transform: translate(-.12em, -.1em) scale(1.08); opacity: .3; }
+.q-text:hover .q-close { transform: translate(.12em, .1em) rotate(180deg) scale(1.08); opacity: .3; }
+.q-foot {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  margin-top: clamp(32px, 4vw, 56px); padding-top: 24px; border-top: 1px solid var(--line);
+}
+.q-photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; filter: grayscale(1); }
+.q-who { display: grid; gap: 2px; }
+.q-name { font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+.q-role { font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .02em; color: var(--sub); }
+.q-link {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--brand); font-weight: 500; font-size: 15px; letter-spacing: .02em; color: var(--sub);
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.q-link svg { width: 14px; height: 14px; transition: transform var(--dur-hover) var(--ease-out); }
+.q-link:hover { color: var(--green-dim); }
+.q-link:hover svg { transform: translateX(5px); }
+[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out); }
+[data-reveal].is-in { opacity: 1; transform: none; }
+@media (max-width: 640px) {
+  .q-link { margin-left: 0; flex-basis: 100%; }
+}
+
+/* ---------- Op een kleiner scherm: het logo boven de tekst ---------- */
+@media (max-width: 899px) {
+  .hero { align-items: flex-start; }
+  .hero-grid { grid-template-columns: 1fr; gap: 8px; }
+  .hero-visual { order: -1; margin: 0 14px 28px 0; }
+  .video-tilt { --ry: -6deg; --rx: 3deg; }
+  .video-play { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+  .video-play svg { width: 20px; height: 20px; }
+  .video-caption { padding: 12px 14px; font-size: 13px; }
+  .video-meta { display: none; }
+  .hero-glow { background: radial-gradient(ellipse 80% 40% at 50% 26%, rgba(38, 58, 96, .55) 0%, rgba(11, 18, 32, 0) 70%); }
+}
+@media (max-width: 640px) {
+  .menu-label { display: none; }
+  .nav-right { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy > * { animation: none; opacity: 1; transform: none; filter: none; }
+}

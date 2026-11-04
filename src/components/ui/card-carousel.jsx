@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -8,6 +8,22 @@ gsap.registerPlugin(ScrollToPlugin);
 
 // Hoe breed de vervaging aan een rand van de rij maximaal is
 const FADE = 140;
+// Na slepen, vegen of een pijltje wacht de automatische beweging zo lang voor ze verder schuift
+const RUST_NA_INTERACTIE = 3000;
+
+// Alle kaarten in volgorde, ook die in de kopieën van de lus (die zitten in een wrapper met data-kloon)
+function cardList(track) {
+    const row = track?.firstElementChild;
+    return [...(row?.children || [])].flatMap((c) => (c.hasAttribute('data-kloon') ? [...c.children] : [c]));
+}
+
+// In de lus: de afstand van de eerste kaart van de eerste kopie tot de eerste kaart van het origineel,
+// dus de breedte van één volledige rij inclusief de tussenruimte
+function loopLength(track) {
+    const all = cardList(track);
+    const n = all.length / 3;
+    return n >= 1 ? all[n].offsetLeft - all[0].offsetLeft : 0;
+}
 
 // Horizontale rij kaarten met vaste kaartbreedte. De rij blijft binnen de inhoudsbreedte, zodat er
 // links en rechts altijd dezelfde afstand tot de schermrand is (dezelfde als bij de rest van de pagina).
@@ -16,16 +32,65 @@ const FADE = 140;
 // Waar nog kaarten voorbij de rand liggen, vervaagt de rij vloeiend naar die rand toe. De vervaging
 // eindigt precies op de inhoudsrand en groeit en krimpt mee met het scrollen.
 // Geef de kinderen zelf hun vaste breedte mee, bv. `shrink-0 w-[82vw] sm:w-[400px]`.
-export default function CardCarousel({ children }) {
+//
+// autoplay (pixels per seconde): de rij schuift traag en zonder einde naar links. De kaarten staan er
+// dan drie keer in (kopie, origineel, kopie) en je kijkt naar het middelste deel; is de rij een volledige
+// rij opgeschoven, dan springt ze onzichtbaar één rij terug. Ze staat stil zolang de muis erop staat,
+// rust even na vegen of een pijltje, en beweegt enkel als ze in beeld is. Slepen met de muis kan
+// eindeloos, zonder uitloop; bij het loslaten beweegt de rij meteen verder vanaf daar. Hover schuift
+// geen kaarten naar het midden. Voorwaarde: één rij is breder dan het zichtbare deel (anders zie je de
+// kopieën naast elkaar). Bij "minder beweging" in het systeem valt autoplay weg.
+// controls={false} laat de pijltjes en de voortgangslijn weg; slepen en vegen blijven werken.
+export default function CardCarousel({ children, autoplay = 0, controls = true }) {
     const { language } = useLanguage();
     const frameRef = useRef(null);
     const trackRef = useRef(null);
     const tweenRef = useRef(null);
     const [state, setState] = useState({ prev: false, next: false, progress: 0, visible: 1 });
+    const [loop] = useState(() => autoplay > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const hoverRef = useRef(false);          // muis op de carousel
+    const inViewRef = useRef(false);         // carousel in beeld
+    const idleUntilRef = useRef(0);          // tot wanneer de automatische beweging rust na een interactie
+    const lastSetRef = useRef(0);            // de laatste scrollpositie die de lus zelf zette
+    const loopedRef = useRef(false);         // al eens voorbij het begin geschoven (dan altijd links vervagen)
+    const resumeAfterDragRef = useRef(false); // net losgelaten na een sleep: bewegen, ook al staat de muis erop
+
+    // In de lus: hou de positie binnen het middelste deel. De sprong is onzichtbaar, want de delen zijn gelijk
+    const wrapIntoMiddle = useCallback(() => {
+        const el = trackRef.current;
+        const L = loopLength(el);
+        if (!L) return el.scrollLeft;
+        let x = el.scrollLeft;
+        while (x < L) x += L;
+        while (x >= 2 * L) x -= L;
+        if (x !== el.scrollLeft) {
+            el.scrollLeft = x;
+            lastSetRef.current = el.scrollLeft;
+        }
+        return x;
+    }, []);
 
     const update = useCallback(() => {
         const el = trackRef.current;
         if (!el) return;
+        if (loop) {
+            const L = loopLength(el);
+            if (L > 0) {
+                // Positie binnen het middelste deel. Links vervagen pas zodra de rij vertrokken is,
+                // zodat de eerste kaart bij de start volledig zichtbaar is; rechts liggen altijd kaarten
+                const rel = el.scrollLeft - L;
+                if (rel >= FADE || rel < 0) loopedRef.current = true;
+                el.style.setProperty('--fade-l', `${loopedRef.current ? FADE : Math.max(0, rel)}px`);
+                el.style.setProperty('--fade-r', `${FADE}px`);
+                setState({
+                    prev: true,
+                    next: true,
+                    progress: (((rel % L) + L) % L) / L,
+                    visible: Math.min(1, el.clientWidth / L)
+                });
+                return;
+            }
+        }
         const max = el.scrollWidth - el.clientWidth;
         const x = el.scrollLeft;
         // Vervaging per kant: nul aan het uiteinde, groeit tot FADE zodra er iets voorbij de rand ligt
@@ -37,7 +102,7 @@ export default function CardCarousel({ children }) {
             progress: max > 0 ? x / max : 0,
             visible: el.scrollWidth > 0 ? Math.min(1, el.clientWidth / el.scrollWidth) : 1
         });
-    }, []);
+    }, [loop]);
 
     // De scrollpositie waarop een kaart in het midden staat, met links en rechts evenveel ruimte
     // voor de buren. Aan de uiteinden kan dat niet; daar wordt het gewoon helemaal links of rechts
@@ -52,8 +117,7 @@ export default function CardCarousel({ children }) {
 
     // Alle verschillende rustposities van de pijltjes, van links naar rechts
     const allStops = () => {
-        const row = trackRef.current?.firstElementChild;
-        const stops = [...(row?.children || [])].map(centeredStop).sort((a, b) => a - b);
+        const stops = cardList(trackRef.current).map(centeredStop).sort((a, b) => a - b);
         return stops.filter((p, i) => i === 0 || p - stops[i - 1] > 2);
     };
 
@@ -72,6 +136,11 @@ export default function CardCarousel({ children }) {
     // Pijltjes: naar de volgende of vorige rustpositie, gerekend vanaf waar de rij nu is (of naartoe gaat)
     const scrollByCard = (dir) => {
         const el = trackRef.current;
+        if (loop) {
+            idleUntilRef.current = performance.now() + RUST_NA_INTERACTIE;
+            // In het midden beginnen, zodat er in beide richtingen kaarten liggen
+            if (!tweenRef.current?.isActive()) wrapIntoMiddle();
+        }
         const base = tweenRef.current?.isActive() ? tweenRef.current.vars.scrollTo.x : el.scrollLeft;
         const stops = allStops();
         const target = dir > 0 ? stops.find((p) => p > base + 2) : [...stops].reverse().find((p) => p < base - 2);
@@ -84,6 +153,8 @@ export default function CardCarousel({ children }) {
     const dragRef = useRef(null);
     const suppressClick = useRef(false);
     const onPointerDown = (e) => {
+        // Vinger: even rust, zodat het vegen (en het uitlopen daarvan) niet tegen de lus in werkt
+        if (loop && e.pointerType !== 'mouse') idleUntilRef.current = performance.now() + RUST_NA_INTERACTIE;
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
         const el = trackRef.current;
         if (el.scrollWidth <= el.clientWidth) return;
@@ -108,6 +179,15 @@ export default function CardCarousel({ children }) {
                 el.classList.add('cursor-grabbing', 'select-none');
             }
             if (!d.moved) return;
+            if (loop) {
+                // In de lus kan je eindeloos slepen: kom je buiten het middelste deel, dan verschuift het
+                // vertrekpunt onzichtbaar één rij, zodat er altijd kaarten aan beide kanten liggen
+                const L = loopLength(el);
+                if (L) {
+                    while (d.left - dx < L) d.left += L;
+                    while (d.left - dx >= 2 * L) d.left -= L;
+                }
+            }
             el.scrollLeft = d.left - dx;
             const now = performance.now();
             d.v = (e.clientX - d.lastX) / Math.max(1, now - d.lastT);
@@ -122,6 +202,13 @@ export default function CardCarousel({ children }) {
             el.classList.remove('cursor-grabbing', 'select-none');
             suppressClick.current = true;
             setTimeout(() => { suppressClick.current = false; }, 0);
+            if (loop) {
+                // Lus: geen uitloop; de rij beweegt meteen verder vanaf waar je losliet, ook al staat de
+                // muis er nog op (hover pauzeert pas weer nadat de muis weg is geweest)
+                lastSetRef.current = el.scrollLeft;
+                resumeAfterDragRef.current = true;
+                return;
+            }
             // Even uitlopen, zonder vast punt
             if (Math.abs(d.v) > 0.05) glideTo(el.scrollLeft - d.v * 250, 0.7, 'power3.out');
         };
@@ -137,14 +224,75 @@ export default function CardCarousel({ children }) {
         };
     }, [update]);
 
+    // Lus: start bij de eerste kaart van het origineel (het middelste deel)
+    useLayoutEffect(() => {
+        if (!loop) return;
+        const el = trackRef.current;
+        el.scrollLeft = loopLength(el);
+        lastSetRef.current = el.scrollLeft;
+        update();
+    }, [loop, update]);
+
+    // Lus: de kopieën zijn er enkel voor het oog; schermlezers slaan ze over (aria-hidden) en de tab-toets ook
+    useEffect(() => {
+        if (!loop) return;
+        trackRef.current?.querySelectorAll('[data-kloon] a, [data-kloon] button').forEach((n) => n.setAttribute('tabindex', '-1'));
+    }, [loop, children]);
+
+    // Lus: elke frame een fractie opschuiven. De positie wordt als kommagetal bijgehouden, want de
+    // browser rondt scrollLeft af en bij een traag tempo zou de rij anders blijven hangen.
+    // Stil zolang de muis erop staat (behalve meteen na een sleep), er gesleept of geglided wordt,
+    // kort na vegen of een pijltje, of als de carousel niet in beeld is
+    useEffect(() => {
+        if (!loop) return;
+        const el = trackRef.current;
+        const io = new IntersectionObserver(([e]) => { inViewRef.current = e.isIntersecting; }, { threshold: 0.2 });
+        io.observe(frameRef.current);
+        let raf;
+        let last = performance.now();
+        let pos = null;
+        const tick = (now) => {
+            const dt = Math.min(0.05, (now - last) / 1000);
+            last = now;
+            const busy = (hoverRef.current && !resumeAfterDragRef.current) || dragRef.current || tweenRef.current?.isActive()
+                || !inViewRef.current || document.hidden || now < idleUntilRef.current;
+            if (busy) {
+                pos = null;   // na de pauze opnieuw vertrekken van waar de rij dan staat
+            } else {
+                if (pos === null) pos = wrapIntoMiddle();
+                pos += autoplay * dt;
+                const L = loopLength(el);
+                if (L && pos >= 2 * L) pos -= L;
+                el.scrollLeft = pos;
+                lastSetRef.current = el.scrollLeft;
+            }
+            raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => {
+            cancelAnimationFrame(raf);
+            io.disconnect();
+        };
+    }, [loop, autoplay, wrapIntoMiddle]);
+
+    // Scrollt de rij zonder dat de lus het deed (vegen, trackpad), dan even rust. Slepen met de muis
+    // telt niet: daarna moet de rij meteen verder
+    const onTrackScroll = () => {
+        const el = trackRef.current;
+        if (loop && !dragRef.current && !tweenRef.current?.isActive() && Math.abs(el.scrollLeft - lastSetRef.current) > 2) {
+            idleUntilRef.current = performance.now() + RUST_NA_INTERACTIE;
+        }
+        update();
+    };
+
     // Hover over een kaart die deels buiten beeld (vervaagd) staat: de rij schuift tot die kaart in het
     // midden staat (of helemaal aan de rand, als het de eerste of laatste is). Alleen voor die
-    // uitpiepende kaart zelf, en pas na een korte rust, zodat er niets schuift als je er gewoon overheen beweegt
+    // uitpiepende kaart zelf, en pas na een korte rust, zodat er niets schuift als je er gewoon overheen beweegt.
+    // Niet in de lus: daar is de enige beweging de automatische en het slepen
     const hoverTimer = useRef(null);
     const hoverCard = useRef(null);
     const onCardHover = (e) => {
-        const row = trackRef.current?.firstElementChild;
-        const card = [...(row?.children || [])].find((c) => c.contains(e.target));
+        const card = cardList(trackRef.current).find((c) => c.contains(e.target));
         if (card === hoverCard.current) return;   // nog altijd op dezelfde kaart
         hoverCard.current = card;
         clearTimeout(hoverTimer.current);
@@ -165,13 +313,21 @@ export default function CardCarousel({ children }) {
     const fade = 'linear-gradient(to right, transparent 0, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent 100%)';
 
     return (
-        <div ref={frameRef}>
+        <div
+            ref={frameRef}
+            onPointerEnter={(e) => { if (e.pointerType === 'mouse') hoverRef.current = true; }}
+            onPointerLeave={(e) => {
+                if (e.pointerType !== 'mouse') return;
+                hoverRef.current = false;
+                resumeAfterDragRef.current = false;
+            }}
+        >
             {/* De rij blijft binnen de inhoudsbreedte. De binnenste rij is zo breed als de kaarten en staat
                 met mx-auto in het midden zolang alles past. De kleine binnenruimte rondom (10px, gecompenseerd
                 met negatieve marges) geeft de L lijn rond de kaarten plaats, zonder dat ze afgeknipt wordt */}
             <div
                 ref={trackRef}
-                onScroll={update}
+                onScroll={onTrackScroll}
                 onPointerDown={onPointerDown}
                 onClickCapture={(e) => { if (suppressClick.current) { e.preventDefault(); e.stopPropagation(); } }}
                 className={`no-scrollbar overflow-x-auto overflow-y-hidden -mx-2.5 -my-3 py-3 ${scrollable ? 'cursor-grab' : ''}`}
@@ -179,21 +335,39 @@ export default function CardCarousel({ children }) {
             >
                 <div
                     className="flex w-max mx-auto gap-8 md:gap-10 px-2.5"
-                    onMouseOver={onCardHover}
-                    onMouseLeave={onRowLeave}
+                    onMouseOver={loop ? undefined : onCardHover}
+                    onMouseLeave={loop ? undefined : onRowLeave}
                     onDragStart={(e) => e.preventDefault()}
                 >
+                    {loop && <div data-kloon="" aria-hidden="true" className="contents">{children}</div>}
                     {children}
+                    {loop && <div data-kloon="" aria-hidden="true" className="contents">{children}</div>}
                 </div>
             </div>
 
-            {scrollable && (
+            {scrollable && controls && (
                 <div className="mt-10 flex items-center gap-8">
                     <div className="relative h-px flex-1 bg-foreground/10 overflow-hidden" aria-hidden="true">
-                        <div
-                            className="absolute inset-y-0 bg-foreground/60"
-                            style={{ width: `${state.visible * 100}%`, left: `${state.progress * (1 - state.visible) * 100}%` }}
-                        />
+                        {loop ? (
+                            // In de lus loopt de lijn rond: wat rechts uit de balk schuift, komt links weer binnen
+                            <>
+                                <div
+                                    className="absolute inset-y-0 bg-foreground/60"
+                                    style={{ left: `${state.progress * 100}%`, width: `${Math.min(state.visible, 1 - state.progress) * 100}%` }}
+                                />
+                                {state.progress + state.visible > 1 && (
+                                    <div
+                                        className="absolute inset-y-0 left-0 bg-foreground/60"
+                                        style={{ width: `${(state.progress + state.visible - 1) * 100}%` }}
+                                    />
+                                )}
+                            </>
+                        ) : (
+                            <div
+                                className="absolute inset-y-0 bg-foreground/60"
+                                style={{ width: `${state.visible * 100}%`, left: `${state.progress * (1 - state.visible) * 100}%` }}
+                            />
+                        )}
                     </div>
                     <div className="flex gap-3">
                         <ArrowButton

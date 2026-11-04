@@ -4,9 +4,40 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
 gsap.registerPlugin(ScrollToPlugin);
 
+// Vaste afstand (px) tussen de onderkant van de menubalk en de bovenkant van de titel na een sprong
+const TITEL_AFSTAND = 72;
+
+// Plaats op de pagina zoals de layout ze bepaalt, zonder transforms: een titel die nog in zijn masker
+// verborgen zit (scrollanimatie), telt mee op de plaats waar hij straks staat
+const paginaTop = (el) => {
+    let y = 0;
+    for (let e = el; e; e = e.offsetParent) y += e.offsetTop;
+    return y;
+};
+
+// Onderkant van de zwevende menubalk bovenaan (het snelmenu zelf is ook een vaste nav, maar onderaan)
+const menubalkOnder = () => {
+    const balk = [...document.querySelectorAll('nav.fixed')].find((n) => n.getBoundingClientRect().top < 80);
+    return balk ? balk.getBoundingClientRect().bottom : 96;
+};
+
+// Waar een sprong naartoe gaat. De eerste sectie (de hero): helemaal bovenaan. Een sectie met een titel:
+// de titel op een vaste afstand onder de menubalk, gecentreerd of niet. Een sectie zonder titel: de sectie
+// als geheel in het midden van het scherm (of bovenaan onder de menubalk als ze hoger is dan het scherm)
+const sprongDoel = (sectie, eerste) => {
+    if (eerste) return 0;
+    const onder = menubalkOnder();
+    const titel = sectie.querySelector('h1, h2');
+    if (titel) return Math.max(0, paginaTop(titel) - onder - TITEL_AFSTAND);
+    const top = paginaTop(sectie);
+    const h = sectie.offsetHeight;
+    if (h > window.innerHeight - onder) return Math.max(0, top - onder);
+    return Math.max(0, top + h / 2 - window.innerHeight / 2);
+};
+
 // Snelmenu linksonder (alleen op grote schermen). In rust een rijtje korte streepjes, één per sectie;
 // het streepje van de sectie waar je bent, is langer en groen. Bij hover schuift het menu open met de
-// namen erbij, en bij weggaan klapt het weer dicht. Een klik glijdt rustig naar die sectie.
+// namen erbij, en bij weggaan klapt het weer dicht. Een klik glijdt rustig naar die sectie (zie sprongDoel).
 // onBeforeJump(id) wordt opgeroepen vlak voor het springen, zodat de pagina zich kan voorbereiden
 // (bv. een scrollanimatie afronden die anders tussenin zou afspelen).
 export default function SectionNav({ items, onBeforeJump }) {
@@ -47,7 +78,7 @@ export default function SectionNav({ items, onBeforeJump }) {
             const el = document.getElementById(id);
             if (!el) return;
             gsap.to(window, {
-                scrollTo: { y: el, autoKill: true },
+                scrollTo: { y: sprongDoel(el, id === items[0]?.id), autoKill: true },
                 duration: 1.2,
                 ease: 'power3.inOut'
             });

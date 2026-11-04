@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 05 groene lijn</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 05. EÃ©n groene lijn: geen omgeving, alleen een accent. Op het einde tekent zich een dunne
+  // groene lijn onder het logo, vanuit het midden naar buiten.
+  TriaLogoV6({
+    setup(c) {
+      const { THREE } = c;
+      c.line = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.024), new THREE.MeshBasicMaterial({ color: 0x628F69 }));
+      c.line.position.set(0, -2.0, 0);
+      c.scene.add(c.line);
+    },
+    frame(c, f) {
+      const k = f.shot === 2 ? c.E.glide(c.clamp((f.s - 1.9) / 1.6)) : 0;
+      c.line.visible = k > 0.001;
+      c.line.scale.x = Math.max(0.0001, 9 * k);
+    },
+  });
+</script>
+</body>
+</html>

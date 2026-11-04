@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 11 groene horizon</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 11. Groene horizon in het metaal: ver weg loopt Ã©Ã©n dunne groene lichtlijn. Je ziet ze
+  // bijna niet rechtstreeks, maar ze weerspiegelt in het titanium als een groene streep.
+  TriaLogoV6({
+    studio(c, add) {
+      add(40, 0.35, 2.6, 0, -0.8, 10, '#628F69');
+      add(40, 0.25, 1.8, 0, 0.6, -10, '#628F69');
+    },
+    setup(c) {
+      const { THREE } = c;
+      const line = new THREE.Mesh(new THREE.PlaneGeometry(600, 0.28), new THREE.MeshBasicMaterial({
+        color: 0x628F69, transparent: true, opacity: 0.45, depthWrite: false,
+      }));
+      line.position.set(0, -6, -70);
+      c.scene.add(line);
+    },
+  });
+</script>
+</body>
+</html>

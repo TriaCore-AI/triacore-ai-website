@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V2 D opstaan</title>
+<link rel="stylesheet" href="v2-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v2-core.js"></script>
+<script>
+  // D. Van onder opstaan: het logo ligt plat, laag in beeld, alsof het op tafel ligt. Het rijst
+  // op naar het midden en kantelt tegelijk rechtop. De camera kijkt eerst licht van boven.
+  TriaLogoV2({
+    dur: 2.9,
+    finale(c, s) {
+      const k = c.E.glide(c.clamp(s / 2.8));
+      c.group.position.y = c.lerp(-1.9, 0, k);
+      c.group.rotation.x = c.rad(-75) * (1 - k);
+      c.pose.el = 6 * (1 - k);
+    },
+  });
+</script>
+</body>
+</html>

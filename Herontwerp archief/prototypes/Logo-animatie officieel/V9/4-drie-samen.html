@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V9 4 de drie pijlers samen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v9-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v9-core.js"></script>
+<script>
+  // 4. De drie pijlers komen samen, en de lijn leidt naar de zin. Na Waarmaken verschijnen
+  // Begrijpen en Vertalen er kort boven: de drie stappen nog één keer samen. Dan schuiven de drie
+  // lijnen samen tot één, en die lijn tekent verder naar de zin, terwijl de camera volgt.
+  let rows = [], L0 = 0;
+  const T_STACK = 0.45, T_MERGE = 2.3, T_LINE = 2.9;
+  TriaLogoV9({
+    raster: true,
+    ending: {
+      dur: 6.6,
+      render(c, words) {
+        c.extra.innerHTML = words.pillars.map((w, i) =>
+          `<div class="stack-row"><span class="s-line"></span><span class="s-num">/0${i + 1}</span><span class="s-word">${w}</span></div>`).join('');
+        rows = [...c.extra.querySelectorAll('.stack-row')];
+      },
+      camera(c, s) {
+        const k = c.E.move(c.clamp((s - T_LINE) / 2.3));
+        c.pose.ax += 1.45 * c.halfW * k;
+      },
+      overlay(c, s) {
+        if (!L0) L0 = c.lineBox().width;
+        const [ax, ay] = c.anchor();
+        const x1 = ax + (c.portrait ? 10 : 14);
+        const word = rows[2].querySelector('.s-word');
+        const rowH = word.getBoundingClientRect().height * 1.55;
+        // de zin van Waarmaken vervaagt, de drie rijen nemen het over
+        c.fadeText(s < T_STACK ? 1 - c.E.soft(c.clamp(s / T_STACK)) : 0);
+        c.fadeLine(s < T_STACK ? 1 : 0);
+        const merge = c.E.inout(c.clamp((s - T_MERGE) / 0.6));
+        rows.forEach((r, i) => {
+          const appear = i === 2 ? (s >= T_STACK ? 1 : 0) : c.E.out(c.clamp((s - T_STACK - (1 - i) * 0.18) / 0.7));
+          const y0 = ay - (2 - i) * rowH;
+          const y = c.lerp(y0, ay, merge) + (1 - appear) * 10;
+          r.style.transform = `translate3d(${x1.toFixed(1)}px, ${y.toFixed(1)}px, 0) translateY(-50%)`;
+          r.style.opacity = s >= T_LINE ? '0' : appear.toFixed(3);
+          r.querySelector('.s-line').style.width = `${L0}px`;
+          r.querySelectorAll('.s-num, .s-word').forEach(e => { e.style.opacity = (1 - merge).toFixed(3); });
+        });
+        // na het samensmelten: één lijn die verder tekent naar de zin
+        if (s >= T_LINE) {
+          const k = c.E.move(c.clamp((s - T_LINE) / 2.3));
+          // waar de lijn van Waarmaken eindigde, voor de camera vertrok
+          const end0 = (c.portrait ? 0.27 : 0.36) * c.W + (c.portrait ? 10 : 14) + L0;
+          if (c.portrait) {
+            c.trail(x1, c.lerp(end0, c.W * 0.92, k), ay);
+            c.way(s, T_LINE + 1.7, c.W / 2, ay + c.H * 0.09);
+          } else {
+            const endT = c.W * 0.3;
+            c.trail(x1, c.lerp(end0, endT, k), ay);
+            c.way(s, T_LINE + 1.7, endT + 28, ay, 'left');
+          }
+        } else {
+          c.trail(0, 0, 0, 0);
+          c.way(-99, 0, c.W / 2, c.H / 2);
+        }
+      },
+    },
+  });
+</script>
+</body>
+</html>

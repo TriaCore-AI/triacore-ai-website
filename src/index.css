@@ -5,7 +5,7 @@
   --color-foreground: #0f172a;
   --color-accent: #628f69;
   --color-dark-section: #020617;
-  --color-paper: #f2f2f2;
+  --color-paper: #f4f7f5;
 
   --font-sans: "Jost", sans-serif;
   --font-serif: "Cormorant Garamond", serif;
@@ -17,8 +17,9 @@
 }
 
 @layer base {
+  /* Zelfde basis als de pagina's, zodat er bij overscrollen geen andere kleur verschijnt */
   body {
-    background-color: var(--color-background);
+    background-color: var(--color-paper);
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
@@ -54,12 +55,26 @@
   display: none;
 }
 
-/* Korrel uit de branding (TriaCore AI 2027): fijne blauwe korrel op de lichte achtergrond.
-   Zit in de achtergrond zelf, zodat kaarten erboven glad blijven. De sterkte (42%) zit in het alfakanaal */
+/* Verloop: horizontale banden die zacht afwisselen tussen wit en groener, op een vast ritme. Elke twee
+   schermen (200svh) één golf: bovenaan wit (de hero), één scherm lager het groenst, dan weer wit, enzovoort.
+   De banden volgen de secties niet; ze lopen gewoon in hetzelfde ritme over de pagina. De overgang volgt een
+   S-curve (tussenstappen op 0, 15, 50, 85 en 100% van de weg), zodat er nergens een lijn te zien is.
+   Wit #f5f7f6, groenst #e2eae3 (een zweem van het lichtgroen #bcd8c1). Scrolt mee, staat altijd achter alles.
+   De naam bg-grain is historisch (vroeger korrel); hernoemen kan zodra de drie oplossingspagina's af zijn */
 .bg-grain {
   background-color: var(--color-paper);
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .06  0 0 0 0 .09  0 0 0 0 .16  0 0 0 .252 -.0756'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-blend-mode: multiply;
+  background-image: linear-gradient(to bottom,
+    rgb(245 247 246) 0%,
+    rgb(242 245 243) 12.5%,
+    rgb(236 241 237) 25%,
+    rgb(229 236 230) 37.5%,
+    rgb(226 234 227) 50%,
+    rgb(229 236 230) 62.5%,
+    rgb(236 241 237) 75%,
+    rgb(242 245 243) 87.5%,
+    rgb(245 247 246) 100%);
+  background-size: 100% 200svh;
+  background-repeat: repeat-y;
 }
 
 ::selection {

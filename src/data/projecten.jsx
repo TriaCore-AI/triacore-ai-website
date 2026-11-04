@@ -32,14 +32,14 @@ export const projecten = [
         client: 'Croes NV',
         logo: croesLogo,
         status: 'live',
-        sector: { nl: 'Bouw & grondwerken', en: 'Construction & earthworks' },
+        sector: { nl: 'Afbraak- en grondwerken', en: 'Demolition & earthworks' },
         title: {
             nl: 'Van papieren bonnen naar realtime overzicht bij Croes NV',
-            en: 'From paper delivery notes to real time overview at Croes NV',
+            en: 'From paper notes to a real-time overview at Croes NV',
         },
         description: {
-            nl: 'Chauffeurs vulden duizenden papieren bonnen per maand in, vaak onvolledig. TriaCore bouwde een planningsplatform en chauffeursapp die alles automatisch en correct vastlegt.',
-            en: 'Drivers filled in thousands of paper delivery notes a month, often incomplete. TriaCore built a planning platform and driver app that captures everything automatically and accurately.',
+            nl: 'Chauffeurs vulden hun grondbankbonnen met de hand in en het kantoor typte ze achteraf over. Met een platform en een chauffeursapp komt elke bon nu meteen binnen, en Croes ziet live wat er op elke werf gebeurt.',
+            en: 'Drivers filled in their soil transport notes by hand and the office retyped them afterwards. With a platform and a driver app, every note now comes in right away, and Croes can see live what is happening on every site.',
         },
         blocks: [
             {
@@ -49,8 +49,8 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'Croes NV is actief in de grondverzet en afbraaksector en vervoert dagelijks grond tussen werven. Voor elk transport hoorde daar een grondbankbon bij: een document met herkomst, bestemming, vertrektijd, aankomsttijd en het vervoerde volume.',
-                en: 'Croes NV is active in earthmoving and demolition and transports soil between sites every day. Every transport came with a soil transport note: a document listing origin, destination, departure time, arrival time and the volume transported.',
+                nl: 'Croes NV is een familiebedrijf uit Geetbets dat afbraak- en grondwerken doet en afbraakmateriaal recycleert. Chauffeurs vervoeren grond tussen werven, en bij dat transport hoort telkens een grondbankbon.',
+                en: 'Croes NV is a family business from Geetbets that carries out demolition and earthworks and recycles demolition materials. Drivers transport soil between sites, and every transport comes with a soil transport note.',
             },
             { type: 'divider' },
             {
@@ -60,25 +60,20 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'Die bon werd met de hand ingevuld op papier. Chauffeurs vulden hem niet altijd correct of volledig in, en sommigen lieten het gewoon achterwege. Het invullen zelf werd ook niet graag gedaan.',
-                en: 'That note was filled in by hand on paper. Drivers did not always fill it in correctly or completely, and some skipped it altogether. Filling it in was not popular either.',
-            },
-            {
-                type: 'paragraph',
-                nl: 'Aan het einde van de maand kwamen honderden tot duizenden van die papieren bonnen bij de administratie terecht. Iemand moest elke bon lezen en manueel overtypen in Excel. Dat leverde drie concrete problemen op:',
-                en: 'At the end of the month, hundreds to thousands of these paper notes ended up with the administration. Someone had to read every single note and manually retype it into a spreadsheet. That created three concrete problems:',
+                nl: 'Die bon werd met de hand ingevuld en moest daarna fysiek naar kantoor. Dat zorgde voor drie problemen:',
+                en: 'That note was filled in by hand and then had to be taken to the office. That created three problems:',
             },
             {
                 type: 'list',
                 nl: [
-                    'Onvolledig: bonnen die niet of maar half werden ingevuld',
-                    'Traag: duizenden bonnen per maand, één voor één manueel overgetypt',
-                    'Onduidelijk: geen overzicht van wat er op een werf binnenkomt of vertrekt, of wie wat doet',
+                    'Laat: bonnen kwamen vaak pas veel later binnen, soms na weken.',
+                    'Dubbel werk: het kantoor typte elke bon over, ook de chauffeurs van onderaannemers die telefonisch werden doorgegeven.',
+                    'Geen zicht: niemand zag live wat er op een werf gebeurde.',
                 ],
                 en: [
-                    'Incomplete: notes that were left blank or only half filled in',
-                    'Slow: thousands of notes a month, retyped one by one',
-                    'Unclear: no overview of what arrives or leaves a site, or who is doing what',
+                    'Late: notes often came in much later, sometimes after weeks.',
+                    'Double work: the office retyped every note, as well as the subcontractor drivers who were passed on by phone.',
+                    'No visibility: nobody could see live what was happening on a site.',
                 ],
             },
             { type: 'divider' },
@@ -89,30 +84,45 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'TriaCore digitaliseerde het volledige proces. De oplossing bestaat uit twee delen die op elkaar inspelen:',
-                en: 'TriaCore digitised the entire process. The solution consists of two parts that work together:',
+                nl: 'We bouwden een platform dat het grondtransport registreert, van transportopdracht tot grondbankbon. Het werkt op maat van de manier waarop de planner plant, en bestaat uit drie delen:',
+                en: 'We built a platform that registers soil transport, from transport order to soil transport note. It is tailored to the way the planner works, and consists of three parts:',
             },
             {
                 type: 'cards',
                 items: [
                     {
                         icon: 'Monitor',
-                        label: { nl: 'Platform', en: 'Platform' },
-                        nl: 'Planning maakt vanaf het desktopplatform taken aan voor elke chauffeur.',
-                        en: 'Planning creates tasks for every driver from the desktop platform.',
+                        label: { nl: 'Kantoor', en: 'Office' },
+                        nl: 'Plant de transporten in een weekrooster, kijkt de bonnen na en maakt de officiële vrachtbonnen als PDF.',
+                        en: 'Plans the transports in a weekly schedule, checks the notes and creates the official transport documents as PDFs.',
                     },
                     {
                         icon: 'Smartphone',
-                        label: { nl: 'Chauffeursapp', en: 'Driver app' },
-                        nl: 'De chauffeur ziet zijn taak op zijn telefoon. Herkomst en bestemming staan er al automatisch in.',
-                        en: 'The driver sees their task on their phone. Origin and destination are already filled in automatically.',
+                        label: { nl: 'Chauffeurs', en: 'Drivers' },
+                        nl: 'Starten en stoppen elke rit in de app en dienen daarna de bon in. De uren staan er vanzelf in, en de app werkt ook zonder bereik.',
+                        en: 'Start and stop every trip in the app and then submit the note. The times are filled in automatically, and the app also works without a signal.',
+                    },
+                    {
+                        icon: 'Users',
+                        label: { nl: 'Onderaannemers', en: 'Subcontractors' },
+                        nl: 'Krijgen een eigen link om hun chauffeurs aan of af te melden.',
+                        en: 'Get their own link to sign their drivers in or out.',
                     },
                 ],
             },
             {
                 type: 'paragraph',
-                nl: 'De chauffeur moet zelf niets meer invullen. Bij vertrek klikt hij op start, bij aankomst dient hij de bon in. Tijdstip en volume worden meteen correct geregistreerd.',
-                en: 'The driver no longer fills in anything themselves. They tap start when departing and submit the note on arrival. Time and volume are registered correctly right away.',
+                nl: "Ook 's nachts werkt het platform door: het dient vergeten bonnen zelf in en voegt bonnen samen die in stukken werden ingediend.",
+                en: 'The platform also keeps working at night: it submits forgotten notes itself and merges notes that were submitted in pieces.',
+            },
+            {
+                type: 'quote',
+                nl: 'Voor de chauffeurs is het een hele stap vooruit, nu moeten ze geen grondbankbons meer schrijven en is ook alles voor de administratie gemakkelijker geworden!',
+                en: 'For the drivers it is a real step forward: they no longer have to write out soil transport notes, and everything has become easier for the administration too!',
+                source: {
+                    nl: 'Alain Vangeebergen, planner bij Croes NV',
+                    en: 'Alain Vangeebergen, planner at Croes NV',
+                },
             },
             { type: 'divider' },
             {
@@ -122,32 +132,31 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'Er is geen papier meer, en vooral de administratie wint enorm veel tijd: bonnen zoeken en overtypen is verleden tijd. De data die binnenkomt, is bovendien veel correcter. Het verschil tussen vroeger en nu, naast elkaar:',
-                en: 'There is no more paper, and the administration in particular gains a huge amount of time: searching for and retyping notes is a thing of the past. The data that comes in is also far more accurate. Before and after, side by side:',
+                nl: 'In september 2026 werkten 35 chauffeurs van Croes en 106 chauffeurs van 18 onderaannemers met de app.',
+                en: 'In September 2026, 35 Croes drivers and 106 drivers from 18 subcontractors were working with the app.',
             },
             {
                 type: 'table',
                 nl: {
-                    head: ['', 'Voor', 'Na'],
+                    head: ['', 'Vroeger', 'Nu'],
                     rows: [
-                        ['Registratie', 'Papieren bon, met de hand', 'Eén klik in de chauffeursapp'],
-                        ['Verwerking', 'Manueel overgetypt in Excel', 'Automatisch beschikbaar in het systeem'],
-                        ['Overzicht per werf', 'Niet mogelijk', 'Realtime inzicht in volume en planning'],
+                        ['Bon invullen', 'Met de hand, op papier', 'Rit starten en stoppen in de app'],
+                        ['Bon op kantoor', 'Soms pas na weken', 'Meteen, en er gaan er geen meer verloren'],
+                        ['Verwerking', 'Alles overtypen', 'Niets meer overtypen'],
+                        ['Onderaannemers', 'Via de telefoon', 'Melden hun chauffeurs zelf aan'],
+                        ['Overzicht', 'Geen live zicht', 'Live per werf'],
                     ],
                 },
                 en: {
-                    head: ['', 'Before', 'After'],
+                    head: ['', 'Before', 'Now'],
                     rows: [
-                        ['Registration', 'Paper note, by hand', 'One tap in the driver app'],
-                        ['Processing', 'Manually retyped into a spreadsheet', 'Automatically available in the system'],
-                        ['Overview per site', 'Not possible', 'Real time view of volume and planning'],
+                        ['Filling in a note', 'By hand, on paper', 'Starting and stopping a trip in the app'],
+                        ['Note at the office', 'Sometimes only after weeks', 'Right away, and none get lost anymore'],
+                        ['Processing', 'Retyping everything', 'Nothing left to retype'],
+                        ['Subcontractors', 'By phone', 'Sign in their own drivers'],
+                        ['Overview', 'No live view', 'Live per site'],
                     ],
                 },
-            },
-            {
-                type: 'paragraph',
-                nl: 'Die duidelijkheid reikt verder dan de administratie zelf. Omdat elke transactie meteen correct geregistreerd staat, kan Croes NV klanten sneller en preciezer informeren over hoever een werf staat. Intern levert diezelfde data meer overzicht op, wat het weer makkelijker maakt om werven en chauffeurs efficiënt in te plannen.',
-                en: 'That clarity reaches further than the administration alone. Because every transaction is registered correctly right away, Croes NV can inform clients faster and more precisely about the progress of a site. Internally, that same data provides more overview, which in turn makes it easier to plan sites and drivers efficiently.',
             },
         ],
     },
@@ -158,12 +167,12 @@ export const projecten = [
         status: 'live',
         sector: { nl: 'Automotive', en: 'Automotive' },
         title: {
-            nl: 'Een schaalbaar fundament voor A&M Group',
-            en: 'A scalable foundation for A&M Group',
+            nl: 'Van twee Excels naar één transportplatform bij A&M Group',
+            en: 'From two spreadsheets to one transport platform at A&M Group',
         },
         description: {
-            nl: 'Meer volume vroeg om een fundament dat mee kan groeien. Dat fundament bouwden we samen.',
-            en: 'More volume called for a foundation that could grow with it. We built that foundation together.',
+            nl: 'De planning van het wagentransport tussen de vestigingen liep via twee Excels en kostte de planner ongeveer vier uur per dag. Met een eigen platform en chauffeursapp volgt nu iedereen hetzelfde transport, van aanvraag tot aflevering.',
+            en: 'Planning vehicle transport between the branches ran through two spreadsheets and took the planner about four hours a day. With a dedicated platform and driver app, everyone now follows the same transport, from request to delivery.',
         },
         blocks: [
             {
@@ -173,8 +182,8 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'A&M Group groeit hard in de automotive sector: meer volume, meer transporten, meer processen die op elkaar afgestemd moeten blijven. AI kon daar duidelijk iets betekenen, maar A&M Group wilde niet zomaar beginnen bouwen zonder eerst goed te weten waar AI concreet iets zou opleveren.',
-                en: 'A&M Group is growing fast in the automotive sector: more volume, more transports, more processes that need to stay aligned. AI could clearly play a role in that, but A&M Group did not want to start building without first knowing exactly where AI would actually pay off.',
+                nl: 'A&M Group is een automobielgroep uit Hasselt, met meer dan 850 medewerkers en 58 showrooms in Limburg, Vlaams-Brabant en Maastricht. Wagens moeten regelmatig van de ene vestiging naar de andere. De afdeling A&M Car Rental regelt dat transport.',
+                en: 'A&M Group is an automotive group from Hasselt, with more than 850 employees and 58 showrooms in Limburg, Flemish Brabant and Maastricht. Vehicles regularly have to move from one branch to another. The A&M Car Rental department arranges that transport.',
             },
             { type: 'divider' },
             {
@@ -184,41 +193,60 @@ export const projecten = [
             },
             {
                 type: 'paragraph',
-                nl: 'Veel bedrijven starten met AI op basis van een aanname: een tool die ergens anders goed werkte, een idee dat aansprak, een trend die voorbijkwam. Zonder zicht op de eigen processen is het risico groot dat je bouwt op veronderstellingen in plaats van op wat er echt nodig is. Dat risico wilde A&M Group vermijden voor er één lijn code werd geschreven.',
-                en: 'Many companies start with AI based on an assumption: a tool that worked well elsewhere, an idea that sounded appealing, a trend that passed by. Without insight into your own processes, there is a real risk of building on assumptions instead of on what is actually needed. A&M Group wanted to avoid that risk before a single line of code was written.',
+                nl: 'Alles liep via Excel en papier. Dat zorgde voor drie problemen:',
+                en: 'Everything ran through spreadsheets and paper. That created three problems:',
+            },
+            {
+                type: 'list',
+                nl: [
+                    'Veel handwerk: de planner bouwde elke namiddag de planning op in een tweede Excel, door te knippen en te plakken. Dat kostte ongeveer vier uur per dag.',
+                    'Geen controle: in het gedeelde bestand met aanvragen kon iedereen alles aanpassen, en niemand zag wat er veranderd was.',
+                    'Weinig zicht: vestigingen moesten zelf zoeken hoe het met hun aanvraag stond, en chauffeurs vertrokken met een afgedrukte planning. Veranderde er onderweg iets, dan bleef alleen de telefoon over.',
+                ],
+                en: [
+                    'A lot of manual work: every afternoon the planner built the schedule in a second spreadsheet by cutting and pasting. That took about four hours a day.',
+                    'No control: in the shared file with requests, anyone could change anything, and nobody could see what had changed.',
+                    'Little visibility: branches had to look up the status of their own requests, and drivers set off with a printed schedule. If something changed along the way, the phone was all that was left.',
+                ],
             },
             { type: 'divider' },
             {
                 type: 'heading',
-                nl: 'Aanpak',
-                en: 'Approach',
+                nl: 'Oplossing',
+                en: 'Solution',
             },
             {
                 type: 'paragraph',
-                nl: 'TriaCore voerde daarom eerst een concrete procesanalyse uit. We gingen samenzitten met het team van A&M Group, bekeken hoe ze dagelijks werken, en brachten in kaart waar de knelpunten zaten en waar AI effectief opportuniteiten bood.',
-                en: 'TriaCore therefore started with a concrete process analysis. We sat down with the A&M Group team, looked at how they work day to day, and mapped out where the bottlenecks were and where AI genuinely offered opportunities.',
+                nl: 'Samen met het team brachten we eerst in kaart hoe het transport dagelijks verloopt en waar het vastliep. Daarop bouwden we de A&M Transporttool, die sinds 1 oktober 2026 live staat. Ook die bestaat uit drie delen:',
+                en: 'Together with the team, we first mapped out how transport runs day to day and where it got stuck. On that basis we built the A&M Transport Tool, which has been live since 1 October 2026. It also consists of three parts:',
             },
             {
                 type: 'cards',
                 items: [
                     {
-                        icon: 'Cog',
-                        label: { nl: 'Analyse', en: 'Analysis' },
-                        nl: 'Samen met het team keken we naar de bestaande processen en waar die vastlopen of tijd kosten.',
-                        en: 'Together with the team we looked at the existing processes and where they stall or cost time.',
+                        icon: 'Building2',
+                        label: { nl: 'Vestigingen', en: 'Branches' },
+                        nl: 'Vragen een transport aan via een formulier en volgen het in vijf stappen. Elke vestiging ziet alleen haar eigen aanvragen.',
+                        en: 'Request a transport through a form and follow it in five steps. Each branch only sees its own requests.',
                     },
                     {
-                        icon: 'Layers',
-                        label: { nl: 'Roadmap', en: 'Roadmap' },
-                        nl: 'Op basis daarvan werkten we een concrete roadmap uit: wat we gaan bouwen, in welke volgorde, en waarom.',
-                        en: 'Based on that, we worked out a concrete roadmap: what to build, in what order, and why.',
+                        icon: 'CalendarDays',
+                        label: { nl: 'Planner', en: 'Planner' },
+                        nl: 'Sleept de aanvragen op een camion en een dag. Wie het langst wacht, staat vooraan in de wachtrij, en spoed gaat voor.',
+                        en: 'Drags requests onto a truck and a day. Whoever has waited longest is at the front of the queue, and urgent requests go first.',
+                    },
+                    {
+                        icon: 'Smartphone',
+                        label: { nl: 'Chauffeurs', en: 'Drivers' },
+                        nl: "Zien hun haltes in volgorde, melden met één tik geladen of gelost en nemen foto's van de wagen, ook zonder bereik.",
+                        en: 'See their stops in order, report loaded or unloaded with one tap and take photos of the vehicle, even without a signal.',
                     },
                 ],
             },
             {
                 type: 'paragraph',
-                nl: 'Zo bouwen we niet op aannames, maar op wat er echt speelt bij A&M Group. Dat is de basis voor oplossingen die renderen en die op lange termijn blijven werken.',
-                en: 'This way we build on what is actually happening at A&M Group, not on assumptions. That is the basis for solutions that pay off and keep working in the long run.',
+                nl: 'We rollen de app stap voor stap uit: eerst met één chauffeur, daarna komen de anderen erbij.',
+                en: 'We are rolling out the app step by step: first with one driver, then the others will follow.',
             },
             { type: 'divider' },
             {
@@ -227,9 +255,30 @@ export const projecten = [
                 en: 'Result',
             },
             {
+                type: 'table',
+                nl: {
+                    head: ['', 'Vroeger', 'Nu'],
+                    rows: [
+                        ['Aanvragen', 'In een gedeeld Excel-bestand', 'Via een formulier, per vestiging'],
+                        ['Planning', 'Knippen en plakken tussen twee Excels', 'Slepen op een camion en een dag'],
+                        ['Stand van zaken', 'Zelf zoeken in het bestand', 'Zelf volgen in de tool, zonder te bellen'],
+                        ['Onderweg', 'Afgedrukte planning en telefoon', 'Een planning die bijgewerkt blijft in de app'],
+                    ],
+                },
+                en: {
+                    head: ['', 'Before', 'Now'],
+                    rows: [
+                        ['Requests', 'In a shared spreadsheet', 'Through a form, per branch'],
+                        ['Planning', 'Cutting and pasting between two spreadsheets', 'Dragging onto a truck and a day'],
+                        ['Status', 'Looking it up in the file', 'Followed in the tool, without calling'],
+                        ['On the road', 'Printed schedule and phone', 'A schedule that stays up to date in the app'],
+                    ],
+                },
+            },
+            {
                 type: 'paragraph',
-                nl: 'De analyse leverde een duidelijke roadmap op: concrete stappen, in de juiste volgorde, gebaseerd op wat het meeste oplevert voor A&M Group. Op basis daarvan zijn we intussen gestart met de bouw van de eerste oplossingen.',
-                en: 'The analysis resulted in a clear roadmap: concrete steps, in the right order, based on what delivers the most value for A&M Group. Building on that, we have since started building the first solutions.',
+                nl: 'De tool legt ook elke stap en elke wijziging vast. Die gegevens dienen later voor een planningsvoorstel met AI.',
+                en: 'The tool also records every step and every change. That data will later be used for a planning proposal with AI.',
             },
         ],
     },

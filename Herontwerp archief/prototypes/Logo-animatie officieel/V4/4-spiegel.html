@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V4 4 spiegel</title>
+<link rel="stylesheet" href="v4-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v4-core.js"></script>
+<script>
+  // 4. Spiegel: de bovenste balk kantelt van boven naar je toe, de onderste tegelijk van onder,
+  // als een spiegelbeeld. Pas daarna draait de middelste balk in: vertalen, de brug, sluit het af.
+  TriaLogoV4({
+    dur: 3.3,
+    finale(c, s) {
+      const outer = c.E.glide(c.clamp(s / 1.6));
+      const mid = c.E.glide(c.clamp((s - 0.5) / 1.7));
+      c.bars[0].rotation.x = c.rad(-90) * (1 - outer);
+      c.bars[2].rotation.x = c.rad(90) * (1 - outer);
+      c.bars[1].rotation.y = c.rad(84) * (1 - mid);
+      c.glint[0] = c.glint[2] = 0.6 * Math.sin(Math.PI * outer);
+      c.glint[1] = 0.6 * Math.sin(Math.PI * mid);
+    },
+  });
+</script>
+</body>
+</html>

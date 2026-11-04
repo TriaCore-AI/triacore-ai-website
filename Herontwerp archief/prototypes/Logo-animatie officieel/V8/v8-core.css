@@ -1,0 +1,83 @@
+/* V8: enkel het logo op het donkere blauw, plus de pijlers, de naam en de slogan. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #05080F; overflow: hidden; }
+.stage {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #152036 0%, #0B1220 48%, #05080F 100%);
+  -webkit-font-smoothing: antialiased;
+}
+.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; will-change: opacity, filter; }
+.veil {
+  position: absolute; inset: 0; z-index: 5; background: #05080F; pointer-events: none;
+  opacity: 1; transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stage.is-on .veil { opacity: 0; }
+.stage.is-fast .veil { transition-duration: 300ms; }
+.stage.is-still .veil { transition: none; }
+
+/* ---------- De pijlers: een lijn vanuit het uiteinde van de balk, dan het nummer en het woord ---------- */
+.pillar { --line: 0; --label: 0; position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; opacity: 0; will-change: transform, opacity; }
+.p-in { display: flex; align-items: center; gap: 22px; transform: translateY(-50%); padding-left: 14px; }
+.to-left .p-in { flex-direction: row-reverse; transform: translate(-100%, -50%); padding-left: 0; padding-right: 14px; }
+.p-line {
+  display: block; width: clamp(56px, 9vw, 180px); height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .25));
+  transform: scaleX(var(--line)); transform-origin: left center;
+}
+.to-left .p-line { background: linear-gradient(270deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .25)); transform-origin: right center; }
+.p-label {
+  display: flex; align-items: baseline; gap: 14px; white-space: nowrap;
+  opacity: var(--label); transform: translateX(calc((1 - var(--label)) * -10px));
+}
+.to-left .p-label { transform: translateX(calc((1 - var(--label)) * 10px)); }
+/* het woord met daaronder zijn zin. Bij de gespiegelde pijler staat alles rechts uitgelijnd, tegen de lijn. */
+/* de zin hangt onder het woord, zodat lijn, woord en balk op één hoogte blijven */
+.p-text { position: relative; display: block; }
+.to-left .p-text { text-align: right; }
+.p-desc {
+  position: absolute; top: 100%; left: 0; width: max-content;
+  margin-top: 16px; max-width: 26em;
+  font-family: "DM Sans", system-ui, sans-serif; font-weight: 400; line-height: 1.45; letter-spacing: .005em;
+  font-size: clamp(16px, 1.25vw, 21px); color: rgba(255, 255, 255, .68);
+}
+.to-left .p-desc { left: auto; right: 0; }
+.p-desc .w { display: inline-block; opacity: 0; will-change: transform, opacity; }
+.p-num { font-family: "Space Grotesk", "DM Sans", system-ui, sans-serif; font-weight: 500; font-size: clamp(15px, 1.35vw, 22px); letter-spacing: .04em; color: #8FB495; }
+.p-word { font-family: "Playfair Display", Georgia, serif; font-weight: 600; line-height: 1; letter-spacing: -.01em; font-size: clamp(34px, 4.2vw, 72px); color: #FFFFFF; }
+
+/* ---------- Op een gsm: zelfde opbouw als op de computer, maar compacter zodat het naast de balk past ---------- */
+.stage.portrait .p-in { gap: 12px; padding-left: 10px; }
+.stage.portrait .to-left .p-in { padding-left: 0; padding-right: 10px; }
+.stage.portrait .p-line { width: clamp(24px, 8vw, 40px); }
+.stage.portrait .p-label { gap: 8px; }
+.stage.portrait .p-num { font-size: 12px; }
+.stage.portrait .p-word { font-size: clamp(24px, 7vw, 34px); }
+.stage.portrait .p-desc { margin-top: 10px; max-width: 52vw; font-size: clamp(13px, 3.6vw, 16px); }
+
+/* ---------- De taalknop bovenaan ---------- */
+.lang {
+  position: absolute; top: 20px; right: 24px; z-index: 6; display: flex; align-items: center; gap: 6px;
+  font-family: "Space Grotesk", "DM Sans", system-ui, sans-serif; font-weight: 500; font-size: 13px; letter-spacing: .04em;
+  color: rgba(255, 255, 255, .35);
+}
+.lang button {
+  font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; cursor: pointer;
+  padding: 6px 4px; transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lang button:hover { color: rgba(255, 255, 255, .8); }
+.lang button.is-on { color: #FFFFFF; }
+.lang button:focus-visible { outline: 1px solid #8FB495; outline-offset: 2px; border-radius: 3px; }
+
+/* ---------- Op het einde: de naam en de slogan, onder het logo ---------- */
+.sign { --n: 0; --s: 0; position: absolute; left: 0; right: 0; top: 0; z-index: 3; text-align: center; pointer-events: none; padding: 0 16px; }
+.sign .name {
+  font-family: "Playfair Display", Georgia, serif; font-weight: 600; line-height: 1; letter-spacing: -.01em;
+  font-size: clamp(30px, 3vw, 46px); color: #FFFFFF;
+  opacity: var(--n); transform: translateY(calc((1 - var(--n)) * 10px));
+}
+.sign .ai { color: #8FB495; }
+.sign .slogan {
+  margin-top: 14px; font-family: "DM Sans", system-ui, sans-serif; font-size: clamp(16px, 1.3vw, 20px); letter-spacing: .01em;
+  color: rgba(255, 255, 255, .68);
+  opacity: var(--s); transform: translateY(calc((1 - var(--s)) * 8px));
+}

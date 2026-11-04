@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Achtergrond 5: Meebewegend licht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300..700;1,300..700&family=Cormorant+Garamond:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+  /* ===== opbouw, gelijk in alle vijf de varianten ===== */
+  :root { --fg: #0f172a; --groen: #628f69; --zij: 24px; }
+  @media (min-width: 768px) { :root { --zij: 64px; } }
+  @media (min-width: 1024px) { :root { --zij: 96px; } }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Jost', sans-serif; color: var(--fg); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--fg); color: #f8fafc; }
+  a { color: inherit; text-decoration: none; }
+  .serif { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -0.025em; }
+  .pagina { position: relative; overflow-x: clip; }
+  .inhoud { position: relative; z-index: 1; }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+
+  .nav { position: fixed; top: 16px; left: 0; right: 0; z-index: 40; display: flex; justify-content: center; padding: 0 16px; }
+  .nav > div { width: 100%; max-width: 1000px; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px;
+    border-radius: 999px; background: rgba(255,255,255,.5); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1px solid rgba(15,23,42,.05); }
+  .nav img { height: 28px; display: block; }
+  .nav ul { display: flex; gap: 32px; list-style: none; font-size: 15px; color: rgba(15,23,42,.75); }
+  @media (max-width: 767px) { .nav ul { display: none; } }
+
+  .knop { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; background: var(--fg); color: #f8fafc;
+    padding: 12px 24px; font-size: 15px; font-weight: 500; transition: background .5s; }
+  .knop:hover { background: var(--groen); }
+  .knop.klein { padding: 10px 20px; font-size: 14px; }
+
+  .hero { min-height: 100svh; display: flex; flex-direction: column; padding: 160px var(--zij) 48px; }
+  @media (min-width: 768px) { .hero { padding-top: 192px; padding-bottom: 64px; } }
+  .hero .wrap { flex: 1; display: flex; flex-direction: column; width: 100%; }
+  .hero h1 { font-size: clamp(3rem, 8.2vw, 7.5rem); line-height: 1.02; }
+  .hero h1 em { display: block; color: var(--groen); }
+  .hero p { margin-top: 40px; max-width: 36rem; font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.6; color: rgba(15,23,42,.7); }
+  .hero .acties { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  .hero .link { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 500; color: rgba(15,23,42,.7); transition: color .3s; }
+  .hero .link:hover { color: var(--groen); }
+  .logos { margin-top: auto; padding-top: 80px; display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; }
+  .logos span { font-size: 14px; color: rgba(15,23,42,.5); }
+  .logos img { height: 36px; max-width: 150px; object-fit: contain; mix-blend-mode: multiply; }
+
+  section { padding: 112px var(--zij) 128px; }
+  .kop { text-align: center; margin-bottom: 64px; }
+  h2 { font-size: clamp(2.25rem, 4.5vw, 3.75rem); line-height: 1.05; }
+  .kop p { margin: 16px auto 0; max-width: 36rem; font-size: 20px; line-height: 1.6; color: rgba(15,23,42,.6); }
+
+  .rij { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .rij::-webkit-scrollbar { display: none; }
+  .kaart-k { flex: none; width: min(82vw, 400px); min-height: 360px; display: flex; flex-direction: column; padding: 40px;
+    border-radius: 24px; background: #fafafa; border: 1px solid rgba(15,23,42,.07); transition: background .5s, border-color .5s; }
+  .kaart-k:hover { background: #fff; border-color: rgba(15,23,42,.15); }
+  .kaart-k .logo { height: 64px; display: flex; align-items: center; margin-bottom: 32px; }
+  .kaart-k .logo img { max-height: 48px; max-width: 140px; object-fit: contain; mix-blend-mode: multiply; }
+  .kaart-k h3 { font-size: 24px; font-weight: 500; line-height: 1.2; }
+  .kaart-k .sector { margin-top: 4px; font-size: 14px; color: rgba(15,23,42,.5); }
+  .kaart-k hr { border: 0; height: 1px; background: rgba(15,23,42,.1); margin-top: 32px; }
+  .kaart-k p { margin-top: 32px; font-size: 15px; line-height: 1.65; color: rgba(15,23,42,.6); }
+  .kaart-k .cta { margin-top: auto; padding-top: 40px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500;
+    color: rgba(15,23,42,.7); transition: color .3s; }
+  .kaart-k:hover .cta { color: var(--groen); }
+
+  .opl h2 { margin-bottom: 64px; }
+  .opl-rij { display: grid; grid-template-columns: 1fr; gap: 24px; padding: 56px 0; border-top: 1px solid rgba(15,23,42,.15); }
+  .opl-rij:last-child { border-bottom: 1px solid rgba(15,23,42,.15); }
+  @media (min-width: 1024px) { .opl-rij { grid-template-columns: 5fr 7fr; gap: 40px; min-height: 300px; } .opl-rij h3 { order: 2; text-align: right; } }
+  .opl-rij h3 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 400; line-height: .95; transition: color .5s; }
+  .opl-rij:hover h3 { color: var(--groen); }
+  .opl-rij div { display: flex; flex-direction: column; }
+  .opl-rij p { max-width: 24rem; font-size: 18px; line-height: 1.65; color: rgba(15,23,42,.7); }
+  .opl-rij .nr { margin-top: auto; padding-top: 32px; font-size: 14px; color: rgba(15,23,42,.4); font-variant-numeric: tabular-nums; }
+
+  .slot { text-align: center; }
+  .slot p { margin: 24px auto 40px; max-width: 32rem; font-size: 20px; line-height: 1.6; color: rgba(15,23,42,.6); }
+
+  footer { position: relative; z-index: 1; background: #020617; color: rgba(248,250,252,.55); padding: 64px var(--zij); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  footer b { color: #f8fafc; font-weight: 500; }
+
+  /* ===== wisselaar tussen de varianten (hoort niet bij het ontwerp) ===== */
+  .wissel { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 4px;
+    padding: 6px; border-radius: 999px; background: rgba(15,23,42,.88); color: #f8fafc; font-size: 13px;
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); max-width: calc(100vw - 24px); }
+  .wissel a { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 999px;
+    color: rgba(248,250,252,.6); transition: background .2s, color .2s; }
+  .wissel a:hover { background: rgba(255,255,255,.12); color: #fff; }
+  .wissel a.nu { background: #f8fafc; color: #0f172a; }
+  .wissel .naam { padding: 0 12px 0 14px; white-space: nowrap; }
+  .uitleg { position: fixed; left: 50%; bottom: 66px; transform: translateX(-50%); z-index: 60; width: min(520px, calc(100vw - 24px));
+    padding: 12px 16px; border-radius: 14px; background: rgba(15,23,42,.88); color: rgba(248,250,252,.85); font-size: 13px; line-height: 1.5;
+    text-align: center; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .wissel:hover + .uitleg { opacity: 1; }
+
+  /* ===== de achtergrond van deze variant ===== */
+      body { background: #f1f2f0; }
+      .pagina { background: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 60vh); }
+      .licht { position: fixed; inset: 0; z-index: 0; pointer-events: none; --x: 75vw; --y: 28vh;
+        background:
+          radial-gradient(560px circle at var(--x) var(--y), rgba(98,143,105,.15), rgba(98,143,105,0) 70%),
+          radial-gradient(260px circle at var(--x) var(--y), rgba(255,255,255,.55), rgba(255,255,255,0) 70%);
+      }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <div class="licht"></div>
+  <nav class="nav"><div>
+    <a href="#"><img src="../../public/logo/TriaCore%20Logo%20Zwart.svg" alt="TriaCore AI"></a>
+    <ul><li>Oplossingen</li><li>Projecten</li><li>Team</li><li>Contact</li></ul>
+    <a class="knop klein" href="#">Plan een gesprek</a>
+  </div></nav>
+
+  <div class="inhoud">
+    <header class="hero"><div class="wrap">
+      <div>
+        <h1 class="serif">AI voor operationele <em>vooruitgang</em></h1>
+        <p>AI die in uw processen werkt, niet ernaast. Met software op maat, workshops en begeleiding.</p>
+        <div class="acties">
+          <a class="knop" href="#">Plan een gesprek <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a class="link" href="#oplossingen">Bekijk onze oplossingen <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+      <div class="logos">
+        <span>Onder meer voor</span>
+        <img src="../../src/assets/partners/Croes%20NV.png" alt="Croes NV">
+        <img src="../../src/assets/partners/A%26M%20Group.webp" alt="A&amp;M Group">
+        <img src="../../src/assets/klantcases/medtronic.png" alt="Medtronic">
+        <img src="../../src/assets/klantcases/the-box.png" alt="The Box">
+      </div>
+    </div></header>
+
+    <section><div class="wrap">
+      <div class="kop">
+        <h2 class="serif">Bewezen in de praktijk.</h2>
+        <p>Bedrijven waarmee we processen herbouwden, geen losstaande experimenten.</p>
+      </div>
+      <div class="rij">
+        <a class="kaart-k" href="#">
+          <div class="logo"><img src="../../src/assets/partners/Croes%20NV.png" alt="Croes NV"></div>
+          <h3>Croes NV</h3>
+          <span class="sector">Bouw & grondwerken</span>
+          <hr>
+          <p>Chauffeurs vulden duizenden papieren bonnen per maand in, vaak onvolledig. TriaCore bouwde een planningsplatform en chauffeursapp die alles automatisch en correct vastlegt.</p>
+          <span class="cta">Bekijk de case <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a class="kaart-k" href="#">
+          <div class="logo"><img src="../../src/assets/partners/A%26M%20Group.webp" alt="A&amp;M Group"></div>
+          <h3>A&amp;M Group</h3>
+          <span class="sector">Automotive</span>
+          <hr>
+          <p>Meer volume vroeg om een fundament dat mee kan groeien. Dat fundament bouwden we samen.</p>
+          <span class="cta">Bekijk de case <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a class="kaart-k" href="#">
+          <div class="logo"><img src="../../src/assets/klantcases/medtronic.png" alt="Medtronic"></div>
+          <h3>Medtronic</h3>
+          <span class="sector">Medische technologie</span>
+          <hr>
+          <p>We gaven het team van Medtronic een workshop over AI: wat het vandaag kan en hoe je het concreet inzet in je werk.</p>
+          <span class="cta">Bekijk onze workshops <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a class="kaart-k" href="#">
+          <div class="logo"><img src="../../src/assets/klantcases/the-box.png" alt="The Box"></div>
+          <h3>The Box</h3>
+          <span class="sector">Vastgoed</span>
+          <hr>
+          <p>We gaven het team van The Box een workshop over AI: wat het vandaag kan en hoe je het concreet inzet in je werk.</p>
+          <span class="cta">Bekijk onze workshops <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+      </div>
+    </div></section>
+
+    <section class="opl" id="oplossingen"><div class="wrap">
+      <h2 class="serif">Onze oplossingen.</h2>
+      <a class="opl-rij" href="#">
+        <h3>Custom oplossingen</h3>
+        <div><p>Software rond uw processen, met AI waar het rendeert. Een platform, een app of een automatisering, gebouwd rond hoe uw bedrijf echt werkt.</p><span class="nr">/01</span></div>
+      </a>
+      <a class="opl-rij" href="#">
+        <h3>Workshops</h3>
+        <div><p>Uw team leert zelf werken met AI. Praktisch, op maat van uw sector en met voorbeelden uit het eigen werk.</p><span class="nr">/02</span></div>
+      </a>
+      <a class="opl-rij" href="#">
+        <h3>AI-begeleiding</h3>
+        <div><p>We zetten AI volledig voor u op: het juiste plan in ChatGPT of Claude, workflows en connectoren, MCP-tools en skills. Zo kan uw team er meteen mee aan de slag.</p><span class="nr">/03</span></div>
+      </a>
+    </div></section>
+
+    <section class="slot"><div class="wrap">
+      <h2 class="serif">Klaar voor de volgende stap?</h2>
+      <p>Vertel ons waar het vandaag wringt. We denken eerlijk mee over wat AI daar kan doen.</p>
+      <a class="knop" href="#">Plan een gesprek <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div></section>
+  </div>
+</div>
+
+<footer><div class="wrap">
+  <span><b>TriaCore AI BV</b> · Kempische Steenweg 303, 3500 Hasselt</span>
+  <span>info@triacore.be</span>
+</div></footer>
+
+<nav class="wissel" aria-label="Varianten">
+  <a href="4-hoogtelijnen.html" aria-label="Vorige">&larr;</a>
+  <a href="1-ochtendlicht.html">1</a><a href="2-verloop.html">2</a><a href="3-blauwdruk.html">3</a><a href="4-hoogtelijnen.html">4</a><a href="5-meebewegend-licht.html" class="nu">5</a>
+  <span class="naam">Meebewegend licht</span>
+  <a href="1-ochtendlicht.html" aria-label="Volgende">&rarr;</a>
+</nav>
+<div class="uitleg">Een zacht groen licht dat traag je muis volgt, alsof je met een lamp over papier gaat. Op gsm staat het licht stil rechtsboven.</div>
+
+<script>
+  // pijltjestoetsen wisselen tussen de varianten
+  addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') location.href = '4-hoogtelijnen.html';
+    if (e.key === 'ArrowRight') location.href = '1-ochtendlicht.html';
+  });
+
+      (function () {
+        var l = document.querySelector('.licht');
+        if (!matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var x = innerWidth * 0.75, y = innerHeight * 0.28, tx = x, ty = y;
+        addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; });
+        (function stap() {
+          x += (tx - x) * 0.045; y += (ty - y) * 0.045;
+          l.style.setProperty('--x', x.toFixed(1) + 'px');
+          l.style.setProperty('--y', y.toFixed(1) + 'px');
+          requestAnimationFrame(stap);
+        })();
+      })();
+</script>
+</body>
+</html>

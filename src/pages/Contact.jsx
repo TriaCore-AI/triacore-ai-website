@@ -1,105 +1,111 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
-import ContactForm from '../components/ui/contact-form';
 import Seo from '../components/ui/seo';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import PageHeader from '../components/ui/page-header';
+import ContactForm from '../components/ui/contact-form';
+import { AutoImage } from '../components/ui/auto-image';
 import { useLanguage } from '../context/LanguageContext';
 
-gsap.registerPlugin(ScrollTrigger);
+const CONTACTS = [
+    {
+        name: 'Rian Mathijs',
+        image: '/team/rian',
+        role: { nl: 'Sales & Klantrelaties', en: 'Sales & Client Relations' },
+        phone: '+32 499 87 46 62',
+        tel: '+32499874662',
+        email: 'rian.mathijs@triacore.be',
+        linkedin: 'https://www.linkedin.com/in/rian-mathijs-6a4350356/'
+    },
+    {
+        name: 'Lucas Curto',
+        image: '/team/lucas',
+        role: { nl: 'AI & Strategie', en: 'AI & Strategy' },
+        phone: '+32 468 27 50 82',
+        tel: '+32468275082',
+        email: 'lucas.curto@triacore.be',
+        linkedin: 'https://www.linkedin.com/in/lucas-curto-67555a377/'
+    }
+];
 
+const linkClass = 'text-foreground/70 hover:text-accent transition-colors w-max';
+
+// Contact, in de nieuwe stijl: links wie u te woord staat en de algemene gegevens, rechts het formulier.
+// Beide kolommen zijn even hoog: de linker verdeelt haar inhoud over de hoogte, het formulier rekt mee.
 export default function Contact() {
-    const containerRef = useRef(null);
     const { language } = useLanguage();
-
-    useEffect(() => {
-        let ctx = gsap.context(() => {
-            gsap.fromTo(
-                '.hero-stagger',
-                { y: 40, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    stagger: 0.15,
-                    ease: 'power3.out',
-                    delay: 0.2
-                }
-            );
-
-            // Scroll animations
-            const scrollElements = gsap.utils.toArray('.scroll-animate');
-            scrollElements.forEach((el) => {
-                gsap.fromTo(
-                    el,
-                    { y: 60, opacity: 0 },
-                    {
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 85%',
-                        },
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.8,
-                        ease: 'power3.out',
-                    }
-                );
-            });
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
+    const nl = language === 'nl';
 
     return (
-        <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-
-            {/* NOISE OVERLAY */}
-            <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                <filter id="noiseFilter">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-                </filter>
-                <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-            </svg>
-
+        <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
             <Seo
-                title={language === 'nl' ? 'Contact | TriaCore AI' : 'Contact | TriaCore AI'}
-                description={language === 'nl'
-                    ? 'Plan een vrijblijvend gesprek. Vertel waar uw processen vastlopen en we bekijken samen wat maatwerksoftware en AI voor uw bedrijf kunnen betekenen.'
-                    : 'Book a no obligation call. Tell us where your processes get stuck and we\'ll explore together what custom software and AI can do for your business.'}
+                title="Contact | TriaCore AI"
+                description={nl
+                    ? 'Plan een vrijblijvend gesprek. Vertel waar uw processen vastlopen en we bekijken samen wat software op maat en AI voor uw bedrijf kunnen betekenen.'
+                    : 'Book a no obligation call. Tell us where your processes get stuck and we will explore together what custom software and AI can do for your business.'}
             />
             <Navbar />
+            <main className="relative flex-grow">
+                <PageHeader
+                    title={nl ? 'Plan een gesprek.' : 'Book a call.'}
+                    intro={nl ? 'Vertel ons hoe uw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.' : 'Tell us how your business works. We listen first, then show you what is possible.'}
+                />
 
-            {/* GLOBAL GRID BACKGROUND (architectural style like homepage) */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0" 
-                 style={{
-                   backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
-                   backgroundSize: '4rem 4rem',
-                 }}>
-            </div>
+                <section className="px-6 md:px-16 lg:px-24 pb-16 md:pb-24">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-16">
+                        {/* Wie u te woord staat en de algemene gegevens */}
+                        <aside className="lg:col-span-4 flex flex-col justify-between gap-10">
+                            <div className="flex flex-col gap-8">
+                                {CONTACTS.map((c) => (
+                                    <div key={c.name} className="flex gap-4">
+                                        <div className="w-14 h-14 shrink-0 rounded-full overflow-hidden bg-foreground/5">
+                                            <AutoImage basePath={c.image} alt={c.name} className="w-full h-full object-cover grayscale" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-lg font-medium text-foreground leading-tight">{c.name}</p>
+                                            <p className="mt-0.5 text-sm text-foreground/50 leading-snug">{c.role[language]}</p>
+                                            <div className="mt-3 flex flex-col gap-1 text-sm">
+                                                <a href={`tel:${c.tel}`} className={linkClass}>{c.phone}</a>
+                                                <a href={`mailto:${c.email}`} className={linkClass}>{c.email}</a>
+                                                <a href={c.linkedin} target="_blank" rel="noopener noreferrer" className={`group/li inline-flex items-center gap-1 ${linkClass}`}>
+                                                    LinkedIn
+                                                    <ArrowUpRight size={14} className="transition-transform duration-300 group-hover/li:-translate-y-0.5 group-hover/li:translate-x-0.5" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
 
-            <div className="relative z-10 flex flex-col w-full">
-                {/* HERO SECTION */}
-                <section className="relative pt-48 pb-12 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
-                    <div className="max-w-5xl mx-auto text-center scroll-animate">
-                        <span className="hero-stagger inline-flex items-center mb-6 px-4 py-1.5 rounded-lg border border-accent/20 bg-accent/5 font-mono uppercase tracking-[0.15em] text-xs md:text-sm font-bold text-accent">
-                            <span className="text-accent/40">[</span>CONTACT<span className="text-accent/40">]</span>
-                        </span>
-                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6 text-foreground">
-                            {language === 'nl' ? 'Plan uw gesprek.' : 'Book a call.'}
-                        </h1>
-                        <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-8 font-light leading-relaxed mx-auto">
-                            {language === 'nl'
-                                ? 'We luisteren, analyseren en geven helder advies over de beste volgende stap.'
-                                : 'We listen, analyze, and provide clear advice on the best next step.'}
-                        </p>
+                            <div>
+                                <span aria-hidden="true" className="block h-px mb-8 bg-foreground/15" />
+                                <dl className="flex flex-col gap-5 text-sm">
+                                    <div>
+                                        <dt className="text-foreground/50">{nl ? 'Algemeen' : 'General'}</dt>
+                                        <dd className="mt-1"><a href="mailto:info@triacore.be" className="text-foreground hover:text-accent transition-colors">info@triacore.be</a></dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-foreground/50">{nl ? 'Kantoor' : 'Office'}</dt>
+                                        <dd className="mt-1 text-foreground leading-relaxed">
+                                            Kempische Steenweg 303<br />3500 Hasselt · Corda Incubator
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-foreground/50">{nl ? 'Btw' : 'VAT'}</dt>
+                                        <dd className="mt-1 text-foreground">BE 1042.233.821</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </aside>
+
+                        {/* Het formulier, even hoog als de kolom links */}
+                        <div className="lg:col-span-8">
+                            <ContactForm />
+                        </div>
                     </div>
                 </section>
-
-                <main className="flex-grow pb-32">
-                    <ContactForm />
-                </main>
-            </div>
-
+            </main>
             <Footer />
         </div>
     );

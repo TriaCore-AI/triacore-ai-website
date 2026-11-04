@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V10 sneller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v10-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v10-sneller-core.js"></script>
+<script>
+  // V10 sneller: dit slot is letterlijk dat van V10. De versnelling (SPEED.slot) zit in v10-sneller-core.js,
+  // zodat de getallen hieronder dezelfde blijven als in V10.
+  // V10, het slot "langs de balk" uit V9. Het woord, de zin en de lijn van Waarmaken vervagen, en
+  // de camera glijdt langs de hele balk tot voorbij zijn andere uiteinde. In de lege ruimte
+  // verschijnt "Dat is de aanpak van TriaCore". Dan blijft enkel TriaCore staan, met daaronder de
+  // twee slogans na elkaar. Het tempo van dat laatste deel staat in FINISH, in v10-core.js.
+  const WAY_AT = 1.9;     // de zin verschijnt
+  const READ_AT = 4.4;    // de zin is gelezen: vanaf hier blijft enkel TriaCore
+  TriaLogoV10({
+    raster: true,
+    ending: {
+      dur: 15.4,
+      camera(c, s) {
+        const k = c.E.move(c.clamp((s - 0.2) / 2.8));
+        c.pose.ax -= (c.BAR_W + 1.9 * c.halfW) * k;
+        // het raster verdwijnt soepel terwijl de camera langs de balk glijdt
+        c.grid = c.lerp(c.grid, 0, c.E.soft(c.clamp((s - 0.3) / 2.2)));
+      },
+      overlay(c, s) {
+        const o = 1 - c.E.soft(c.clamp(s / 0.5));
+        c.fadeText(o); c.fadeLine(o);
+        // en de achtergrond wordt een effener navy, waarop de zin verschijnt
+        c.bgNeutral(c.E.soft(c.clamp((s - 0.6) / 2.0)));
+        c.way(s, WAY_AT, c.W / 2, c.H / 2);
+        c.finish(s, READ_AT);
+      },
+    },
+  });
+</script>
+</body>
+</html>

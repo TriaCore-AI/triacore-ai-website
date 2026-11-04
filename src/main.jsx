@@ -15,6 +15,7 @@ import ResourceDetail from './pages/ResourceDetail.jsx'
 import Projecten from './pages/Projecten.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import Workshops from './pages/Workshops.jsx'
+import AiBegeleiding from './pages/AiBegeleiding.jsx'
 import ScrollToTop from './components/ui/ScrollToTop.jsx'
 import CookieBanner from './components/ui/cookie-banner.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/projecten" element={<Projecten />} />
           <Route path="/projecten/:slug" element={<ProjectDetail />} />
           <Route path="/workshops" element={<Workshops />} />
+          <Route path="/ai-begeleiding" element={<AiBegeleiding />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>

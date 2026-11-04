@@ -1,0 +1,417 @@
+/* =============================================================
+   Software op maat V4: de pagina over software op maat. Nu alleen de hero, in 3D zoals op de homepage,
+   en de overgang van blauw naar licht. Kleuren, fonts en tempo uit ../../../stijl/tokens.css.
+   page.js zet twee waarden: --page (de kleur van de pagina) en --light (0 = blauw, 1 = licht).
+   ============================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --light: 0; }
+html, body { background: var(--page, #0B1220); }
+body { color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body.menu-open { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+:focus-visible { outline: 1px solid var(--green-lt); outline-offset: 3px; border-radius: 3px; }
+
+/* ---------- De knop, zoals op de homepage ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: var(--radius-s);
+  background: var(--green); color: var(--white);
+  font-family: var(--brand); font-weight: 600; font-size: 14px; letter-spacing: .02em;
+  transition: background var(--dur-micro) var(--ease-out);
+}
+.btn svg { width: 14px; height: 14px; transition: transform var(--dur-hover) var(--ease-out); }
+.btn:hover { background: var(--green-dim); }
+.btn:hover svg { transform: translateX(4px); }
+.btn.small { padding: 10px 16px; font-size: 13px; }
+
+/* ---------- De navigatie: zwevend, donker op blauw, licht zodra de pagina licht wordt ---------- */
+.nav {
+  position: fixed; top: 12px; left: clamp(12px, 3vw, 48px); right: clamp(12px, 3vw, 48px); z-index: 30;
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px clamp(14px, 1.6vw, 22px);
+  color: var(--text-inv); transition: color var(--dur-hover) var(--ease-out);
+}
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius-m);
+  background: rgba(15, 23, 42, .42); border: 1px solid rgba(255, 255, 255, .08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2);
+  transition: background var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.nav.on-light { color: var(--text); }
+.nav.on-light::before { background: rgba(222, 222, 219, .72); border-color: rgba(15, 23, 42, .06); }
+body.menu-open .nav { color: var(--text-inv); }
+body.menu-open .nav::before { opacity: 0; }
+.nav-right { display: flex; align-items: center; gap: 22px; }
+.menu-btn { display: flex; align-items: center; gap: 14px; padding: 6px 0; }
+.menu-mark { position: relative; width: 30.7px; height: 18.8px; }
+.menu-mark i {
+  position: absolute; left: 0; width: 22px; height: 3.66px; border-radius: 2px; background: currentColor;
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-micro) var(--ease-out);
+}
+.menu-mark i:nth-child(1) { top: 0; }
+.menu-mark i:nth-child(2) { top: 7.58px; transform: translateX(8.69px); }
+.menu-mark i:nth-child(3) { top: 15.16px; }
+.menu-btn:hover .menu-mark i:nth-child(2) { transform: none; }
+body.menu-open .menu-mark i:nth-child(1) { transform: translateY(7.58px) rotate(45deg); }
+body.menu-open .menu-mark i:nth-child(2) { opacity: 0; transform: none; }
+body.menu-open .menu-mark i:nth-child(3) { transform: translateY(-7.58px) rotate(-45deg); }
+.menu-label { font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+.nav-lang { display: flex; align-items: center; gap: 4px; font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; }
+.nav-lang span { opacity: .35; }
+.nav-lang button { padding: 6px 4px; opacity: .45; }
+.nav-lang button.is-on { opacity: 1; }
+.nav-lang button:disabled { cursor: default; }
+
+/* ---------- Het menu: een zijbalk van links ---------- */
+.menu-scrim {
+  position: fixed; inset: 0; z-index: 20; background: rgba(5, 8, 15, .55);
+  opacity: 0; pointer-events: none; transition: opacity 500ms var(--ease-out);
+}
+.menu {
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 25;
+  width: min(540px, 100vw); padding: 104px var(--gutter) 40px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--navy); color: var(--text-inv);
+  transform: translateX(-100%); visibility: hidden;
+  transition: transform 700ms var(--ease-out), visibility 0s linear 700ms;
+}
+body.menu-open .menu-scrim { opacity: 1; pointer-events: auto; }
+body.menu-open .menu { transform: none; visibility: visible; transition: transform 700ms var(--ease-out), visibility 0s; }
+.menu-list { list-style: none; }
+.menu-list a { position: relative; display: block; padding: 16px 0 14px; border-top: 1px solid var(--line-inv); }
+.menu-list a::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green-lt);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:hover::before, .menu-list a.is-here::before { transform: scaleX(1); }
+.menu-list li:last-child a { border-bottom: 1px solid var(--line-inv); }
+.m-name {
+  display: inline-block; font-family: var(--sans); font-weight: 500; letter-spacing: -.02em; line-height: 1.1;
+  font-size: clamp(28px, 2.6vw, 36px); transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:hover .m-name { transform: translateX(var(--shift-s)); }
+.menu-foot { display: grid; gap: 6px; margin-top: 40px; }
+.menu-foot a, .menu-foot span { font-size: 15px; color: var(--sub-inv); }
+.menu-foot a:hover { color: var(--text-inv); }
+
+/* ---------- De hero ---------- */
+/* Minstens één scherm hoog, zodat je bij het openen alleen blauw ziet. Past de tekst niet (een gsm),
+   dan wordt de hero langer en blijf je blauw tot het einde ervan. */
+.hero {
+  position: relative; overflow: hidden; color: var(--text-inv);
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: clamp(112px, 12vw, 140px) var(--gutter) clamp(56px, 7vw, 96px);
+}
+/* het logo in 3D, over de hele hero (hero-scene.js) */
+.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+/* een zacht licht rond het logo, dat met de pagina mee wegvaagt */
+.hero-glow {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 55% 60% at 72% 42%, rgba(38, 58, 96, .55) 0%, rgba(11, 18, 32, 0) 70%);
+  opacity: calc(1 - var(--light));
+}
+.hero-grid {
+  position: relative; z-index: 1; width: 100%; max-width: 1640px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 80px); align-items: center;
+}
+/* de tekst vaagt weg terwijl de pagina licht wordt, zodat wit nooit op licht staat */
+.hero-copy { opacity: calc(1 - var(--light) * 1.6); }
+.hero-title { font-size: clamp(40px, 4.8vw, 80px); }
+.hero-lead { margin-top: 24px; max-width: 30em; color: var(--sub-inv); }
+.hero-actions { margin-top: 34px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+/* ---------- De video (plaatshouder): schuin in 3D, kantelt mee met de muis ---------- */
+/* page.js zet --rx en --ry: in rust staat de video licht schuin, bij hover volgt ze de muis.
+   Het groene lijnkader ligt erachter en schuift bij hover uit, zoals bij het team op de homepage. */
+.hero-visual { perspective: 1600px; opacity: calc(1 - var(--light) * 1.6); }
+.video-tilt {
+  --rx: 4deg; --ry: -10deg;
+  position: relative; transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 900ms var(--ease-out);
+}
+.video-tilt.is-live { transition: transform 160ms linear; }   /* tijdens het volgen van de muis: meteen mee */
+.video {
+  position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: var(--radius-l); border: 1px solid var(--line-inv);
+  background: radial-gradient(ellipse 70% 70% at 50% 45%, #1C2B47 0%, #0D1424 100%);
+  box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .75);
+}
+/* een fijn raster in de video, zoals de vloer */
+.video::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 0%, transparent 75%);
+}
+.video-play {
+  position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35); color: var(--white);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: transform var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.video-play svg { width: 26px; height: 26px; margin-left: 3px; }
+.video:hover .video-play { transform: scale(1.08); background: var(--green); border-color: var(--green); }
+.video-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 18px 22px; font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .02em; color: var(--text-inv);
+}
+.video-meta { color: var(--sub-soft-inv); font-size: 13px; }
+/* het groene lijnkader: verborgen achter de video, schuift bij hover naar rechtsonder uit (hoe ver: --frame) */
+.video-frame {
+  --frame: 16px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green-lt); border-radius: var(--radius-l);
+  opacity: 0; transform: translate3d(0, 0, -1px); pointer-events: none;
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.video-tilt:hover .video-frame, .video-tilt:focus-within .video-frame { opacity: 1; transform: translate3d(var(--frame), var(--frame), -1px); }
+/* zonder muis: het kader staat er altijd */
+@media (hover: none) { .video-frame { opacity: 1; transform: translate3d(12px, 12px, -1px); } }
+
+/* de tekst en de knoppen komen zacht na elkaar binnen */
+.hero-copy > * { opacity: 0; transform: translateY(14px); filter: blur(5px); animation: hero-in 1400ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+.hero-copy > :nth-child(2) { animation-delay: 250ms; }
+.hero-copy > :nth-child(3) { animation-delay: 500ms; }
+@keyframes hero-in { to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- De eerste sectie na de hero: komt op met het licht ---------- */
+.next { min-height: 90vh; padding: clamp(96px, 12vw, 180px) var(--gutter); }   /* genoeg pagina om helemaal licht te worden */
+.next > * { max-width: 1640px; margin-left: auto; margin-right: auto; opacity: var(--light); transform: translateY(calc((1 - var(--light)) * 24px)); }
+
+/* ---------- Wat we bouwen: drie categorieën naast elkaar ---------- */
+/* Op het eerste gezicht alleen het nummer, de naam en één regel. Wat er mogelijk is, komt pas bij hover
+   (de ruimte ervoor ligt klaar, zodat niets verspringt). Op een gsm tik je een categorie open. */
+.build-head { margin-bottom: clamp(48px, 6vw, 96px); }
+.build-title { font-size: var(--fs-h2); }
+.build-intro { margin-top: 16px; max-width: 30em; font-size: var(--fs-lead); line-height: 1.5; color: var(--sub); }
+.build-list { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3.5vw, 64px); align-items: start; }
+/* een categorie: een lijn erboven, die bij hover groen kleurt van links naar rechts */
+.kind { position: relative; border-top: 1px solid var(--line); }
+.kind::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.kind-head { display: grid; width: 100%; padding-top: 26px; cursor: default; }
+.kind-head:focus-visible { outline: none; }
+.kind-num { font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .04em; color: var(--sub); transition: color var(--dur-hover) var(--ease-out); }
+.kind-name {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  margin-top: 18px; font-family: var(--sans); font-weight: 500; letter-spacing: -.03em; line-height: 1; font-size: clamp(36px, 3.4vw, 56px);
+}
+.kind-line { margin-top: 16px; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.5; color: var(--sub); }
+/* het plusje: toont dat er meer is, en wordt een min als de categorie open staat */
+.kind-plus { position: relative; flex: none; width: 18px; height: 18px; color: var(--sub); transition: color var(--dur-hover) var(--ease-out); }
+.kind-plus::before, .kind-plus::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; transition: transform var(--dur-hover) var(--ease-out); }
+.kind-plus::after { transform: rotate(90deg); }
+/* wat er mogelijk is: een rustige lijst met dunne lijnen ertussen */
+.kind-items { list-style: none; margin-top: 30px; border-top: 1px solid var(--line); }
+.kind-items li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: clamp(15px, 1.05vw, 17px); line-height: 1.4; }
+/* open: bij hover, als je er met het toetsenbord in zit, of na een tik */
+.kind:hover::before, .kind.open::before, .kind:focus-within::before { transform: scaleX(1); }
+.kind:hover .kind-num, .kind.open .kind-num, .kind:focus-within .kind-num { color: var(--green-dim); }
+.kind:hover .kind-plus, .kind.open .kind-plus, .kind:focus-within .kind-plus { color: var(--green); }
+.kind:hover .kind-plus::after, .kind.open .kind-plus::after, .kind:focus-within .kind-plus::after { transform: rotate(90deg) scaleX(0); }
+/* met een muis: de lijst vaagt in op een plek die al klaarligt */
+@media (hover: hover) {
+  .kind-more { opacity: 0; transform: translateY(10px); transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out); }
+  .kind:hover .kind-more, .kind:focus-within .kind-more, .kind.open .kind-more { opacity: 1; transform: none; }
+}
+/* zonder muis: de lijst schuift open onder de gekozen categorie */
+@media (hover: none) {
+  .kind-head { cursor: pointer; }
+  .kind-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 520ms var(--ease-out); }
+  .kind-more > div { overflow: hidden; }
+  .kind.open .kind-more { grid-template-rows: 1fr; }
+}
+
+/* ---------- Hoe het verloopt: de stappen schuiven naar links ---------- */
+/* De sectie is een paar schermen hoog; daarin blijft het beeld staan (sticky) terwijl je scrolt. page.js zet per stap
+   waar hij staat, hoe groot en hoe helder: de stap waar je bent in het midden, de buren ernaast, klein en doorschijnend.
+   --per (uit STEP in page.js): hoeveel schermhoogtes je scrolt per stap. */
+.steps { --per: .9; position: relative; height: calc(100vh * (1 + 3 * var(--per))); height: calc(100svh * (1 + 3 * var(--per))); margin-bottom: clamp(40px, 6vw, 96px); }
+.steps-stage {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  display: flex; flex-direction: column; padding: clamp(110px, 14vh, 150px) var(--gutter) clamp(32px, 6vh, 64px);
+}
+.steps-head { width: 100%; max-width: 1640px; margin: 0 auto; }
+.steps-title { font-size: var(--fs-h2); }
+/* de stappenbalk: nummers met lijnen ertussen; de lijn na de actieve stap is lang. page.js zet alles mee met
+   hoe ver je zit: de haakjes schuiven geleidelijk naar het volgende nummer, en de lange lijn groeit mee. */
+.track { position: relative; display: flex; align-items: center; gap: 12px; max-width: 640px; margin-top: clamp(20px, 2.6vw, 36px); font-family: var(--sans); font-size: clamp(18px, 1.5vw, 24px); color: var(--sub); }
+.track-n { position: relative; z-index: 2; flex: none; }
+/* de haakjes: één schuifje over de balk, dat de lijn eronder in de kleur van de pagina afdekt */
+.track-br { position: absolute; left: 0; top: 50%; z-index: 1; height: 1.3em; background: var(--page, #F2F2F2); will-change: transform, width; }
+.track-br::before, .track-br::after { position: absolute; top: 50%; transform: translateY(-50%); line-height: 1; color: var(--text); }
+.track-br::before { content: "["; left: 0; }
+.track-br::after { content: "]"; right: 0; }
+.track-l { flex: 0 0 28px; height: 1.5px; background: currentColor; opacity: .55; }
+/* de rij met stappen: elke stap staat in het midden van de rij; page.js schuift en schaalt hem met transform */
+.steps-row { position: relative; flex: 1; list-style: none; }
+.step {
+  position: absolute; left: 50%; top: 50%; width: clamp(300px, 40vw, 620px);
+  transform: translate(-50%, -50%); transform-origin: 50% 40%; will-change: transform, opacity;
+}
+.step-num { display: block; font-size: clamp(20px, 1.6vw, 26px); color: var(--sub); transition: color 500ms var(--ease-out); }
+.step.is-on .step-num { color: var(--green-dim); }
+.step-name {
+  margin: clamp(10px, 1.2vw, 18px) 0 clamp(18px, 2vw, 28px);
+  font-family: var(--sans); font-weight: 500; letter-spacing: -.035em; line-height: 1.04; font-size: clamp(36px, 3.8vw, 64px);
+}
+.step-text { font-size: clamp(17px, 1.2vw, 20px); line-height: 1.6; color: var(--sub); text-wrap: pretty; }
+
+/* op een gsm: dezelfde beweging, de stap neemt bijna de hele breedte en de buren tonen alleen een randje */
+@media (max-width: 899px) {
+  .track { font-size: 16px; gap: 8px; }
+  .track-l { flex-basis: 16px; }
+  .step { width: calc(100vw - 2 * var(--gutter) - 48px); }
+  .step-name { font-size: clamp(32px, 8.6vw, 44px); }
+  .step-text { font-size: 17px; }
+}
+
+/* ---------- Twee wegen verder: wat we al bouwden, en wat er nog kan ---------- */
+/* Twee grote blokken naast elkaar. Bij hover schuift het pijltje op en schuift er een groen lijnkader
+   achter het blok uit, zoals bij het team en de video. Het hele blok is klikbaar. */
+.paths { padding: 0 var(--gutter) clamp(120px, 14vw, 200px); }
+.paths-grid { max-width: 1640px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 2.6vw, 44px); }
+.path { position: relative; display: block; width: 100%; text-align: left; }
+.path-frame {
+  --frame: 14px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green); border-radius: var(--radius-l);
+  opacity: 0; pointer-events: none; transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.path-frame.on-dark { border-color: var(--green); }
+.path:hover .path-frame, .path:focus-visible .path-frame { opacity: 1; transform: translate(var(--frame), var(--frame)); }
+.path:focus-visible { outline: none; }
+.path-card {
+  position: relative; display: flex; flex-direction: column; overflow: hidden; min-width: 0;
+  min-height: clamp(440px, 58vh, 620px); border-radius: var(--radius-l);
+}
+.path-light { background: var(--surface); border: 1px solid var(--line); color: var(--text); }
+.path-dark { background: radial-gradient(ellipse 90% 80% at 50% 30%, #1A2740 0%, #0F172A 60%, #0A0F1C 100%); color: var(--text-inv); }
+.path-foot { position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; padding: 0 clamp(26px, 2.8vw, 44px) clamp(26px, 2.8vw, 40px); }
+.path-title { font-size: clamp(30px, 3vw, 48px); }
+.path-link {
+  display: inline-flex; align-items: center; gap: 10px; padding-bottom: 6px;
+  font-family: var(--brand); font-weight: 500; font-size: 15px; letter-spacing: .02em; color: var(--sub);
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.path-dark .path-link { color: var(--sub-inv); }
+.path-link svg { width: 14px; height: 14px; transition: transform var(--dur-hover) var(--ease-out); }
+.path:hover .path-link { color: var(--green-dim); }
+.path:hover .path-dark .path-link { color: var(--green-lt); }
+.path:hover .path-link svg { transform: translateX(5px); }
+
+/* links: een schets van een platform op een laptop (A&M) en een app op een gsm (Croes) */
+.path-visual { position: relative; flex: 1; display: block; min-height: 260px; margin-top: clamp(28px, 3vw, 48px); }
+.dev-laptop {
+  position: absolute; left: 50%; top: 50%; width: min(58%, 380px); transform: translate(-58%, -54%);
+  transition: transform 900ms var(--ease-out);
+}
+.dev-screen {
+  display: grid; grid-template-columns: 18% 1fr; gap: 6%; aspect-ratio: 16 / 10; padding: 5%;
+  border-radius: 10px; background: #0F172A; border: 6px solid #1B2335;
+  box-shadow: 0 30px 60px -30px rgba(15, 23, 42, .5);
+}
+.dev-base { display: block; width: 116%; height: 8px; margin: 0 -8%; border-radius: 0 0 8px 8px; background: #D2D2CE; }
+.ui-side { border-radius: 4px; background: rgba(255, 255, 255, .06); }
+.ui-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8%; }
+.ui-col { display: grid; align-content: start; gap: 8px; }
+.ui-col i { display: block; height: 18px; border-radius: 4px; background: rgba(255, 255, 255, .1); }
+.ui-col i.on { background: rgba(98, 143, 105, .7); }
+.dev-phone {
+  position: absolute; left: 50%; top: 50%; width: min(24%, 140px); aspect-ratio: 9 / 18.5; transform: translate(62%, -40%);
+  display: grid; align-content: start; gap: 8px; padding: 18px 10px 10px;
+  border-radius: 20px; background: #0F172A; border: 5px solid #1B2335;
+  box-shadow: 0 30px 60px -24px rgba(15, 23, 42, .55);
+  transition: transform 900ms var(--ease-out);
+}
+.ui-bar { display: block; height: 8px; width: 50%; border-radius: 4px; background: rgba(255, 255, 255, .2); margin-bottom: 6px; }
+.ui-row { display: block; height: 22px; border-radius: 6px; background: rgba(255, 255, 255, .08); }
+.ui-row.short { width: 70%; }
+.ui-go {
+  position: absolute; left: 10px; right: 10px; bottom: 12px; padding: 7px 0; border-radius: 999px;
+  background: var(--green); color: var(--white); text-align: center; font-family: var(--brand); font-weight: 600; font-size: 10px; letter-spacing: .04em;
+}
+.path:hover .dev-laptop { transform: translate(-60%, -56%); }
+.path:hover .dev-phone { transform: translate(66%, -44%); }
+.path-logos { display: flex; align-items: center; gap: 26px; padding: 0 clamp(26px, 2.8vw, 44px) 22px; }
+.path-logos img { height: 30px; width: auto; filter: grayscale(1); opacity: .55; transition: opacity var(--dur-hover) var(--ease-out); }
+.path-logos .logo-am { height: 34px; mix-blend-mode: multiply; }
+.path:hover .path-logos img { opacity: .85; }
+
+/* achter alles in de navy kaart: de rastervloer uit de hero, in 3D, stil onderaan (card-scene.js, afstellen in CARD) */
+.card-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+/* de twee kaarten even hoog: de formulierkaart bepaalt de hoogte, de linkerkaart rekt mee */
+.paths-grid .path-card { height: 100%; }
+.path-ask:focus-within .path-frame { opacity: 1; transform: translate(var(--frame), var(--frame)); }
+
+/* rechts: het formulier. Titel en uitleg bovenaan, de velden als rustige lijnen, de knop onderaan */
+.ask {
+  position: relative; z-index: 1; flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start;
+  gap: clamp(18px, 1.8vw, 26px) clamp(18px, 2vw, 32px); padding: clamp(30px, 3.2vw, 52px) clamp(26px, 2.8vw, 44px) clamp(26px, 2.8vw, 40px);
+}
+.ask .path-title, .ask-intro, .ask-wide { grid-column: 1 / -1; }
+.ask-intro { margin-top: -6px; max-width: 30em; font-size: clamp(16px, 1.1vw, 18px); line-height: 1.55; color: var(--sub-inv); }
+.ask .path-title { margin-bottom: 0; }
+.ask-intro + .ask-field { margin-top: clamp(4px, 1vw, 14px); }
+.ask-field { display: grid; gap: 8px; min-width: 0; }
+.ask-label { font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; color: var(--sub-inv); transition: color var(--dur-micro) var(--ease-out); }
+.ask-field:focus-within .ask-label { color: var(--green-lt); }
+.ask input, .ask textarea {
+  width: 100%; padding: 8px 0 10px; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .22); border-radius: 0;
+  background: transparent; color: var(--white); font: inherit; font-size: clamp(16px, 1.1vw, 18px); line-height: 1.45;
+  transition: border-color var(--dur-micro) var(--ease-out);
+}
+.ask textarea { resize: none; min-height: 4.4em; }
+.ask input::placeholder, .ask textarea::placeholder { color: rgba(255, 255, 255, .32); }
+.ask input:focus, .ask textarea:focus { outline: none; border-bottom-color: var(--green-lt); }
+.ask .is-missing { border-bottom-color: #D98C7A; }
+.ask-foot { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: clamp(6px, 1vw, 14px); }
+.ask-note { font-size: 14px; color: #E3A898; }
+/* na het versturen: het formulier vaagt weg, de bedanking komt in het midden */
+.ask-done {
+  position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; gap: 10px; text-align: center; padding: 32px;
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out), visibility 0s linear 600ms;
+}
+.ask { transition: opacity 400ms var(--ease-out); }
+.path-ask.is-sent .ask { opacity: 0; visibility: hidden; }
+.path-ask.is-sent .ask-done { opacity: 1; visibility: visible; transform: none; transition: opacity 600ms var(--ease-out) 250ms, transform 700ms var(--ease-out) 250ms, visibility 0s; }
+
+@media (max-width: 899px) {
+  .paths-grid { grid-template-columns: minmax(0, 1fr); }
+  .path-card { min-height: 420px; }
+  .path-frame { opacity: 1; transform: translate(10px, 10px); }
+  .paths-grid { padding-right: 10px; }
+}
+@media (max-width: 560px) {
+  .ask { grid-template-columns: minmax(0, 1fr); }   /* op een smalle gsm: naam en bedrijf onder elkaar */
+}
+
+/* ---------- Op een kleiner scherm: het logo boven de tekst ---------- */
+@media (max-width: 899px) {
+  .hero { align-items: flex-start; }
+  .hero-grid { grid-template-columns: 1fr; gap: 8px; }
+  .hero-visual { order: -1; margin: 0 14px 28px 0; }
+  .video-tilt { --ry: -6deg; --rx: 3deg; }
+  .video-play { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+  .video-play svg { width: 20px; height: 20px; }
+  .video-caption { padding: 12px 14px; font-size: 13px; }
+  .video-meta { display: none; }
+  .build-list { grid-template-columns: 1fr; gap: 0; }
+  .kind-head { padding-bottom: 24px; }
+  .kind-items { margin-top: 0; padding-bottom: 12px; }
+  .kind-items li:last-child { border-bottom: 0; }
+  .hero-glow { background: radial-gradient(ellipse 80% 40% at 50% 26%, rgba(38, 58, 96, .55) 0%, rgba(11, 18, 32, 0) 70%); }
+}
+@media (max-width: 640px) {
+  .menu-label { display: none; }
+  .nav-right { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy > * { animation: none; opacity: 1; transform: none; filter: none; }
+}

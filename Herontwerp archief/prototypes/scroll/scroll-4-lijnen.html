@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll 4 de balken worden de lijnen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../stijl/tokens.css">
+<link rel="stylesheet" href="scroll-core.css">
+<style>
+  /* De drie rijen: elke lijn is een balk van het logo, plat gelegd over de volle breedte */
+  .rows { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+  .row { position: absolute; left: 0; top: 0; width: 0; }
+  .row-line {
+    height: 1px; background: rgba(255, 255, 255, .26);
+    opacity: clamp(0, calc((var(--p) - .4) * 10), 1);
+  }
+  .row-body {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: baseline; padding-top: 26px;
+    --q: clamp(0, calc((var(--p) - var(--at)) * 6), 1);
+    opacity: var(--q); transform: translateY(calc(12px - 12px * var(--q)));
+  }
+  .row:nth-child(1) .row-body { --at: .5; }
+  .row:nth-child(2) .row-body { --at: .56; }
+  .row:nth-child(3) .row-body { --at: .62; }
+  .row-head { display: flex; align-items: baseline; gap: 16px; }
+  .row-num { font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .04em; color: var(--green-lt); }
+  .row-word { font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.015em; font-size: clamp(32px, 3.6vw, 56px); }
+  .row-text { font-size: clamp(16px, 1.3vw, 20px); color: var(--sub-inv); max-width: 26em; }
+  @media (max-width: 760px) {
+    .row-body { grid-template-columns: 1fr; gap: 10px; padding-top: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="rows" id="rows">
+      <div class="row">
+        <div class="row-line"></div>
+        <div class="row-body">
+          <div class="row-head"><span class="row-num">/01</span><span class="row-word">Understand</span></div>
+          <p class="row-text">We find what really holds a business back, before we propose anything.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-line"></div>
+        <div class="row-body">
+          <div class="row-head"><span class="row-num">/02</span><span class="row-word">Translate</span></div>
+          <p class="row-text">We say honestly what AI can do for you, and what it cannot.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-line"></div>
+        <div class="row-body">
+          <div class="row-head"><span class="row-num">/03</span><span class="row-word">Deliver</span></div>
+          <p class="row-text">We stay until it works in practice, where it saves time or money.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap reveal">
+    <p class="eyebrow">Selected work · Croes NV</p>
+    <p class="big">From paper delivery notes <em>to a real time overview.</em></p>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="scroll-core.js"></script>
+<script>
+  // Idee 4: bij het scrollen schuiven de drie balken onder elkaar, worden ze flinterdun en rekken ze
+  // uit over de volle breedte. Daar nemen drie lijnen van 1 px het over, met de pijlers erop.
+  const rows = [...document.querySelectorAll('.row')];
+  const rowY = (c, i) => c.H * (c.mobile ? 0.2 : 0.24) + i * c.H * (c.mobile ? 0.25 : 0.22);
+
+  TriaHero({
+    scroll: 2,
+    frame(c) {
+      const ppu = c.base.ppu, camY = c.base.y;
+      const width = c.W - 2 * c.left;
+      c.bars.forEach((b, i) => {
+        // de balken vertrekken na elkaar, boven eerst
+        const a = c.E.inout(c.clamp((c.p - i * 0.04) / 0.36));
+        if (a <= 0) return;
+        const ty = camY - (rowY(c, i) - c.H / 2) / ppu;
+        const tx = (c.left + width / 2 - c.W / 2) / ppu;
+        b.mesh.position.x = c.lerp(c.BARS[i].x, tx, a);
+        b.mesh.position.y = c.lerp(c.BARS[i].y, ty, a);
+        b.mesh.scale.x = c.lerp(1, width / (c.BAR_W * ppu), a);
+        b.mesh.scale.y = c.lerp(1, 1.6 / (c.BAR_H * ppu), a);
+        b.mesh.scale.z = c.lerp(1, 0.15, a);
+      });
+      c.canvasOpacity = 1 - c.smooth(0.42, 0.52, c.p);
+    },
+    overlay(c) {
+      const width = c.W - 2 * c.left;
+      rows.forEach((el, i) => {
+        el.style.width = `${width}px`;
+        el.style.transform = `translate3d(${c.left}px, ${rowY(c, i)}px, 0)`;
+      });
+    },
+  });
+</script>
+</body>
+</html>

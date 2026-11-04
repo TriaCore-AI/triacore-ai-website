@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie officieel V1</title>
+<style>
+  /* V1 van de officiële logo-animatie. Zelfde logo, metaal en achtergrond als de basis
+     (logo-animatie-officieel.html), maar opgebouwd uit shots: rechtsboven, linksonder en
+     middenboven, telkens dichtbij en traag inzoomend, met een zachte knip ertussen. Het
+     laatste shot draait in naar het eindbeeld in het midden. */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #05080F; overflow: hidden; }
+  .stage {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 50% 42%, #152036 0%, #0B1220 48%, #05080F 100%);
+  }
+  .gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; will-change: opacity, filter; }
+  .veil {
+    position: absolute; inset: 0; background: #05080F; pointer-events: none;
+    opacity: 1; transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .stage.is-on .veil { opacity: 0; }
+  .stage.is-fast .veil { transition-duration: 300ms; }
+  .stage.is-still .veil { transition: none; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rad = THREE.MathUtils.degToRad;
+
+  // Een easing zoals cubic-bezier() in CSS
+  function bezier(x1, y1, x2, y2) {
+    const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+    const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+    const sx = t => ((ax * t + bx) * t + cx) * t;
+    const sy = t => ((ay * t + by) * t + cy) * t;
+    const dx = t => (3 * ax * t + 2 * bx) * t + cx;
+    return x => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 8; i++) {
+        const e = sx(t) - x, d = dx(t);
+        if (Math.abs(e) < 1e-6 || Math.abs(d) < 1e-6) break;
+        t -= e / d;
+      }
+      return sy(clamp(t));
+    };
+  }
+  const linear = x => clamp(x);
+  const glide = bezier(0.37, 0, 0.22, 1);   // traag vertrekken, lang uitglijden (zoals de basis)
+  const soft = bezier(0.4, 0, 0.2, 1);
+
+  // Het logo, in eenheden van 100 uit de originele SVG
+  const BAR_W = 2.9156, BAR_H = 0.4857, DX = 0.5758, DY = 1.00445;
+  const BARS = [{ x: -DX, y: DY }, { x: DX, y: 0 }, { x: -DX, y: -DY }];
+  const LOGO_H = 2 * DY + BAR_H, LOGO_W = 2 * DX + BAR_W;
+  const DEPTH = 0.2, BEVEL = 0.035;
+  const FOV = 26;
+
+  // ---------- De shots ----------
+  // Elk shot gaat van een stand (from) naar een stand (to). Een stand: hoek rond het logo
+  // (az, links/rechts), hoogte (el, boven/onder), afstand als deel van het eindbeeld (d),
+  // kanteling (roll), waar de camera naar kijkt (ax, ay) en waar het licht over het metaal valt (lg).
+  // In de drie eerste shots verandert enkel d: de camera zoomt recht naar het logo toe.
+  const SHOTS = [
+    { name: 'rechtsboven', dur: 1.9, ease: linear,
+      from: { az:  36, el:  27, d: 0.34, roll: -3, ax: 0.15, ay:  0.2,  lg: -0.2 },
+      to:   { az:  36, el:  27, d: 0.28, roll: -3, ax: 0.15, ay:  0.2,  lg:  0.15 } },
+    { name: 'linksonder', dur: 1.9, ease: linear,
+      from: { az: -38, el: -20, d: 0.36, roll:  3, ax: -0.2, ay:  0.15, lg: -0.9 },
+      to:   { az: -38, el: -20, d: 0.30, roll:  3, ax: -0.2, ay:  0.15, lg: -0.6 } },
+    { name: 'middenboven', dur: 1.7, ease: linear,
+      from: { az:   6, el:  32, d: 0.36, roll:  0, ax: 0,    ay:  0.18, lg: -0.6 },
+      to:   { az:   6, el:  32, d: 0.30, roll:  0, ax: 0,    ay:  0.18, lg: -0.3 } },
+    { name: 'naar het midden', dur: 2.8, ease: glide,
+      from: { az: -26, el:  12, d: 0.55, roll:  3, ax: 0,    ay:  0,    lg: -1.6 },
+      to:   { az:   0, el:   0, d: 1,    roll:  0, ax: 0,    ay:  0,    lg:  0.32 } },
+  ];
+  const FIELDS = ['az', 'el', 'd', 'roll', 'ax', 'ay', 'lg'];
+  const FADE = 0.28;      // seconden dat het beeld wegvervaagt, en evenveel om terug te komen
+  const BLUR = 10;        // zoveel pixels vervaagt het beeld op het moment van de knip
+
+  const STARTS = [];
+  let T_CAM = 0;
+  for (const s of SHOTS) { STARTS.push(T_CAM); T_CAM += s.dur; }
+  const T_END = T_CAM + 0.1;
+
+  // de stand van de camera en hoe zichtbaar het beeld is, op seconde t
+  function at(t) {
+    t = clamp(t, 0, T_CAM);
+    let i = SHOTS.length - 1;
+    while (i > 0 && t < STARTS[i]) i--;
+    const s = SHOTS[i], local = t - STARTS[i];
+    const k = s.ease(local / s.dur);
+    const pose = {};
+    for (const f of FIELDS) pose[f] = lerp(s.from[f], s.to[f], k);
+    // de knip: aan het einde van een shot vervaagt het beeld weg, aan het begin van het volgende komt het terug
+    let vis = 1;
+    if (i > 0) vis = Math.min(vis, soft(clamp(local / FADE)));
+    if (i < SHOTS.length - 1) vis = Math.min(vis, soft(clamp((s.dur - local) / FADE)));
+    // de lichtstreep in het laatste shot loopt zacht, los van de camera
+    if (i === SHOTS.length - 1) pose.lg = lerp(s.from.lg, s.to.lg, soft(clamp(local / (s.dur + 0.1))));
+    return { pose, vis };
+  }
+
+  const stage = document.getElementById('stage');
+  const canvas = stage.querySelector('.gl');
+
+  // ?t=3 zet de animatie vast op seconde 3, ?lg=0.5 zet het licht vast (om stilstaande beelden te controleren)
+  const params = new URLSearchParams(location.search);
+  const fixed = params.get('t');
+  const still = fixed !== null && !Number.isNaN(parseFloat(fixed));
+  const lgParam = parseFloat(params.get('lg'));
+  const lgTest = still && !Number.isNaN(lgParam) ? lgParam : null;
+
+  // ---------- Three.js ----------
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: still });
+  let dpr = Math.min(window.devicePixelRatio, 1.75);
+  renderer.setPixelRatio(dpr);
+  renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.05;
+
+  const scene = new THREE.Scene();
+
+  // een donkere studio met lichtstroken: dat is wat het metaal weerspiegelt
+  const studio = new THREE.Scene();
+  studio.background = new THREE.Color(0x06090f);
+  const strip = (w, h, k, x, y, z) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k), side: THREE.DoubleSide })
+    );
+    m.position.set(x, y, z);
+    m.lookAt(0, 0, 0);
+    studio.add(m);
+  };
+  strip(14, 0.9, 7, 0, 6, 3);
+  strip(0.8, 9, 4.5, -7, 0.5, 2);
+  strip(0.6, 9, 3, 7.5, 0, -1);
+  strip(18, 2.5, 1.3, 0, -6, 5);
+  strip(5, 3.5, 2.2, 0, 1, 9);
+  const env = new THREE.PMREMGenerator(renderer).fromScene(studio, 0.02).texture;
+
+  // de drie balken: afgeronde staven met een fijne afschuining
+  const shape = (() => {
+    const w = BAR_W - 2 * BEVEL, h = BAR_H - 2 * BEVEL, r = h / 2, x0 = -w / 2 + r, x1 = w / 2 - r;
+    const s = new THREE.Shape();
+    s.moveTo(x0, -r);
+    s.lineTo(x1, -r);
+    s.absarc(x1, 0, r, -Math.PI / 2, Math.PI / 2, false);
+    s.lineTo(x0, r);
+    s.absarc(x0, 0, r, Math.PI / 2, Math.PI * 1.5, false);
+    return s;
+  })();
+  const barGeo = new THREE.ExtrudeGeometry(shape, {
+    depth: DEPTH, bevelEnabled: true, bevelThickness: BEVEL, bevelSize: BEVEL, bevelSegments: 10, curveSegments: 48,
+  });
+  barGeo.center();
+
+  const bars = BARS.map(b => {
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color('#F2F2F2'), metalness: 1, roughness: 0.3,
+      anisotropy: 0.45, envMap: env, envMapIntensity: 1.2,
+    });
+    const mesh = new THREE.Mesh(barGeo, mat);
+    mesh.position.set(b.x, b.y, 0);
+    scene.add(mesh);
+    return mat;
+  });
+
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.03, 4000);
+  const tn = Math.tan(rad(FOV / 2));
+  let W = 0, H = 0, dist = 1;
+
+  function layout() {
+    W = stage.clientWidth; H = stage.clientHeight;
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+    // het eindbeeld: het logo in het midden, een kwart van de hoogte (zoals de basis)
+    dist = Math.max(LOGO_H / (0.25 * 2 * tn), LOGO_W / (0.6 * 2 * tn * camera.aspect));
+  }
+
+  // ---------- De lus ----------
+  let t = 0, fast = false, running = false, last = 0, slow = 1 / 60;
+
+  function draw() {
+    const { pose: p, vis } = at(t);
+    const az = rad(p.az), el = rad(p.el), r = p.d * dist, roll = rad(p.roll);
+    camera.position.set(
+      p.ax + r * Math.sin(az) * Math.cos(el),
+      p.ay + r * Math.sin(el),
+      r * Math.cos(az) * Math.cos(el)
+    );
+    camera.up.set(Math.sin(roll), Math.cos(roll), 0);
+    camera.lookAt(p.ax, p.ay, 0);
+
+    const lg = lgTest ?? p.lg;
+    bars.forEach(mat => mat.envMapRotation.set(0, lg, 0));
+
+    canvas.style.opacity = vis.toFixed(3);
+    canvas.style.filter = vis < 0.999 ? `blur(${((1 - vis) * BLUR).toFixed(2)}px)` : 'none';
+
+    renderer.render(scene, camera);
+  }
+
+  function frame(now) {
+    const raw = (now - last) / 1000;
+    const dt = Math.min(0.05, raw);
+    last = now;
+    t += dt * (fast ? 7 : 1);
+
+    // haalt de computer de 60 beelden per seconde niet, dan iets minder pixels
+    if (raw < 0.25) slow = lerp(slow, raw, 0.05);
+    if (slow > 1 / 45 && dpr > 1) {
+      dpr = Math.max(1, dpr - 0.25);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(W, H, false);
+      slow = 1 / 60;
+    }
+
+    draw();
+    // na het eindbeeld rekent de computer niet meer door
+    if (t < T_END) requestAnimationFrame(frame);
+    else { running = false; fast = false; }
+  }
+
+  function play() {
+    t = 0; fast = false;
+    stage.classList.remove('is-on', 'is-fast');
+    void stage.offsetWidth;   // de sluier begint opnieuw vanaf zwart
+    stage.classList.add('is-on');
+    if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); }
+  }
+
+  // tijdens de intro: klik of toets spoelt door. Na de intro: klik of R speelt opnieuw af.
+  function onInput(e) {
+    if (still) return;
+    if (e.type === 'keydown' && (e.key === 'r' || e.key === 'R') && !running) return play();
+    if (running && t < T_CAM) { fast = true; stage.classList.add('is-fast'); }
+    else if (!running && e.type === 'pointerdown') play();
+  }
+  window.addEventListener('pointerdown', onInput);
+  window.addEventListener('keydown', onInput);
+  window.addEventListener('resize', () => { layout(); if (!running) draw(); });
+
+  layout();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (still || reduce) {
+    t = still ? clamp(parseFloat(fixed), 0, T_END) : T_END;
+    stage.classList.add('is-still', 'is-on');
+    draw();
+  } else {
+    play();
+  }
+</script>
+</body>
+</html>

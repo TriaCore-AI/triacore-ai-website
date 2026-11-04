@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 09 typografie</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 09. Typografie op schaal: reusachtige woorden, de drie pijlers, staan als vlakken in de
+  // ruimte, wit op een fractie van zichtbaar. In elk shot zie je er maar een stukje van.
+  TriaLogoV6({
+    async setup(c) {
+      const { THREE } = c;
+      try { await document.fonts.load('600 400px "Playfair Display"'); } catch (e) { /* valt terug op Georgia */ }
+      c.scene.fog = new THREE.Fog(0x0B1220, 14, 60);
+      c.words = [];
+      const word = (text, w, x, y, z, ry) => {
+        const cv = document.createElement('canvas');
+        cv.width = 4096; cv.height = 720;
+        const g = cv.getContext('2d');
+        g.font = '600 560px "Playfair Display", Georgia, serif';
+        g.fillStyle = '#ffffff';
+        g.textBaseline = 'middle';
+        g.textAlign = 'center';
+        g.fillText(text, 2048, 380);
+        const tex = new THREE.CanvasTexture(cv);
+        tex.anisotropy = 8;
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(w, w * 720 / 4096), new THREE.MeshBasicMaterial({
+          map: tex, transparent: true, opacity: 0.07, depthWrite: false,
+        }));
+        m.position.set(x, y, z);
+        m.rotation.y = ry;
+        c.scene.add(m);
+        c.words.push(m);
+      };
+      word('Begrijpen', 34, -6, -5, -16, 0.35);
+      word('Vertalen', 30, 8, 5, -20, -0.3);
+      word('Waarmaken', 36, 0, -1.5, -30, 0);
+    },
+    frame(c, f) {
+      const o = f.shot === 2 ? c.lerp(0.07, 0.035, c.E.soft(f.k)) : 0.07;
+      c.words.forEach(m => { m.material.opacity = o; });
+    },
+  });
+</script>
+</body>
+</html>

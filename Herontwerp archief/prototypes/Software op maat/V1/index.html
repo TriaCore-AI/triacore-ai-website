@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore AI | Software op maat V1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../stijl/tokens.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+
+<!-- De navigatie, zoals op de homepage: zwevend, donker op de hero, licht op de rest -->
+<header class="nav" id="nav">
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu openen">
+    <span class="menu-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="menu-label">Menu</span>
+  </button>
+  <div class="nav-right">
+    <div class="nav-lang" role="group" aria-label="Taal">
+      <button type="button" class="is-on">NL</button><span>/</span><button type="button" disabled title="De Engelse tekst volgt als de inhoud vastligt">EN</button>
+    </div>
+    <a class="btn small" href="https://triacore.be/contact">Contact
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+  </div>
+</header>
+
+<div class="menu-scrim" id="menuScrim"></div>
+<nav class="menu" id="menu" aria-label="Hoofdmenu">
+  <ol class="menu-list">
+    <li><a href="../../Hero/V2/index.html"><span class="m-name">Home</span></a></li>
+    <li><a href="#top" class="is-here"><span class="m-name">Software op maat</span></a></li>
+    <li><a href="#"><span class="m-name">AI-oplossingen</span></a></li>
+    <li><a href="#"><span class="m-name">Workshops</span></a></li>
+    <li><a href="https://triacore.be/team"><span class="m-name">Team</span></a></li>
+    <li><a href="https://triacore.be/contact"><span class="m-name">Contact</span></a></li>
+  </ol>
+  <div class="menu-foot">
+    <a href="mailto:info@triacore.be">info@triacore.be</a>
+    <span>Kempische Steenweg 303, 3500 Hasselt</span>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- De hero: de titel, één zin, twee acties, en rechts de uitlegvideo (in de maak) -->
+  <section class="intro on-dark" id="intro">
+    <div class="intro-grid">
+      <div class="intro-copy">
+        <h1 class="title intro-title">Software op maat.<br><em>Rond hoe jij werkt.</em></h1>
+        <p class="lead intro-lead">Een tool die gebouwd wordt rond hoe jouw bedrijf werkt. Voor wie buiten werkt, voor kantoor en voor de zaakvoerder.</p>
+        <div class="intro-actions">
+          <a class="btn" href="https://triacore.be/contact">Plan een gesprek
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+          <a class="text-link" href="#wat">Wat we bouwen</a>
+        </div>
+      </div>
+      <button class="video" type="button" id="video" aria-label="Video: wat is software op maat? De video is in de maak.">
+        <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+        <span class="video-caption"><span>Wat is software op maat?</span><span class="video-meta">Video, in de maak</span></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Wat we bouwen: drie categorieën als naamrijen, met per categorie wat er mogelijk is -->
+  <section class="cats" id="wat">
+    <h2 class="title section-title">Wat we bouwen.</h2>
+    <ol class="cat-list">
+      <li class="cat">
+        <div class="cat-info">
+          <p class="cat-intro">Wat nog op papier of in Excel loopt, krijgt een digitale basis.</p>
+          <p class="cat-proof">Zo deden we het bij Croes en A&amp;M</p>
+          <span class="cat-num">/01</span>
+        </div>
+        <div class="cat-body">
+          <h3 class="cat-name">Digitaliseren</h3>
+          <ul class="cat-items">
+            <li>Een app voor wie buiten werkt: registreren, inspecties, foto's</li>
+            <li>Een platform per rol, voor kantoor, planner of vestiging</li>
+            <li>Een planning voor mensen, voertuigen of machines</li>
+            <li>Calculaties en offertes</li>
+            <li>Een portaal voor klanten, onderaannemers of vestigingen</li>
+          </ul>
+        </div>
+      </li>
+      <li class="cat">
+        <div class="cat-info">
+          <p class="cat-intro">Meer halen uit de software die je al hebt.</p>
+          <p class="cat-proof">Zo deden we het bij Croes</p>
+          <span class="cat-num">/02</span>
+        </div>
+        <div class="cat-body">
+          <h3 class="cat-name">Verbinden</h3>
+          <ul class="cat-items">
+            <li>Je ERP eenvoudiger: alleen de knoppen die je mensen nodig hebben</li>
+            <li>Aanvullen wat je ERP of pakket mist</li>
+            <li>Je programma's wisselen zelf gegevens uit</li>
+          </ul>
+        </div>
+      </li>
+      <li class="cat">
+        <div class="cat-info">
+          <p class="cat-intro">Alles op één plek, zodat je ziet hoe het loopt.</p>
+          <span class="cat-num">/03</span>
+        </div>
+        <div class="cat-body">
+          <h3 class="cat-name">Overzien</h3>
+          <ul class="cat-items">
+            <li>Gegevens uit verschillende systemen samengebracht</li>
+            <li>Documenten die je meteen terugvindt</li>
+            <li>Dashboards en cijfers voor de zaakvoerder</li>
+            <li>Opvolging van materieel en termijnen: keuringen, onderhoud, attesten</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Eén zin over de volle breedte: het antwoord op de grootste twijfel -->
+  <section class="statement on-dark">
+    <p class="title statement-line">Je ERP blijft. <em>Wij bouwen wat het mist.</em></p>
+    <p class="statement-sub">En we koppelen eraan, zodat de gegevens die er al in zitten voor je gaan werken.</p>
+  </section>
+
+  <!-- Zo pakken we het aan: de drie pijlers van de homepage, elk met zijn balk van het logo -->
+  <section class="how">
+    <h2 class="title section-title">Zo pakken we het aan.</h2>
+    <ol class="how-list">
+      <li class="step">
+        <span class="step-bar b1" aria-hidden="true"></span>
+        <h3 class="step-name">Begrijpen</h3>
+        <p class="step-text">We zitten samen aan tafel, lopen mee waar het nodig is, en brengen in kaart wat het probleem vandaag kost.</p>
+      </li>
+      <li class="step">
+        <span class="step-bar b2" aria-hidden="true"></span>
+        <h3 class="step-name">Vertalen</h3>
+        <p class="step-text">We ontwerpen een oplossing rond hoe jouw bedrijf werkt, met wat je al hebt als vertrekpunt.</p>
+      </li>
+      <li class="step">
+        <span class="step-bar b3" aria-hidden="true"></span>
+        <h3 class="step-name">Waarmaken</h3>
+        <p class="step-text">We bouwen snel en gebruiksvriendelijk, en begeleiden je team twee maanden intensief na de oplevering.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Het bewijs: de twee use cases, zoals op de homepage maar compacter -->
+  <section class="proof">
+    <h2 class="title section-title">Wat we bouwden.</h2>
+    <div class="proof-row">
+      <article class="case">
+        <div class="case-media"><img class="case-logo croes" src="../../Hero/V2/assets/croes.png" alt="Croes NV"></div>
+        <div class="case-body">
+          <span class="case-tag">Grondverzet · Digitaliseren</span>
+          <p class="case-text">De vrachtbonnen gingen van papier naar een app. Kantoor ziet nu live wat er op elke werf gebeurt.</p>
+          <a class="case-cta" href="#">Lees meer
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+      <article class="case">
+        <div class="case-media"><img class="case-logo am" src="../../Hero/V2/assets/am-group.webp" alt="A&amp;M Group"></div>
+        <div class="case-body">
+          <span class="case-tag">Autodealers · Digitaliseren</span>
+          <p class="case-text">Het transport van wagens tussen de vestigingen ging van een gedeelde Excel naar eigen platformen.</p>
+          <a class="case-cta" href="#">Lees meer
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- De FAQ, als index zoals op de homepage -->
+  <section class="faq">
+    <h2 class="title section-title">Wat je je <em>misschien afvraagt.</em></h2>
+    <div class="faq-index">
+      <ol class="faq-list">
+        <li class="faq-item is-on"><button class="faq-pick" type="button" aria-expanded="true" aria-controls="faqShown"><span class="faq-num">/01</span><span class="faq-q">Moet ik mijn ERP overboord gooien?</span></button>
+          <p class="faq-a">Je ERP blijft. Het bevat al veel van je gegevens. Wij bouwen wat het mist, maken het eenvoudiger waar het te ingewikkeld is, en koppelen eraan.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/02</span><span class="faq-q">Wat kost software op maat?</span></button>
+          <p class="faq-a">Software bouwen is de voorbije jaren veel betaalbaarder geworden. Je betaalt een eenmalige prijs voor wat we bouwen, en daarna een vaste maandelijkse begeleiding: support, updates en onderhoud.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/03</span><span class="faq-q">Wat levert het op?</span></button>
+          <p class="faq-a">Tijd die vandaag naar overtypen en zoeken gaat, minder fouten, juister en sneller factureren, en een overzicht om op te beslissen. We brengen vooraf in kaart wat het probleem je nu kost, en tonen achteraf wat er veranderd is.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/04</span><span class="faq-q">Van wie is de software?</span></button>
+          <p class="faq-a">Van jou. De gegevens en de broncode blijven van je bedrijf. We werken veilig en volgens de GDPR, en iedereen ziet alleen wat hij nodig heeft.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/05</span><span class="faq-q">Kan er later AI bij?</span></button>
+          <p class="faq-a">Ja. Staat de basis er, dan kan AI erop verder bouwen: voorstellen doen, documenten ordenen, vragen beantwoorden met de kennis van je bedrijf.</p></li>
+      </ol>
+      <div class="faq-shown" id="faqShown" aria-live="polite"><p class="faq-shown-q"></p><p class="faq-shown-a"></p></div>
+    </div>
+  </section>
+
+  <!-- De afsluiting: één uitnodiging, en de weg naar AI-oplossingen -->
+  <section class="close">
+    <h2 class="title close-title">Vertel ons hoe <em>jullie werken.</em></h2>
+    <div class="close-actions">
+      <a class="btn" href="https://triacore.be/contact">Plan een gesprek
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      <a class="next-link" href="#">Staat de basis er? Ontdek AI-oplossingen
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<script src="page.js"></script>
+</body>
+</html>

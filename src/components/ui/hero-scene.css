@@ -1,0 +1,62 @@
+/* De 3D-achtergrond vloeit onderaan over in het groen van de pagina, zonder zichtbare rand. De overgang volgt een
+   zachte S-curve en begint net onder de knoppen, zodat de logo's al deels op het groen staan */
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, rgb(0 0 0 / 0.86) 75%, rgb(0 0 0 / 0.58) 80%, rgb(0 0 0 / 0.32) 85%, rgb(0 0 0 / 0.13) 90%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 70%, rgb(0 0 0 / 0.86) 75%, rgb(0 0 0 / 0.58) 80%, rgb(0 0 0 / 0.32) 85%, rgb(0 0 0 / 0.13) 90%, transparent 96%);
+}
+.hero-scene.is-klaar { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .hero-scene { transition: none; } }
+
+/* De klantlogo's staan rechtstreeks op de achtergrond */
+.hero-logorij {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 18px 28px;
+}
+.hero-logorij > * { position: relative; }
+@media (min-width: 768px) {
+  .hero-logorij { padding: 16px 44px; }
+  .hero-logo-kopie { display: none; }
+}
+
+/* Gsm: de logo's schuiven op één lijn van rand tot rand, traag en zonder einde.
+   Elk logo beweegt zelf (niet de hele rij), anders kan het niet meer met de achtergrond mengen. Alle logo's
+   krijgen een vak van 170px, dus één set is 4 x 170 = 680px: precies zo ver schuiven ze, en dan begint het opnieuw */
+@media (max-width: 767px) {
+  .hero-logorij { width: 100%; padding-left: 0; padding-right: 0; }
+  .hero-logos {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
+    overflow: hidden;
+  }
+  .hero-logo {
+    flex: none;
+    width: 170px;
+    height: 44px;
+    max-width: none;
+    padding: 0 18px;
+    animation: hero-logos-schuif 30s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-logos { flex-wrap: wrap; justify-content: center; gap: 16px 0; }
+    .hero-logo { animation: none; }
+    .hero-logo-kopie { display: none; }
+  }
+}
+@keyframes hero-logos-schuif {
+  to { transform: translateX(-680px); }
+}

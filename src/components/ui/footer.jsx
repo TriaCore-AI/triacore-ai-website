@@ -6,7 +6,7 @@ import NewsletterSignup from './newsletter-signup';
 // Overgang van de lichte pagina naar de donkere footer: een verloop dat volgens een zachte
 // S-curve van doorzichtig naar #020617 gaat. Door de vele tussenstappen is er nergens een begin of
 // eind te zien, en omdat het telkens dezelfde kleur met meer dekking is, ontstaat er geen grauwe band.
-// De korrel van de pagina schemert er nog door en verdwijnt geleidelijk mee
+// De achtergrond van de pagina schemert er nog door en verdwijnt geleidelijk mee
 const FADE_STOPS = [
     [0, 0], [8.1, 0.013], [15.5, 0.049], [22.5, 0.104], [29, 0.175], [35.3, 0.259], [41.2, 0.352],
     [47.1, 0.45], [52.9, 0.55], [58.8, 0.648], [64.7, 0.741], [71, 0.825], [77.5, 0.896],
@@ -52,8 +52,9 @@ export default function Footer() {
                     <div className="lg:col-span-4 grid grid-cols-2 gap-8">
                         <div className="flex flex-col gap-2.5">
                             <p className="text-sm font-medium text-white mb-1.5">{nl ? "Pagina's" : 'Pages'}</p>
-                            <Link to="/custom-oplossingen" className={linkClass}>{nl ? 'Custom oplossingen' : 'Custom solutions'}</Link>
+                            <Link to="/custom-oplossingen" className={linkClass}>{nl ? 'Custom tools' : 'Custom tools'}</Link>
                             <Link to="/workshops" className={linkClass}>Workshops</Link>
+                            <Link to="/ai-begeleiding" className={linkClass}>{nl ? 'AI-begeleiding' : 'AI guidance'}</Link>
                             <Link to="/projecten" className={linkClass}>{nl ? 'Projecten' : 'Projects'}</Link>
                             <Link to="/resources" className={linkClass}>Resources</Link>
                             <Link to="/team" className={linkClass}>Team</Link>
@@ -62,8 +63,8 @@ export default function Footer() {
                         <div className="flex flex-col gap-2.5">
                             <p className="text-sm font-medium text-white mb-1.5">Contact</p>
                             <a href="mailto:info@triacore.be" className={linkClass}>info@triacore.be</a>
-                            <a href="tel:+32499874662" className={linkClass}>Rian · 0499 87 46 62</a>
-                            <a href="tel:+32468275082" className={linkClass}>Lucas · 0468 27 50 82</a>
+                            <a href="tel:+32499874662" className={linkClass}>Rian · +32 499 87 46 62</a>
+                            <a href="tel:+32468275082" className={linkClass}>Lucas · +32 468 27 50 82</a>
                             <p className="mt-2 text-sm text-white/40 leading-relaxed">
                                 Kempische Steenweg 303<br />3500 Hasselt · Corda Incubator
                             </p>
@@ -89,7 +90,7 @@ export default function Footer() {
                             onClick={() => window.dispatchEvent(new CustomEvent('open-cookie-settings'))}
                             className="hover:text-white transition-colors"
                         >
-                            {nl ? 'Cookie instellingen' : 'Cookie settings'}
+                            {nl ? 'Cookie-instellingen' : 'Cookie settings'}
                         </button>
                     </div>
                 </div>

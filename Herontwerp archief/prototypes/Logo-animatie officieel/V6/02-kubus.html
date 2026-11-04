@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 02 kubus</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 02. De kubus: een kubus van haarfijne lijnen rond het logo. In de schuine shots zie je de
+  // ribben, de camera vliegt er in shot 1 zelfs binnen. In het eindbeeld vervaagt hij.
+  TriaLogoV6({
+    setup(c) {
+      const { THREE } = c;
+      const geo = new THREE.EdgesGeometry(new THREE.BoxGeometry(5.8, 5.8, 5.8));
+      const mat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, depthWrite: false });
+      c.cube = new THREE.LineSegments(geo, mat);
+      c.scene.add(c.cube);
+    },
+    frame(c, f) {
+      c.cube.material.opacity = f.shot === 2 ? 0.18 * (1 - c.E.soft(c.clamp(f.k * 1.5))) : 0.18;
+    },
+  });
+</script>
+</body>
+</html>

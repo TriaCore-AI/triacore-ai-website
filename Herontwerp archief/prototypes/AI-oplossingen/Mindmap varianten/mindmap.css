@@ -1,0 +1,181 @@
+/* =============================================================
+   Mindmap varianten: zes mindmaps voor de kaart "Zo bouwen wij AI.".
+   Kleuren, fonts en tempo uit ../../../stijl/tokens.css. Elke kaart is licht met een fijne rand; bij hover schuift
+   het groene lijnkader uit. Links het schema in een vierkant vak, rechts de uitleg.
+   ============================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); }
+body { color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 1px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- De kop van de pagina ---------- */
+.top { max-width: 1640px; margin: 0 auto; padding: clamp(64px, 8vw, 120px) var(--gutter) clamp(32px, 4vw, 56px); }
+.top-title { font-size: var(--fs-h2); }
+.top-intro { margin-top: 16px; font-size: var(--fs-lead); line-height: 1.5; color: var(--sub); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .03em; color: var(--sub); }
+.jump a:hover { color: var(--green-dim); }
+
+/* ---------- Per variant ---------- */
+.var { max-width: 1640px; margin: 0 auto; padding: clamp(48px, 6vw, 96px) var(--gutter); border-top: 1px solid var(--line); }
+.var-head { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 6px 18px; margin-bottom: 32px; }
+.var-num { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--green-dim); }
+.var-name { font-family: var(--sans); font-weight: 500; font-size: 26px; letter-spacing: -.02em; }
+.var-note { font-size: 15px; line-height: 1.5; color: var(--sub); max-width: 52em; }
+
+.hwrap { position: relative; }
+.hframe {
+  --frame: 14px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green); border-radius: var(--radius-l);
+  opacity: 0; pointer-events: none; transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.hwrap:hover .hframe { opacity: 1; transform: translate(var(--frame), var(--frame)); }
+.vcard {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 112px); align-items: center;
+  border-radius: var(--radius-l); background: var(--surface); border: 1px solid var(--line);
+  padding: clamp(28px, 4.5vw, 80px) clamp(24px, 4.5vw, 80px);
+}
+
+/* ---------- Het schema: een vierkant vak, plaatsen in procent ---------- */
+.mm { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1; justify-self: center; }
+.mm-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mm-svg .web { fill: none; stroke: rgba(15, 23, 42, .08); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.mm-svg .spoke {
+  fill: none; stroke: rgba(15, 23, 42, .14); stroke-width: 1.2; vector-effect: non-scaling-stroke;
+  transition: stroke var(--dur-hover) var(--ease-out);
+}
+/* gekozen: een groene stippellijn die van het model naar het onderdeel stroomt */
+.mm-svg .spoke.is-on { stroke: var(--green); stroke-width: 1.6; stroke-dasharray: 3 5; animation: flow .9s linear infinite; }
+.mm-svg .spoke.is-all { stroke: rgba(98, 143, 105, .55); stroke-dasharray: 3 5; animation: flow 1.4s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -16; } }
+
+/* het model in het midden */
+.mc {
+  position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%, -50%);
+  display: grid; place-items: center; width: 25%; aspect-ratio: 1; border-radius: 50%;
+  background: var(--navy); color: var(--text-inv);
+  box-shadow: 0 24px 48px -24px rgba(15, 23, 42, .55), 0 0 0 0 rgba(98, 143, 105, 0);
+  transition: box-shadow 600ms var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.mc-in { display: grid; justify-items: center; gap: 8px; }
+.mc svg { width: clamp(24px, 2.2vw, 34px); height: clamp(24px, 2.2vw, 34px); color: var(--green-lt); }
+.mc-name { font-weight: 500; font-size: clamp(13px, 1.05vw, 16px); letter-spacing: -.01em; }
+.mc.is-on { box-shadow: 0 24px 48px -24px rgba(15, 23, 42, .55), 0 0 0 10px rgba(98, 143, 105, .14); }
+
+/* ---------- Knoop: rond icoon met het woord naar buiten (01, 02, 03) ---------- */
+.mn { position: absolute; z-index: 2; transform: translate(-50%, -50%); }
+.mn-dot .mn-ic {
+  position: relative; display: grid; place-items: center; width: clamp(44px, 4vw, 60px); aspect-ratio: 1; border-radius: 50%;
+  background: var(--white); border: 1px solid var(--line); color: var(--green-dim);
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out),
+              transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.mn-dot svg { width: 42%; height: 42%; }
+.mn-lab {
+  position: absolute; white-space: nowrap; font-weight: 500; font-size: clamp(14px, 1.1vw, 17px); letter-spacing: -.01em; color: var(--sub);
+  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.lab-right .mn-lab { left: calc(100% + 14px); top: 50%; transform: translateY(-50%); }
+.lab-left .mn-lab { right: calc(100% + 14px); top: 50%; transform: translateY(-50%); }
+.lab-up .mn-lab { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.lab-down .mn-lab { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
+.mn-dot.is-on .mn-ic { background: var(--green); border-color: var(--green); color: var(--white); transform: scale(1.1); box-shadow: 0 0 0 8px rgba(98, 143, 105, .14); }
+.mn-dot.is-on .mn-lab { color: var(--text); }
+
+/* 03 Gloed: een zachte groene gloed rond het model, zwevende icoontjes met een schaduw, stippellijnen */
+.mm-glow {
+  position: absolute; left: 50%; top: 50%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(98, 143, 105, .34) 0%, rgba(98, 143, 105, .14) 38%, rgba(98, 143, 105, 0) 70%);
+  animation: glow 5s ease-in-out infinite;
+}
+@keyframes glow { 0%, 100% { transform: translate(-50%, -50%) scale(.94); opacity: .8; } 50% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; } }
+.glow .spoke { stroke-dasharray: 1 5; stroke: rgba(15, 23, 42, .22); stroke-linecap: round; }
+.glow .mn-dot .mn-ic { border-color: transparent; box-shadow: 0 14px 30px -14px rgba(15, 23, 42, .35); }
+.glow .mn-dot.is-on .mn-ic { box-shadow: 0 0 0 10px rgba(98, 143, 105, .16), 0 14px 30px -14px rgba(15, 23, 42, .35); }
+.glow .mn-dot { animation: float 6s ease-in-out infinite; }
+.glow .mn-dot:nth-of-type(odd) { animation-delay: -3s; }
+@keyframes float { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 4px)); } }
+
+/* ---------- Knoop: kaartje met icoon, naam en één regel (04) ---------- */
+.mn-card {
+  display: flex; align-items: center; gap: 12px; width: 32%; padding: 12px 14px; border-radius: 14px;
+  background: var(--white); border: 1px solid var(--line);
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.mn-card .mn-ic, .mn-pill .mn-ic {
+  flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(98, 143, 105, .1); color: var(--green-dim);
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.mn-card svg, .mn-pill svg { width: 18px; height: 18px; }
+.mn-txt { min-width: 0; }
+.mn-name { display: block; font-weight: 500; font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; line-height: 1.2; }
+.mn-short { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.3; color: var(--sub); }
+.mn-card.is-on { transform: translate(-50%, calc(-50% - 4px)); border-color: var(--green); box-shadow: 0 22px 40px -26px rgba(15, 23, 42, .45); }
+.mn-card.is-on .mn-ic, .mn-pill.is-on .mn-ic { background: var(--green); color: var(--white); }
+
+/* ---------- Knoop: pil met icoon en naam (05) ---------- */
+.mn-pill {
+  display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; border-radius: 999px; white-space: nowrap;
+  background: var(--white); border: 1px solid var(--line); font-weight: 500;
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.mn-pill .mn-ic { border-radius: 50%; }
+.mn-pill.is-right { flex-direction: row-reverse; padding: 6px 6px 6px 16px; }
+.mn-pill.is-on { border-color: var(--green); box-shadow: 0 18px 36px -24px rgba(15, 23, 42, .45); transform: translate(-50%, -50%) scale(1.04); }
+.mm-pill .mc { width: 27%; }
+
+/* ---------- Knoop: zeshoek (06) ---------- */
+/* De rand is de buitenste zeshoek, het vlak de binnenste (een rand gaat niet met clip-path). */
+.mn-hex, .mc-hex {
+  width: 30%; aspect-ratio: 1 / 1.1547; border-radius: 0; padding: 1px; background: var(--line);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  transition: background var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.hex-in {
+  display: grid; place-content: center; justify-items: center; gap: 10px; width: 100%; height: 100%; background: var(--white);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  transition: background var(--dur-hover) var(--ease-out);
+}
+.mn-hex .mn-ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(98, 143, 105, .1); color: var(--green-dim); transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out); }
+.mn-hex svg { width: 20px; height: 20px; }
+.mn-hex.is-on { background: var(--green); transform: translate(-50%, -50%) scale(1.04); }
+.mn-hex.is-on .mn-ic { background: var(--green); color: var(--white); }
+.mc-hex { aspect-ratio: 1 / 1.1547; background: var(--navy); box-shadow: none; }
+.mc-hex.is-on { box-shadow: none; background: var(--green); }
+.mc-hex .mc-in { width: 100%; height: 100%; place-content: center; background: var(--navy); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+
+/* ---------- Rechts: icoon, naam en uitleg ---------- */
+.vp { max-width: 30em; transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.vp.swap { opacity: 0; transform: translateY(6px); }
+.vp-ic { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--green); color: var(--white); }
+.vp-ic svg { width: 26px; height: 26px; }
+.vp-name { margin-top: 26px; font-weight: 500; font-size: clamp(32px, 2.8vw, 46px); letter-spacing: -.03em; line-height: 1; }
+.vp-text { margin-top: 18px; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.6; color: var(--sub); }
+
+/* ---------- Kleinere schermen: het schema boven, de uitleg eronder ---------- */
+@media (max-width: 1099px) {
+  .vcard { grid-template-columns: minmax(0, 1fr); }
+  .mm { max-width: 520px; }
+}
+@media (max-width: 640px) {
+  .var-head { grid-template-columns: auto 1fr; }
+  .var-note { grid-column: 1 / -1; }
+  .vcard { padding: 40px 14px 32px; gap: 48px; }
+  .mm { width: 88%; }
+  /* de woorden onder de icoontjes, zodat ze binnen de kaart blijven */
+  .mn-dot .mn-lab { top: calc(100% + 6px); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); font-size: 12px; }
+  .mn-card { width: 27%; flex-direction: column; align-items: center; text-align: center; padding: 8px 4px; gap: 4px; }
+  .mn-short { display: none; }
+  .mn-name { font-size: 12px; }
+  .mn-pill { padding: 4px 10px 4px 4px; font-size: 12px; gap: 6px; }
+  .mn-pill.is-right { padding: 4px 4px 4px 10px; }
+  .mn-card .mn-ic, .mn-pill .mn-ic { width: 28px; height: 28px; }
+  .mn-hex .mn-ic { width: 28px; height: 28px; }
+  .mn-hex svg { width: 15px; height: 15px; }
+  .hex-in { gap: 4px; }
+  .mc-name { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-svg .spoke.is-on, .mm-svg .spoke.is-all, .mm-glow, .glow .mn-dot { animation: none; }
+}

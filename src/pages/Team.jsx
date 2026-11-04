@@ -1,213 +1,155 @@
 import React, { useEffect, useRef } from 'react';
-import Navbar from '../components/ui/navbar';
-import Footer from '../components/ui/footer';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useLanguage } from '../context/LanguageContext';
-import { AutoImage } from '../components/ui/auto-image';
+import { ArrowUpRight } from 'lucide-react';
+import Navbar from '../components/ui/navbar';
+import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
+import PageHeader from '../components/ui/page-header';
+import CornerTrace from '../components/ui/corner-trace';
+import { AutoImage } from '../components/ui/auto-image';
+import { useLanguage } from '../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TEAM_DATA = {
-    nl: [
-        {
-            name: "Rian Mathijs",
-            role: "Sales & Klantrelaties",
-            image: "/team/rian",
-            p1: "Rian is het eerste aanspreekpunt voor onze klanten en bewaakt de volledige samenwerking van begin tot eind. Met een sterke focus op duidelijke communicatie en lange termijnrelaties zorgt hij ervoor dat verwachtingen, doelstellingen en uitvoering perfect op elkaar afgestemd blijven.",
-            p2: "Hij vertaalt bedrijfsuitdagingen naar concrete trajecten en bewaakt de strategische lijn tijdens het volledige project. Voor onze klanten is hij het vaste referentiepunt dat structuur en overzicht brengt.",
-            linkedin: "https://www.linkedin.com/in/rian-mathijs-6a4350356/",
-            email: "rian.mathijs@triacore.be",
-            phone: "0499 87 46 62"
+// De teamleden, in dezelfde volgorde als op de homepage
+const TEAM = [
+    {
+        name: 'Lucas Curto',
+        image: '/team/lucas',
+        role: { nl: 'AI & Strategie', en: 'AI & Strategy' },
+        bio: {
+            nl: [
+                'Lucas staat in voor AI en strategie binnen TriaCore AI. Hij is altijd op zoek naar wat er nieuw is in AI en bekijkt telkens wat daarvan echt nuttig is voor onze klanten.',
+                'Wat hij ontdekt, vertaalt hij naar de dagelijkse praktijk van uw bedrijf. Met een sterke focus op duidelijke uitleg maakt hij AI begrijpelijk en haalbaar, ook voor wie er nog niet elke dag mee werkt.'
+            ],
+            en: [
+                'Lucas is responsible for AI and strategy at TriaCore AI. He is always looking for what is new in AI and considers what is genuinely useful for our clients.',
+                'What he discovers, he translates into the daily reality of your business. With a strong focus on clear explanation, he makes AI understandable and achievable, even for people who don\'t work with it every day.'
+            ]
         },
-        {
-            name: "Lucas Curto",
-            role: "Operationeel & Technische Architectuur",
-            image: "/team/lucas",
-            p1: "Lucas staat in voor de technische uitwerking binnen TriaCore AI. Hij ontwerpt schaalbare architecturen die organisaties helpen groeien zonder hun systemen telkens te moeten herdenken.",
-            p2: "Bedrijfsprocessen vertaalt hij naar efficiënte AI-oplossingen en automatisaties, met focus op stabiliteit, overzicht en toekomstbestendigheid.",
-            linkedin: "https://www.linkedin.com/in/lucas-curto-67555a377/",
-            email: "lucas.curto@triacore.be",
-            phone: "0468 27 50 82"
+        email: 'lucas.curto@triacore.be',
+        phone: '+32 468 27 50 82',
+        tel: '+32468275082',
+        linkedin: 'https://www.linkedin.com/in/lucas-curto-67555a377/'
+    },
+    {
+        name: 'Rian Mathijs',
+        image: '/team/rian',
+        role: { nl: 'Sales & Klantrelaties', en: 'Sales & Client Relations' },
+        bio: {
+            nl: [
+                'Rian is het eerste aanspreekpunt voor onze klanten en bewaakt de volledige samenwerking van begin tot eind. Met een sterke focus op duidelijke communicatie en relaties voor de lange termijn zorgt hij ervoor dat verwachtingen, doelstellingen en uitvoering op elkaar afgestemd blijven.',
+                'Hij vertaalt bedrijfsuitdagingen naar concrete trajecten en bewaakt de rode draad tijdens het volledige project. Voor onze klanten is hij het vaste referentiepunt: u kan altijd bij hem terecht.'
+            ],
+            en: [
+                'Rian is the first point of contact for our clients and oversees the entire collaboration from start to finish. With a strong focus on clear communication and long term relationships, he makes sure expectations, goals and execution stay aligned.',
+                'He translates business challenges into concrete trajectories and keeps the common thread throughout the project. For our clients, he is the fixed point of reference: you can always turn to him.'
+            ]
         },
+        email: 'rian.mathijs@triacore.be',
+        phone: '+32 499 87 46 62',
+        tel: '+32499874662',
+        linkedin: 'https://www.linkedin.com/in/rian-mathijs-6a4350356/'
+    },
+    {
+        name: 'Jorn Van Breemaat',
+        image: '/team/jorn',
+        role: { nl: 'Softwareontwikkeling & ICT-advies', en: 'Software Development & IT Advisory' },
+        bio: {
+            nl: [
+                'Jorn staat in voor de softwareontwikkeling binnen TriaCore AI. Hij ontwerpt de oplossingen die we voor onze klanten bouwen en zorgt ervoor dat ze technisch kloppen, van het eerste idee tot de oplevering.',
+                'Binnen ons team is hij de vaste raadgever op technisch en ICT-vlak: wie een vraag heeft, klopt bij hem aan. Die kennis komt elk project ten goede.'
+            ],
+            en: [
+                'Jorn is responsible for software development at TriaCore AI. He designs the solutions we build for our clients and makes sure they are technically sound, from the first idea to delivery.',
+                'Within our team, he is the go-to advisor on technical and IT matters: anyone with a question comes to him. That knowledge benefits every project.'
+            ]
+        },
+        email: 'jorn.vanbreemaat@triacore.be',
+        phone: '+32 470 24 94 69',
+        tel: '+32470249469',
+        linkedin: 'https://www.linkedin.com/in/jorn-van-breemaat/'
+    }
+];
 
-    ],
-    en: [
-        {
-            name: "Rian Mathijs",
-            role: "Sales & Client Relations",
-            image: "/team/rian",
-            p1: "Rian is the first point of contact for our clients and oversees the entire collaboration from start to finish. With a strong focus on clear communication and long-term relationships, he ensures that expectations, goals, and execution are perfectly aligned.",
-            p2: "He translates business challenges into concrete trajectories and monitors the strategic line throughout the entire project. For our clients, he is the fixed point of reference that brings structure and overview.",
-            linkedin: "https://www.linkedin.com/in/rian-mathijs-6a4350356/",
-            email: "rian.mathijs@triacore.be",
-            phone: "0499 87 46 62"
-        },
-        {
-            name: "Lucas Curto",
-            role: "Operations & Technical Architecture",
-            image: "/team/lucas",
-            p1: "Lucas is responsible for the technical realization within TriaCore AI. He designs scalable architectures that help organizations grow without having to rethink their systems every time.",
-            p2: "He translates business processes into efficient AI solutions and automations, focusing on stability, overview, and future-proofing.",
-            linkedin: "https://www.linkedin.com/in/lucas-curto-67555a377/",
-            email: "lucas.curto@triacore.be",
-            phone: "0468 27 50 82"
-        },
-
-    ]
-};
-
+// Team: per persoon een groot portret en de volledige uitleg ernaast, om beurten links en rechts.
+// Bij het scrollen onthult de foto zich van onder naar boven, daarna komt de tekst op.
 export default function Team() {
     const { language } = useLanguage();
-    const containerRef = useRef(null);
-    const teamMembers = TEAM_DATA[language];
+    const nl = language === 'nl';
+    const listRef = useRef(null);
 
     useEffect(() => {
-        let ctx = gsap.context(() => {
-            // Hero animation
-            gsap.fromTo(
-                '.hero-stagger',
-                { y: 40, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    stagger: 0.15,
-                    ease: 'power3.out',
-                    delay: 0.2
-                }
-            );
-
-            // Card animations (smooth reveal)
-            const teamCards = gsap.utils.toArray('.team-card');
-            teamCards.forEach((el) => {
-                gsap.fromTo(
-                    el,
-                    { opacity: 0, y: 100, scale: 0.98 },
-                    {
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 85%',
-                            toggleActions: 'play none none none'
-                        },
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        duration: 1.2,
-                        ease: 'power3.out'
-                    }
-                );
+        const ctx = gsap.context(() => {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            gsap.utils.toArray('.member').forEach((member) => {
+                const tl = gsap.timeline({ scrollTrigger: { trigger: member, start: 'top 80%', once: true } });
+                tl.fromTo(member.querySelector('.member-photo'),
+                    { clipPath: 'inset(100% 0% 0% 0% round 24px)' },
+                    { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: 1.6, ease: 'power4.inOut' })
+                    .from(member.querySelector('.member-photo-img'), { scale: 1.2, duration: 2.2, ease: 'expo.out' }, 0)
+                    .from(member.querySelectorAll('.member-fade'), { y: 16, opacity: 0, duration: 1.4, ease: 'expo.out', stagger: 0.1 }, 0.6);
             });
-        }, containerRef);
-
+        }, listRef);
         return () => ctx.revert();
-    }, []);
+    }, [language]);
 
     return (
-        <div ref={containerRef} className="relative min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-
+        <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
             <Seo
-                title={language === 'nl' ? 'Ons team | TriaCore AI' : 'Our team | TriaCore AI'}
-                description={language === 'nl'
-                    ? 'Maak kennis met het team achter TriaCore AI. Rian bewaakt de samenwerking van begin tot eind, Lucas vertaalt uw processen naar schaalbare software en AI-oplossingen.'
-                    : 'Meet the team behind TriaCore AI. Rian oversees the collaboration from start to finish, Lucas translates your processes into scalable software and AI solutions.'}
+                title="Team | TriaCore AI"
+                description={nl
+                    ? 'Maak kennis met het team achter TriaCore AI: Lucas Curto, Rian Mathijs en Jorn Van Breemaat uit Hasselt.'
+                    : 'Meet the team behind TriaCore AI: Lucas Curto, Rian Mathijs and Jorn Van Breemaat from Hasselt.'}
             />
-
-            {/* NOISE OVERLAY */}
-            <svg className="noise-overlay pointer-events-none fixed inset-0 z-50 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                <filter id="noiseFilter">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-                </filter>
-                <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-            </svg>
-
             <Navbar />
+            <main className="relative flex-grow">
+                <PageHeader
+                    title={nl ? 'Ons team.' : 'Our team.'}
+                    intro={nl ? 'Een complementair team dat structuur brengt in elke implementatie.' : 'A complementary team that brings structure to every implementation.'}
+                />
 
-            {/* GLOBAL GRID BACKGROUND (architectural style like homepage) */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.02] z-0" 
-                 style={{
-                   backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
-                   backgroundSize: '4rem 4rem',
-                 }}>
-            </div>
-
-            <div className="relative z-10">
-                {/* HERO SECTION */}
-                <section className="relative pt-48 pb-12 px-6 md:px-16 overflow-hidden flex flex-col items-center justify-start">
-                    <div className="max-w-5xl mx-auto text-center scroll-animate">
-                        <span className="hero-stagger inline-flex items-center mb-6 px-4 py-1.5 rounded-lg border border-accent/20 bg-accent/5 font-mono uppercase tracking-[0.15em] text-xs md:text-sm font-bold text-accent">
-                            <span className="text-accent/40">[</span>TEAM<span className="text-accent/40">]</span>
-                        </span>
-                        <h1 className="hero-stagger font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6 text-foreground">
-                            {language === 'nl' ? 'Klein team. Grote impact.' : 'Small team. Big impact.'}
-                        </h1>
-                        <p className="hero-stagger max-w-2xl text-lg md:text-xl text-foreground/60 mb-8 font-light leading-relaxed mx-auto">
-                            {language === 'nl' ? 'Maak kennis met het team achter TriaCore AI.' : 'Meet the team behind TriaCore AI.'}
-                        </p>
-                    </div>
-                </section>
-
-                {/* STACKING TEAM CARDS */}
-                <section className="px-6 md:px-16 pb-40 relative z-10 max-w-7xl mx-auto w-full">
-                    <div className="space-y-24">
-                        {teamMembers.map((member, i) => (
-                            <div
-                                key={i}
-                                className="team-card relative mb-12 md:mb-24 bg-white/70 backdrop-blur-xl border border-foreground/5 shadow-2xl shadow-foreground/[0.03] rounded-[2.5rem] overflow-hidden flex flex-col lg:flex-row items-stretch"
-                            >
-                                {/* Photo - Stack on md, side-by-side on lg */}
-                                <div className="w-full lg:w-[40%] aspect-[4/5] overflow-hidden">
-                                    <AutoImage
-                                        basePath={member.image}
-                                        alt={member.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-
-                                {/* Text - Stack on md, side-by-side on lg */}
-                                <div className="w-full lg:w-[60%] p-10 md:p-14 lg:p-16 flex flex-col justify-center scroll-animate">
-                                    <div className="mb-8">
-                                        <div className="text-accent text-sm font-bold uppercase tracking-[0.2em] mb-3">
-                                            {member.role}
+                <section ref={listRef} className="px-6 md:px-16 lg:px-24 pb-16 md:pb-24">
+                    <div className="max-w-7xl mx-auto flex flex-col gap-24 md:gap-32">
+                        {TEAM.map((m, i) => (
+                            <article key={m.name} className="member grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                                <div className={`lg:col-span-5 ${i % 2 === 1 ? 'lg:order-2 lg:col-start-8' : ''}`}>
+                                    <div className="group relative max-w-md">
+                                        <div className="member-photo aspect-[4/5] rounded-3xl overflow-hidden bg-foreground/5">
+                                            <div className="member-photo-img w-full h-full">
+                                                <AutoImage basePath={m.image} alt={m.name} className="w-full h-full object-cover grayscale transition duration-700 ease-out group-hover:grayscale-0 group-hover:scale-[1.03]" />
+                                            </div>
                                         </div>
-                                        <h2 className="text-4xl md:text-5xl font-serif font-semibold tracking-tight text-foreground">
-                                            {member.name}
-                                        </h2>
-                                    </div>
-                                    <div className="space-y-6 text-lg text-foreground/70 leading-relaxed font-light mb-10">
-                                        <p>{member.p1}</p>
-                                        <p>{member.p2}</p>
-                                    </div>
-
-                                    {/* CONTACT INFO */}
-                                    <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-10 border-t border-foreground/5">
-                                        <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-foreground/60 hover:text-accent transition-all group">
-                                            <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-accent/10">
-                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                                            </div>
-                                            <span className="text-sm font-medium tracking-tight">LinkedIn</span>
-                                        </a>
-                                        <a href={`mailto:${member.email}`} className="flex items-center gap-3 text-foreground/60 hover:text-accent transition-all group">
-                                            <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-accent/10">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                            </div>
-                                            <span className="text-sm font-medium tracking-tight">{member.email}</span>
-                                        </a>
-                                        <a href={`tel:${member.phone.replace(/ /g, '')}`} className="flex items-center gap-3 text-foreground/60 hover:text-accent transition-all group">
-                                            <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-accent/10">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                            </div>
-                                            <span className="text-sm font-medium tracking-tight">{member.phone}</span>
-                                        </a>
+                                        <CornerTrace />
                                     </div>
                                 </div>
-                            </div>
+
+                                <div className={`lg:col-span-6 ${i % 2 === 1 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-7'}`}>
+                                    <h2 className="member-fade text-3xl md:text-4xl font-medium text-foreground leading-tight">{m.name}</h2>
+                                    <p className="member-fade mt-2 text-base text-foreground/50">{m.role[language]}</p>
+                                    <span aria-hidden="true" className="member-fade block h-px my-8 bg-foreground/15" />
+                                    {m.bio[language].map((p, j) => (
+                                        <p key={j} className="member-fade mt-4 text-lg text-foreground/70 leading-relaxed max-w-xl">{p}</p>
+                                    ))}
+                                    {(m.email || m.phone || m.linkedin) && (
+                                        <div className="member-fade mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium">
+                                            {m.email && <a href={`mailto:${m.email}`} className="text-foreground/70 hover:text-accent transition-colors">{m.email}</a>}
+                                            {m.phone && <a href={`tel:${m.tel}`} className="text-foreground/70 hover:text-accent transition-colors">{m.phone}</a>}
+                                            {m.linkedin && (
+                                                <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="group/li inline-flex items-center gap-1 text-foreground/70 hover:text-accent transition-colors">
+                                                    LinkedIn
+                                                    <ArrowUpRight size={15} className="transition-transform duration-300 group-hover/li:-translate-y-0.5 group-hover/li:translate-x-0.5" />
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </article>
                         ))}
                     </div>
                 </section>
-            </div>
-
+            </main>
             <Footer />
         </div>
     );

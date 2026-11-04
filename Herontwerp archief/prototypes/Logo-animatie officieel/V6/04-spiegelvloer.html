@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 04 spiegelende vloer</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 04. Spiegelende vloer: een donkere, glanzende vloer onder het logo, met een zachte
+  // weerspiegeling van de balken. Een auto in een showroom.
+  TriaLogoV6({
+    async setup(c) {
+      const { THREE } = c;
+      const { Reflector } = await import('three/addons/objects/Reflector.js');
+      c.scene.fog = new THREE.Fog(0x0B1220, 14, 70);
+      const mirror = new Reflector(new THREE.PlaneGeometry(240, 240), {
+        textureWidth: 1024, textureHeight: 1024, color: 0x8a93a3,
+      });
+      mirror.rotation.x = -Math.PI / 2;
+      mirror.position.y = -2.6;
+      c.scene.add(mirror);
+      // een donkere laag over de spiegel, zodat de weerspiegeling zacht blijft
+      const dim = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), new THREE.MeshBasicMaterial({
+        color: 0x0B1220, transparent: true, opacity: 0.7, depthWrite: false,
+      }));
+      dim.rotation.x = -Math.PI / 2;
+      dim.position.y = -2.59;
+      c.scene.add(dim);
+    },
+  });
+</script>
+</body>
+</html>

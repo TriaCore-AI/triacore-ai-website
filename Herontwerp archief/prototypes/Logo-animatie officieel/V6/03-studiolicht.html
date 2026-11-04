@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 03 studiolicht</title>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 03. Studiolicht: de lichtstroken die in het metaal weerspiegelen, worden zichtbaar als
+  // zachte vlakken in de verte. Je ziet het licht dat de glans maakt.
+  TriaLogoV6({
+    setup(c) {
+      const { THREE } = c;
+      // een zacht vlak: helder in het midden, de randen lopen uit
+      const cv = document.createElement('canvas');
+      cv.width = 256; cv.height = 256;
+      const g = cv.getContext('2d');
+      const grad = g.createRadialGradient(128, 128, 20, 128, 128, 128);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.55, 'rgba(255,255,255,0.55)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
+      const tex = new THREE.CanvasTexture(cv);
+      const panel = (w, h, x, y, z, o) => {
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({
+          map: tex, transparent: true, opacity: o, depthWrite: false, blending: THREE.AdditiveBlending,
+        }));
+        m.position.set(x, y, z);
+        m.lookAt(0, 0, 0);
+        c.scene.add(m);
+      };
+      panel(30, 2.2, 0, 11, -16, 0.16);
+      panel(2.2, 22, -15, 0, -12, 0.14);
+      panel(1.8, 22, 16, 1, -13, 0.12);
+      panel(26, 2.6, -4, -10, -18, 0.1);
+      panel(2, 18, 6, 2, -26, 0.1);
+    },
+  });
+</script>
+</body>
+</html>

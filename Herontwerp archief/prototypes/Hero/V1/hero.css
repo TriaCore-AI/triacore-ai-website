@@ -1,0 +1,193 @@
+/* =============================================================
+   Hero V1: de pagina rond de logo-animatie. Het menu, de titel, de knoppen en de sectie erna.
+   Kleuren, fonts en tempo komen uit ../../../stijl/tokens.css.
+   ============================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--navy); }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body.menu-open { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 1px solid var(--green-lt); outline-offset: 3px; border-radius: 3px; }
+
+/* ---------- De hero: een lang vak, met de scène die blijft staan terwijl je scrolt ---------- */
+.hero { position: relative; background: #05080F; }
+.hero-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+
+/* het donkere vlak dat bij het openen wegvaagt */
+.intro-veil {
+  position: absolute; inset: 0; z-index: 6; background: #05080F; pointer-events: none;
+  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.started .intro-veil { opacity: 0; }
+/* wie de intro overslaat: een korte, zachte overgang naar het volledige logo */
+.stage.skip .gl { animation: skip-in 420ms var(--ease-out); }
+@keyframes skip-in { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: none; } }
+
+/* ---------- De titel, de zin en de knoppen, onder het logo ---------- */
+.hero-copy {
+  position: absolute; left: 0; right: 0; top: 56%; z-index: 5;
+  padding: 0 var(--gutter); text-align: center; color: var(--text-inv);
+  pointer-events: none;
+}
+.hero-title {
+  max-width: 19em; margin: 0 auto;
+  font-size: clamp(30px, 3.5vw, 54px);
+}
+/* het groene deel van de titel op een eigen regel */
+.hero-title em { display: block; }
+.hero-lead { margin: 20px auto 0; max-width: 36em; }
+.hero-actions { margin-top: 32px; display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; }
+
+/* elk deel komt na elkaar binnen, en gaat samen weg zodra je scrolt */
+.hero-copy > * {
+  opacity: 0; transform: translateY(var(--shift-s));
+  transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out);
+}
+body.copy-on .hero-copy { pointer-events: auto; }
+body.copy-on .hero-copy > * {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+}
+body.copy-on .hero-copy > :nth-child(2) { transition-delay: calc(2 * var(--stagger)); }
+body.copy-on .hero-copy > :nth-child(3) { transition-delay: calc(4 * var(--stagger)); }
+
+/* de knop: groen vlak, witte tekst. Hover: donkerder groen, de pijl schuift 4 px op */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: var(--radius-s);
+  background: var(--green); color: var(--white);
+  font-family: var(--brand); font-weight: 600; font-size: 14px; letter-spacing: .02em;
+  transition: background var(--dur-micro) var(--ease-out);
+}
+.btn svg { width: 14px; height: 14px; transition: transform var(--dur-hover) var(--ease-out); }
+.btn:hover { background: var(--green-dim); }
+.btn:hover svg { transform: translateX(4px); }
+.btn.small { padding: 10px 16px; font-size: 13px; }
+
+/* de tekstlink: een lijn tekent zich van links naar rechts onder de tekst */
+.text-link {
+  position: relative; padding: 4px 0;
+  font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .02em;
+  color: var(--sub-inv); transition: color var(--dur-micro) var(--ease-out);
+}
+.text-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+.text-link:hover { color: var(--text-inv); }
+.text-link:hover::after { transform: scaleX(1); }
+
+/* onderaan: een zachte hint om te scrollen */
+.scroll-hint {
+  position: absolute; left: 50%; bottom: 22px; z-index: 5; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  font-family: var(--brand); font-weight: 500; font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--sub-soft-inv); opacity: 0; transition: opacity 320ms var(--ease-out); pointer-events: none;
+}
+.scroll-hint i { display: block; width: 1px; height: 34px; background: linear-gradient(var(--sub-soft-inv), transparent); transform-origin: top; animation: hint 2.4s var(--ease-in-out) infinite; }
+@keyframes hint { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+body.copy-on .scroll-hint { opacity: 1; transition: opacity var(--dur-reveal) var(--ease-out) 700ms; }
+
+/* ---------- De navigatie bovenaan ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px var(--gutter);
+  color: var(--text-inv);
+  opacity: 0; transition: opacity var(--dur-reveal) var(--ease-out), color var(--dur-hover) var(--ease-out);
+  pointer-events: none;
+}
+body.nav-on .nav { opacity: 1; pointer-events: auto; }
+.nav.on-light { color: var(--text); }
+.nav-right { display: flex; align-items: center; gap: 22px; }
+
+/* de menuknop is het logo. Hover: de balken lijnen uit. Open: ze worden een kruisje */
+.menu-btn { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.menu-mark { position: relative; width: 26px; height: 17px; }
+.menu-mark i {
+  position: absolute; left: 0; width: 19px; height: 3.2px; border-radius: 2px; background: currentColor;
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-micro) var(--ease-out), background var(--dur-hover) var(--ease-out);
+}
+.menu-mark i:nth-child(1) { top: 0; }
+.menu-mark i:nth-child(2) { top: 6.9px; transform: translateX(7px); }
+.menu-mark i:nth-child(3) { top: 13.8px; }
+.menu-btn:hover .menu-mark i:nth-child(2) { transform: none; }
+.menu-label {
+  font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .15em; text-transform: uppercase;
+}
+body.menu-open .menu-mark i:nth-child(1) { transform: translateY(6.9px) rotate(45deg); }
+body.menu-open .menu-mark i:nth-child(2) { opacity: 0; transform: none; }
+body.menu-open .menu-mark i:nth-child(3) { transform: translateY(-6.9px) rotate(-45deg); }
+body.menu-open .nav { color: var(--text-inv); }
+
+/* de taalknop */
+.nav-lang { display: flex; align-items: center; gap: 4px; font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em; }
+.nav-lang span { opacity: .35; }
+.nav-lang button { padding: 6px 4px; opacity: .45; transition: opacity var(--dur-micro) var(--ease-out); }
+.nav-lang button:hover, .nav-lang button.is-on { opacity: 1; }
+
+/* ---------- Het menu: een zijbalk van links ---------- */
+.menu-scrim {
+  position: fixed; inset: 0; z-index: 20; background: rgba(5, 8, 15, .55);
+  opacity: 0; pointer-events: none; transition: opacity 500ms var(--ease-out);
+}
+.menu {
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 25;
+  width: min(540px, 100vw); padding: 104px var(--gutter) 40px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--navy); color: var(--text-inv);
+  transform: translateX(-100%); visibility: hidden;
+  transition: transform 700ms var(--ease-out), visibility 0s linear 700ms;
+}
+body.menu-open .menu-scrim { opacity: 1; pointer-events: auto; }
+body.menu-open .menu { transform: none; visibility: visible; transition: transform 700ms var(--ease-out), visibility 0s; }
+
+.menu-list { list-style: none; }
+/* een naamrij: de lijn erboven kleurt groen van links naar rechts, de naam schuift 8 px op */
+.menu-list a {
+  position: relative; display: flex; align-items: baseline; justify-content: space-between;
+  padding: 16px 0 14px; border-top: 1px solid var(--line-inv);
+}
+.menu-list a::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green-lt);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:focus-visible { outline: none; }
+.menu-list a:hover::before, .menu-list a:focus-visible::before, .menu-list a.is-here::before { transform: scaleX(1); }
+.m-name {
+  font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; line-height: 1.1;
+  font-size: clamp(28px, 2.6vw, 36px); white-space: nowrap;
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+.menu-list a:hover .m-name { transform: translateX(var(--shift-s)); }
+.m-meta { font-family: var(--brand); font-weight: 500; font-size: 12px; letter-spacing: .04em; color: var(--sub-soft-inv); }
+.menu-list li:last-child a { border-bottom: 1px solid var(--line-inv); }
+
+/* de namen komen na elkaar binnen als het menu opent */
+.menu-list li { opacity: 0; transform: translateX(calc(-1 * var(--shift-m))); transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out); }
+body.menu-open .menu-list li { opacity: 1; transform: none; transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out); }
+body.menu-open .menu-list li:nth-child(2) { transition-delay: calc(1 * var(--stagger)); }
+body.menu-open .menu-list li:nth-child(3) { transition-delay: calc(2 * var(--stagger)); }
+body.menu-open .menu-list li:nth-child(4) { transition-delay: calc(3 * var(--stagger)); }
+body.menu-open .menu-list li:nth-child(5) { transition-delay: calc(4 * var(--stagger)); }
+body.menu-open .menu-list li:nth-child(6) { transition-delay: calc(5 * var(--stagger)); }
+
+.menu-foot { display: grid; gap: 6px; margin-top: 40px; }
+.menu-foot a, .menu-foot span { font-family: var(--sans); font-size: 15px; color: var(--sub-inv); }
+.menu-foot a:hover { color: var(--text-inv); }
+
+/* ---------- Na de hero: de lichte site begint ---------- */
+.next { min-height: 90vh; display: grid; place-items: center; padding: var(--section) var(--gutter); background: var(--bg); text-align: center; }
+.next .title { font-size: var(--fs-h2); margin-top: 18px; color: var(--sub-soft); }
+
+/* ---------- Op een gsm ---------- */
+@media (max-width: 640px) {
+  .menu-label { display: none; }
+  .nav-right { gap: 14px; }
+  .hero-copy { top: 54%; }
+  .hero-lead { font-size: 16px; margin-top: 14px; }
+  .hero-actions { margin-top: 24px; gap: 20px; }
+  .scroll-hint { display: none; }
+}

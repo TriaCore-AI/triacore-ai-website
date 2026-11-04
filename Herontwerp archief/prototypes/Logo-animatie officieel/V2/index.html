@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: clamp(56px, 9vw, 120px) var(--gutter); }
+  .title { font-size: var(--fs-h2); margin-top: 14px; }
+  .lead { margin-top: 18px; }
+  .list { margin-top: 56px; border-top: var(--hairline); }
+  .item {
+    position: relative; display: grid; grid-template-columns: 64px 1fr auto; gap: 8px 24px; align-items: baseline;
+    padding: 28px 0; border-bottom: var(--hairline);
+  }
+  .item::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green);
+    transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  .item:hover::before { transform: scaleX(1); }
+  .num { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--green-dim); }
+  .name { font-family: var(--serif); font-weight: 600; font-size: var(--fs-h3); line-height: 1.15; transition: transform var(--dur-hover) var(--ease-out); }
+  .item:hover .name { transform: translateX(8px); }
+  .desc { grid-column: 2; color: var(--sub); max-width: 40em; }
+  .end { grid-column: 3; grid-row: 1; font-family: var(--brand); font-weight: 500; font-size: 13px; color: var(--sub-soft); white-space: nowrap; }
+  .note { margin-top: 40px; }
+  @media (max-width: 640px) {
+    .item { grid-template-columns: 40px 1fr; }
+    .end { grid-column: 2; grid-row: auto; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Logo animatie officieel, V2</p>
+  <h1 class="title">Vijf manieren om <em>te landen.</em></h1>
+  <p class="lead">Elke variant begint met de twee shots uit V1: rechtsboven en linksonder, dichtbij en traag inzoomend. Na de knip staat de camera recht voor het logo en wijkt ze terug, terwijl het logo zelf op zijn plek komt.</p>
+
+  <div class="list">
+    <a class="item" href="a-drie-balken.html">
+      <span class="num">/A</span><span class="name">Drie balken, één voor één</span><span class="end">±7 s</span>
+      <span class="desc">De balken liggen plat, je ziet drie dunne strepen. Na elkaar kantelen ze rechtop naar je toe, boven, midden, onder, en elke balk vangt het licht terwijl hij draait.</span>
+    </a>
+    <a class="item" href="b-kwartslag.html">
+      <span class="num">/B</span><span class="name">Kwartslag</span><span class="end">±6,5 s</span>
+      <span class="desc">Het logo staat bijna op zijn zijkant, sterk verkort. In één vloeiende draai keert het geheel naar je toe.</span>
+    </a>
+    <a class="item" href="c-omdraaien.html">
+      <span class="num">/C</span><span class="name">Omdraaien</span><span class="end">±7 s</span>
+      <span class="desc">Je ziet eerst de achterkant, gespiegeld. Het logo draait een halve slag om, en het licht vangt de voorkant.</span>
+    </a>
+    <a class="item" href="d-opstaan.html">
+      <span class="num">/D</span><span class="name">Van onder opstaan</span><span class="end">±6,5 s</span>
+      <span class="desc">Het logo ligt plat, laag in beeld, alsof het op tafel ligt. Het rijst op naar het midden en kantelt tegelijk rechtop.</span>
+    </a>
+    <a class="item" href="e-middelste-balk.html">
+      <span class="num">/E</span><span class="name">De middelste balk sluit aan</span><span class="end">±6,5 s</span>
+      <span class="desc">Boven en onder staan al. De middelste balk draait binnen vanuit de diepte en schuift op zijn plek: vertalen, de brug.</span>
+    </a>
+  </div>
+
+  <p class="meta note">Klik tijdens de animatie om door te spoelen. Klik of druk op R achteraf om ze opnieuw af te spelen.</p>
+</main>
+</body>
+</html>

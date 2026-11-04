@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V9 1 de lijn leidt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v9-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v9-core.js"></script>
+<script>
+  // 1. De lijn leidt naar de zin. Het woord en de zin van Waarmaken vervagen, de lijn tekent
+  // verder naar rechts, en de camera volgt: de balk schuift links uit beeld. Waar de lijn
+  // eindigt, schrijft de zin zich.
+  let L0 = 0;
+  TriaLogoV9({
+    raster: true,
+    ending: {
+      dur: 4.6,
+      camera(c, s) {
+        const k = c.E.move(c.clamp((s - 0.25) / 2.3));
+        c.pose.ax += 1.45 * c.halfW * k;
+      },
+      overlay(c, s) {
+        c.fadeText(1 - c.E.soft(c.clamp(s / 0.5)));
+        c.fadeLine(0);
+        if (!L0) L0 = c.lineBox().width;
+        const [ax, ay] = c.anchor();
+        const k = c.E.move(c.clamp((s - 0.25) / 2.3));
+        const x1 = ax + (c.portrait ? 10 : 14);
+        // waar de lijn van Waarmaken eindigde, voor de camera vertrok
+        const end0 = (c.portrait ? 0.27 : 0.36) * c.W + (c.portrait ? 10 : 14) + L0;
+        if (c.portrait) {
+          c.trail(x1, c.lerp(end0, c.W * 0.92, k), ay);
+          c.way(s, 2.0, c.W / 2, ay + c.H * 0.09);
+        } else {
+          const endT = c.W * 0.3;
+          const x2 = c.lerp(end0, endT, k);
+          c.trail(x1, x2, ay);
+          c.way(s, 2.0, endT + 28, ay, 'left');
+        }
+      },
+    },
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore AI | Hero V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../stijl/tokens.css">
+<link rel="stylesheet" href="logo-scene.css">
+<link rel="stylesheet" href="hero.css">
+</head>
+<body>
+
+<!-- De navigatie: het logo is de menuknop, rechts de taal en de knop naar contact -->
+<header class="nav" id="nav">
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
+    <span class="menu-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="menu-label" data-i18n="menu">Menu</span>
+  </button>
+  <div class="nav-right">
+    <div class="nav-lang" role="group" aria-label="Taal">
+      <button type="button" data-lang="nl" class="is-on">NL</button><span>/</span><button type="button" data-lang="en">EN</button>
+    </div>
+    <a class="btn small" href="https://triacore.be/contact"><span data-i18n="contact">Contact</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+  </div>
+</header>
+
+<!-- Het menu: een zijbalk met de pagina's van de site -->
+<div class="menu-scrim" id="menuScrim"></div>
+<nav class="menu" id="menu" aria-label="Hoofdmenu">
+  <ol class="menu-list">
+    <li><a href="#top" class="is-here"><span class="m-name">Home</span></a></li>
+    <li><a href="https://triacore.be/custom-oplossingen"><span class="m-name" data-i18n="nav1">Custom oplossingen</span></a></li>
+    <li><a href="https://triacore.be/projecten"><span class="m-name" data-i18n="nav2">Projecten</span></a></li>
+    <li><a href="https://triacore.be/resources"><span class="m-name">Resources</span></a></li>
+    <li><a href="https://triacore.be/team"><span class="m-name">Team</span></a></li>
+    <li><a href="https://triacore.be/contact"><span class="m-name">Contact</span></a></li>
+  </ol>
+  <div class="menu-foot">
+    <a href="mailto:info@triacore.be">info@triacore.be</a>
+    <span>Kempische Steenweg 303, 3500 Hasselt</span>
+  </div>
+</nav>
+
+<!-- Het snelmenu (Ferrari): puntjes linksonder. Bij hover verschijnen de namen, een klik springt meteen
+     naar de sectie. De sectie waar je bent, krijgt een klein groen balkje. -->
+<nav class="quick" id="quick" aria-label="Snel naar">
+  <ul>
+    <li><button type="button" data-to="home"><i></i><span>Home</span></button></li>
+    <li><button type="button" data-to="aanpak"><i></i><span data-i18n="qApproach">Onze aanpak</span></button></li>
+    <li><button type="button" data-to="cases"><i></i><span>Use cases</span></button></li>
+    <li><button type="button" data-to="oplossingen"><i></i><span data-i18n="qSolutions">Oplossingen</span></button></li>
+    <li><button type="button" data-to="team"><i></i><span>Team</span></button></li>
+    <li><button type="button" data-to="faq"><i></i><span>FAQ</span></button></li>
+  </ul>
+</nav>
+<!-- een zacht vlak dat even opkomt wanneer het snelmenu naar een sectie springt -->
+<div class="jump-veil" id="jumpVeil"></div>
+
+<main id="top">
+  <!-- De hero. Tijdens het scrollen blijft de scène staan, en lopen de pijlers -->
+  <section class="hero" id="hero">
+    <div class="hero-pin">
+      <div class="stage" id="stage">
+        <canvas class="gl" aria-hidden="true"></canvas>
+      </div>
+      <div class="hero-copy on-dark" id="heroCopy">
+        <h1 class="title hero-title" id="heroTitle" aria-label="De transformatiepartner van bedrijven in het tijdperk van AI."><span aria-hidden="true"><span class="tl">De transformatiepartner</span><br><span class="tl">van bedrijven</span><br><em class="tl">in het tijdperk van AI.</em></span></h1>
+        <p class="lead hero-lead" data-i18n="lead">We begrijpen uitdagingen tot in de kern, en vertalen ze naar intelligente oplossingen die bedrijven versterken.</p>
+        <div class="hero-actions">
+          <a class="btn" href="https://triacore.be/contact"><span data-i18n="cta">Plan een gesprek</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+          <a class="text-link" href="#aanpak" id="toApproach" data-i18n="approach">Onze aanpak</a>
+        </div>
+        <div class="trusted">
+          <span class="trusted-label" data-i18n="trusted">Vertrouwd door</span>
+          <a href="https://www.croesnv.be/" target="_blank" rel="noopener" class="trusted-logo croes"><img src="assets/croes.png" alt="Croes NV"></a>
+          <a href="https://www.anmgroup.be/" target="_blank" rel="noopener" class="trusted-logo am"><img src="assets/am-group.webp" alt="A&amp;M Group"></a>
+        </div>
+      </div>
+      <!-- Onze aanpak: groot bij het binnenschuiven van het logo, daarna een klein label bovenaan -->
+      <h2 class="approach title" id="approach" data-i18n="approachTitle">Onze aanpak.</h2>
+      <div class="approach-label" id="approachLabel" aria-hidden="true">
+        <span data-i18n="approach">Onze aanpak</span>
+        <span class="steps"><i></i><i></i><i></i></span>
+      </div>
+      <div class="intro-veil"></div>
+    </div>
+  </section>
+
+  <!-- De use cases, op het lichte grijs. Zoals Porsche zijn modellen toont: grote kaarten naast
+       elkaar, de kaart onder de muis wordt breder. Op een gsm één per scherm, met pijltjes. -->
+  <section class="cases" id="cases">
+    <div class="cases-head">
+      <h2 class="title cases-title" data-i18n-html="casesTitle">Wat we bouwden. <em>En voor wie.</em></h2>
+    </div>
+    <div class="cases-track" id="casesTrack">
+      <article class="case">
+        <div class="case-media"><img class="case-logo croes" src="assets/croes.png" alt="Croes NV"></div>
+        <div class="case-body">
+          <span class="case-tag" data-i18n="croesTag">Grondverzet</span>
+          <p class="case-text" data-i18n="croesText">De vrachtbonnen gingen van papier naar een app.</p>
+          <a class="case-cta" href="#"><span data-i18n="readMore">Lees meer</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+      <article class="case">
+        <div class="case-media"><img class="case-logo am" src="assets/am-group.webp" alt="A&amp;M Group"></div>
+        <div class="case-body">
+          <span class="case-tag" data-i18n="amTag">Autodealers</span>
+          <p class="case-text" data-i18n="amText">Het transport van wagens tussen de vestigingen ging van een gedeelde Excel naar eigen platformen.</p>
+          <a class="case-cta" href="#"><span data-i18n="readMore">Lees meer</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+    </div>
+    <div class="cases-foot">
+      <a class="btn" href="#"><span data-i18n="allCases">Alle use cases</span>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      <div class="cases-nav" id="casesNav">
+        <button type="button" class="round" id="casesPrev" data-i18n-aria="prev" aria-label="Vorige">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14 8H3M7 4L3 8l4 4"/></svg></button>
+        <button type="button" class="round" id="casesNext" data-i18n-aria="next" aria-label="Volgende">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Onze oplossingen, in genummerde naamrijen (Palantir): links een korte uitleg en het nummer,
+       in het midden vaag één balk van ons logo (samen vormen de drie rijen het logo), rechts de naam. -->
+  <section class="solutions" id="oplossingen">
+    <h2 class="title solutions-title" data-i18n="solTitle">Onze oplossingen.</h2>
+    <ol class="sol-list">
+      <li><a class="sol" href="https://triacore.be/custom-oplossingen">
+        <div class="sol-info"><p class="sol-text" data-i18n="sol1Text">Het fundament. Je gegevens op één plek, in een tool die werkt zoals jouw bedrijf: nieuw gebouwd, of gekoppeld aan wat je al hebt.</p><span class="sol-num">/01</span></div>
+        <span class="sol-mark m1" aria-hidden="true"></span>
+        <span class="sol-name" data-i18n="sol1Name">Software op maat</span>
+      </a></li>
+      <li><a class="sol" href="#">
+        <div class="sol-info"><p class="sol-text" data-i18n="sol2Text">Wat erop bouwt. AI die antwoordt, voorstelt en werk overneemt met de kennis van je bedrijf. Op dat fundament, of op zichzelf.</p><span class="sol-num">/02</span></div>
+        <span class="sol-mark m2" aria-hidden="true"></span>
+        <span class="sol-name" data-i18n="sol2Name">AI-oplossingen</span>
+      </a></li>
+      <li><a class="sol" href="#">
+        <div class="sol-info"><p class="sol-text" data-i18n="sol3Text">De mensen erbij. Je team leert zelf werken met AI die je bedrijf kent.</p><span class="sol-num">/03</span></div>
+        <span class="sol-mark m3" aria-hidden="true"></span>
+        <span class="sol-name" data-i18n="sol3Name">Workshops</span>
+      </a></li>
+    </ol>
+  </section>
+
+  <!-- Het team: drie grote portretten, zonder kaart. Onder elk portret de naam en de rol. Bij hover schuift
+       een groen lijnkader van achter de foto naar rechtsonder uit, en komt de zin binnen. -->
+  <section class="team" id="team">
+    <h2 class="title team-title" data-i18n="teamTitle">Wie je aan tafel krijgt.</h2>
+    <ol class="team-list">
+      <li class="member">
+        <div class="member-photo"><span class="member-frame" aria-hidden="true"></span><img src="assets/team/lucas.jpg" alt="Lucas Curto" loading="lazy"><p class="member-line" data-i18n="lucasLine">Vertaalt wat je nodig hebt naar wat we bouwen.</p></div>
+        <h3 class="member-name">Lucas Curto</h3>
+        <span class="member-role" data-i18n="lucasRole">Strategie en oplossingen</span>
+      </li>
+      <li class="member">
+        <div class="member-photo"><span class="member-frame" aria-hidden="true"></span><img src="assets/team/rian.jpg" alt="Rian Mathijs" loading="lazy"><p class="member-line" data-i18n="rianLine">Je eerste gesprek, en daarna je vaste aanspreekpunt.</p></div>
+        <h3 class="member-name">Rian Mathijs</h3>
+        <span class="member-role" data-i18n="rianRole">Klantrelaties en financiën</span>
+      </li>
+      <li class="member">
+        <div class="member-photo"><span class="member-frame" aria-hidden="true"></span><img src="assets/team/jorn.jpg" alt="Jorn Van Breemaat" loading="lazy"><p class="member-line" data-i18n="jornLine">Denkt de oplossing uit en bouwt ze.</p></div>
+        <h3 class="member-name">Jorn Van Breemaat</h3>
+        <span class="member-role" data-i18n="jornRole">Architectuur en development</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- De FAQ, als index (variant 05 uit FAQ varianten): links de vragen, rechts groot het gekozen antwoord.
+       Een groen balkje toont welke vraag gekozen is. Op een gsm komt het antwoord onder de gekozen vraag. -->
+  <section class="faq" id="faq">
+    <h2 class="title faq-title" data-i18n-html="faqTitle">Vragen die we <em>vaak krijgen.</em></h2>
+    <div class="faq-index">
+      <ol class="faq-list">
+        <li class="faq-item is-on"><button class="faq-pick" type="button" aria-expanded="true" aria-controls="faqShown"><span class="faq-num">/01</span><span class="faq-q" data-i18n="faq1Q">Hoe begint een samenwerking?</span></button>
+          <p class="faq-a" data-i18n="faq1A">Met een gesprek. We luisteren naar hoe je bedrijf werkt en waar het vandaag wringt. Binnen 48 uur hoor je van ons wat de volgende stap is.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/02</span><span class="faq-q" data-i18n="faq2Q">Moeten we al met AI bezig zijn?</span></button>
+          <p class="faq-a" data-i18n="faq2A">Je start waar je nu staat. Vaak begint het bij je gegevens: die brengen we eerst samen op één plek. Daarop bouwt AI verder.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/03</span><span class="faq-q" data-i18n="faq3Q">Werkt het samen met onze bestaande programma's?</span></button>
+          <p class="faq-a" data-i18n="faq3A">Ja. We bouwen rond je processen en koppelen met de programma's die je al gebruikt, ook met je ERP.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/04</span><span class="faq-q" data-i18n="faq4Q">Wat gebeurt er na de oplevering?</span></button>
+          <p class="faq-a" data-i18n="faq4A">Twee maanden begeleiden we je team intensief. Daarna blijven we je partner, met maandelijkse support, updates en onderhoud.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/05</span><span class="faq-q" data-i18n="faq5Q">Hoe gaan jullie om met onze gegevens?</span></button>
+          <p class="faq-a" data-i18n="faq5A">Veilig en volgens de GDPR. Iedereen in je bedrijf ziet alleen wat hij nodig heeft, en je gegevens blijven van jou.</p></li>
+        <li class="faq-item"><button class="faq-pick" type="button" aria-expanded="false" aria-controls="faqShown"><span class="faq-num">/06</span><span class="faq-q" data-i18n="faq6Q">Wat kost het?</span></button>
+          <p class="faq-a" data-i18n="faq6A">Elk project start met een eenmalige prijs voor wat we bouwen, op maat van je vraag. Daarna loopt een vaste maandelijkse begeleiding: support, updates, onderhoud en het AI-verbruik.</p></li>
+      </ol>
+      <div class="faq-shown" id="faqShown" aria-live="polite"><p class="faq-shown-q"></p><p class="faq-shown-a"></p></div>
+    </div>
+  </section>
+</main>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="logo-scene.js"></script>
+<script src="hero.js"></script>
+</body>
+</html>

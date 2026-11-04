@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V6 10 lichtbundel</title>
+<style>.stage { background: radial-gradient(ellipse 80% 70% at 50% 42%, #0E1729 0%, #080D18 52%, #03050A 100%); }</style>
+<link rel="stylesheet" href="v6-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="v6-core.js"></script>
+<script>
+  // 10. EÃ©n harde lichtbundel: de ruimte is bijna zwart. EÃ©n scherpe, schuine bundel licht valt
+  // achter het logo door, en bij elk shot komt hij uit een andere hoek.
+  TriaLogoV6({
+    setup(c) {
+      const { THREE } = c;
+      // de bundel: scherpe zijkanten, helder aan de bron, uitlopend naar het einde
+      const cv = document.createElement('canvas');
+      cv.width = 64; cv.height = 1024;
+      const g = cv.getContext('2d');
+      const along = g.createLinearGradient(0, 0, 0, 1024);
+      along.addColorStop(0, 'rgba(255,255,255,1)');
+      along.addColorStop(0.45, 'rgba(255,255,255,0.45)');
+      along.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = along; g.fillRect(6, 0, 52, 1024);
+      g.globalAlpha = 0.35; g.fillRect(2, 0, 4, 1024); g.fillRect(58, 0, 4, 1024);
+      const tex = new THREE.CanvasTexture(cv);
+      c.beam = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 34), new THREE.MeshBasicMaterial({
+        map: tex, color: 0xd6dde8, transparent: true, opacity: 0.17, depthWrite: false, blending: THREE.AdditiveBlending,
+      }));
+      c.scene.add(c.beam);
+    },
+    frame(c, f) {
+      // per shot een andere hoek: [kanteling, x, y, z]
+      const SET = [[0.62, 2.5, 5, -2.2], [-0.5, -3, 4.5, -2.4], [0.38, 2, 6, -3]];
+      const [rz, x, y, z] = SET[f.shot];
+      c.beam.rotation.set(0, 0, rz);
+      c.beam.position.set(x, y, z);
+      // de bundel staat met de bron bovenaan: schuif hem langs zijn eigen lengte
+      c.beam.translateY(-17 + 6);
+    },
+  });
+</script>
+</body>
+</html>

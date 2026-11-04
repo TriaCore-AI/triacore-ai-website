@@ -1,0 +1,354 @@
+/* =============================================================
+   Schema varianten: acht vormen voor de kaart "Zo bouwen wij AI.".
+   Kleuren, fonts en tempo uit ../../../stijl/tokens.css. Elke kaart is licht, met een fijne rand, en bij hover
+   schuift er een groen lijnkader achter uit, zoals op de pagina zelf.
+   ============================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); }
+body { color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 1px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- De kop van de pagina ---------- */
+.top { max-width: 1640px; margin: 0 auto; padding: clamp(64px, 8vw, 120px) var(--gutter) clamp(32px, 4vw, 56px); }
+.top-title { font-size: var(--fs-h2); }
+.top-intro { margin-top: 16px; font-size: var(--fs-lead); line-height: 1.5; color: var(--sub); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .03em; color: var(--sub); }
+.jump a:hover { color: var(--green-dim); }
+
+/* ---------- Per variant: nummer, naam, één zin, en de kaart ---------- */
+.var { max-width: 1640px; margin: 0 auto; padding: clamp(48px, 6vw, 96px) var(--gutter); border-top: 1px solid var(--line); }
+.var-head { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 6px 18px; margin-bottom: 32px; }
+.var-num { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--green-dim); }
+.var-name { font-family: var(--sans); font-weight: 500; font-size: 26px; letter-spacing: -.02em; }
+.var-note { font-size: 15px; line-height: 1.5; color: var(--sub); max-width: 52em; }
+
+.hwrap { position: relative; }
+.hframe {
+  --frame: 14px;
+  position: absolute; inset: 0; border: 1.5px solid var(--green); border-radius: var(--radius-l);
+  opacity: 0; pointer-events: none; transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+.hwrap:hover .hframe { opacity: 1; transform: translate(var(--frame), var(--frame)); }
+.vcard {
+  position: relative; border-radius: var(--radius-l); background: var(--surface); border: 1px solid var(--line);
+  padding: clamp(24px, 3.6vw, 60px); min-height: 520px; overflow: hidden;
+}
+
+/* ---------- Gedeeld: icoon, tegel, paneel ---------- */
+.ic {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(98, 143, 105, .1); color: var(--green-dim);
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.ic svg { width: 22px; height: 22px; }
+.ic.inv { background: rgba(255, 255, 255, .08); color: var(--green-lt); }
+.is-on > .ic, .is-on .acc-head .ic { background: var(--green); color: var(--white); }
+.is-on > .ic.inv { background: var(--green); color: var(--white); }
+
+.tile {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 20px; min-width: 0;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--white);
+  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.tile .ic { margin-bottom: 14px; }
+.tile.row { flex-direction: row; align-items: center; gap: 16px; }
+.tile.row .ic { margin: 0; }
+.tile.is-on { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 22px 40px -28px rgba(15, 23, 42, .4); }
+.t-name { display: block; font-weight: 500; font-size: 17px; letter-spacing: -.01em; line-height: 1.25; }
+.t-short { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: var(--sub); }
+
+.vp { transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.vp.swap { opacity: 0; transform: translateY(6px); }
+.vp-ic { width: 64px; height: 64px; border-radius: 18px; background: var(--green); color: var(--white); }
+.vp-ic svg { width: 28px; height: 28px; }
+.vp-name { margin-top: 28px; font-weight: 500; font-size: clamp(32px, 2.8vw, 46px); letter-spacing: -.03em; line-height: 1; }
+.vp-ic + .vp-name { margin-top: 28px; }
+.vp > .vp-name:first-child { margin-top: 0; }
+.vp-text { margin-top: 18px; max-width: 27em; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.6; color: var(--sub); }
+
+/* ---------- 01 Tegels ---------- */
+.v1 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 112px); align-items: center; }
+.v1-left { display: grid; gap: 12px; }
+.v1-model {
+  display: flex; align-items: center; gap: 18px; padding: 22px 24px; border-radius: 14px;
+  background: var(--navy); color: var(--text-inv); border: 1px solid var(--navy);
+  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.v1-model .t-short { color: var(--sub-inv); }
+.v1-model.is-on { transform: translateY(-3px); box-shadow: 0 22px 40px -24px rgba(15, 23, 42, .55); }
+.v1-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+
+/* ---------- 02 Index ---------- */
+.v2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 7vw, 128px); align-items: center; }
+.v2-list { list-style: none; }
+.v2-row {
+  position: relative; display: grid; grid-template-columns: 30px 40px minmax(0, 1fr) auto; align-items: center; gap: 16px;
+  width: 100%; padding: 13px 0; border-top: 1px solid var(--line);
+}
+.v2-list li:last-child .v2-row { border-bottom: 1px solid var(--line); }
+.v2-row.is-core { margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.v2-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1.5px; background: var(--green);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.v2-row .ic { width: 36px; height: 36px; border-radius: 10px; }
+.v2-row .ic svg { width: 18px; height: 18px; }
+.v2-num { font-family: var(--brand); font-weight: 500; font-size: 13px; color: var(--sub-soft); }
+.v2-name { font-weight: 500; font-size: 20px; letter-spacing: -.02em; transition: transform var(--dur-hover) var(--ease-out); }
+.v2-short { font-size: 14px; color: var(--sub-soft); transition: color var(--dur-hover) var(--ease-out); }
+.v2-row.is-on::before { transform: scaleX(1); }
+.v2-row.is-on .v2-name { transform: translateX(6px); }
+.v2-row.is-on .v2-short { color: var(--green-dim); }
+.v2-row.is-on .v2-num { color: var(--green-dim); }
+
+/* ---------- 03 Kern ---------- */
+.v3 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 64px); align-items: center; }
+.v3-col { display: grid; gap: 14px; }
+.v3-col .tile { position: relative; overflow: visible; }
+/* een lijn van elke tegel naar de kern */
+.v3-col .tile::after {
+  content: ""; position: absolute; top: 50%; width: clamp(32px, 4vw, 64px); height: 1px; background: var(--line);
+  transition: background var(--dur-hover) var(--ease-out);
+}
+.v3-col.left .tile::after { left: 100%; }
+.v3-col.right .tile::after { right: 100%; }
+.v3-col .tile.is-on::after { background: var(--green); }
+.v3-core {
+  min-height: 400px; padding: clamp(28px, 3vw, 44px); border-radius: 20px; background: var(--white); border: 1px solid var(--line);
+  box-shadow: 0 30px 60px -40px rgba(15, 23, 42, .35); transition: border-color var(--dur-hover) var(--ease-out);
+}
+.v3-badge { display: inline-flex; align-items: center; gap: 14px; padding: 8px 18px 8px 8px; border-radius: 999px; background: var(--navy); color: var(--text-inv); font-weight: 500; font-size: 15px; }
+.v3-badge .ic { width: 36px; height: 36px; border-radius: 50%; }
+.v3-badge .ic svg { width: 18px; height: 18px; }
+.v3-core .vp { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
+.v3.on-side .v3-core { border-color: var(--green); }
+
+/* ---------- 04 Bento ---------- */
+.v4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(200px, auto); gap: 12px; }
+.b {
+  position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; padding: 24px; min-width: 0;
+  border-radius: 16px; background: var(--white); border: 1px solid var(--line); overflow: hidden;
+  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.b-model { grid-column: 1 / 3; grid-row: 1 / 3; background: var(--navy); border-color: var(--navy); color: var(--text-inv); }
+.b-kennis { grid-column: 3; grid-row: 1; }
+.b-geheugen { grid-column: 4; grid-row: 1; }
+.b-tools { grid-column: 3 / 5; grid-row: 2; }
+.b-richtlijnen { grid-column: 1; grid-row: 3; }
+.b-controle { grid-column: 2; grid-row: 3; }
+.b-bijleren { grid-column: 3 / 5; grid-row: 3; }
+.b-name { display: block; font-weight: 500; font-size: 22px; letter-spacing: -.02em; }
+.b-model .b-name { font-size: clamp(30px, 2.6vw, 42px); }
+/* de uitleg schuift op in de tegel */
+.b-text { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 520ms var(--ease-out); }
+.b-text > span { overflow: hidden; font-size: 15px; line-height: 1.55; color: var(--sub); opacity: 0; transition: opacity 400ms var(--ease-out); }
+.b-text > span { padding-top: 0; }
+.b.is-on .b-text, .b-model .b-text { grid-template-rows: 1fr; }
+.b.is-on .b-text > span, .b-model .b-text > span { opacity: 1; padding-top: 10px; }
+.b-model .b-text > span { color: var(--sub-inv); max-width: 26em; font-size: 17px; }
+.b.is-on { border-color: var(--green); box-shadow: 0 22px 40px -28px rgba(15, 23, 42, .4); }
+.b-model.is-on { border-color: var(--navy); }
+
+/* ---------- 05 Tabs ---------- */
+.v5-tabs { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.v5-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px 6px 20px;
+  font-weight: 500; font-size: 15px; color: var(--sub-soft); transition: color var(--dur-hover) var(--ease-out);
+}
+.v5-tab svg { width: 24px; height: 24px; transition: transform var(--dur-hover) var(--ease-out); }
+.v5-tab.is-on { color: var(--text); }
+.v5-tab.is-on svg { color: var(--green); transform: translateY(-3px); }
+.v5-bar { position: absolute; left: 0; bottom: -1px; height: 2px; background: var(--green); transition: transform 520ms var(--ease-out), width 520ms var(--ease-out); }
+.v5-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 96px); align-items: center; padding-top: clamp(40px, 5vw, 72px); }
+.v5-halo { position: relative; justify-self: center; width: min(100%, 300px); aspect-ratio: 1; display: grid; place-items: center; }
+.v5-halo i { position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--line); }
+.v5-halo i:nth-child(2) { inset: 16%; }
+.v5-halo i:nth-child(3) { inset: 32%; background: var(--white); }
+.v5-big { position: relative; display: grid; place-items: center; width: 34%; aspect-ratio: 1; border-radius: 50%; background: var(--green); color: var(--white); }
+.v5-big svg { width: 44%; height: 44%; }
+.v5-halo.pulse i { animation: v5-ring 900ms var(--ease-out); }
+.v5-halo.pulse i:nth-child(2) { animation-delay: 80ms; }
+.v5-halo.pulse i:nth-child(3) { animation-delay: 160ms; }
+@keyframes v5-ring { 0% { transform: scale(.94); border-color: var(--green); } 100% { transform: none; } }
+
+/* ---------- 05b Zoom: een camera boven een kleine mindmap ---------- */
+/* .zs is het beeld, .zw de mindmap met een vaste maat. varianten.js zet de transform van .zw (schuiven en zoomen). */
+/* een raster over de linkerkant van de kaart, ook achter de tabs, dat zacht naar rechts vervaagt */
+.v5z::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(15, 23, 42, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, .055) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: -1px -1px;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 22%, transparent 68%);
+  mask-image: linear-gradient(to right, #000 0%, #000 22%, transparent 68%);
+}
+.v5z > * { position: relative; }
+/* het beeld: geen eigen kader, de randen vagen zacht weg in het raster */
+/* .zcol is de plek in de kolom; het beeld .zs loopt links in de rand van de kaart en rechts in de opening tot de uitleg
+   door (--bl, --br), en vaagt daar over een lange strook weg. Zo is er geen harde grens, ook niet bij het model. */
+.zcol { --bl: 48px; --br: 120px; position: relative; width: 100%; aspect-ratio: 1 / .9; }
+.zs {
+  position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--bl)); right: calc(-1 * var(--br)); overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--bl) + 24px), #000 calc(100% - var(--br) - 60px), transparent 100%), linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--bl) + 24px), #000 calc(100% - var(--br) - 60px), transparent 100%), linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-composite: intersect;
+}
+@media (max-width: 1099px) { .zcol { --bl: 16px; --br: 16px; } }
+/* de uitleg in het midden van de rechterhelft */
+.v5z .vp { justify-self: center; }
+.zw { position: absolute; left: 0; top: 0; transform-origin: 0 0; transition: transform 1000ms var(--ease-in-out); }
+.zl { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.zl line { stroke: rgba(15, 23, 42, .18); stroke-width: 1.4; transition: stroke var(--dur-hover) var(--ease-out), opacity 600ms var(--ease-out); }
+.zl line.is-on { stroke: var(--green); stroke-width: 2; }
+.v5z.is-zoomed .zl line:not(.is-on) { opacity: .35; }
+
+.zn { position: absolute; transform: translate(-50%, -50%); transition: opacity 600ms var(--ease-out); }
+/* het model: een navy cirkel met het AI-sterretje en de naam */
+.zn-model {
+  display: grid; place-content: center; justify-items: center; gap: 8px; width: 132px; height: 132px; border-radius: 50%;
+  background: var(--navy); color: var(--text-inv); box-shadow: 0 24px 48px -24px rgba(15, 23, 42, .55);
+}
+.zn-model svg { width: 30px; height: 30px; color: var(--green-lt); }
+.zn-model b { font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+/* de zes: een rechthoekig kaartje met eerst het icoon en dan de naam */
+.zn-part {
+  display: flex; align-items: center; gap: 12px; padding: 8px 18px 8px 8px; border-radius: 12px; white-space: nowrap;
+  background: var(--white); border: 1px solid var(--line); box-shadow: 0 14px 30px -22px rgba(15, 23, 42, .35);
+  transition: opacity 600ms var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.zn-part i {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9px;
+  background: rgba(98, 143, 105, .1); color: var(--green-dim);
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.zn-part svg { width: 18px; height: 18px; }
+.zn-part b { font-weight: 500; font-size: 15px; letter-spacing: -.01em; color: var(--text); }
+.zn-part.is-on { border-color: var(--green); box-shadow: 0 18px 36px -22px rgba(15, 23, 42, .45); }
+.zn-part.is-on i { background: var(--green); color: var(--white); }
+/* ingezoomd: de andere onderdelen vagen weg, het model blijft */
+.v5z.is-zoomed .zn-part:not(.is-on) { opacity: .25; }
+
+/* ---------- 06 Stroom ---------- */
+.v6 { display: grid; gap: clamp(36px, 4vw, 56px); }
+.flow {
+  display: grid; align-items: center; row-gap: 18px;
+  grid-template-columns: minmax(0, 1.1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, .7fr);
+}
+.band {
+  display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border-radius: 999px;
+  border: 1px dashed rgba(15, 23, 42, .22); color: var(--sub); font-weight: 500; font-size: 15px;
+  transition: border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out);
+}
+.band svg { width: 18px; height: 18px; color: var(--green-dim); }
+.band em { font-style: normal; font-weight: 400; font-size: 14px; color: var(--sub-soft); }
+.band span { color: var(--text); }
+.band-top { grid-column: 3 / 8; grid-row: 1; }
+.band-back { grid-column: 1 / 8; grid-row: 3; }
+.band.is-on { border-style: solid; border-color: var(--green); background: rgba(98, 143, 105, .07); }
+.f-in { grid-column: 1; grid-row: 2; display: grid; gap: 10px; }
+.flow > .arr, .f-core, .flow > .fnode, .f-out { grid-row: 2; }
+.fnode {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--white); border: 1px solid var(--line);
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.fnode .ic { width: 38px; height: 38px; border-radius: 10px; }
+.fnode .ic svg { width: 19px; height: 19px; }
+.fnode.is-on { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 18px 36px -26px rgba(15, 23, 42, .4); }
+.f-core { position: relative; }
+.fnode.core { width: 100%; padding: 22px 16px; background: var(--navy); border-color: var(--navy); color: var(--text-inv); }
+.f-loop {
+  position: absolute; top: -14px; right: -14px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--white); border: 1px solid var(--line); color: var(--green-dim);
+  transition: border-color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.f-loop svg { width: 16px; height: 16px; animation: f-spin 8s linear infinite; }
+.f-loop.is-on { background: var(--green); border-color: var(--green); color: var(--white); }
+@keyframes f-spin { to { transform: rotate(360deg); } }
+.arr { position: relative; height: 1px; background: rgba(15, 23, 42, .25); margin: 0 6px; }
+.arr::after { content: ""; position: absolute; right: -1px; top: -3.5px; width: 7px; height: 7px; border-top: 1px solid rgba(15, 23, 42, .4); border-right: 1px solid rgba(15, 23, 42, .4); transform: rotate(45deg); }
+.f-out { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--sub); }
+.v6-panel { padding-top: clamp(28px, 3vw, 40px); border-top: 1px solid var(--line); }
+.v6-panel .vp { display: grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 28px; align-items: start; }
+.v6-panel .vp-ic { grid-row: 1 / 3; }
+.v6-panel .vp-name { margin-top: 0; font-size: clamp(28px, 2.2vw, 36px); }
+.v6-panel .vp-text { margin-top: 10px; max-width: 44em; }
+
+/* ---------- 07 Omlijst ---------- */
+.v7 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 112px); align-items: center; }
+.v7-frame {
+  display: grid; gap: 10px;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, .8fr); grid-template-rows: auto minmax(200px, 1fr) auto;
+}
+.seg {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 22px 12px; text-align: center;
+  border-radius: 14px; background: var(--white); border: 1px solid var(--line);
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.seg-kennis { grid-column: 2; grid-row: 1; }
+.seg-geheugen { grid-column: 3; grid-row: 1; }
+.seg-tools { grid-column: 4; grid-row: 1 / 4; }
+.seg-richtlijnen { grid-column: 2; grid-row: 3; }
+.seg-controle { grid-column: 3; grid-row: 3; }
+.seg-bijleren { grid-column: 1; grid-row: 1 / 4; }
+.seg-model { grid-column: 2 / 4; grid-row: 2; background: var(--navy); border-color: var(--navy); color: var(--text-inv); }
+.seg-model .t-name { font-size: 22px; }
+.seg.is-on { border-color: var(--green); box-shadow: 0 18px 36px -26px rgba(15, 23, 42, .4); transform: scale(1.015); }
+.seg-model.is-on { border-color: var(--navy); }
+
+/* ---------- 08 Lijst ---------- */
+.v8 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(40px, 7vw, 128px); align-items: start; }
+.v8-core { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: var(--navy); color: var(--green-lt); }
+.v8-core svg { width: 28px; height: 28px; }
+.v8-say { margin-top: 28px; font-weight: 500; font-size: clamp(28px, 2.4vw, 40px); letter-spacing: -.03em; line-height: 1.12; max-width: 14em; }
+.v8-sub { margin-top: 18px; max-width: 26em; font-size: 17px; line-height: 1.6; color: var(--sub); }
+.v8-list { list-style: none; border-top: 1px solid var(--line); }
+.acc { position: relative; border-bottom: 1px solid var(--line); cursor: default; }
+.acc:focus-visible { outline: none; }
+.acc::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1.5px; background: var(--green);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-hover) var(--ease-out);
+}
+.acc-head { display: grid; grid-template-columns: 30px 40px minmax(0, 1fr) 20px; align-items: center; gap: 16px; padding: 16px 0; }
+.acc-head .ic { width: 36px; height: 36px; border-radius: 10px; }
+.acc-head .ic svg { width: 18px; height: 18px; }
+.acc-name { font-weight: 500; font-size: 22px; letter-spacing: -.02em; transition: transform var(--dur-hover) var(--ease-out); }
+.acc-plus { color: var(--sub-soft); transition: transform var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out); }
+.acc-plus svg { width: 18px; height: 18px; }
+.acc-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 520ms var(--ease-out); }
+.acc-body > span { overflow: hidden; }
+.acc-text { display: block; padding: 0 0 20px 86px; max-width: 34em; font-size: 16px; line-height: 1.6; color: var(--sub); }
+.acc.is-on::before { transform: scaleX(1); }
+.acc.is-on .acc-body { grid-template-rows: 1fr; }
+.acc.is-on .acc-name { transform: translateX(6px); }
+.acc.is-on .acc-plus { transform: rotate(45deg); color: var(--green); }
+
+/* ---------- Kleinere schermen ---------- */
+@media (max-width: 1099px) {
+  .v1, .v2, .v7, .v8, .v5-body { grid-template-columns: minmax(0, 1fr); }
+  .v3 { grid-template-columns: minmax(0, 1fr); }
+  .v3-core { order: -1; min-height: 0; }
+  .v3-col .tile::after { display: none; }
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .flow > *, .flow > .fnode, .f-core, .f-out, .band-top, .band-back, .f-in { grid-column: 1; grid-row: auto; }
+  .arr { display: none; }
+}
+@media (max-width: 760px) {
+  .var-head { grid-template-columns: auto 1fr; }
+  .var-note { grid-column: 1 / -1; }
+  .v1-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .v4 { grid-template-columns: minmax(0, 1fr); }
+  .v4 .b { grid-column: auto; grid-row: auto; }
+  .v5-tabs { grid-template-columns: repeat(7, 96px); overflow-x: auto; }
+  .v5-tab { white-space: nowrap; font-size: 14px; }
+  .v7-frame { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  .v7-frame .seg { grid-column: auto; grid-row: auto; }
+  .v7-frame .seg-model { grid-column: 1 / -1; order: -1; }
+  .v2-short { display: none; }
+  .v2-row { grid-template-columns: 26px 36px minmax(0, 1fr); }
+  .acc-text { padding-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .f-loop svg { animation: none; }
+}

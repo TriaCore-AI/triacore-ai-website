@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V9 2 langs de balk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v9-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v9-core.js"></script>
+<script>
+  // 2. Langs de balk. Het woord, de zin en de lijn vervagen. De camera glijdt van dichtbij langs
+  // de hele lengte van de balk, zodat het licht over het metaal schuift, tot voorbij zijn andere
+  // uiteinde. In de lege ruimte die overblijft, verschijnt de zin.
+  TriaLogoV9({
+    raster: true,
+    ending: {
+      dur: 4.8,
+      camera(c, s) {
+        const k = c.E.move(c.clamp((s - 0.2) / 2.8));
+        c.pose.ax -= (c.BAR_W + 1.9 * c.halfW) * k;
+      },
+      overlay(c, s) {
+        const o = 1 - c.E.soft(c.clamp(s / 0.5));
+        c.fadeText(o); c.fadeLine(o);
+        c.way(s, 2.6, c.W / 2, c.H / 2);
+      },
+    },
+  });
+</script>
+</body>
+</html>

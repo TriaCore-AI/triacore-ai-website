@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vijf scrollvarianten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: clamp(56px, 9vw, 120px) var(--gutter); }
+  .title { font-size: var(--fs-h2); margin-top: 14px; }
+  .lead { margin-top: 18px; }
+  .list { margin-top: 56px; border-top: var(--hairline); }
+  .item {
+    position: relative; display: grid; grid-template-columns: 64px 1fr auto; gap: 8px 24px; align-items: baseline;
+    padding: 28px 0; border-bottom: var(--hairline);
+  }
+  .item::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green);
+    transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  .item:hover::before { transform: scaleX(1); }
+  .num { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--green-dim); }
+  .name { font-family: var(--serif); font-weight: 600; font-size: var(--fs-h3); line-height: 1.15; transition: transform var(--dur-hover) var(--ease-out); }
+  .item:hover .name { transform: translateX(8px); }
+  .desc { grid-column: 2; color: var(--sub); max-width: 40em; }
+  .end { grid-column: 3; grid-row: 1; font-family: var(--brand); font-weight: 500; font-size: 13px; color: var(--sub-soft); white-space: nowrap; }
+  .note { margin-top: 40px; }
+  @media (max-width: 640px) {
+    .item { grid-template-columns: 40px 1fr; }
+    .end { grid-column: 2; grid-row: auto; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Prototypes, 2 oktober</p>
+  <h1 class="title">Vijf manieren om <em>verder te scrollen.</em></h1>
+  <p class="lead">Elke variant start met dezelfde intro: het logo in titanium, in het midden. Pas als je scrolt, gaan ze uit elkaar. Scrol je terug, dan staat het logo weer in het midden.</p>
+
+  <div class="list">
+    <a class="item" href="scroll-1-uitwijken.html">
+      <span class="num">/01</span><span class="name">Uitwijken</span><span class="end">logo eindigt links</span>
+      <span class="desc">Het logo schuift naar links en wordt iets kleiner. Rechts tekenen de lijnen naar de drie pijlers, eronder de slogan en twee acties.</span>
+    </a>
+    <a class="item" href="scroll-2-hoofdstukken.html">
+      <span class="num">/02</span><span class="name">Drie hoofdstukken</span><span class="end">logo blijft in het midden</span>
+      <span class="desc">Elke derde van de scroll licht één balk op: hij komt naar voren, de andere worden stil, en zijn pijler staat groot eronder.</span>
+    </a>
+    <a class="item" href="scroll-3-menu.html">
+      <span class="num">/03</span><span class="name">Het logo wordt het menu</span><span class="end">logo eindigt rechtsboven</span>
+      <span class="desc">Het logo krimpt en glijdt naar de hoek, waar het de menuknop wordt. In het midden verschijnt de missie.</span>
+    </a>
+    <a class="item" href="scroll-4-lijnen.html">
+      <span class="num">/04</span><span class="name">De balken worden de lijnen</span><span class="end">logo wordt drie lijnen</span>
+      <span class="desc">De balken schuiven onder elkaar, worden flinterdun en rekken uit over de volle breedte. Ze worden de lijnen van de pijlersectie.</span>
+    </a>
+    <a class="item" href="scroll-5-kern.html">
+      <span class="num">/05</span><span class="name">Door de kern</span><span class="end">camera gaat erdoor</span>
+      <span class="desc">De camera vliegt door de opening tussen de balken. Aan de andere kant is het licht, en daar staat de missie.</span>
+    </a>
+  </div>
+
+  <p class="meta note">Scrol of klik tijdens de intro om ze door te spoelen. Laad de pagina opnieuw om de intro opnieuw te zien.</p>
+</main>
+</body>
+</html>

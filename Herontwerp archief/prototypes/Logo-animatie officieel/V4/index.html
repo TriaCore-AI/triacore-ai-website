@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: clamp(56px, 9vw, 120px) var(--gutter); }
+  .title { font-size: var(--fs-h2); margin-top: 14px; }
+  .lead { margin-top: 18px; }
+  .list { margin-top: 56px; border-top: var(--hairline); }
+  .item {
+    position: relative; display: grid; grid-template-columns: 64px 1fr auto; gap: 8px 24px; align-items: baseline;
+    padding: 28px 0; border-bottom: var(--hairline);
+  }
+  .item::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--green);
+    transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  .item:hover::before { transform: scaleX(1); }
+  .num { font-family: var(--brand); font-weight: 500; font-size: 14px; color: var(--green-dim); }
+  .name { font-family: var(--serif); font-weight: 600; font-size: var(--fs-h3); line-height: 1.15; transition: transform var(--dur-hover) var(--ease-out); }
+  .item:hover .name { transform: translateX(8px); }
+  .desc { grid-column: 2; color: var(--sub); max-width: 40em; }
+  .end { grid-column: 3; grid-row: 1; font-family: var(--brand); font-weight: 500; font-size: 13px; color: var(--sub-soft); white-space: nowrap; }
+  .note { margin-top: 40px; }
+  @media (max-width: 640px) {
+    .item { grid-template-columns: 40px 1fr; }
+    .end { grid-column: 2; grid-row: auto; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Logo animatie officieel, V4</p>
+  <h1 class="title">Vier manieren om <em>om te draaien.</em></h1>
+  <p class="lead">Verder op variant A uit V2. Rechtsboven en linksonder beginnen dichter dan in V1 en schuiven tijdens het inzoomen langs de balken. Rechtsboven begint het dichtst. In het laatste shot begint het logo groot en zoomt de camera fel uit, terwijl de balken omdraaien.</p>
+
+  <div class="list">
+    <a class="item" href="1-kantelen.html">
+      <span class="num">/01</span><span class="name">Kantelen</span><span class="end">±7 s</span>
+      <span class="desc">Variant A uit V2. De balken liggen plat als drie dunne strepen en kantelen na elkaar rechtop naar je toe, van boven naar onder.</span>
+    </a>
+    <a class="item" href="2-volledige-draai.html">
+      <span class="num">/02</span><span class="name">Volledige draai</span><span class="end">±7 s</span>
+      <span class="desc">Elke balk begint met zijn achterkant naar je toe en maakt een halve slag om zijn lengteas, na elkaar van boven naar onder. Het metaal licht twee keer op.</span>
+    </a>
+    <a class="item" href="3-lamellen.html">
+      <span class="num">/03</span><span class="name">Lamellen</span><span class="end">±7 s</span>
+      <span class="desc">Elke balk staat eerst dwars, je ziet enkel zijn uiteinde. Na elkaar draaien ze rond hun verticale as open, als lamellen.</span>
+    </a>
+    <a class="item" href="4-spiegel.html">
+      <span class="num">/04</span><span class="name">Spiegel</span><span class="end">±7 s</span>
+      <span class="desc">De bovenste balk kantelt van boven, de onderste tegelijk van onder, als een spiegelbeeld. Daarna draait de middelste in en sluit het logo af.</span>
+    </a>
+  </div>
+
+  <p class="meta note">Klik tijdens de animatie om door te spoelen. Klik of druk op R achteraf om ze opnieuw af te spelen.</p>
+</main>
+</body>
+</html>

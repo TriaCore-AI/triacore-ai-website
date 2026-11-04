@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team varianten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Tien varianten voor de teamsectie, om naast elkaar te vergelijken. Los van de site.
+   De foto's komen uit ../Hero/V2/assets/team/. De zin onder de rol verschijnt pas bij hover. */
+:root {
+  --green: #628F69; --green-dim: #557A5B; --green-lt: #8FB495;
+  --navy: #0F172A; --bg: #F2F2F2; --surface: #FBFBFA; --white: #FFFFFF; --line: #D9D9D6;
+  --sub: rgba(15, 23, 42, .62); --sub-inv: rgba(255, 255, 255, .68);
+  --serif: "Playfair Display", Georgia, serif; --sans: "DM Sans", system-ui, sans-serif; --brand: "Space Grotesk", "DM Sans", sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1); --dur: 420ms;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--navy); font-family: var(--sans); -webkit-font-smoothing: antialiased; padding: 64px 16px 120px; }
+.page-head, .variant { max-width: 1240px; margin: 0 auto; }
+.page-head h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(34px, 4vw, 52px); letter-spacing: -.01em; }
+.page-head p { margin-top: 10px; color: var(--sub); font-size: 17px; }
+.variant { margin-top: 96px; }
+.variant-head { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; margin-bottom: 32px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.variant-head b { font-family: var(--brand); font-weight: 600; font-size: 15px; color: var(--green-dim); }
+.variant-head h2 { font-family: var(--brand); font-weight: 600; font-size: 18px; }
+.variant-head span { color: var(--sub); font-size: 15px; }
+
+/* ---------- Gemeenschappelijk ---------- */
+.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.card { position: relative; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease); }
+.ph { position: relative; }
+.ph img { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; filter: grayscale(1); }
+.frame { position: absolute; pointer-events: none; transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), inset var(--dur) var(--ease); }
+.name { font-family: var(--serif); font-weight: 600; font-size: 26px; line-height: 1.15; letter-spacing: -.01em; }
+.role { display: block; margin-top: 6px; font-family: var(--brand); font-weight: 500; font-size: 14px; letter-spacing: .02em; color: var(--sub); transition: color var(--dur) var(--ease); }
+/* de zin: de ruimte staat al klaar, zodat de kaart niet verspringt; alleen de zin zelf komt binnen */
+.line { margin-top: 14px; font-size: 16px; line-height: 1.45; color: var(--sub); max-width: 22em;
+  opacity: 0; transform: translateY(6px); transition: opacity 400ms var(--ease), transform 400ms var(--ease); }
+.card:hover .line { opacity: 1; transform: none; }
+.card:hover .role { color: var(--green-dim); }
+@media (hover: none) { .line { opacity: 1; transform: none; } }
+.center { text-align: center; }
+.center .line { margin-left: auto; margin-right: auto; }
+
+/* ---------- 01 Passe-partout ---------- */
+.v1 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+.v1 .ph { width: 200px; aspect-ratio: 4 / 5; margin: 0 auto 24px; padding: 8px; background: var(--white); border: 1px solid var(--line); border-radius: 10px; transition: border-color var(--dur) var(--ease); }
+.v1 .ph img { border-radius: 5px; }
+.v1 .card:hover .ph { border-color: var(--green); }
+
+/* ---------- 02 Verschoven kader ---------- */
+.v2 .card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 32px 32px 28px; }
+.v2 .ph { width: 180px; aspect-ratio: 4 / 5; margin-bottom: 36px; }
+.v2 .ph img { border-radius: 8px; }
+.v2 .frame { inset: 0; border: 1.5px solid var(--green); border-radius: 8px; transform: translate(12px, 12px); }
+.v2 .card:hover .frame { transform: translate(18px, 18px); }
+
+/* ---------- 03 Navy band ---------- */
+.v3 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; padding: 0 28px 28px; }
+.v3 .card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 140px; background: var(--navy); transition: height var(--dur) var(--ease); }
+.v3 .ph { width: 176px; aspect-ratio: 4 / 5; margin: 44px auto 22px; }
+.v3 .ph img { border-radius: 10px; box-shadow: 0 0 0 5px var(--surface); }
+.v3 .card:hover::before { height: 156px; }
+
+/* ---------- 04 Uitstekende foto ---------- */
+.v4 .row { padding-top: 56px; }
+.v4 .card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 0 28px 28px; }
+.v4 .ph { width: 168px; aspect-ratio: 4 / 5; margin: -56px 0 26px; }
+.v4 .ph img { border-radius: 10px; box-shadow: 0 0 0 6px var(--bg); }
+.v4 .card:hover { border-color: var(--green); }
+
+/* ---------- 05 Snijtekens ---------- */
+.v5 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 40px 36px 28px; }
+.v5 .ph { width: 180px; aspect-ratio: 4 / 5; margin-bottom: 38px; }
+.v5 .frame {
+  inset: -12px; --c: rgba(15, 23, 42, .45);
+  background:
+    linear-gradient(var(--c), var(--c)) left top / 16px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) left top / 1.5px 16px no-repeat,
+    linear-gradient(var(--c), var(--c)) right top / 16px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) right top / 1.5px 16px no-repeat,
+    linear-gradient(var(--c), var(--c)) left bottom / 16px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) left bottom / 1.5px 16px no-repeat,
+    linear-gradient(var(--c), var(--c)) right bottom / 16px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) right bottom / 1.5px 16px no-repeat;
+}
+.v5 .card:hover .frame { inset: -7px; --c: var(--green); }
+
+/* ---------- 06 Navy kaart ---------- */
+.v6 .card { background: var(--navy); border-radius: 14px; padding: 28px; color: var(--white); }
+.v6 .ph { width: 184px; aspect-ratio: 4 / 5; margin-bottom: 26px; padding: 6px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 12px; transition: border-color var(--dur) var(--ease); }
+.v6 .ph img { border-radius: 7px; }
+.v6 .role { color: var(--green-lt); }
+.v6 .line { color: var(--sub-inv); }
+.v6 .card:hover .ph { border-color: var(--green-lt); }
+.v6 .card:hover .role { color: var(--green-lt); }
+
+/* ---------- 07 Groen vlak erachter ---------- */
+.v7 .card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 32px 28px 28px; }
+.v7 .ph { width: 172px; aspect-ratio: 4 / 5; margin: 0 auto 38px; }
+.v7 .ph img { border-radius: 8px; }
+.v7 .frame { inset: 0; background: rgba(98, 143, 105, .2); border-radius: 8px; transform: translate(14px, 14px); }
+.v7 .card:hover .frame { background: rgba(98, 143, 105, .34); transform: translate(18px, 18px); }
+
+/* ---------- 08 Gesplitst ---------- */
+.v8 .card { display: grid; grid-template-columns: 140px 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.v8 .ph { height: 100%; min-height: 200px; border-right: 1px solid var(--line); }
+.v8 .txt { padding: 22px 22px 20px; display: flex; flex-direction: column; justify-content: center; }
+.v8 .name { font-size: 22px; }
+.v8 .line { font-size: 15px; }
+.v8 .card:hover { border-color: var(--green); }
+
+/* ---------- 09 Rond met ring ---------- */
+.v9 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 36px 28px 28px; }
+.v9 .ph { width: 156px; aspect-ratio: 1; margin: 0 auto 30px; }
+.v9 .ph img { border-radius: 50%; object-position: 50% 30%; }
+.v9 .frame { inset: -9px; border: 1.5px solid var(--line); border-radius: 50%; }
+.v9 .card:hover .frame { inset: -12px; border-color: var(--green); }
+
+/* ---------- 10 Gestapelde kaart ---------- */
+.v10 .row { padding: 0 12px 12px 0; }
+.v10 .card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 28px; box-shadow: 10px 10px 0 #E1E9E2, 10px 10px 0 1px #D2DED4; }
+.v10 .ph { width: 172px; aspect-ratio: 4 / 5; margin-bottom: 26px; }
+.v10 .ph img { border-radius: 8px; }
+.v10 .card:hover { box-shadow: 14px 14px 0 #D3E0D5, 14px 14px 0 1px #C3D3C6; }
+
+/* op een smal scherm: de kaarten schuiven opzij, nog altijd van links naar rechts */
+@media (max-width: 860px) {
+  .row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 16px; }
+  .card { flex: 0 0 82%; scroll-snap-align: start; }
+  .v8 .card { flex-basis: 92%; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <h1>Team: tien varianten</h1>
+  <p>Telkens Lucas, Rian en Jorn, van links naar rechts. Beweeg over een kaart: de zin verschijnt pas dan.</p>
+</header>
+
+<main id="variants"></main>
+
+<script>
+  const PEOPLE = [
+    { name: 'Lucas Curto', role: 'Strategie en oplossingen', line: 'Vertaalt wat je nodig hebt naar wat we bouwen.', img: 'lucas.jpg' },
+    { name: 'Rian Mathijs', role: 'Klantrelaties en financiën', line: 'Je eerste gesprek, en daarna je vaste aanspreekpunt.', img: 'rian.jpg' },
+    { name: 'Jorn Van Breemaat', role: 'Architectuur en development', line: 'Denkt de oplossing uit en bouwt ze.', img: 'jorn.jpg' },
+  ];
+  // nummer, naam, uitleg, en of de inhoud gecentreerd staat
+  const VARIANTS = [
+    [1, 'Passe-partout', 'De foto in het midden, in een wit binnenkader zoals een ingelijste print. Hover: het kader wordt groen.', true],
+    [2, 'Verschoven kader', 'De foto linksboven, met een groene lijnrand die er schuin achter ligt. Hover: de rand schuift verder uit.', false],
+    [3, 'Navy band', 'Bovenaan de kaart een navy band; de foto staat half op de band en half op het licht. Hover: de band zakt wat.', true],
+    [4, 'Uitstekende foto', 'De foto linksboven steekt boven de kaart uit. Hover: de rand van de kaart wordt groen.', false],
+    [5, 'Snijtekens', 'Vier hoekjes rond de foto, zoals op drukwerk. Hover: ze schuiven naar de foto toe en worden groen.', false],
+    [6, 'Navy kaart', 'Een donkere kaart, de foto linksboven in een dunne lichte rand. Hover: de rand wordt groen.', false],
+    [7, 'Groen vlak erachter', 'De foto in het midden, met een zacht groen vlak dat er schuin achter ligt. Hover: het vlak wordt dieper.', true],
+    [8, 'Gesplitst', 'De foto links in de kaart over de volle hoogte, de tekst rechts. Compact. Hover: de rand wordt groen.', false],
+    [9, 'Rond met ring', 'Een rond portret in het midden, met een dunne ring op afstand. Hover: de ring wordt groen en groter.', true],
+    [10, 'Gestapelde kaart', 'Achter elke kaart een tweede, licht groene kaart, iets verschoven. Hover: de achterste schuift verder uit.', false],
+  ];
+  const card = p => `
+    <article class="card">
+      <div class="ph"><span class="frame"></span><img src="../Hero/V2/assets/team/${p.img}" alt="${p.name}"></div>
+      <div class="txt">
+        <h3 class="name">${p.name}</h3>
+        <span class="role">${p.role}</span>
+        <p class="line">${p.line}</p>
+      </div>
+    </article>`;
+  document.getElementById('variants').innerHTML = VARIANTS.map(([n, title, about, centered]) => `
+    <section class="variant v${n}${centered ? ' center' : ''}">
+      <div class="variant-head"><b>${String(n).padStart(2, '0')}</b><h2>${title}</h2><span>${about}</span></div>
+      <div class="row">${PEOPLE.map(card).join('')}</div>
+    </section>`).join('');
+</script>
+</body>
+</html>

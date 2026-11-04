@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore logo in titanium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #05080F; color: var(--text-inv); }
+  body { font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--green-lt); outline-offset: 4px; border-radius: 4px; }
+
+  .hero {
+    position: relative; height: 100%; min-height: 560px; overflow: hidden;
+    background: radial-gradient(ellipse 80% 70% at 50% 42%, #152036 0%, #0B1220 48%, #05080F 100%);
+  }
+  #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #gl.is-pointer { cursor: pointer; }
+
+  /* zwart aan het begin, het beeld komt traag op */
+  .veil {
+    position: absolute; inset: 0; background: #05080F; pointer-events: none;
+    opacity: 1; transition: opacity 2200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hero.is-on .veil { opacity: 0; }
+
+  /* Bediening van het prototype: bescheiden, rechtsboven */
+  .controls {
+    position: absolute; top: 18px; right: var(--gutter); z-index: 3;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end;
+    opacity: .55; transition: opacity var(--dur-hover) var(--ease-out);
+  }
+  .controls:hover, .controls:focus-within { opacity: 1; }
+  .ghost {
+    font-family: var(--brand); font-weight: 600; font-size: 12px; letter-spacing: .02em;
+    padding: 7px 13px; border-radius: var(--radius-pill); border: 1px solid var(--line-inv);
+    color: var(--sub-inv); transition: border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+  }
+  .ghost:hover { border-color: var(--sub-inv); color: var(--text-inv); }
+
+  /* Bij hover: een dunne lijn vanuit de balk naar zijn pijler. De positie zet het script. */
+  .guide { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform; }
+  .guide-line {
+    position: absolute; left: 0; top: 0; height: 1px; width: var(--w, 120px);
+    background: linear-gradient(90deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, .22));
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1) 80ms;
+  }
+  .guide-line::before {
+    content: ""; position: absolute; left: -2px; top: -2px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--text-inv);
+    opacity: 0; transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .guide-label {
+    position: absolute; top: 0; left: calc(var(--w, 120px) + 18px);
+    display: flex; align-items: baseline; gap: 12px; white-space: nowrap;
+    opacity: 0; transform: translate(-8px, -50%);
+    transition: opacity 360ms cubic-bezier(0.4, 0, 0.2, 1), transform 520ms var(--ease-out);
+  }
+  .guide.is-on .guide-line { transform: scaleX(1); transition: transform 800ms var(--ease-out); }
+  .guide.is-on .guide-line::before { opacity: 1; }
+  .guide.is-on .guide-label {
+    opacity: 1; transform: translate(0, -50%);
+    transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 140ms, transform 800ms var(--ease-out) 140ms;
+  }
+  .guide-num {
+    font-family: var(--brand); font-weight: 500; font-size: 13px; letter-spacing: .04em;
+    color: var(--green-lt);
+  }
+  .guide-word {
+    font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.01em;
+    font-size: clamp(24px, 2.2vw, 34px);
+  }
+
+  /* Onderaan: de naam als ondertekening */
+  .sign {
+    position: absolute; left: 0; right: 0; bottom: clamp(32px, 7vh, 72px);
+    padding: 0 var(--gutter); text-align: center; pointer-events: none;
+  }
+  .sign .name {
+    font-family: var(--serif); font-weight: 600; line-height: 1; letter-spacing: -.01em;
+    font-size: clamp(30px, 3vw, 46px);
+  }
+  .sign .ai { color: var(--green-lt); }
+  .sign .ch { display: inline-block; opacity: 0; transform: translateY(.35em); filter: blur(6px); }
+  .hero.show-sign .sign .ch {
+    opacity: 1; transform: none; filter: blur(0);
+    transition:
+      opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--d) * 1ms),
+      transform 1400ms var(--ease-out) calc(var(--d) * 1ms),
+      filter 1100ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--d) * 1ms);
+  }
+  .tagline {
+    margin-top: 14px; font-size: clamp(16px, 1.3vw, 20px); letter-spacing: .01em; color: var(--sub-inv);
+    opacity: 0; transform: translateY(6px);
+  }
+  .hero.show-sign .tagline {
+    opacity: 1; transform: none;
+    transition: opacity 1400ms cubic-bezier(0.4, 0, 0.2, 1) 750ms, transform 1600ms var(--ease-out) 750ms;
+  }
+
+  /* Op een smal scherm staat de pijler gecentreerd boven de naam, zonder lijn */
+  @media (max-width: 760px) {
+    .guide { transform: none !important; left: 0; right: 0; top: auto; bottom: calc(clamp(32px, 7vh, 72px) + 120px); }
+    .guide-line { display: none; }
+    .guide-label { position: static; justify-content: center; transform: translateY(6px); }
+    .guide.is-on .guide-label { transform: none; }
+  }
+
+  .nogl { position: absolute; inset: 0; display: none; place-items: center; text-align: center; padding: var(--gutter); }
+  .nogl.is-on { display: grid; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; }
+  }
+</style>
+</head>
+<body>
+<section class="hero" id="hero">
+  <canvas id="gl" aria-label="Het logo van TriaCore AI in titanium: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+  <div class="veil"></div>
+
+  <div class="guide"><span class="guide-line"></span><span class="guide-label"><span class="guide-num">/01</span><span class="guide-word">Understand</span></span></div>
+  <div class="guide"><span class="guide-line"></span><span class="guide-label"><span class="guide-num">/02</span><span class="guide-word">Translate</span></span></div>
+  <div class="guide"><span class="guide-line"></span><span class="guide-label"><span class="guide-num">/03</span><span class="guide-word">Deliver</span></span></div>
+
+  <div class="sign" aria-label="TriaCore AI, at the core of innovation">
+    <p class="name" id="name"></p>
+    <p class="tagline">At the core of innovation</p>
+  </div>
+
+  <div class="controls">
+    <button class="ghost" id="replay">Opnieuw afspelen</button>
+    <button class="ghost" id="skip">Eindbeeld</button>
+    <button class="ghost" id="material">Groen</button>
+  </div>
+
+  <div class="nogl" id="nogl"><p class="meta">Deze browser toont geen 3D. Open het prototype in Chrome, Edge, Firefox of Safari.</p></div>
+</section>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+// Een easing zoals cubic-bezier() in CSS: zo kiezen we exact hoe zacht iets vertrekt en uitglijdt
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = t => ((ax * t + bx) * t + cx) * t;
+  const sy = t => ((ay * t + by) * t + cy) * t;
+  const dx = t => (3 * ax * t + 2 * bx) * t + cx;
+  return x => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const e = sx(t) - x, d = dx(t);
+      if (Math.abs(e) < 1e-6 || Math.abs(d) < 1e-6) break;
+      t -= e / d;
+    }
+    return sy(clamp(t));
+  };
+}
+const glide = bezier(0.37, 0, 0.22, 1);   // traag vertrekken, lang uitglijden, zonder piek in het midden
+const soft = bezier(0.4, 0, 0.2, 1);      // voor het licht
+
+// ---------- Het logo, in eenheden van 100 uit de originele SVG ----------
+const BAR_W = 2.9156, BAR_H = 0.4857;
+const DX = 0.5758, DY = 1.00445;
+const BARS = [{ x: -DX, y: DY }, { x: DX, y: 0 }, { x: -DX, y: -DY }];
+const LOGO_H = 2 * DY + BAR_H;
+const LOGO_W = 2 * DX + BAR_W;
+const DEPTH = 0.2, BEVEL = 0.035;
+
+// ---------- De tijdlijn, in seconden ----------
+const T_CAM = 5.6;     // de camera glijdt van dicht bij de rand naar het volledige logo
+const T_SIGN = 4.4;    // de naam onderaan, terwijl de camera nog uitglijdt
+const T_READY = 5.4;   // hover mag
+
+const hero = document.getElementById('hero');
+const canvas = document.getElementById('gl');
+const guides = [...document.querySelectorAll('.guide')];
+
+// de naam, letter per letter
+const nameEl = document.getElementById('name');
+let k = 0;
+[['TriaCore', ''], [' ', ''], ['AI', 'ai']].forEach(([text, cls]) => {
+  const g = document.createElement('span');
+  if (cls) g.className = cls;
+  [...text].forEach(ch => {
+    const s = document.createElement('span');
+    s.className = 'ch';
+    s.setAttribute('aria-hidden', 'true');
+    s.textContent = ch === ' ' ? ' ' : ch;
+    s.style.setProperty('--d', k++ * 45);
+    g.appendChild(s);
+  });
+  nameEl.appendChild(g);
+});
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+} catch (e) {
+  document.getElementById('nogl').classList.add('is-on');
+  throw e;
+}
+// scherp, maar niet zwaarder dan nodig: haperen is erger dan iets minder pixels
+const DPR_MAX = Math.min(window.devicePixelRatio, 1.75);
+let dpr = DPR_MAX;
+renderer.setPixelRatio(dpr);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+
+// ---------- Een donkere studio met lichtstroken: dat is wat het metaal weerspiegelt ----------
+function studio() {
+  const s = new THREE.Scene();
+  s.background = new THREE.Color(0x06090f);
+  const strip = (w, h, k, x, y, z) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k), side: THREE.DoubleSide })
+    );
+    m.position.set(x, y, z);
+    m.lookAt(0, 0, 0);
+    s.add(m);
+  };
+  strip(14, 0.9, 7, 0, 6, 3);      // lange strook boven
+  strip(0.8, 9, 4.5, -7, 0.5, 2);  // smalle strook links
+  strip(0.6, 9, 3, 7.5, 0, -1);    // smalle strook rechts
+  strip(18, 2.5, 1.3, 0, -6, 5);   // zachte weerkaatsing van de vloer
+  strip(5, 3.5, 2.2, 0, 1, 9);     // front, zodat het lichte metaal licht oogt en niet grauw
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  return pmrem.fromScene(s, 0.02).texture;
+}
+const env = studio();
+
+// ---------- De drie balken: afgeronde staven met een fijne afschuining ----------
+function capsule(w, h) {
+  const r = h / 2, x0 = -w / 2 + r, x1 = w / 2 - r;
+  const s = new THREE.Shape();
+  s.moveTo(x0, -r);
+  s.lineTo(x1, -r);
+  s.absarc(x1, 0, r, -Math.PI / 2, Math.PI / 2, false);
+  s.lineTo(x0, r);
+  s.absarc(x0, 0, r, Math.PI / 2, Math.PI * 1.5, false);
+  return s;
+}
+const barGeo = new THREE.ExtrudeGeometry(capsule(BAR_W - 2 * BEVEL, BAR_H - 2 * BEVEL), {
+  depth: DEPTH, bevelEnabled: true, bevelThickness: BEVEL, bevelSize: BEVEL,
+  bevelSegments: 10, curveSegments: 48,
+});
+barGeo.center();
+
+// het metaal krijgt de kleuren uit de huisstijl: lichtgrijs #F2F2F2, of groen licht #8FB495
+const MATERIALS = {
+  titanium: { color: new THREE.Color('#F2F2F2'), roughness: 0.3, intensity: 1.2 },
+  groen:    { color: new THREE.Color('#8FB495'), roughness: 0.3, intensity: 1.1 },
+};
+let matKey = 'titanium';
+
+const logo = new THREE.Group();
+scene.add(logo);
+const bars = BARS.map((b, i) => {
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: MATERIALS.titanium.color.clone(), metalness: 1, roughness: MATERIALS.titanium.roughness,
+    anisotropy: 0.45, envMap: env, envMapIntensity: MATERIALS.titanium.intensity,
+  });
+  const mesh = new THREE.Mesh(barGeo, mat);
+  mesh.position.set(b.x, b.y, 0);
+  mesh.userData.i = i;
+  logo.add(mesh);
+  return { mesh, mat, glint: 0 };
+});
+
+// ---------- Camera ----------
+const FOV = 26;
+const camera = new THREE.PerspectiveCamera(FOV, 1, 0.03, 200);
+// centripetaal: het pad schiet niet door voorbij zijn punten
+const camPath = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()], false, 'centripetal');
+const aimPath = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()], false, 'centripetal');
+let W = 0, H = 0, finalY = 0;
+
+function layout() {
+  W = hero.clientWidth;
+  H = hero.clientHeight;
+  renderer.setSize(W, H, false);
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+
+  // zo ver dat het logo ongeveer een kwart van de hoogte vult, en op een gsm niet te breed wordt
+  const tn = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+  const dist = Math.max(LOGO_H / (0.25 * 2 * tn), LOGO_W / (0.6 * 2 * tn * camera.aspect));
+  const visH = 2 * dist * tn;
+  finalY = -0.04 * visH;  // het logo staat net boven het midden, de naam helemaal onderaan
+
+  // start: dicht bij het afgeronde uiteinde van de bovenste balk, scherend over het metaal
+  camPath.points[0].set(1.75, 1.32, 0.62);
+  camPath.points[1].set(1.6, 0.55, dist * 0.32);
+  camPath.points[2].set(0, finalY, dist);
+  aimPath.points[0].set(0.15, 1.0, 0);
+  aimPath.points[1].set(0.1, 0.25, 0);
+  aimPath.points[2].set(0, finalY, 0);
+
+  // lengtes opnieuw berekenen, zodat getPointAt een gelijkmatige snelheid geeft
+  camPath.updateArcLengths();
+  aimPath.updateArcLengths();
+}
+layout();
+window.addEventListener('resize', layout);
+
+// ---------- Interactie ----------
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2(9, 9);
+let active = null, ready = false;
+
+function setActive(i) {
+  if (i === active) return;
+  active = i;
+  guides.forEach((el, n) => el.classList.toggle('is-on', n === i));
+}
+function pick(e) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(bars.map(b => b.mesh), false)[0];
+  return hit ? hit.object.userData.i : null;
+}
+// Wie van de balk langs de lijn naar het woord beweegt, houdt de hover vast
+let lane = null;   // per frame: waar elke balk begint, waar de woorden staan, en hoe hoog een rij is
+function onLane(e) {
+  if (active === null || !lane) return false;
+  const r = canvas.getBoundingClientRect();
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  return x >= lane.xStart[active] && x <= lane.labelX + 280 && Math.abs(y - lane.yMid[active]) <= lane.band;
+}
+
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch' || !ready) return;
+  let i = pick(e);
+  if (i === null && onLane(e)) i = active;
+  canvas.classList.toggle('is-pointer', i !== null);
+  setActive(i);
+});
+canvas.addEventListener('pointerleave', () => { setActive(null); canvas.classList.remove('is-pointer'); });
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch' || !ready) return;
+  const i = pick(e);
+  setActive(i === active ? null : i);
+});
+
+// ---------- Afspelen ----------
+let start = performance.now();
+function replay() {
+  start = performance.now();
+  ready = false;
+  setActive(null);
+  hero.classList.remove('show-sign', 'is-on');
+  void hero.offsetWidth;
+  hero.classList.add('is-on');
+}
+document.getElementById('replay').addEventListener('click', replay);
+document.getElementById('skip').addEventListener('click', () => {
+  start = performance.now() - T_READY * 1000;
+  hero.classList.add('is-on');
+});
+const matBtn = document.getElementById('material');
+matBtn.addEventListener('click', () => {
+  matKey = matKey === 'titanium' ? 'groen' : 'titanium';
+  matBtn.textContent = matKey === 'titanium' ? 'Groen' : 'Lichtgrijs';
+});
+
+// ---------- De lus ----------
+const aim = new THREE.Vector3();
+const upStart = new THREE.Vector3(0.22, 1, 0).normalize();
+const upEnd = new THREE.Vector3(0, 1, 0);
+const v = new THREE.Vector3();
+let last = performance.now();
+let slow = 1 / 60;
+
+function frame(now) {
+  const raw = (now - last) / 1000;
+  const dt = Math.min(0.05, raw);
+  last = now;
+  const t = reduce ? 999 : (now - start) / 1000;
+
+  // haalt de computer de 60 beelden per seconde niet, dan iets minder pixels
+  if (raw < 0.25) slow = lerp(slow, raw, 0.05);  // een tab die even weg was, telt niet mee
+  if (slow > 1 / 45 && dpr > 1) {
+    dpr = Math.max(1, dpr - 0.25);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(W, H, false);
+    slow = 1 / 60;
+  }
+
+  // de enige beweging: de camera, van de rand naar het geheel, alles op dezelfde curve
+  const e = glide(clamp(t / T_CAM));
+  camPath.getPointAt(e, camera.position);
+  aimPath.getPointAt(e, aim);
+  camera.up.copy(upStart).lerp(upEnd, e).normalize();
+  camera.lookAt(aim);
+
+  // het enige effect: een lichtstreep die over het metaal loopt
+  const sweep = lerp(-1.6, 0.32, soft(clamp(t / (T_CAM + 0.4))));
+  const damp = 1 - Math.exp(-dt * 3.5);
+  const m = MATERIALS[matKey];
+  bars.forEach((b, i) => {
+    b.glint = lerp(b.glint, active === i ? 0.7 : 0, damp);
+    b.mat.envMapRotation.set(0, sweep + b.glint, 0);
+    b.mat.color.lerp(m.color, damp);
+    b.mat.roughness = lerp(b.mat.roughness, m.roughness, damp);
+    b.mat.envMapIntensity = lerp(b.mat.envMapIntensity, m.intensity, damp);
+  });
+
+  hero.classList.toggle('show-sign', t >= T_SIGN);
+  ready = t >= T_READY;
+
+  // de lijnen vertrekken aan het rechteruiteinde van elke balk en eindigen samen op één hoogte
+  if (W > 760) {
+    camera.updateMatrixWorld();
+    const xStart = [], xEnd = [], yMid = [];
+    BARS.forEach((b, i) => {
+      v.set(b.x - BAR_W / 2, b.y, DEPTH / 2).project(camera);
+      xStart[i] = (v.x + 1) / 2 * W;
+      v.set(b.x + BAR_W / 2, b.y, DEPTH / 2).project(camera);
+      xEnd[i] = (v.x + 1) / 2 * W;
+      yMid[i] = (1 - v.y) / 2 * H;
+    });
+    const labelX = Math.max(...xEnd) + Math.min(150, W * 0.09);
+    lane = { xStart, yMid, labelX, band: Math.abs(yMid[1] - yMid[0]) / 2 };
+    guides.forEach((el, i) => {
+      const x0 = xEnd[i] + 14;
+      el.style.transform = `translate3d(${x0}px, ${yMid[i]}px, 0)`;
+      el.style.setProperty('--w', `${Math.max(24, labelX - x0)}px`);
+    });
+  } else {
+    lane = null;
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+Promise.race([fontsReady, new Promise(r => setTimeout(r, 900))]).then(() => {
+  start = last = performance.now();
+  hero.classList.add('is-on');
+  requestAnimationFrame(frame);
+});
+</script>
+</body>
+</html>

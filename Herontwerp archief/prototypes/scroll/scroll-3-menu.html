@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll 3 het logo wordt het menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../stijl/tokens.css">
+<link rel="stylesheet" href="scroll-core.css">
+<style>
+  /* Het menu-icoon bestaat pas als het 3D-logo er aankomt */
+  .stage .nav .menu { opacity: clamp(0, calc((var(--p) - .88) * 10), 1); }
+
+  /* Terwijl het logo wegvliegt, komt de missie in het midden */
+  .mission {
+    position: absolute; inset: 0; z-index: 5; display: grid; place-items: center;
+    padding: 0 var(--gutter); text-align: center; pointer-events: none;
+    --q: clamp(0, calc((var(--p) - .42) * 3), 1);
+    opacity: var(--q);
+  }
+  .mission-in { transform: translateY(calc(18px - 18px * var(--q))); }
+  .mission .eyebrow { color: var(--green-lt); }
+  .mission .big {
+    margin: 22px auto 0; max-width: 17em;
+    font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -.015em;
+    font-size: clamp(32px, 4.2vw, 62px);
+  }
+  .mission .big em { font-style: normal; color: var(--green-lt); }
+</style>
+</head>
+<body>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="mission">
+      <div class="mission-in">
+        <p class="eyebrow">Our mission</p>
+        <p class="big">Understand challenges down to their core, <em>and translate them into intelligent solutions that empower businesses.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap reveal">
+    <p class="eyebrow">Selected work · Croes NV</p>
+    <p class="big">From paper delivery notes <em>to a real time overview.</em></p>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="scroll-core.js"></script>
+<script>
+  // Idee 3: bij het scrollen krimpt het logo en glijdt het naar rechtsboven, waar het de menuknop wordt.
+  // De grootte verandert geleidelijk (per stap hetzelfde percentage), zodat de krimp gelijkmatig aanvoelt.
+  TriaHero({
+    scroll: 1.2,
+    frame(c) {
+      const e = c.E.inout(c.clamp(c.p / 0.88));
+      const ppu0 = c.base.ppu, ppu1 = 26 / c.LOGO_W;          // eindgrootte: 26 px breed, zoals het menu-icoon
+      const ppu = ppu0 * Math.pow(ppu1 / ppu0, e);
+      const dist = c.distAt(ppu);
+      const mx = c.W - c.left - 13, my = 42;                   // middelpunt van het menu-icoon
+      const cx = c.lerp(c.W / 2, mx, e), cy = c.lerp(c.base.cy, my, e);
+      const camX = (c.W / 2 - cx) / ppu, camY = (cy - c.H / 2) / ppu;
+      c.camPos.set(camX, camY, dist);
+      c.aim.set(camX, camY, 0);
+      c.canvasOpacity = 1 - c.smooth(0.88, 0.97, c.p);
+    },
+  });
+</script>
+</body>
+</html>

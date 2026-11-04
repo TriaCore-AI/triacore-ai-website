@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, Monitor, Smartphone, Cog, Layers, ArrowUpRight } from 'lucide-react';
+import { Copy, Check, Download, Monitor, Smartphone, Cog, Layers, Users, Building2, CalendarDays, ArrowUpRight } from 'lucide-react';
 
 // Optionele iconen voor het 'cards' blok (bv. platform vs app). Enkel deze
 // namen zijn beschikbaar; laat item.icon weg voor een kaart zonder icoon.
-const CARD_ICONS = { Monitor, Smartphone, Cog, Layers };
+const CARD_ICONS = { Monitor, Smartphone, Cog, Layers, Users, Building2, CalendarDays };
 
 // --- BLOCK RENDERERS ---
 // Gedeeld door Resources (ResourceDetail.jsx) en Projecten (ProjectDetail.jsx),
@@ -123,7 +123,13 @@ function PromptBlock({ block, language }) {
     );
 }
 
-export function ContentBlock({ block, language }) {
+// theme="nieuw" geeft de blokken de stijl van de nieuwe site (rustige lijnen, lichte kaarten, geen labels
+// in hoofdletters). Voorlopig enkel gebruikt op de casepagina's; de resources houden de klassieke stijl.
+export function ContentBlock({ block, language, theme = 'klassiek' }) {
+    if (theme === 'nieuw') {
+        const nieuw = renderNieuw(block, language);
+        if (nieuw !== undefined) return nieuw;
+    }
     switch (block.type) {
         case 'heading':
             return (
@@ -382,5 +388,140 @@ export function ContentBlock({ block, language }) {
 
         default:
             return null;
+    }
+}
+
+// --- NIEUWE STIJL ---
+// Geeft undefined terug voor bloktypes zonder eigen nieuwe stijl; die vallen terug op de klassieke weergave.
+function renderNieuw(block, language) {
+    switch (block.type) {
+        case 'heading':
+            return (
+                <h2 id={block.anchor} className="scroll-mt-32 text-2xl md:text-3xl font-medium tracking-tight text-foreground mt-2 mb-6">
+                    {block[language]}
+                </h2>
+            );
+
+        case 'divider':
+            return <div className="my-14 h-px w-full bg-foreground/15" />;
+
+        case 'paragraph':
+            return (
+                <p className="text-foreground/70 text-lg leading-relaxed mb-6">
+                    {block[language]}
+                </p>
+            );
+
+        case 'list':
+            return (
+                <ul className="space-y-3 mb-6">
+                    {block[language].map((item, i) => (
+                        <li key={i} className="flex items-start gap-4 text-foreground/70 text-lg leading-relaxed">
+                            <span aria-hidden="true" className="mt-[0.85em] w-3 h-px bg-accent shrink-0" />
+                            <span>{item}</span>
+                        </li>
+                    ))}
+                </ul>
+            );
+
+        case 'callout':
+            return (
+                <div className="my-10 p-7 md:p-8 rounded-3xl bg-[#fafafa] border border-foreground/[0.07]">
+                    <p className="text-foreground/70 text-lg leading-relaxed">{block[language]}</p>
+                </div>
+            );
+
+        case 'quote':
+            return (
+                <blockquote className="my-14">
+                    <span aria-hidden="true" className="block font-serif italic text-accent text-6xl leading-none h-8 select-none">&ldquo;</span>
+                    <p className="font-serif text-2xl md:text-3xl leading-snug text-foreground">{block[language]}</p>
+                    {block.source && (
+                        <cite className="mt-5 block not-italic text-sm text-foreground/50">{block.source[language]}</cite>
+                    )}
+                </blockquote>
+            );
+
+        case 'cards':
+            return (
+                <div className={`my-10 grid grid-cols-1 gap-5 ${block.items.length === 3 ? 'md:grid-cols-3' : 'sm:grid-cols-2'}`}>
+                    {block.items.map((item, i) => {
+                        const Icon = item.icon && CARD_ICONS[item.icon];
+                        return (
+                            <div key={i} className="rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-6 md:p-7">
+                                <div className="flex items-center gap-3">
+                                    {Icon && <Icon size={18} strokeWidth={1.5} className="text-accent" />}
+                                    {item.label && <p className="text-base font-medium text-foreground">{item.label[language]}</p>}
+                                </div>
+                                <p className="mt-3 text-foreground/65 leading-relaxed">{item[language]}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+
+        case 'steps':
+            return (
+                <div className="my-10">
+                    {block.items.map((item, i) => (
+                        <div key={i} className="flex items-start gap-5 py-5 border-t border-foreground/15 last:border-b">
+                            <span className="shrink-0 text-sm text-accent tabular-nums mt-1">/0{i + 1}</span>
+                            <div>
+                                <p className="text-lg font-medium text-foreground">{item.title[language]}</p>
+                                <p className="mt-1 text-foreground/65 leading-relaxed">{item[language]}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+
+        case 'table': {
+            const t = block[language];
+            return (
+                <div className="my-10">
+                    {/* Mobiel: per rij een lichte kaart */}
+                    <div className="sm:hidden space-y-3">
+                        {t.rows.map((row, ri) => (
+                            <div key={ri} className="rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-5">
+                                {row[0] && <p className="text-base font-medium text-foreground">{row[0]}</p>}
+                                <div className="mt-3 space-y-3">
+                                    {row.slice(1).map((cell, ci) => (
+                                        <div key={ci}>
+                                            {t.head[ci + 1] && <span className="block text-sm text-foreground/50">{t.head[ci + 1]}</span>}
+                                            <span className="block mt-0.5 text-foreground/70 leading-relaxed">{cell}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Vanaf sm: een rustige tabel met enkel lijnen */}
+                    <table className="hidden sm:table w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                {t.head.map((h, i) => (
+                                    <th key={i} className="pb-3 pr-6 text-sm font-normal text-foreground/50 border-b border-foreground/15">{h}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {t.rows.map((row, ri) => (
+                                <tr key={ri} className="border-b border-foreground/10">
+                                    {row.map((cell, ci) => (
+                                        <td key={ci} className={`py-4 pr-6 align-top leading-relaxed ${ci === 0 ? 'font-medium text-foreground' : 'text-foreground/70'}`}>
+                                            {cell}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }
+
+        default:
+            return undefined;
     }
 }

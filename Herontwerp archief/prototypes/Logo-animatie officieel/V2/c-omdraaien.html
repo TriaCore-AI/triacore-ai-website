@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V2 C omdraaien</title>
+<link rel="stylesheet" href="v2-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v2-core.js"></script>
+<script>
+  // C. Omdraaien: je ziet eerst de achterkant van het logo, gespiegeld. Het logo draait een
+  // halve slag om, en het licht vangt de voorkant.
+  TriaLogoV2({
+    dur: 3.0,
+    finale(c, s) {
+      const k = c.E.glide(c.clamp(s / 2.9));
+      c.group.rotation.y = c.rad(180) * (1 - k);
+    },
+  });
+</script>
+</body>
+</html>

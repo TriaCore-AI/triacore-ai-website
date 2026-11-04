@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriaCore logo in 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../stijl/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--navy); color: var(--text-inv); }
+  body {
+    font-family: var(--sans); font-size: var(--fs-body); line-height: 1.5;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    transition: background-color var(--dur-reveal) var(--ease-in-out), color var(--dur-reveal) var(--ease-in-out);
+  }
+  body.is-light { background: var(--bg); color: var(--text); }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 4px; }
+
+  /* Themakleuren voor de tekst rond het logo */
+  body {
+    --t-sub: var(--sub-inv); --t-soft: var(--sub-soft-inv); --t-accent: var(--green-lt);
+    --t-line: var(--line-inv); --t-num: var(--green-lt);
+  }
+  body.is-light {
+    --t-sub: var(--sub); --t-soft: var(--sub-soft); --t-accent: var(--green);
+    --t-line: var(--line); --t-num: var(--green-dim);
+  }
+
+  /* ---------- Bedieningsbalk van het prototype ---------- */
+  .top {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+    display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between;
+    padding: 18px var(--gutter);
+  }
+  .top-l { display: flex; align-items: baseline; gap: 14px; }
+  .top .eyebrow { color: var(--t-num); }
+  .top .meta { color: var(--t-sub); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ghost {
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-meta); letter-spacing: .02em;
+    padding: 8px 14px; border-radius: var(--radius-pill); border: 1px solid var(--t-line);
+    transition: border-color var(--dur-micro) var(--ease-out);
+  }
+  .ghost:hover { border-color: currentColor; }
+
+  /* ---------- De hero ---------- */
+  .hero { position: relative; height: 100vh; min-height: 620px; overflow: hidden; }
+  #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+  #gl.is-pointer { cursor: pointer; }
+
+  /* Pijlers naast de balken: de positie zet het script elk frame */
+  .pl { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform; }
+  .pl-in {
+    position: relative; display: flex; align-items: baseline; gap: 12px; white-space: nowrap;
+    transform: translate(-12px, -50%); opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 1000ms var(--ease-out);
+    transition-delay: calc(var(--i) * 140ms);
+  }
+  .hero.show-pillars .pl-in { opacity: .92; transform: translate(0, -50%); }
+  .hero.show-pillars[data-active] .pl-in { opacity: .28; transition-delay: 0ms; }
+  .hero.show-pillars[data-active="0"] .p0 .pl-in,
+  .hero.show-pillars[data-active="1"] .p1 .pl-in,
+  .hero.show-pillars[data-active="2"] .p2 .pl-in { opacity: 1; }
+  .pnum {
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-eyebrow);
+    letter-spacing: .15em; color: var(--t-num);
+  }
+  .pname {
+    font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; line-height: 1;
+    font-size: clamp(24px, 2.3vw, 36px);
+  }
+  .pdesc {
+    position: absolute; left: 0; top: calc(100% + 8px);
+    font-size: 15px; color: var(--t-sub);
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+  }
+  .hero[data-active="0"] .p0 .pdesc,
+  .hero[data-active="1"] .p1 .pdesc,
+  .hero[data-active="2"] .p2 .pdesc { opacity: 1; transform: none; transition-delay: 80ms; }
+
+  /* Slogan en naam onder het logo */
+  .copy {
+    position: absolute; left: 0; right: 0; top: 0;
+    padding: 0 var(--gutter); text-align: center; pointer-events: none;
+    will-change: transform;
+  }
+  .row {
+    display: none; justify-content: center; gap: 18px; margin-bottom: 26px;
+    font-family: var(--brand); font-weight: 600; font-size: var(--fs-eyebrow);
+    letter-spacing: .15em; text-transform: uppercase; color: var(--t-soft);
+    opacity: 0; transition: opacity 700ms var(--ease-out);
+  }
+  .row span { transition: color var(--dur-hover) var(--ease-out); }
+  .hero.show-pillars .row { opacity: 1; }
+  .hero[data-active="0"] .row span:nth-child(1),
+  .hero[data-active="1"] .row span:nth-child(2),
+  .hero[data-active="2"] .row span:nth-child(3) { color: var(--t-accent); }
+
+  .slogan {
+    font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; line-height: 1.12;
+    font-size: clamp(26px, 3vw, 46px); max-width: 21em; margin: 0 auto;
+  }
+  .slogan em { font-style: normal; color: var(--t-accent); }
+  .slogan .w {
+    display: inline-block; opacity: 0; transform: translateY(.4em); filter: blur(6px);
+  }
+  .hero.show-slogan .slogan .w {
+    opacity: 1; transform: none; filter: blur(0);
+    transition:
+      opacity 900ms var(--ease-out) calc(var(--d) * 1ms),
+      transform 1100ms var(--ease-out) calc(var(--d) * 1ms),
+      filter 900ms var(--ease-out) calc(var(--d) * 1ms);
+  }
+
+  .name {
+    display: inline-flex; align-items: center; gap: 18px; margin-top: 34px;
+    font-family: var(--serif); font-weight: 600; font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -.005em;
+  }
+  .name::before, .name::after {
+    content: ""; width: 44px; height: 1px; background: var(--t-line);
+    transform: scaleX(0); transition: transform 1200ms var(--ease-out);
+  }
+  .name::before { transform-origin: right center; }
+  .name::after { transform-origin: left center; }
+  .hero.show-name .name::before, .hero.show-name .name::after { transform: scaleX(1); }
+  .name .ai { color: var(--t-accent); }
+  .name .ch { display: inline-block; opacity: 0; transform: translateY(.3em); filter: blur(5px); }
+  .hero.show-name .name .ch {
+    opacity: 1; transform: none; filter: blur(0);
+    transition:
+      opacity 800ms var(--ease-out) calc(var(--d) * 1ms),
+      transform 1000ms var(--ease-out) calc(var(--d) * 1ms),
+      filter 800ms var(--ease-out) calc(var(--d) * 1ms);
+  }
+
+  .hint {
+    position: absolute; left: 50%; bottom: 28px;
+    display: flex; align-items: center; gap: 10px; color: var(--t-sub);
+    transform: translate(-50%, 6px); opacity: 0;
+    transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+  }
+  .hint.is-in { opacity: 1; transform: translate(-50%, 0); }
+  .hint::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--t-accent); animation: pulse 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+
+  .nogl {
+    position: absolute; inset: 0; display: none; place-items: center; text-align: center; padding: var(--gutter);
+  }
+  .nogl.is-on { display: grid; }
+
+  @media (max-width: 760px) {
+    .pl { display: none; }
+    .row { display: flex; }
+  }
+
+  /* ---------- Toelichting ---------- */
+  .section { max-width: var(--maxw); margin: 0 auto; padding: var(--section) var(--gutter); }
+  .section + .section { padding-top: 0; }
+  .section .eyebrow { color: var(--t-num); }
+  .section .title { font-size: var(--fs-h2); margin-top: 14px; }
+  .section .title em { color: var(--t-accent); }
+  .section .lead { margin-top: 20px; color: var(--t-sub); }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 56px; border-top: 1px solid var(--t-line); }
+  .col { padding: 28px 32px 36px 0; }
+  .col + .col { padding-left: 32px; border-left: 1px solid var(--t-line); }
+  .col h3 { font-family: var(--serif); font-weight: 600; font-size: var(--fs-h3); line-height: 1.15; margin: 12px 0 10px; }
+  .col p { color: var(--t-sub); }
+  @media (max-width: 860px) {
+    .cols { grid-template-columns: 1fr; }
+    .col + .col { padding-left: 0; border-left: 0; border-top: 1px solid var(--t-line); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0ms !important;
+      transition-delay: 0ms !important;
+      animation: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-l">
+    <span class="eyebrow">Prototype</span>
+    <span class="meta">Logo in 3D, idee A: drie strengen</span>
+  </div>
+  <div class="controls">
+    <button class="ghost" id="replay">Opnieuw afspelen</button>
+    <button class="ghost" id="skip">Naar het eindbeeld</button>
+    <button class="ghost" id="theme">Licht</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <canvas id="gl" aria-label="Het logo van TriaCore AI: drie balken, voor begrijpen, vertalen en waarmaken"></canvas>
+
+    <div class="pl p0" style="--i:0"><div class="pl-in"><span class="pnum">01</span><span class="pname">Begrijpen</span><span class="pdesc">Eerst het probleem, dan de oplossing.</span></div></div>
+    <div class="pl p1" style="--i:1"><div class="pl-in"><span class="pnum">02</span><span class="pname">Vertalen</span><span class="pdesc">Eerlijk over wat AI kan, en wat niet.</span></div></div>
+    <div class="pl p2" style="--i:2"><div class="pl-in"><span class="pnum">03</span><span class="pname">Waarmaken</span><span class="pdesc">Tot het in de praktijk draait.</span></div></div>
+
+    <div class="copy" id="copy">
+      <div class="row" aria-hidden="true"><span>Begrijpen</span><span>Vertalen</span><span>Waarmaken</span></div>
+      <h1 class="slogan" id="slogan" aria-label="Iedereen kan straks bouwen. Niet iedereen neemt de tijd om te begrijpen."></h1>
+      <div class="name" id="name" aria-label="TriaCore AI"></div>
+    </div>
+
+    <p class="hint meta" id="hint">Beweeg over de balken</p>
+    <div class="nogl" id="nogl"><p class="meta">Deze browser toont geen 3D. Open het prototype in Chrome, Edge, Firefox of Safari.</p></div>
+  </section>
+
+  <section class="section">
+    <p class="eyebrow">Het idee</p>
+    <h2 class="title">Drie strengen. <em>Eén kern.</em></h2>
+    <p class="lead">Drie strengen bewegen vrij door elkaar, zoals een bedrijf vol vragen, mensen en processen. Ze draaien rond elkaar tot ze tot rust komen in ons logo. Daarna de pijlers, de zin waar we voor staan, en de naam als ondertekening.</p>
+    <div class="cols">
+      <div class="col">
+        <span class="eyebrow">01</span>
+        <h3>De vlecht</h3>
+        <p>De strengen glijden van links binnen en draaien om elkaar heen. Ze hebben de dikte en de ronde uiteinden van de balken, maar zijn nog vrij.</p>
+      </div>
+      <div class="col">
+        <span class="eyebrow">02</span>
+        <h3>Tot rust komen</h3>
+        <p>Ze ontwarren zich en leggen zich neer, boven en onder eerst. De middelste komt als laatste aan en schuift opzij: vertalen, de brug tussen begrijpen en waarmaken.</p>
+      </div>
+      <div class="col">
+        <span class="eyebrow">03</span>
+        <h3>De ondertekening</h3>
+        <p>Naast elke balk verschijnt zijn pijler, daaronder de zin, en tot slot de naam. Daarna leeft het logo mee met de muis, en komt een balk naar je toe als je erover beweegt.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="eyebrow">Nog open</p>
+    <h2 class="title">Wat je <em>beslist.</em></h2>
+    <div class="cols">
+      <div class="col">
+        <span class="eyebrow">De zin</span>
+        <h3>Een plaatshouder</h3>
+        <p>De zin is de kernovertuiging uit de vault. De vaste zin van TriaCore is nog niet geschreven. Hij moet kort en stevig zijn, en sterk genoeg om na deze animatie te staan.</p>
+      </div>
+      <div class="col">
+        <span class="eyebrow">Licht of donker</span>
+        <h3>Twee sferen</h3>
+        <p>Donker is filmischer en past bij de opening van de site. Licht sluit aan bij de rest van de huisstijl. Wissel bovenaan om te vergelijken.</p>
+      </div>
+      <div class="col">
+        <span class="eyebrow">Op een gsm</span>
+        <h3>Een lichtere versie</h3>
+        <p>Op de echte site krijgt een gsm of wie minder beweging vraagt een lichtere versie: het eindbeeld, of de 2D-animatie uit het vorige prototype.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ---------- Tekst opbouwen ----------
+const SLOGAN = [
+  { text: 'Iedereen kan straks bouwen.', em: false },
+  { text: 'Niet iedereen neemt de tijd om te begrijpen.', em: true },
+];
+const sloganEl = document.getElementById('slogan');
+let d = 0;
+SLOGAN.forEach((part, p) => {
+  const wrap = document.createElement(part.em ? 'em' : 'span');
+  part.text.split(' ').forEach((word, n, all) => {
+    const w = document.createElement('span');
+    w.className = 'w';
+    w.setAttribute('aria-hidden', 'true');
+    w.textContent = word;
+    w.style.setProperty('--d', d);
+    d += 55;
+    wrap.appendChild(w);
+    if (n < all.length - 1) wrap.appendChild(document.createTextNode(' '));
+  });
+  sloganEl.appendChild(wrap);
+  if (p === 0) { sloganEl.appendChild(document.createElement('br')); d += 180; }
+});
+
+const nameEl = document.getElementById('name');
+let k = 0;
+[['TriaCore', ''], [' ', ''], ['AI', 'ai']].forEach(([text, cls]) => {
+  const g = document.createElement('span');
+  if (cls) g.className = cls;
+  [...text].forEach(ch => {
+    const s = document.createElement('span');
+    s.className = 'ch';
+    s.setAttribute('aria-hidden', 'true');
+    s.textContent = ch === ' ' ? ' ' : ch;
+    s.style.setProperty('--d', 200 + k++ * 40);
+    g.appendChild(s);
+  });
+  nameEl.appendChild(g);
+});
+
+// ---------- Hulpjes ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+const easeInOutCubic = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const smoothstep = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+const TAU = Math.PI * 2;
+
+// ---------- Het logo, in eenheden van 100 uit de originele SVG ----------
+const L = 2.4299;        // lengte tussen de middelpunten van de ronde uiteinden
+const RAD = 0.24285;     // straal van een balk
+const DX = 0.5758;       // verschuiving van de middelste balk, gecentreerd
+const DY = 1.00445;      // afstand tussen de balken
+const BARS = [{ x: -DX, y: DY }, { x: DX, y: 0 }, { x: -DX, y: -DY }];
+const LOGO_H = 2 * DY + 2 * RAD;
+const LOGO_W = 2 * DX + L + 2 * RAD;
+
+// ---------- De tijdlijn, in seconden ----------
+const T = {
+  travel: 2.6,                 // de vlecht glijdt binnen
+  converge: [3.0, 3.45, 3.2],  // wanneer elke streng tot rust begint te komen (boven, midden, onder)
+  convergeDur: 1.9,
+  group: 3.0, groupDur: 2.45,
+  pillars: 5.5, slogan: 6.4, name: 7.6, ready: 8.3,
+};
+
+// ---------- De vlecht ----------
+const WB = 8.6;      // lengte van de vlecht
+const TURNS = 2.1;   // hoe vaak de strengen om elkaar draaien
+
+function braidPoint(i, u, t, out) {
+  const travel = -14 * (1 - easeOutCubic(clamp(t / T.travel)));
+  const x = (u - 0.5) * WB + travel;
+  const ay = 0.38 * Math.sin(TAU * 0.9 * u + 0.7 * t);
+  const az = 0.55 * Math.cos(TAU * 0.65 * u - 0.45 * t);
+  const phi = TAU * i / 3 + TAU * TURNS * u - 1.5 * t;
+  const rho = 0.62 - 0.1 * easeInOutCubic(clamp((t - 2.0) / 1.4));
+  out[0] = x;
+  out[1] = ay + rho * Math.cos(phi);
+  out[2] = az + rho * Math.sin(phi);
+}
+
+// ---------- Three.js ----------
+const hero = document.getElementById('hero');
+const canvas = document.getElementById('gl');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+} catch (e) {
+  document.getElementById('nogl').classList.add('is-on');
+  throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.0;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.7;
+
+const key = new THREE.DirectionalLight(0xffffff, 1.5);
+key.position.set(3, 5, 6);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x8fb495, 0.7);
+rim.position.set(-6, -2, -4);
+scene.add(rim);
+
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+camera.position.set(0, 0, 10);
+
+const root = new THREE.Group();
+scene.add(root);
+
+const THEMES = {
+  dark:  { base: new THREE.Color('#E8EBEF'), active: new THREE.Color('#8FB495'), dim: new THREE.Color('#2B3448') },
+  light: { base: new THREE.Color('#628F69'), active: new THREE.Color('#557A5B'), dim: new THREE.Color('#C9D2CA') },
+};
+let theme = THEMES.dark;
+
+// Eén streng: een buis die we elk frame zelf opbouwen, met twee bollen als ronde uiteinden
+const SEG = 180;   // stukken in de lengte
+const RS = 24;     // stukken rondom
+const capGeo = new THREE.SphereGeometry(1, 32, 16);
+
+function makeStrand(i) {
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: theme.base.clone(), roughness: 0.38, metalness: 0,
+    clearcoat: 0.35, clearcoatRoughness: 0.45,
+  });
+  const ring = RS + 1;
+  const pos = new Float32Array((SEG + 1) * ring * 3);
+  const nor = new Float32Array((SEG + 1) * ring * 3);
+  const idx = [];
+  for (let j = 0; j < SEG; j++) {
+    for (let r = 0; r < RS; r++) {
+      const a = j * ring + r, b = (j + 1) * ring + r, c = (j + 1) * ring + r + 1, dd = j * ring + r + 1;
+      idx.push(a, dd, b, b, dd, c);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setIndex(idx);
+
+  const group = new THREE.Group();
+  const tube = new THREE.Mesh(geo, mat);
+  tube.frustumCulled = false;
+  const capA = new THREE.Mesh(capGeo, mat);
+  const capB = new THREE.Mesh(capGeo, mat);
+  group.add(tube, capA, capB);
+  root.add(group);
+
+  return {
+    i, mat, geo, pos, nor, group, capA, capB,
+    P: new Float32Array((SEG + 1) * 3),
+    RR: new Float32Array(SEG + 1),
+    off: new THREE.Vector3(),
+  };
+}
+
+const strands = [0, 1, 2].map(makeStrand);
+
+// Onzichtbare raakvlakken voor de hover, één per balk
+const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+const hits = BARS.map((b, i) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(L + 2 * RAD, 4 * RAD, 5 * RAD), hitMat);
+  m.position.set(b.x, b.y, 0);
+  m.userData.i = i;
+  root.add(m);
+  return m;
+});
+
+const tmp = [0, 0, 0];
+const vT = new THREE.Vector3(), vN = new THREE.Vector3(), vB = new THREE.Vector3(), vPrevN = new THREE.Vector3();
+const vA = new THREE.Vector3(), vC = new THREE.Vector3(), vRef = new THREE.Vector3();
+
+function buildStrand(s, t, w) {
+  const { i, P, RR, pos, nor } = s;
+  const bar = BARS[i];
+  for (let j = 0; j <= SEG; j++) {
+    const u = j / SEG;
+    braidPoint(i, u, t, tmp);
+    const sx = bar.x + (u - 0.5) * L, sy = bar.y, sz = 0;
+    P[j * 3]     = lerp(tmp[0], sx, w);
+    P[j * 3 + 1] = lerp(tmp[1], sy, w);
+    P[j * 3 + 2] = lerp(tmp[2], sz, w);
+    // als slang lopen de uiteinden dun uit, als balk is de dikte overal gelijk
+    const edge = smoothstep(0, 0.14, u) * smoothstep(1, 0.86, u);
+    RR[j] = RAD * (1 - (1 - w) * 0.7 * (1 - edge));
+  }
+
+  const ring = RS + 1;
+  for (let j = 0; j <= SEG; j++) {
+    const j0 = Math.max(0, j - 1), j1 = Math.min(SEG, j + 1);
+    vA.set(P[j0 * 3], P[j0 * 3 + 1], P[j0 * 3 + 2]);
+    vC.set(P[j1 * 3], P[j1 * 3 + 1], P[j1 * 3 + 2]);
+    vT.subVectors(vC, vA).normalize();
+
+    if (j === 0) {
+      vRef.set(0, 0, 1);
+      if (Math.abs(vT.dot(vRef)) > 0.9) vRef.set(0, 1, 0);
+      vN.crossVectors(vRef, vT).normalize();
+    } else {
+      // het vorige frame meedragen langs de buis, zodat ze niet verdraait
+      vN.copy(vPrevN).addScaledVector(vT, -vPrevN.dot(vT)).normalize();
+    }
+    vB.crossVectors(vT, vN);
+    vPrevN.copy(vN);
+
+    const px = P[j * 3], py = P[j * 3 + 1], pz = P[j * 3 + 2], rr = RR[j];
+    for (let r = 0; r <= RS; r++) {
+      const th = (r / RS) * TAU, c = Math.cos(th), sn = Math.sin(th);
+      const nx = c * vN.x + sn * vB.x, ny = c * vN.y + sn * vB.y, nz = c * vN.z + sn * vB.z;
+      const o = (j * ring + r) * 3;
+      pos[o] = px + rr * nx; pos[o + 1] = py + rr * ny; pos[o + 2] = pz + rr * nz;
+      nor[o] = nx; nor[o + 1] = ny; nor[o + 2] = nz;
+    }
+  }
+  s.geo.attributes.position.needsUpdate = true;
+  s.geo.attributes.normal.needsUpdate = true;
+
+  s.capA.position.set(P[0], P[1], P[2]);
+  s.capA.scale.setScalar(RR[0]);
+  const e = SEG * 3;
+  s.capB.position.set(P[e], P[e + 1], P[e + 2]);
+  s.capB.scale.setScalar(RR[SEG]);
+}
+
+// ---------- Indeling ----------
+let W = 0, H = 0, ppu = 1, sBraid = 1, sFinal = 0.5, fx = 0, fy = 0, mobile = false;
+
+function layout() {
+  W = hero.clientWidth;
+  H = hero.clientHeight;
+  renderer.setSize(W, H, false);
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+  const visH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const visW = visH * camera.aspect;
+  ppu = H / visH;
+  mobile = W < 760;
+
+  const logoPx = mobile ? Math.min(W * 0.4, 180) : clamp(H * 0.27, 150, 290);
+  sFinal = logoPx / (LOGO_H * ppu);
+  sBraid = Math.max(visW / 10.5, 0.55);
+
+  const labelsW = mobile ? 0 : 320, gap = mobile ? 0 : 44;
+  fx = (W / 2 - (gap + labelsW) / 2 - W / 2) / ppu;
+  const centerY = H * (mobile ? 0.33 : 0.36);
+  fy = (H / 2 - centerY) / ppu;
+}
+layout();
+window.addEventListener('resize', layout);
+
+// ---------- Interactie ----------
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2(9, 9);
+const mouse = new THREE.Vector2(0, 0);
+const hint = document.getElementById('hint');
+let active = null, ready = false, hinted = false;
+
+function setActive(i) {
+  active = i;
+  if (i === null) hero.removeAttribute('data-active');
+  else hero.dataset.active = i;
+}
+
+function pick() {
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(hits, false)[0];
+  return hit ? hit.object.userData.i : null;
+}
+
+function updatePointer(e) {
+  const r = canvas.getBoundingClientRect();
+  ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+  ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  mouse.copy(ndc);
+}
+
+function touched() {
+  if (!hinted) { hinted = true; hint.classList.remove('is-in'); }
+}
+
+canvas.addEventListener('pointermove', e => {
+  updatePointer(e);
+  if (e.pointerType === 'touch' || !ready) return;
+  const i = pick();
+  canvas.classList.toggle('is-pointer', i !== null);
+  if (i !== active) { if (i !== null) touched(); setActive(i); }
+});
+canvas.addEventListener('pointerleave', e => {
+  mouse.set(0, 0);
+  if (e.pointerType !== 'touch') { setActive(null); canvas.classList.remove('is-pointer'); }
+});
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch' || !ready) return;
+  updatePointer(e);
+  const i = pick();
+  touched();
+  setActive(i === active ? null : i);
+});
+
+// ---------- Afspelen ----------
+let start = performance.now();
+let geometryDone = false;
+let readyAmt = 0;
+const par = new THREE.Vector2(0, 0);
+
+function replay() {
+  start = performance.now();
+  geometryDone = false;
+  ready = false;
+  readyAmt = 0;
+  setActive(null);
+  hint.classList.remove('is-in');
+  ['show-pillars', 'show-slogan', 'show-name'].forEach(c => hero.classList.remove(c));
+}
+document.getElementById('replay').addEventListener('click', replay);
+document.getElementById('skip').addEventListener('click', () => { start = performance.now() - T.ready * 1000; });
+
+const themeBtn = document.getElementById('theme');
+themeBtn.addEventListener('click', () => {
+  const light = document.body.classList.toggle('is-light');
+  theme = light ? THEMES.light : THEMES.dark;
+  themeBtn.textContent = light ? 'Donker' : 'Licht';
+  rim.color.set(light ? 0xffffff : 0x8fb495);
+});
+
+if (reduce) start = performance.now() - 60000;
+
+// ---------- Pijlers en tekst volgen het logo ----------
+const plEls = [...document.querySelectorAll('.pl')];
+const copyEl = document.getElementById('copy');
+const v = new THREE.Vector3();
+function toScreen(x, y, z) {
+  v.set(x, y, z);
+  root.localToWorld(v);
+  v.project(camera);
+  return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H];
+}
+
+// ---------- De lus ----------
+let last = performance.now();
+const goal = new THREE.Color();
+
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  const t = (now - start) / 1000;
+
+  // de strengen opbouwen tot ze stilliggen
+  if (!geometryDone) {
+    let allDone = true;
+    strands.forEach((s, i) => {
+      const w = easeInOutCubic(clamp((t - T.converge[i]) / T.convergeDur));
+      if (w < 1) allDone = false;
+      buildStrand(s, t, w);
+    });
+    if (allDone) geometryDone = true;
+  }
+
+  // de groep: van vlecht over de volle breedte naar het logo op zijn plek
+  const wg = easeInOutCubic(clamp((t - T.group) / T.groupDur));
+  root.scale.setScalar(lerp(sBraid, sFinal, wg));
+
+  ready = t >= T.ready;
+  readyAmt = lerp(readyAmt, ready ? 1 : 0, 1 - Math.exp(-dt * 3));
+  if (ready && !hinted && !hint.classList.contains('is-in')) {
+    hint.textContent = matchMedia('(hover: none)').matches ? 'Tik op een balk' : 'Beweeg over de balken';
+    hint.classList.add('is-in');
+  }
+
+  // de muis kantelt het logo een klein beetje
+  const pt = reduce ? 0 : readyAmt;
+  par.x = lerp(par.x, -mouse.y * 0.1 * pt, 1 - Math.exp(-dt * 4));
+  par.y = lerp(par.y, mouse.x * 0.16 * pt, 1 - Math.exp(-dt * 4));
+
+  root.position.set(lerp(0, fx, wg), lerp(0, fy, wg), 0);
+  root.rotation.set(lerp(0.22, 0, wg) + par.x, lerp(-0.38, 0, wg) + par.y, lerp(0.06, 0, wg));
+
+  // de actieve balk komt naar je toe, de andere worden stil
+  const damp = 1 - Math.exp(-dt * 8);
+  const cdamp = 1 - Math.exp(-dt * 6);
+  strands.forEach((s, i) => {
+    const on = active === i;
+    const float = reduce ? 0 : readyAmt * 0.018 * Math.sin(now / 1000 * 0.9 + i * 1.7);
+    s.off.x = lerp(s.off.x, on ? 0.12 : 0, damp);
+    s.off.z = lerp(s.off.z, on ? 0.45 : 0, damp);
+    s.group.position.set(s.off.x, s.off.y + float, s.off.z);
+    goal.copy(on ? theme.active : (active === null ? theme.base : theme.dim));
+    s.mat.color.lerp(goal, cdamp);
+  });
+
+  // tekst op zijn plek
+  hero.classList.toggle('show-pillars', t >= T.pillars);
+  hero.classList.toggle('show-slogan', t >= T.slogan);
+  hero.classList.toggle('show-name', t >= T.name);
+
+  root.updateMatrixWorld(true);
+  if (!mobile) {
+    const labelX = toScreen(DX + L / 2 + RAD, 0, 0)[0] + 44;
+    plEls.forEach((el, i) => {
+      const [, y] = toScreen(BARS[i].x, BARS[i].y, 0);
+      el.style.transform = `translate3d(${labelX}px, ${y}px, 0)`;
+    });
+  }
+  const [, bottom] = toScreen(0, -DY - RAD, 0);
+  copyEl.style.transform = `translate3d(0, ${bottom + (mobile ? 44 : 64)}px, 0)`;
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+Promise.race([fontsReady, new Promise(r => setTimeout(r, 900))]).then(() => {
+  if (!reduce) start = performance.now();
+  requestAnimationFrame(frame);
+});
+</script>
+</body>
+</html>

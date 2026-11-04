@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animatie V4 1 kantelen</title>
+<link rel="stylesheet" href="v4-core.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas class="gl" aria-label="Het TriaCore AI logo in licht titanium: drie balken"></canvas>
+  <div class="veil"></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script src="v4-core.js"></script>
+<script>
+  // 1. Kantelen: de balken liggen plat, je ziet drie dunne strepen. Na elkaar kantelen ze
+  // rechtop naar je toe, boven, midden, onder (variant A uit V2), en elke balk vangt het licht.
+  const STAGGER = 0.28, TURN = 1.6;
+  TriaLogoV4({
+    dur: 3.2,
+    finale(c, s) {
+      c.bars.forEach((m, i) => {
+        const k = c.E.glide(c.clamp((s - i * STAGGER) / TURN));
+        m.rotation.x = c.rad(-90) * (1 - k);
+        c.glint[i] = 0.6 * Math.sin(Math.PI * k);
+      });
+    },
+  });
+</script>
+</body>
+</html>
