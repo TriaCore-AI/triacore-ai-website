@@ -1,20 +1,15 @@
 ﻿import React, { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../../context/LanguageContext';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // De visual onder de hero van Custom tools: in het midden een lichte kaart met het logo, en aan beide kanten
 // een trechter met gebogen randen, breed aan de buitenkant en smal waar hij de kaart raakt.
 // Links staan de woorden van het handwerk dat we wegnemen (Excel, overtypen, papieren werkbonnen ...),
 // verspreid in verschillende maten en tinten: de chaos die in de kaart samenkomt. Hoe dichter bij de kaart,
 // hoe kleiner en vager. Op een gsm staat de trechter rechtop (zie FunnelVertical): daar is de hoogte er wel
-// en de breedte niet. In de kaart het logo met "Uw tool op maat" eronder. De kaart en de bogen staan er meteen en bewegen niet.
-// Bij het laden staat er verder niets (op vraag van Lucas: anders is het te druk). Bij het scrollen komen de
-// woorden links op, glijden ze langs de bogen de kaart in, en komen de resultaten rechts uit de kaart.
-// Alles hangt aan de scroll: wie stopt met scrollen, ziet niets meer bewegen, en terug naar boven scrollen
-// draait het om. De hero staat zolang even vast. Wie minder beweging vraagt, ziet meteen beide kanten, stil.
+// en de breedte niet. In de kaart het logo met "Uw tool op maat" eronder.
+// De woorden en de resultaten staan stil. Enkel over de bogen lopen dunne groene lijntjes, tegelijk boven en
+// onder, in één vloeiende beweging rond de kaart en achter de tekst (zie FlowLines).
 // De trechter is enkel een zacht lichter vlak met dunne randen, zonder gloed (zie de branding bible).
 
 // Elk woord heeft een vaste plaats, met de hand gekozen op de volle breedte (de linkerkant van de kaart op
@@ -95,70 +90,73 @@ const navBottom = () => {
 };
 
 // De hoogte van de compositie: ze past altijd tussen de navigatiebalk en de onderrand van het venster, zodat
-// ze volledig in beeld staat als de hero vaststaat
+// ze volledig in beeld kan staan
 const fitHeight = (w) => {
     const room = window.innerHeight - navBottom() - 16;
     return Math.round(w < VERTICAL_BELOW ? Math.max(480, Math.min(680, room)) : Math.max(460, Math.min(FULL.h, room)));
 };
 
-// Zet de hero vast zodra het midden van de visual midden tussen de navigatiebalk en de onderrand van het
-// venster staat, en laat de animatie afspelen op de scroll (bewuste uitzondering op de regel uit de branding
-// bible, op vraag van Lucas). Terug naar boven scrollen draait alles om
-const heroPin = (frame, distance) => {
-    const hero = frame.closest('section');
-    return {
-        trigger: hero,
-        pin: hero,
-        start: () => {
-            const nav = navBottom();
-            const target = nav + (window.innerHeight - nav) / 2;
-            const center = frame.getBoundingClientRect().top + window.scrollY + frame.offsetHeight / 2;
-            return Math.max(0, center - target);
-        },
-        end: `+=${distance}`,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        // Eerst berekend, zodat de secties eronder rekening houden met de extra scrollafstand
-        refreshPriority: 1,
-        scrub: 0.6
-    };
-};
+// De groene lijntjes: hoe lang ze zijn (als deel van het hele pad), hoeveel seconden één tocht duurt, om de
+// hoeveel seconden er een nieuw vertrekt, en hoe sterk de kleur is op haar sterkst. Vertrekken ze sneller na
+// elkaar dan één tocht duurt, dan lopen er meerdere tegelijk op een boog (copies)
+const FLOW = { segment: 0.16, duration: 5, every: 3, opacity: 0.5 };
+const FLOW_COPIES = Math.ceil(FLOW.duration / FLOW.every);
+// De straal van de hoeken van de kaart (rounded-3xl)
+const CARD_RADIUS = 24;
 
-// Twee dunne groene lijnen lopen tegelijk rond de kaart, van boog naar boog. De kop loopt voorop, de staart
-// volgt zacht en haalt ze op het einde in, zodat de lijn daar uitloopt. Ze hangen aan de scroll zoals de rest:
-// wie pauzeert, ziet ze stilstaan, wie doorscrolt, laat ze lopen
-const addTrace = (tl, traceEls) => {
-    const line = { head: 0, tail: 0 };
-    const draw = () => {
-        const length = line.head - line.tail;
-        traceEls.forEach((el) => {
-            el.style.opacity = length > 0.002 ? '1' : '0';
-            el.setAttribute('stroke-dasharray', `${length} 2`);
-            el.setAttribute('stroke-dashoffset', String(-line.tail));
-        });
-    };
-    draw();
-    tl.to(line, { head: 1, duration: 3.2, ease: 'sine.inOut', onUpdate: draw }, 4.4)
-        .to(line, { tail: 1, duration: 3.2, ease: 'sine.inOut', onUpdate: draw }, 5);
-};
+// Dunne groene lijntjes die tegelijk over de bogen en rond de kaart lopen, vanaf de buitenkant door naar de
+// andere kant. Ze blijven altijd in beweging en vervagen naar de uiteinden toe, zodat ze zacht opkomen en
+// wegvallen. Ze staan boven de kaart maar achter de tekst. Wie minder beweging vraagt, ziet ze niet
+function FlowLines({ w, h, paths, vertical }) {
+    const ref = useRef(null);
+    const pathsKey = paths.join('|');
 
-// De twee groene lijnen als pad in een svg bovenop de kaart
-const TraceLines = ({ w, h, paths }) => (
-    <svg className="pointer-events-none absolute inset-0 w-full h-full overflow-visible" viewBox={`0 0 ${w} ${h}`}>
-        {paths.map((path) => (
-            <path
-                key={path}
-                className="fv-trace text-accent opacity-0"
-                d={path}
-                pathLength="1"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-            />
-        ))}
-    </svg>
-);
+    useLayoutEffect(() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+        const ctx = gsap.context(() => {
+            gsap.utils.toArray('path', ref.current).forEach((el) => {
+                gsap.fromTo(el,
+                    { attr: { 'stroke-dashoffset': FLOW.segment } },
+                    {
+                        attr: { 'stroke-dashoffset': -1 },
+                        duration: FLOW.duration,
+                        ease: 'none',
+                        repeat: -1,
+                        repeatDelay: FLOW_COPIES * FLOW.every - FLOW.duration,
+                        delay: Number(el.dataset.copy) * FLOW.every
+                    });
+            });
+        }, ref);
+        return () => ctx.revert();
+    }, [pathsKey]);
+
+    return (
+        <svg ref={ref} className="pointer-events-none absolute inset-0 w-full h-full overflow-visible" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+            <defs>
+                <linearGradient id="fv-flow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={vertical ? 0 : w} y2={vertical ? h : 0}>
+                    <stop offset="0" stopColor="#628f69" stopOpacity="0" />
+                    <stop offset="0.25" stopColor="#628f69" stopOpacity={FLOW.opacity} />
+                    <stop offset="0.75" stopColor="#628f69" stopOpacity={FLOW.opacity} />
+                    <stop offset="1" stopColor="#628f69" stopOpacity="0" />
+                </linearGradient>
+            </defs>
+            {paths.flatMap((path) => Array.from({ length: FLOW_COPIES }, (_, copy) => (
+                <path
+                    key={`${path}-${copy}`}
+                    data-copy={copy}
+                    d={path}
+                    pathLength="1"
+                    fill="none"
+                    stroke="url(#fv-flow)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeDasharray={`${FLOW.segment} 2`}
+                    strokeDashoffset={FLOW.segment}
+                />
+            )))}
+        </svg>
+    );
+}
 
 // De maten van de compositie. Ze schaalt als één geheel mee met de breedte en de hoogte (s), zodat alles op
 // elk scherm op dezelfde manier ten opzichte van elkaar staat. De trechters komen niet op de hoeken van de
@@ -233,13 +231,10 @@ const placeWords = (d, texts) => {
     return placed;
 };
 
-// Hoeveel px er gescrold wordt terwijl de hero vaststaat: hoe meer, hoe trager de animatie
-const FLOW_DISTANCE = { horizontal: 880, vertical: 550 };
-
 // De trechter rechtop, voor een gsm. Bovenaan is hij breed en wordt hij smal naar de kaart toe, onderaan gaat
 // hij weer open. Boven staan de woorden, verspreid; onder de resultaten, om de beurt links en rechts. De
 // bogen vertrekken op de boven- en onderkant van de kaart, op een kwart van de breedte naar binnen, en lopen
-// tot de rand. De animatie is dezelfde als op een groter scherm, maar dan van boven naar onder.
+// tot de rand.
 
 // De woorden, verwijzend naar WORDS: v is de plaats van boven (0) naar de kaart (1), c de plaats van links (-1)
 // naar rechts (1) over de volle breedte van het scherm. Telkens een eigen hoogte of ver genoeg uit elkaar, de
@@ -259,7 +254,6 @@ const VERTICAL_WORDS = [
 
 function FunnelVertical({ w, h }) {
     const { language } = useLanguage();
-    const ref = useRef(null);
     const cw = 170;
     const ch = 110;
     const cL = (w - cw) / 2;
@@ -281,7 +275,7 @@ function FunnelVertical({ w, h }) {
         const m = wd.v * cT;
         const x = mid + wd.c * Math.max(0, screenHalf - half);
         const base = PLACES[wd.i].b ? 0.85 : 0.65;
-        return { text, x, m, size: wd.size, bold: !!PLACES[wd.i].b, tone: base * (0.75 + 0.25 * wd.v), order: 1 - wd.v };
+        return { text, x, m, size: wd.size, bold: !!PLACES[wd.i].b, tone: base * (0.75 + 0.25 * wd.v) };
     });
 
     const resultGap = (h - cB - 16) / RESULT_TEXT[language].length;
@@ -292,69 +286,12 @@ function FunnelVertical({ w, h }) {
             text,
             x: mid + (i % 2 ? 1 : -1) * 0.6 * Math.max(0, screenHalf - half),
             y: cB + resultGap * (i + 0.6),
-            accent: i === all.length - 1,
-            order: i
+            accent: i === all.length - 1
         };
     });
 
-    useLayoutEffect(() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const root = ref.current;
-        const byOrder = (a, b) => Number(a.dataset.order) - Number(b.dataset.order);
-        const wordEls = [...root.querySelectorAll('.fv-word')].sort(byOrder);
-        const resultEls = [...root.querySelectorAll('.fv-result')].sort(byOrder);
-        const traceEls = [...root.querySelectorAll('.fv-trace')];
-
-        // Een woord zakt naar de kaart en schuift daarbij naar het midden
-        const renderWord = (el, st) => {
-            const x0 = Number(el.dataset.x);
-            const m0 = Number(el.dataset.m);
-            const m = m0 + (cT + 6 - m0) * st.p;
-            const x = x0 + (mid - x0) * st.p;
-            const rise = (1 - st.a) * 8;
-            el.style.opacity = String(st.a * Math.min(1, (1 - st.p) / 0.3));
-            el.style.transform = `translate(${x - x0}px, ${m - m0 + rise}px) scale(${1 - 0.4 * st.p})`;
-        };
-        // Een resultaat komt onderaan uit het midden van de kaart en schuift naar zijn plaats
-        const renderResult = (el, st) => {
-            const x0 = Number(el.dataset.x);
-            const y0 = Number(el.dataset.y);
-            el.style.opacity = String(Math.min(1, st.p / 0.35));
-            el.style.transform = `translate(${(mid - x0) * (1 - st.p)}px, ${(cB - y0) * (1 - st.p)}px) scale(${0.7 + 0.3 * st.p})`;
-        };
-
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ scrollTrigger: heroPin(root, FLOW_DISTANCE.vertical) });
-            const step = (i, n, span) => (n > 1 ? (i / (n - 1)) * span : 0);
-            wordEls.forEach((el, i) => {
-                const st = { a: 0, p: 0 };
-                const draw = () => renderWord(el, st);
-                draw();
-                tl.to(st, { a: 1, duration: 1, ease: 'power1.out', onUpdate: draw }, step(i, wordEls.length, 2.4));
-                tl.to(st, { p: 1, duration: 2.2, ease: 'power2.in', onUpdate: draw }, 3.6 + step(i, wordEls.length, 1.6));
-            });
-            resultEls.forEach((el, i) => {
-                const st = { p: 0 };
-                const draw = () => renderResult(el, st);
-                draw();
-                tl.to(st, { p: 1, duration: 2.2, ease: 'power2.out', onUpdate: draw }, 7 + step(i, resultEls.length, 1.6));
-            });
-            addTrace(tl, traceEls);
-            tl.to({}, { duration: 0.8 });
-            ScrollTrigger.refresh();
-            if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
-        }, root);
-        return () => {
-            ctx.revert();
-            [...wordEls, ...resultEls, ...traceEls].forEach((el) => {
-                el.style.opacity = '';
-                el.style.transform = '';
-            });
-        };
-    }, [w, h, language]); // eslint-disable-line react-hooks/exhaustive-deps
-
     return (
-        <div ref={ref} className="absolute inset-0">
+        <div className="absolute inset-0">
             <svg className="absolute inset-0 w-full h-full" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
                 <defs>
                     <linearGradient id="fv-fill-t" x1="0" x2="0" y1="0" y2="1">
@@ -386,13 +323,38 @@ function FunnelVertical({ w, h }) {
                 <path d={arc(w, h, mR, cB)} fill="none" stroke="url(#fv-line-b)" strokeWidth="1" />
             </svg>
 
+            {/* De kaart in het midden, met het logo */}
+            <div
+                className="absolute flex items-center justify-center rounded-3xl bg-white/80 backdrop-blur-sm border border-foreground/[0.07]"
+                style={{ left: cL, top: cT, width: cw, height: ch }}
+            >
+                <div className="flex flex-col items-center">
+                    <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="h-11 w-auto" />
+                    <span className="mt-1 text-xs text-foreground/60 whitespace-nowrap">
+                        {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
+                    </span>
+                </div>
+            </div>
+
+            {/* De lijntjes lopen van boven naar onder: de ene om de linkerkant van de kaart, de andere om de rechterkant.
+                Ze staan voor de woorden en de resultaten in de code, dus achter de tekst */}
+            <FlowLines
+                w={w}
+                h={h}
+                vertical
+                paths={[
+                    `${arc(0, 0, mL, cT)} H${cL + CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 0 ${cL} ${cT + CARD_RADIUS} V${cB - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 0 ${cL + CARD_RADIUS} ${cB} H${mL} ${arcBack(mL, cB, 0, h)}`,
+                    `${arc(w, 0, mR, cT)} H${cL + cw - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 1 ${cL + cw} ${cT + CARD_RADIUS} V${cB - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 1 ${cL + cw - CARD_RADIUS} ${cB} H${mR} ${arcBack(mR, cB, w, h)}`
+                ]}
+            />
+
             {words.map((wd) => (
                 <span
                     key={`${language}-${wd.text}`}
                     className={`absolute left-0 top-0 whitespace-nowrap text-foreground ${wd.bold ? 'font-semibold' : ''}`}
                     style={{ fontSize: wd.size, opacity: wd.tone, transform: `translate(${wd.x}px, ${wd.m}px) translate(-50%, -50%)` }}
                 >
-                    <span className="fv-word inline-block" data-order={wd.order} data-x={wd.x} data-m={wd.m}>{wd.text}</span>
+                    {wd.text}
                 </span>
             ))}
 
@@ -402,30 +364,9 @@ function FunnelVertical({ w, h }) {
                     className={`absolute left-0 top-0 whitespace-nowrap font-medium text-[15px] ${r.accent ? 'text-accent' : 'text-foreground'}`}
                     style={{ transform: `translate(${r.x}px, ${r.y}px) translate(-50%, -50%)` }}
                 >
-                    <span className="fv-result inline-block" data-order={r.order} data-x={r.x} data-y={r.y}>{r.text}</span>
+                    {r.text}
                 </span>
             ))}
-
-            {/* De kaart in het midden, met het logo en de groene lijnen langs de linker- en rechterkant */}
-            <div
-                className="absolute flex items-center justify-center rounded-3xl bg-white/80 backdrop-blur-sm border border-foreground/[0.07]"
-                style={{ left: cL, top: cT, width: cw, height: ch }}
-            >
-                <TraceLines
-                    w={cw}
-                    h={ch}
-                    paths={[
-                        `M${cw * 0.25} 0 H24 A24 24 0 0 0 0 24 V${ch - 24} A24 24 0 0 0 24 ${ch} H${cw * 0.25}`,
-                        `M${cw * 0.75} 0 H${cw - 24} A24 24 0 0 1 ${cw} 24 V${ch - 24} A24 24 0 0 1 ${cw - 24} ${ch} H${cw * 0.75}`
-                    ]}
-                />
-                <div className="flex flex-col items-center">
-                    <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="h-11 w-auto" />
-                    <span className="mt-1 text-xs text-foreground/60 whitespace-nowrap">
-                        {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
-                    </span>
-                </div>
-            </div>
         </div>
     );
 }
@@ -465,12 +406,12 @@ export default function FunnelVisual() {
         // ze een heel klein beetje, mee met de bogen (tot een kwart lichter helemaal aan de rand)
         const base = pl.b ? 0.8 + rnd(i, 3) * 0.15 : 0.55 + rnd(i, 3) * 0.25;
         const tone = base * (0.75 + 0.25 * Math.max(0, Math.min(1, x / (d.cL * 0.5))));
-        return { text: WORDS[language][i], x, dy, y: d.h / 2 + dy, size, tone, bold: !!pl.b, order: Math.hypot(d.cL - x, dy) };
+        return { text: WORDS[language][i], x, y: d.h / 2 + dy, size, tone, bold: !!pl.b };
     }) : [];
 
-    // De resultaten rechts, onder elkaar in één kolom, op gelijke afstand rond het midden. De volgorde van boven
-    // naar onder is ook de volgorde waarin ze uit de kaart komen. Op een kleiner scherm krijgt een regel als
-    // maximale breedte de ruimte tot aan de rand van het scherm, zodat hij eventueel over twee lijnen loopt
+    // De resultaten rechts, onder elkaar in één kolom, op gelijke afstand rond het midden. Op een kleiner scherm
+    // krijgt een regel als maximale breedte de ruimte tot aan de rand van het scherm, zodat hij eventueel over
+    // twee lijnen loopt
     const resultStyle = horizontal ? RESULT_STYLE[level] : null;
     const resultXr = horizontal ? resultStyle.xr(d.cL) : 0;
     const resultRoom = horizontal && level < 3
@@ -485,86 +426,12 @@ export default function FunnelVisual() {
         const dy = (i - (all.length - 1) / 2) * resultGap;
         return {
             text,
-            xr: resultXr,
-            dy,
             x: d.cR + resultXr,
             y: d.h / 2 + dy,
             size: resultStyle.size,
-            accent: i === all.length - 1,
-            order: i
+            accent: i === all.length - 1
         };
     }) : [];
-
-    // De trechter aan het werk, volledig op de scroll: de woorden komen links op, glijden langs de bogen de
-    // kaart in en verdwijnen, en daarna komen de resultaten rechts uit de kaart en schuiven ze naar hun plek.
-    // De delen overlappen, zodat het als één beweging leest. Binnen elk deel eerst wat het dichtst bij de
-    // kaart staat. De hero staat ondertussen vast (zie heroPin). Wie minder beweging vraagt, ziet beide
-    // kanten stil, zonder vastzetten. Op een gsm doet FunnelVertical dit zelf
-    const width = horizontal ? d.w : null;
-    const height = horizontal ? d.h : null;
-    useLayoutEffect(() => {
-        if (!width || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const frame = frameRef.current;
-        const dm = layout(width, height);
-        const byOrder = (a, b) => Number(a.dataset.order) - Number(b.dataset.order);
-        const wordEls = [...frame.querySelectorAll('.fv-word')].sort(byOrder);
-        const resultEls = [...frame.querySelectorAll('.fv-result')].sort(byOrder);
-        const traceEls = [...frame.querySelectorAll('.fv-trace')];
-        const clear = () => [...wordEls, ...resultEls, ...traceEls].forEach((el) => {
-            el.style.opacity = '';
-            el.style.transform = '';
-        });
-
-        // Een woord: a is hoe ver het opgekomen is, p hoe ver het op weg is naar de kaart. Het volgt de boog:
-        // zijn afstand tot het midden krimpt mee met de hoogte van de trechter op die plaats
-        const renderWord = (el, st) => {
-            const x0 = Number(el.dataset.x);
-            const dy = Number(el.dataset.dy);
-            const x = x0 + (dm.cL + 6 - x0) * st.p;
-            const y = dy * (halfAt(dm, Math.min(x, dm.cL)) / halfAt(dm, x0));
-            const rise = (1 - st.a) * 8;
-            el.style.opacity = String(st.a * Math.min(1, (1 - st.p) / 0.3));
-            el.style.transform = `translate(${x - x0}px, ${y - dy + rise}px) scale(${1 - 0.4 * st.p})`;
-        };
-        // Een resultaat: p is hoe ver het uit de kaart gekomen is, gespiegeld langs de rechter boog
-        const renderResult = (el, st) => {
-            const xr = Number(el.dataset.xr);
-            const dy = Number(el.dataset.dy);
-            const now = xr * st.p;
-            const y = dy * (halfAt(dm, dm.cL - now) / halfAt(dm, dm.cL - xr));
-            el.style.opacity = String(Math.min(1, st.p / 0.35));
-            el.style.transform = `translate(${now - xr}px, ${y - dy}px) scale(${0.7 + 0.3 * st.p})`;
-        };
-
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ scrollTrigger: heroPin(frame, FLOW_DISTANCE.horizontal) });
-            const step = (i, n, span) => (n > 1 ? (i / (n - 1)) * span : 0);
-            wordEls.forEach((el, i) => {
-                const st = { a: 0, p: 0 };
-                const draw = () => renderWord(el, st);
-                draw();
-                tl.to(st, { a: 1, duration: 1, ease: 'power1.out', onUpdate: draw }, step(i, wordEls.length, 2.4));
-                tl.to(st, { p: 1, duration: 2.2, ease: 'power2.in', onUpdate: draw }, 3.6 + step(i, wordEls.length, 1.6));
-            });
-            resultEls.forEach((el, i) => {
-                const st = { p: 0 };
-                const draw = () => renderResult(el, st);
-                draw();
-                tl.to(st, { p: 1, duration: 2.2, ease: 'power2.out', onUpdate: draw }, 7 + step(i, resultEls.length, 1.6));
-            });
-            // Terwijl de woorden door de kaart gaan, lopen de groene lijnen rond de kaart
-            addTrace(tl, traceEls);
-            // Een korte rust op het einde, zodat de resultaten even blijven staan voor de pagina verdergaat
-            tl.to({}, { duration: 0.8 });
-            ScrollTrigger.refresh();
-            // De lettertypes veranderen de hoogte van de hero, en dus de plaats van de visual
-            if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
-        }, frame);
-        return () => {
-            ctx.revert();
-            clear();
-        };
-    }, [width, height, language]);
 
     return (
         // Bovenaan is het midden van de visual leeg, dus ze mag een stuk onder de knop schuiven, in verhouding
@@ -615,6 +482,31 @@ export default function FunnelVisual() {
                         <path d={fromOuter(d.w, d.h - d.pad, d.cR, d.mB)} fill="none" stroke="url(#fv-line-r)" strokeWidth="1" />
                     </svg>
 
+                    {/* De kaart in het midden, met het logo */}
+                    <div
+                        className="absolute flex items-center justify-center rounded-3xl bg-white/80 backdrop-blur-sm border border-foreground/[0.07]"
+                        style={{ left: d.cL, top: d.cT, width: d.cw, height: d.ch }}
+                    >
+                        <div className="flex flex-col items-center">
+                            <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="w-auto" style={{ height: 96 * d.s }} />
+                            <span className="mt-2 text-foreground/60 whitespace-nowrap" style={{ fontSize: Math.max(12, 15 * d.s) }}>
+                                {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* De lijntjes lopen van links naar rechts: de ene over de bovenste boog en de bovenkant van de
+                        kaart, de andere over de onderste boog en de onderkant. Ze staan voor de woorden en de
+                        resultaten in de code, dus achter de tekst */}
+                    <FlowLines
+                        w={d.w}
+                        h={d.h}
+                        paths={[
+                            `${fromOuter(0, d.pad, d.cL, d.mT)} V${d.cT + CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 1 ${d.cL + CARD_RADIUS} ${d.cT} H${d.cR - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 1 ${d.cR} ${d.cT + CARD_RADIUS} V${d.mT} ${toOuter(d.cR, d.mT, d.w, d.pad)}`,
+                            `${fromOuter(0, d.h - d.pad, d.cL, d.mB)} V${d.cB - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 0 ${d.cL + CARD_RADIUS} ${d.cB} H${d.cR - CARD_RADIUS} A${CARD_RADIUS} ${CARD_RADIUS} 0 0 0 ${d.cR} ${d.cB - CARD_RADIUS} V${d.mB} ${toOuter(d.cR, d.mB, d.w, d.h - d.pad)}`
+                        ]}
+                    />
+
                     {/* De woorden van het handwerk */}
                     {/* Niet afgeknipt: aan de buitenkant mogen de woorden een beetje uit de trechter lopen */}
                     <div className="absolute inset-0">
@@ -624,7 +516,7 @@ export default function FunnelVisual() {
                                 className={`absolute left-0 top-0 whitespace-nowrap text-foreground ${wd.bold ? 'font-semibold' : ''}`}
                                 style={{ fontSize: wd.size, opacity: wd.tone, transform: `translate(${wd.x}px, ${wd.y}px) translate(-50%, -50%)` }}
                             >
-                                <span className="fv-word inline-block" data-order={wd.order} data-x={wd.x} data-dy={wd.dy}>{wd.text}</span>
+                                {wd.text}
                             </span>
                         ))}
                     </div>
@@ -637,32 +529,9 @@ export default function FunnelVisual() {
                                 className={`absolute left-0 top-0 font-medium leading-tight ${resultRoom ? '' : 'whitespace-nowrap'} ${r.accent ? 'text-accent' : 'text-foreground'}`}
                                 style={{ fontSize: r.size, maxWidth: resultRoom || undefined, width: resultRoom ? 'max-content' : undefined, transform: `translate(${r.x}px, ${r.y}px) translateY(-50%)` }}
                             >
-                                <span className="fv-result inline-block origin-left" data-order={r.order} data-xr={r.xr} data-dy={r.dy}>{r.text}</span>
+                                {r.text}
                             </span>
                         ))}
-                    </div>
-
-                    {/* De kaart in het midden, met het logo */}
-                    <div
-                        className="absolute flex items-center justify-center rounded-3xl bg-white/80 backdrop-blur-sm border border-foreground/[0.07]"
-                        style={{ left: d.cL, top: d.cT, width: d.cw, height: d.ch }}
-                    >
-                        {/* De groene lijnen rond de kaart: van waar de bovenste en de onderste boog de kaart links raken,
-                            over de boven- en onderkant, tot waar diezelfde bogen rechts vertrekken */}
-                        <TraceLines
-                            w={d.cw}
-                            h={d.ch}
-                            paths={[
-                                `M0 ${d.ch * 0.25} V24 A24 24 0 0 1 24 0 H${d.cw - 24} A24 24 0 0 1 ${d.cw} 24 V${d.ch * 0.25}`,
-                                `M0 ${d.ch * 0.75} V${d.ch - 24} A24 24 0 0 0 24 ${d.ch} H${d.cw - 24} A24 24 0 0 0 ${d.cw} ${d.ch - 24} V${d.ch * 0.75}`
-                            ]}
-                        />
-                        <div className="flex flex-col items-center">
-                            <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="w-auto" style={{ height: 96 * d.s }} />
-                            <span className="mt-2 text-foreground/60 whitespace-nowrap" style={{ fontSize: Math.max(12, 15 * d.s) }}>
-                                {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
-                            </span>
-                        </div>
                     </div>
                 </>
             )}

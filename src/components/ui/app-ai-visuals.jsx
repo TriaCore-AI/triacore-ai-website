@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight, Check, FileText, Sparkles, Users } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { u } from './tool-visual-unit';
-import { ToolVisual, ToolStage, ChatWindow, ChatFromAi, ChatFromPerson } from './tool-visual-parts';
+import { ToolVisual, ToolStage, PhoneFrame, ChatWindow, ChatFromAi, ChatFromPerson } from './tool-visual-parts';
 
 // Twee visuals bij de AI-acties van de tool App voor op de baan: op de baan de gsm van de chauffeur, op
 // kantoor de chat op het grote scherm. Alle gegevens zijn verzonnen. De gedeelde onderdelen staan in
@@ -101,11 +101,7 @@ function PaperSlip({ paper, t }) {
 
 function Phone({ phone, thumb, t }) {
     return (
-        <div
-            className="absolute flex flex-col bg-[#fafafa] border border-foreground/15"
-            style={{ left: u(phone.x), top: u(phone.y), width: u(phone.w), height: u(phone.h), padding: `${u(12)} ${u(14)} ${u(14)}`, borderRadius: u(30), boxShadow: `0 ${u(22)} ${u(50)} ${u(-22)} rgba(15,23,42,0.28)` }}
-        >
-            <span aria-hidden="true" className="self-center shrink-0 rounded-full bg-foreground/15" style={{ width: u(54), height: u(5) }} />
+        <PhoneFrame phone={phone}>
             <p className="font-medium text-foreground tracking-tight" style={{ marginTop: u(14), fontSize: u(18) }}>{t.screen}</p>
 
             {/* Op gsm is er geen plaats voor de papieren bon ernaast: dan staat de foto op het scherm */}
@@ -137,7 +133,7 @@ function Phone({ phone, thumb, t }) {
             </div>
 
             <span className="flex items-center justify-center shrink-0 mt-auto rounded-lg bg-foreground text-white font-medium" style={{ height: u(36), fontSize: u(12) }}>{t.again}</span>
-        </div>
+        </PhoneFrame>
     );
 }
 

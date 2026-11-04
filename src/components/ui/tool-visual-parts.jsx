@@ -103,6 +103,20 @@ export function AssistantActions({ bubble, primary, secondary }) {
     );
 }
 
+// De gsm van de chauffeur of de technicus: een rand, bovenaan het streepje, en de inhoud onder elkaar.
+// phone geeft de plaats en de maten: x, y, w en h
+export function PhoneFrame({ phone, children }) {
+    return (
+        <div
+            className="absolute flex flex-col bg-[#fafafa] border border-foreground/15"
+            style={{ left: u(phone.x), top: u(phone.y), width: u(phone.w), height: u(phone.h), padding: `${u(12)} ${u(14)} ${u(14)}`, borderRadius: u(30), boxShadow: `0 ${u(22)} ${u(50)} ${u(-22)} rgba(15,23,42,0.28)` }}
+        >
+            <span aria-hidden="true" className="self-center shrink-0 rounded-full bg-foreground/15" style={{ width: u(54), height: u(5) }} />
+            {children}
+        </div>
+    );
+}
+
 // Een chat in het venster van de tool: de berichten in het midden en onderaan de balk om te typen.
 // De AI staat links, de mens rechts, zoals in elke chat.
 export function ChatWindow({ win, pad, heading, sub, headingSize, subSize, placeholder, children }) {

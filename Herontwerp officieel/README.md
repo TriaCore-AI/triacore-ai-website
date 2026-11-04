@@ -100,7 +100,7 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 | Team (`/team`) | Header, Lucas, Rian en Jorn met portret, uitleg en contact |
 | Contact (`/contact`) | Header, links Rian en Lucas met gegevens, rechts het formulier |
 | Custom oplossingen, Workshops, AI-begeleiding | Enkel de header; worden nu uitgewerkt in de drie chats |
-| Privacybeleid, cookiebeleid | Nog in de **oude** stijl |
+| Privacybeleid, cookiebeleid | Header en leeskolom in de nieuwe stijl (`legal-page.jsx`), juridische tekst ongewijzigd |
 
 **Menubalk:** Oplossingen (dropdown met de drie pagina's) · Projecten · Team · Contact.
 
@@ -140,7 +140,7 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 
 - De drie oplossingspagina's uitwerken (bezig).
 - Quote van The Box verzamelen (naam, functie, quote). De quote van Croes NV laten nakijken door Alain Vangeebergen (samengevoegd uit zijn vragenlijst en licht geredigeerd).
-- Privacybeleid en cookiebeleid naar de nieuwe stijl. Het privacybeleid vermeldt nog de nieuwsbrief: aanpassen zodra beslist is wat er met de bestaande inschrijvingen in Resend gebeurt.
+- Het privacybeleid vermeldt nog de nieuwsbrief: aanpassen zodra beslist is wat er met de bestaande inschrijvingen in Resend gebeurt.
 - `CLAUDE.md` bijwerken naar de nieuwe stijl en pagina's zodra het herontwerp vastligt.
 - Opruimen: `tailwind.config.js` (niet meer gebruikt), en het lettertype Syne (enkel voor Solevo).
 - Hogere resolutie van de teamfoto's (nu 512 × 512).

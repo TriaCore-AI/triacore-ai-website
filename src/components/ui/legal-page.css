@@ -1,0 +1,61 @@
+/* De leeskolom van de juridische pagina's: titels in de titelletter, de rest rustig in Jost */
+.juridisch {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--color-foreground) 72%, transparent);
+}
+.juridisch > section + section { margin-top: 4rem; }
+.juridisch > section:last-child {
+  padding-top: 3.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-foreground) 15%, transparent);
+}
+
+.juridisch h2 {
+  margin-bottom: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.875rem, 4vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--color-foreground);
+}
+.juridisch h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--color-foreground);
+}
+
+.juridisch p { margin-top: 1rem; }
+.juridisch h2 + p,
+.juridisch h3 + p { margin-top: 0; }
+/* Regels die bij elkaar horen, zoals een adres */
+.juridisch p.rij { margin-top: 0.25rem; }
+.juridisch p.noot {
+  font-size: 0.9375rem;
+  color: color-mix(in srgb, var(--color-foreground) 55%, transparent);
+}
+
+.juridisch ul {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+.juridisch h3 + ul { margin-top: 0; }
+.juridisch li + li { margin-top: 0.375rem; }
+.juridisch li::marker { color: color-mix(in srgb, var(--color-foreground) 30%, transparent); }
+
+.juridisch strong {
+  font-weight: 500;
+  color: var(--color-foreground);
+}
+.juridisch a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+  transition: text-decoration-color 0.3s;
+}
+.juridisch a:hover { text-decoration-color: currentColor; }

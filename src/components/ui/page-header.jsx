@@ -4,7 +4,8 @@ import gsap from 'gsap';
 // De header van elke pagina in de nieuwe stijl: een grote titel, links uitgelijnd zoals op de homepage,
 // eventueel met één zin uitleg en iets eronder (bv. een knop). De titel onthult zich vloeiend van links
 // naar rechts, daarna komt de rest zacht op. Start pas als de lettertypes geladen zijn.
-export default function PageHeader({ title, intro, children }) {
+// titleSize vervangt de standaardmaten, voor een titel die anders niet op een smal scherm past.
+export default function PageHeader({ title, intro, children, titleSize = 'text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem]' }) {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function PageHeader({ title, intro, children }) {
     return (
         <section ref={ref} className="px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-20 md:pb-28">
             <div className="max-w-7xl mx-auto">
-                <h1 className="ph-title hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.02]">
+                <h1 className={`ph-title hero-title text-foreground ${titleSize} leading-[1.02]`}>
                     {title}
                 </h1>
                 {intro && (
