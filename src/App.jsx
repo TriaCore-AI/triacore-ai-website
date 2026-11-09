@@ -420,7 +420,7 @@ function App() {
       {/* Gsm liggend (lage schermen onder 1280): minder ruimte boven de titel, anders staat enkel de titel in beeld.
           Op gsm (onder 768) is alles compacter (titel, ondertitel, knoppen, logo's), zodat de hero niet hoger wordt
           dan het scherm: dan valt de staaf van de 3D-scène net onder de knoppen, achter de logo's, en zie je ze meteen */}
-      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-28 sm:pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-8 md:pb-[72px]">
+      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-36 sm:pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-8 md:pb-[72px]">
         <HeroScene />
         <div className="relative max-w-7xl mx-auto w-full flex flex-col">
           <div className="max-w-6xl mx-auto text-center">
@@ -460,7 +460,7 @@ function App() {
 
           {/* Stil bewijs: logo's van klanten, in kleur, boven de schijven. Pas vanaf 1280 staat "Onder meer voor"
               naast de logo's; op tablet staat het erboven, anders wringen de logo's zich in drie rijen */}
-          <div data-schijven-rust className="hero-logorij mt-9 sm:mt-16 md:mt-24 flex flex-col xl:flex-row items-center justify-center gap-3 sm:gap-6 xl:gap-12">
+          <div data-schijven-rust className="hero-logorij mt-5 sm:mt-16 md:mt-24 flex flex-col xl:flex-row items-center justify-center gap-3 sm:gap-6 xl:gap-12">
             <span className="hero-fade text-base sm:text-xl md:text-2xl text-foreground/70 shrink-0">
               {language === 'nl' ? 'Onder meer voor' : 'Trusted by'}
             </span>
