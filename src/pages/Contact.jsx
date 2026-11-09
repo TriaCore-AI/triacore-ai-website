@@ -32,7 +32,8 @@ const CONTACTS = [
 // Onder 1024px een ruimer tikvlak; de negatieve marge houdt de opmaak gelijk
 const linkClass = 'text-foreground/70 hover:text-accent transition-colors w-max max-lg:py-1.5 max-lg:-my-1.5';
 
-// Contact, in de nieuwe stijl: links wie u te woord staat en de algemene gegevens, rechts het formulier.
+// Contact, in de nieuwe stijl: eerst het formulier (links, op gsm bovenaan), daarna wie je te woord staat en de
+// algemene gegevens (rechts, op gsm eronder).
 // Beide kolommen zijn even hoog: de linker verdeelt haar inhoud over de hoogte, het formulier rekt mee.
 export default function Contact() {
     const { language } = useLanguage();
@@ -58,7 +59,7 @@ export default function Contact() {
                         {/* Wie u te woord staat en de algemene gegevens */}
                         {/* Op een tablet staan Rian en Lucas naast elkaar en de algemene gegevens op één rij,
                             zodat de breedte benut wordt */}
-                        <aside className="lg:col-span-4 flex flex-col justify-between gap-10">
+                        <aside className="order-2 lg:col-span-4 flex flex-col justify-between gap-10">
                             <div className="flex flex-col gap-8 sm:max-lg:grid sm:max-lg:grid-cols-2">
                                 {CONTACTS.map((c) => (
                                     <div key={c.name} className="flex gap-4">
@@ -102,8 +103,8 @@ export default function Contact() {
                             </div>
                         </aside>
 
-                        {/* Het formulier, even hoog als de kolom links */}
-                        <div className="lg:col-span-8">
+                        {/* Het formulier, even hoog als de kolom met de gegevens */}
+                        <div className="order-1 lg:col-span-8">
                             <ContactForm />
                         </div>
                     </div>

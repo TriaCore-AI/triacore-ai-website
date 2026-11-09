@@ -13,6 +13,14 @@
   mask-image: linear-gradient(to bottom, #000 70%, rgb(0 0 0 / 0.86) 75%, rgb(0 0 0 / 0.58) 80%, rgb(0 0 0 / 0.32) 85%, rgb(0 0 0 / 0.13) 90%, transparent 96%);
 }
 .hero-scene.is-klaar { opacity: 1; }
+/* Gsm (onder 640): de staaf staat daar onderaan het scherm, achter de logo's. De overgang begint later,
+   zodat ze niet al half vervaagd is (zie de testrenders van 9/11) */
+@media (max-width: 639px) {
+  .hero-scene {
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, rgb(0 0 0 / 0.86) 84%, rgb(0 0 0 / 0.58) 88%, rgb(0 0 0 / 0.32) 92%, rgb(0 0 0 / 0.13) 96%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 80%, rgb(0 0 0 / 0.86) 84%, rgb(0 0 0 / 0.58) 88%, rgb(0 0 0 / 0.32) 92%, rgb(0 0 0 / 0.13) 96%, transparent 100%);
+  }
+}
 @media (prefers-reduced-motion: reduce) { .hero-scene { transition: none; } }
 
 /* De klantlogo's staan rechtstreeks op de achtergrond */

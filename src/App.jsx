@@ -406,22 +406,28 @@ function App() {
           // Spring je voorbij Onze aanpak terwijl die nog niet afgespeeld is, rond ze dan eerst af,
           // anders speelt het hele schema tussenin af en klopt de bestemming niet
           const order = snelmenu.nl.map((s) => s.id);
-          if (order.indexOf(id) > order.indexOf('aanpak')) finishAanpak.current?.();
+          if (order.indexOf(id) > order.indexOf('aanpak')) {
+            finishAanpak.current?.();
+            // Ook de kleine versie (onder 1280) mag dan niet meer stoppen onderweg
+            window.dispatchEvent(new Event('aanpak-klaar'));
+          }
         }}
       />
 
       {/* B. HERO SECTION */}
       {/* Rustig en gecentreerd: één korte titel, één zin, één knop. Daaronder stil bewijs, op een vaste
           afstand (niet onderaan een schermhoge hero, waar de logo's los van de rest kwamen te staan) */}
-      {/* Gsm liggend (lage schermen onder 1280): minder ruimte boven de titel, anders staat enkel de titel in beeld */}
-      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-8 md:pb-[72px]">
+      {/* Gsm liggend (lage schermen onder 1280): minder ruimte boven de titel, anders staat enkel de titel in beeld.
+          Op gsm (onder 768) is alles compacter (titel, ondertitel, knoppen, logo's), zodat de hero niet hoger wordt
+          dan het scherm: dan valt de staaf van de 3D-scène net onder de knoppen, achter de logo's, en zie je ze meteen */}
+      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-28 sm:pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-8 md:pb-[72px]">
         <HeroScene />
         <div className="relative max-w-7xl mx-auto w-full flex flex-col">
           <div className="max-w-6xl mx-auto text-center">
             {/* Regel per regel: elke regel komt als geheel binnen uit zijn eigen richting (data-from).
                 Elke regel is zo breed als zijn tekst, zodat de veeg op de tekst zelf loopt en niet op lege ruimte.
                 Tussen 1024 en 1280 schaalt de titel mee, zodat de eerste regel op één lijn blijft */}
-            <h1 className="hero-title text-foreground text-[clamp(3.5rem,17vw,4.25rem)] sm:text-6xl md:text-7xl lg:text-[7.5rem] lg:max-xl:text-[min(7.5rem,10.2vw)] leading-[1.02]">
+            <h1 className="hero-title text-foreground text-[clamp(2.5rem,12vw,3rem)] sm:text-6xl md:text-7xl lg:text-[7.5rem] lg:max-xl:text-[min(7.5rem,10.2vw)] leading-[1.02]">
               <span className="hero-row block w-fit mx-auto" data-from="left">
                 {language === 'nl' ? 'AI voor operationele' : 'AI for operational'}
               </span>
@@ -433,7 +439,7 @@ function App() {
             {/* Eerst voor wie (breed genoeg voor een aannemer, een autogroep en een verhuurder), dan wat we doen:
                 nieuwe software bouwen of koppelen aan wat er al is, met AI waar het rendeert. Kort gehouden, zodat de
                 klantlogo's eronder in beeld blijven */}
-            <p className="hero-fade mt-8 md:mt-10 mx-auto text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-2xl text-balance">
+            <p className="hero-fade mt-5 sm:mt-8 md:mt-10 mx-auto text-base sm:text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-2xl text-balance">
               {language === 'nl'
                 ? 'Voor bedrijven met planning, mensen op de baan en veel administratief werk. Wij bouwen software op maat of koppelen aan wat je al gebruikt, met AI waar het rendeert.'
                 : 'For businesses with schedules to manage, people on the road and a lot of paperwork. We build custom software or connect to what you already use, with AI where it pays off.'}
@@ -441,11 +447,11 @@ function App() {
 
             {/* Op gsm is de tekstlink 44px hoog om op te tikken; de kleinere rijafstand houdt de witruimte gelijk */}
             {/* data-schijven-rust: rond deze knoppen reageren de schijven achter de hero niet op de muis */}
-            <div data-schijven-rust className="hero-fade mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5 max-md:gap-y-3">
+            <div data-schijven-rust className="hero-fade mt-7 sm:mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5 max-md:gap-y-3">
               <CTAButton to="/contact" size="md">
                 {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
               </CTAButton>
-              <Link to="/custom-oplossingen" className="group/hero-link inline-flex items-center gap-2 max-md:py-2 text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
+              <Link to="/custom-oplossingen" className="group/hero-link inline-flex items-center gap-2 max-md:py-2 text-base sm:text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
                 {language === 'nl' ? 'Bekijk onze tools' : 'View our tools'}
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover/hero-link:translate-x-1" />
               </Link>
@@ -454,8 +460,8 @@ function App() {
 
           {/* Stil bewijs: logo's van klanten, in kleur, boven de schijven. Pas vanaf 1280 staat "Onder meer voor"
               naast de logo's; op tablet staat het erboven, anders wringen de logo's zich in drie rijen */}
-          <div data-schijven-rust className="hero-logorij mt-16 md:mt-24 flex flex-col xl:flex-row items-center justify-center gap-6 xl:gap-12">
-            <span className="hero-fade text-xl md:text-2xl text-foreground/70 shrink-0">
+          <div data-schijven-rust className="hero-logorij mt-9 sm:mt-16 md:mt-24 flex flex-col xl:flex-row items-center justify-center gap-3 sm:gap-6 xl:gap-12">
+            <span className="hero-fade text-base sm:text-xl md:text-2xl text-foreground/70 shrink-0">
               {language === 'nl' ? 'Onder meer voor' : 'Trusted by'}
             </span>
             {/* Op desktop één rustige rij. Op gsm schuiven ze op één lijn zonder einde door: daarvoor staan de
