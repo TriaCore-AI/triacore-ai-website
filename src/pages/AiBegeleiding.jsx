@@ -6,7 +6,7 @@ import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
 import SectionNav from '../components/ui/section-nav';
 import CTAButton from '../components/ui/cta-button';
-import TweedeBreinVergelijking from '../components/ui/tweede-brein-vergelijking';
+import AgentsVergelijking from '../components/ui/agents-vergelijking';
 import TweedeBreinImpact from '../components/ui/tweede-brein-impact';
 import TweedeBreinAchtergrond from '../components/ui/tweede-brein-achtergrond';
 import ProcessSteps from '../components/ui/process-steps';
@@ -207,13 +207,20 @@ export default function AiBegeleiding() {
                     <TweedeBreinAchtergrond />
                     <div ref={heroContentRef} className="relative max-w-7xl mx-auto flex flex-col items-center text-center">
                         <h1 className="tb-title hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.02]">
-                            {nl ? 'Tweede brein' : 'Second Brain'}
+                            {/* Vanaf md op twee regels, met het resultaat in het groen zoals "vooruitgang" op de homepage */}
+                            <span className="md:block">{nl ? 'AI-agents die' : 'AI agents that'}</span>{' '}
+                            <span className="md:block">
+                                <span className="italic font-bold text-accent">{nl ? 'resultaten' : 'deliver'}</span>{' '}
+                                {nl ? 'leveren' : 'results'}
+                            </span>
                         </h1>
-                        {/* Iets kleiner dan de intro van de andere pagina's, omdat de tekst langer is */}
+                        {/* Iets kleiner dan de intro van de andere pagina's, omdat de tekst langer is. Zelfzeker:
+                            eerst drie stukken werk die indruk maken, dan het verschil tussen een snel antwoord
+                            uit één prompt en werk waarop u kunt bouwen (verder uitgelegd lager op de pagina) */}
                         <p className="tb-fade mt-8 md:mt-10 max-w-3xl text-lg md:text-xl text-foreground/70 leading-relaxed">
                             {nl
-                                ? 'AI is slim, maar mist de context van uw bedrijf en uw manier van werken. Dus legt u elke keer opnieuw uit wie uw klanten zijn en hoe u werkt. Een tweede brein onthoudt het voor u, zodat AI uw werk kent, met u meedenkt en repetitief werk uit handen kan nemen.'
-                                : 'AI is smart, but it lacks the context of your business and the way you work. So every time, you explain again who your clients are and how you work. A second brain remembers it for you, so AI knows your work, thinks along with you and can take repetitive work off your hands.'}
+                                ? 'Uw concurrenten vergeleken op honderd punten. Elke ochtend de aanbestedingen die bij u passen. Al uw contracten doorgelezen. Een prompt geeft u snel een antwoord, onze agents leveren werk waarop u kunt bouwen.'
+                                : 'Your competitors compared on a hundred points. Every morning, the tenders that suit you. All your contracts read through. A prompt gives you a quick answer, our agents deliver work you can build on.'}
                         </p>
                         <div className="tb-fade mt-10 md:mt-12">
                             <CTAButton to="/contact" size="md">
@@ -224,9 +231,11 @@ export default function AiBegeleiding() {
                 </section>
 
                 {/* De wolk over de eerste sectie: bij het laden volledig verborgen, op elk formaat. Bij het
-                    scrollen trekt de wolk zacht weg, van boven naar onder. Zonder animatie is alles zichtbaar */}
+                    scrollen trekt de wolk zacht weg, van boven naar onder. Zonder animatie is alles zichtbaar.
+                    De vergelijking van het tweede brein (tweede-brein-vergelijking.jsx) is vervangen door die
+                    tussen een snelle prompt en een gerichte agent, maar blijft bewaard */}
                 <div id="verschil" className="tb-fog" style={{ '--lift': `${LIFT_END}%`, WebkitMaskImage: liftMask, maskImage: liftMask }}>
-                    <TweedeBreinVergelijking language={language} />
+                    <AgentsVergelijking language={language} />
                 </div>
 
                 <TweedeBreinImpact language={language} />

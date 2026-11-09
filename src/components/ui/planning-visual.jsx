@@ -32,6 +32,7 @@ const LAYOUTS = {
 const TEXT = {
     nl: {
         label: 'Weekplanning van de chauffeurs van maandag tot vrijdag, met een assistent die de optimale planning voorstelt op basis van beschikbaarheid, belading, routes, rijtijden en openingsuren. De planner kiest: overnemen of handmatig aanpassen.',
+        heading: 'Planning',
         days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag'],
         add: 'Rit toevoegen',
         export: 'Exporteren',
@@ -45,14 +46,15 @@ const TEXT = {
         adjust: 'Pas handmatig aan'
     },
     en: {
-        label: 'Weekly schedule for the drivers from Monday to Friday, with an assistant proposing the optimal planning based on availability, load, routes, driving times and opening hours. The planner chooses: accept it or adjust it manually.',
+        label: 'Weekly schedule for the drivers from Monday to Friday, with an assistant proposing the optimal schedule based on availability, loads, routes, driving times and opening hours. The planner chooses: accept it or adjust it manually.',
+        heading: 'Schedule',
         days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         add: 'Add trip',
         export: 'Export',
         off: 'Off',
         assistant: 'AI assistant',
-        title: 'This is the optimal planning for this week.',
-        basis: 'I set up this planning based on:',
+        title: 'Here is the optimal schedule for this week.',
+        basis: 'I built this schedule based on:',
         basisShort: 'Based on availability, load and routes.',
         reasons: ['Driver availability', 'Optimal truck loading', 'Optimal routes', 'Driving times and opening hours'],
         accept: 'Accept',
@@ -70,9 +72,13 @@ const DRIVERS = [
     { name: 'Jan R.', trips: [['Lommel', 'Genk', '07:30', 14], ['Hasselt', 'Aalst', '06:30', 20], null, ['Beringen', 'Luik', '07:00', 18], ['Hasselt', 'Genk', '08:00', 15]] }
 ];
 
+// Steden die in het Engels een eigen naam hebben
+const CITY_EN = { Luik: 'Liège', Antwerpen: 'Antwerp', Gent: 'Ghent' };
+const city = (name, lang) => (lang === 'en' && CITY_EN[name]) || name;
+
 const initials = (name) => name.replace('.', '').split(' ').map((part) => part[0]).join('');
 
-function Trip({ trip, fonts, off }) {
+function Trip({ trip, fonts, off, lang }) {
     if (!trip) {
         return (
             <div className="h-full flex items-center rounded-md bg-foreground/[0.035] text-foreground/35" style={{ paddingLeft: u(9), fontSize: u(fonts.meta) }}>
@@ -85,7 +91,7 @@ function Trip({ trip, fonts, off }) {
         <div className="relative h-full flex flex-col justify-center overflow-hidden rounded-md bg-white border border-foreground/[0.08]" style={{ paddingLeft: u(9) }}>
             <span aria-hidden="true" className="absolute left-0 inset-y-0 bg-accent" style={{ width: u(2) }} />
             <span className="flex items-center whitespace-nowrap text-foreground leading-tight" style={{ fontSize: u(fonts.route), gap: u(3) }}>
-                {from}<ArrowRight strokeWidth={1.75} style={{ width: u(9), height: u(9) }} />{to}
+                {city(from, lang)}<ArrowRight strokeWidth={1.75} style={{ width: u(9), height: u(9) }} />{city(to, lang)}
             </span>
             <span className="whitespace-nowrap text-foreground/50 leading-tight" style={{ marginTop: u(2), fontSize: u(fonts.meta) }}>
                 {time}, {load} t
@@ -104,7 +110,7 @@ function Stage({ layout, t }) {
             <ToolWindow
                 win={win}
                 pad={pad}
-                heading="Planning"
+                heading={t.heading}
                 sub="Week 46"
                 headingSize={fonts.heading}
                 subSize={fonts.week}
@@ -141,6 +147,7 @@ function Stage({ layout, t }) {
                                         trip={trip}
                                         fonts={fonts}
                                         off={t.off}
+                                        lang={t.lang}
                                     />
                                 ))}
                             </div>
@@ -179,6 +186,6 @@ function Stage({ layout, t }) {
 
 export default function PlanningVisual() {
     const { language } = useLanguage();
-    const t = TEXT[language];
+    const t = { ...TEXT[language], lang: language };
     return <ToolVisual label={t.label} narrow={<Stage layout={LAYOUTS.narrow} t={t} />} wide={<Stage layout={LAYOUTS.wide} t={t} />} />;
 }

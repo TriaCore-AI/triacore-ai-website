@@ -137,12 +137,22 @@ export default function HeroScene() {
         gl.uniform2f(u.uRes, canvas.width, canvas.height);
       };
 
+      // Rond de knoppen en de logo's (elementen in een ouder met data-schijven-rust) reageren de schijven niet:
+      // wie een knop wil aanklikken, moet de staaf erachter niet zien bewegen. De zone loopt RUST_MARGE
+      // pixels rond elk element, zodat de schijven niet springen als de muis net naast een knop komt
+      const RUST_MARGE = 32;
+      const inRust = () => [...hero.querySelectorAll('[data-schijven-rust] > *')].some((el) => {
+        const b = el.getBoundingClientRect();
+        return muisX > b.left - RUST_MARGE && muisX < b.right + RUST_MARGE
+          && muisY > b.top - RUST_MARGE && muisY < b.bottom + RUST_MARGE;
+      });
+
       // Geeft true zolang er een schijf beweegt of de muis op de staaf staat
       const schijvenBij = (dt) => {
         let raak = null;
         if (muisX !== null && klok > INTRO) {
           const r = hero.getBoundingClientRect();
-          if (muisY >= r.top && muisY <= r.bottom) {
+          if (muisY >= r.top && muisY <= r.bottom && !inRust()) {
             const ux = (muisX - r.left - r.width / 2) / r.height;
             const uy = (r.top + r.height / 2 - muisY) / r.height;
             const ro = [SCENE.ro[0] + m.x * SCENE.muis[0], SCENE.ro[1] + m.y * SCENE.muis[1], SCENE.ro[2]];
@@ -216,6 +226,9 @@ export default function HeroScene() {
         wek();
       };
       const muisWeg = () => { muisX = null; };
+      // Tijdens het scrollen staat de muis stil maar schuift de staaf eronder door: dan zouden er schijven
+      // bewegen zonder dat de muis bewoog. Daarom telt de muis pas weer na de volgende muisbeweging
+      const opScroll = () => { muisX = null; };
       const opVerlies = (e) => { e.preventDefault(); canvas.style.display = 'none'; };
 
       const zicht = new IntersectionObserver((e) => { inBeeld = e[0].isIntersecting; wek(); });
@@ -223,6 +236,7 @@ export default function HeroScene() {
       const formaat = new ResizeObserver(() => { maat(); teken(); });
       formaat.observe(hero);
       window.addEventListener('pointermove', opMuis, { passive: true });
+      window.addEventListener('scroll', opScroll, { passive: true });
       document.documentElement.addEventListener('mouseleave', muisWeg);
       document.addEventListener('visibilitychange', wek);
       canvas.addEventListener('webglcontextlost', opVerlies);
@@ -237,6 +251,7 @@ export default function HeroScene() {
         zicht.disconnect();
         formaat.disconnect();
         window.removeEventListener('pointermove', opMuis);
+        window.removeEventListener('scroll', opScroll);
         document.documentElement.removeEventListener('mouseleave', muisWeg);
         document.removeEventListener('visibilitychange', wek);
         canvas.removeEventListener('webglcontextlost', opVerlies);

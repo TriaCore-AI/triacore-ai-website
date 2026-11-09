@@ -16,7 +16,7 @@ const snelmenu = {
     nl: [
         { id: 'workshops', label: 'Workshops' },
         { id: 'uitdaging', label: 'De uitdaging' },
-        { id: 'leren', label: 'Wat uw team leert' },
+        { id: 'leren', label: 'Wat je team leert' },
         { id: 'quotes', label: 'Wat klanten zeggen' },
         { id: 'offerte', label: 'Offerte aanvragen' }
     ],
@@ -42,7 +42,7 @@ export default function Workshops() {
             <Seo
                 title="Workshops | TriaCore AI"
                 description={nl
-                    ? 'Praktische AI-workshops van TriaCore AI: uw team leert zelf werken met AI, op maat van uw sector en met voorbeelden uit het eigen werk.'
+                    ? 'Praktische AI-workshops van TriaCore AI: je team leert zelf werken met AI, op maat van je sector en met voorbeelden uit het eigen werk.'
                     : 'Practical AI workshops by TriaCore AI: your team learns to work with AI themselves, tailored to your sector and with examples from their own work.'}
             />
             <Navbar />

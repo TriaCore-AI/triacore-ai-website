@@ -18,7 +18,7 @@ export default function FaqList({ items }) {
                             type="button"
                             onClick={() => setOpen(on ? null : i)}
                             aria-expanded={on}
-                            className="group w-full flex items-center justify-between gap-8 py-7 md:py-8 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                            className="group w-full flex items-center justify-between gap-8 max-md:gap-5 py-7 md:py-8 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
                         >
                             <span className={`text-xl md:text-2xl leading-snug transition-colors duration-300 ${on ? 'text-accent' : 'text-foreground group-hover:text-accent'}`}>
                                 {item.q}

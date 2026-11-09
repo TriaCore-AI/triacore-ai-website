@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -40,7 +41,10 @@ const sprongDoel = (sectie, eerste) => {
 // namen erbij, en bij weggaan klapt het weer dicht. Een klik glijdt rustig naar die sectie (zie sprongDoel).
 // onBeforeJump(id) wordt opgeroepen vlak voor het springen, zodat de pagina zich kan voorbereiden
 // (bv. een scrollanimatie afronden die anders tussenin zou afspelen).
+// Op een tablet met aanraakscherm (onder 1280) valt het weg: zonder hover blijven de namen onzichtbaar,
+// en hun onzichtbare vlak boven de inhoud zou een tik op de pagina opvangen.
 export default function SectionNav({ items, onBeforeJump }) {
+    const { language } = useLanguage();
     const [active, setActive] = useState(items[0]?.id);
     const [overFooter, setOverFooter] = useState(false);
 
@@ -87,9 +91,9 @@ export default function SectionNav({ items, onBeforeJump }) {
 
     return (
         <nav
-            aria-label="Snel naar"
+            aria-label={language === 'nl' ? 'Snel naar' : 'Jump to'}
             aria-hidden={overFooter}
-            className={`group/nav fixed left-6 bottom-8 z-40 hidden lg:block transition-opacity duration-500 ${overFooter ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`group/nav fixed left-6 bottom-8 z-40 hidden lg:block max-xl:pointer-coarse:hidden transition-opacity duration-500 ${overFooter ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
             <div className="relative px-4 py-3 -mx-4 -my-3">
                 {/* Zacht vlak achter het menu, alleen zichtbaar als het openstaat, zodat de namen leesbaar

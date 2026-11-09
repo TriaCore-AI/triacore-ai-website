@@ -7,13 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TriaCore AI | De AI-partner waar groeiende bedrijven op bouwen</title>
   <meta name="description"
-    content="TriaCore AI bouwt maatwerksoftware rond uw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's." />
+    content="TriaCore AI bouwt maatwerksoftware rond jouw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's." />
   <meta name="keywords"
     content="AI agents, digitale transformatie, procesoptimalisatie, TriaCore AI, business automation" />
   <link rel="canonical" href="https://triacore.be/" />
   <meta property="og:title" content="TriaCore AI | De AI-partner waar groeiende bedrijven op bouwen" />
   <meta property="og:description"
-    content="TriaCore AI bouwt maatwerksoftware rond uw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's." />
+    content="TriaCore AI bouwt maatwerksoftware rond jouw bedrijfsprocessen en integreert AI waar het echt rendeert. Automatisering, mobiele apps en webplatformen voor kmo's." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://triacore.be/" />
   <meta property="og:site_name" content="TriaCore AI" />
@@ -29,16 +29,18 @@
 <body>
   <div id="root"></div>
 
-  <!-- Hidden form for Netlify Forms bot discovery -->
+  <!-- Verborgen formulier waaraan Netlify Forms de velden herkent. Elk veld dat de site verstuurt, moet hier
+       staan. De onderwerpen zijn dezelfde als de knoppen in contact-form.jsx: Custom tool en Weet ik nog niet
+       (bericht in "message"), Workshop (ook vanaf de workshoppagina; aantal personen en locatie staan dan in
+       "message"). -->
   <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
     <input type="text" name="name" />
     <input type="text" name="company" />
     <input type="email" name="email" />
     <input type="tel" name="phone" />
     <select name="topic">
-      <option value="Custom oplossing"></option>
+      <option value="Custom tool"></option>
       <option value="Workshop"></option>
-      <option value="AI-begeleiding"></option>
       <option value="Weet ik nog niet"></option>
     </select>
     <textarea name="message"></textarea>

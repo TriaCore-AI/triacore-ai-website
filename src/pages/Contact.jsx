@@ -29,7 +29,8 @@ const CONTACTS = [
     }
 ];
 
-const linkClass = 'text-foreground/70 hover:text-accent transition-colors w-max';
+// Onder 1024px een ruimer tikvlak; de negatieve marge houdt de opmaak gelijk
+const linkClass = 'text-foreground/70 hover:text-accent transition-colors w-max max-lg:py-1.5 max-lg:-my-1.5';
 
 // Contact, in de nieuwe stijl: links wie u te woord staat en de algemene gegevens, rechts het formulier.
 // Beide kolommen zijn even hoog: de linker verdeelt haar inhoud over de hoogte, het formulier rekt mee.
@@ -42,21 +43,23 @@ export default function Contact() {
             <Seo
                 title="Contact | TriaCore AI"
                 description={nl
-                    ? 'Plan een vrijblijvend gesprek. Vertel waar uw processen vastlopen en we bekijken samen wat software op maat en AI voor uw bedrijf kunnen betekenen.'
+                    ? 'Plan een vrijblijvend gesprek. Vertel waar je processen vastlopen en we bekijken samen wat software op maat en AI voor jouw bedrijf kunnen betekenen.'
                     : 'Book a no obligation call. Tell us where your processes get stuck and we will explore together what custom software and AI can do for your business.'}
             />
             <Navbar />
             <main className="relative flex-grow">
                 <PageHeader
                     title={nl ? 'Plan een gesprek.' : 'Book a call.'}
-                    intro={nl ? 'Vertel ons hoe uw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.' : 'Tell us how your business works. We listen first, then show you what is possible.'}
+                    intro={nl ? 'Vertel ons hoe jouw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.' : 'Tell us how your business works. We listen first, then show you what is possible.'}
                 />
 
                 <section className="px-6 md:px-16 lg:px-24 pb-16 md:pb-24">
                     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-16">
                         {/* Wie u te woord staat en de algemene gegevens */}
+                        {/* Op een tablet staan Rian en Lucas naast elkaar en de algemene gegevens op één rij,
+                            zodat de breedte benut wordt */}
                         <aside className="lg:col-span-4 flex flex-col justify-between gap-10">
-                            <div className="flex flex-col gap-8">
+                            <div className="flex flex-col gap-8 sm:max-lg:grid sm:max-lg:grid-cols-2">
                                 {CONTACTS.map((c) => (
                                     <div key={c.name} className="flex gap-4">
                                         <div className="w-14 h-14 shrink-0 rounded-full overflow-hidden bg-foreground/5">
@@ -80,7 +83,7 @@ export default function Contact() {
 
                             <div>
                                 <span aria-hidden="true" className="block h-px mb-8 bg-foreground/15" />
-                                <dl className="flex flex-col gap-5 text-sm">
+                                <dl className="flex flex-col gap-5 text-sm sm:max-lg:grid sm:max-lg:grid-cols-3 sm:max-lg:gap-8">
                                     <div>
                                         <dt className="text-foreground/50">{nl ? 'Algemeen' : 'General'}</dt>
                                         <dd className="mt-1"><a href="mailto:info@triacore.be" className="text-foreground hover:text-accent transition-colors">info@triacore.be</a></dd>

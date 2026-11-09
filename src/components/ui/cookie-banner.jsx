@@ -75,7 +75,7 @@ export default function CookieBanner() {
                     <div className="w-full max-w-[340px] bg-white border border-slate-100 shadow-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col items-center text-center gap-5 pointer-events-auto">
                         <div className="text-center">
                             <h3 className="text-base font-bold text-foreground mb-2">{language === 'nl' ? 'Cookies & privacy' : 'Cookies & privacy'}</h3>
-                            <p className="text-[11px] text-foreground/50 leading-relaxed">
+                            <p className="text-[11px] max-md:text-[13px] text-foreground/50 leading-relaxed">
                                 {language === 'nl'
                                     ? 'Wij gebruiken noodzakelijke cookies voor een optimale ervaring.'
                                     : 'We use necessary cookies for an optimal experience.'}
@@ -105,10 +105,11 @@ export default function CookieBanner() {
                 </div>
             )}
 
-            {/* Settings Modal */}
+            {/* Settings Modal. Onder 1280px kan het venster scrollen, zodat het ook op een liggende gsm
+                helemaal bereikbaar is; past het, dan staat het zoals voorheen in het midden */}
             {showSettings && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-[2.5rem] p-8 md:p-10 max-w-md w-full shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
+                <div className="fixed inset-0 z-[110] flex items-center max-xl:items-start max-xl:overflow-y-auto max-xl:overscroll-contain justify-center p-6 bg-black/20 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[2.5rem] p-8 max-sm:p-6 md:p-10 max-xl:my-auto max-w-md w-full shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
                         <h3 className="text-2xl font-bold text-foreground mb-6">{language === 'nl' ? 'Cookie-instellingen' : 'Cookie settings'}</h3>
 
                         <div className="space-y-8 mb-10">

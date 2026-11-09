@@ -1,3 +1,4 @@
 /resources    /  301
 /resources/*  /  301
+/ai-begeleiding  /  302
 /*  /index.html  200

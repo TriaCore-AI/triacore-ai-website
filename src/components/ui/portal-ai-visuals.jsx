@@ -42,11 +42,11 @@ const CHECK_LAYOUTS = {
 
 const CHECK_TEXT = {
     nl: {
-        label: 'Een onderaannemer meldt een nieuwe chauffeur aan met drie documenten. De AI leest ze: de identiteitskaart en de code 95 zijn in orde, maar het rijbewijs is vervallen op 2 oktober. U kiest: een nieuw rijbewijs vragen of toch goedkeuren.',
+        label: 'Een onderaannemer meldt een nieuwe chauffeur aan met drie documenten. De AI leest ze: de identiteitskaart en de code 95 zijn in orde, maar het rijbewijs is vervallen op 2 oktober. Jij kiest: een nieuw rijbewijs vragen of toch goedkeuren.',
         heading: 'Klantenportaal',
         sub: 'Nieuwe aanmelding',
         applicant: 'Bram L., nieuwe chauffeur',
-        by: 'Ingediend door uw onderaannemer',
+        by: 'Ingediend door je onderaannemer',
         docs: [
             { name: 'Identiteitskaart', status: 'Geldig tot 2031', short: 'Tot 2031' },
             { name: 'Code 95', status: 'Geldig tot 2028', short: 'Tot 2028' },
@@ -59,7 +59,7 @@ const CHECK_TEXT = {
         approve: 'Keur toch goed'
     },
     en: {
-        label: 'A subcontractor registers a new driver with three documents. The AI reads them: the ID card and code 95 are in order, but the licence expired on 2 October. You choose: request a new licence or approve anyway.',
+        label: 'A subcontractor registers a new driver with three documents. The AI reads them: the ID card and Code 95 are in order, but the driving licence expired on 2 October. You choose: request a new licence or approve it anyway.',
         heading: 'Client portal',
         sub: 'New registration',
         applicant: 'Bram L., new driver',
@@ -67,7 +67,7 @@ const CHECK_TEXT = {
         docs: [
             { name: 'ID card', status: 'Valid until 2031', short: 'Until 2031' },
             { name: 'Code 95', status: 'Valid until 2028', short: 'Until 2028' },
-            { name: 'Licence C', status: 'Expired on 2 October 2026', short: 'Expired 2 Oct', expired: true }
+            { name: 'C licence', status: 'Expired on 2 October 2026', short: 'Expired 2 Oct', expired: true }
         ],
         assistant: 'AI assistant',
         title: 'The licence has expired.',
@@ -131,21 +131,21 @@ const ASK_TEXT = {
         label: 'Een chat in het portaal. Een onderaannemer vraagt welke ritten er morgen zijn. De AI antwoordt meteen met twee ritten van de eigen chauffeurs, en vermeldt dat die onderaannemer enkel de eigen ritten ziet.',
         heading: 'Klantenportaal',
         assistant: 'AI-assistent',
-        placeholder: 'Stel uw vraag',
-        person: 'Uw onderaannemer',
+        placeholder: 'Stel je vraag',
+        person: 'Je onderaannemer',
         question: 'Welke ritten hebben we morgen?',
-        answer: 'Morgen staan er twee ritten voor u gepland.',
+        answer: 'Morgen staan er twee ritten voor jou gepland.',
         rows: [['Bram L.', 'Hasselt → Luik', '06:30'], ['Sara K.', 'Genk → Gent', '07:15']],
-        only: 'U ziet enkel uw eigen ritten.'
+        only: 'Je ziet enkel je eigen ritten.'
     },
     en: {
-        label: 'A chat in the portal. A subcontractor asks which trips there are tomorrow. The AI answers right away with two trips of their own drivers, and mentions that this subcontractor only sees their own trips.',
+        label: 'A chat in the portal. A subcontractor asks which trips are planned for tomorrow. The AI answers right away with two trips by their own drivers, and notes that this subcontractor only sees their own trips.',
         heading: 'Client portal',
         assistant: 'AI assistant',
         placeholder: 'Ask your question',
         person: 'Your subcontractor',
         question: 'Which trips do we have tomorrow?',
-        answer: 'Two trips are planned for you tomorrow.',
+        answer: 'You have two trips planned for tomorrow.',
         rows: [['Bram L.', 'Hasselt → Liège', '06:30'], ['Sara K.', 'Genk → Ghent', '07:15']],
         only: 'You only see your own trips.'
     }
@@ -207,19 +207,19 @@ const ROUTE_TEXT = {
         heading: 'Klantenportaal',
         sub: 'Aanvragen',
         rows: [
-            { title: 'Nieuwe chauffeur', from: 'Van uw onderaannemer', to: 'Planning', dossier: 'Dossier Bram L.' },
-            { title: 'Registratie week 45', from: 'Van uw klant', to: 'Administratie', dossier: 'Dossier werf Noord' },
-            { title: 'Factuur oktober', from: 'Van uw leverancier', to: 'Boekhouding', dossier: 'Dossier leverancier' }
+            { title: 'Nieuwe chauffeur', from: 'Van je onderaannemer', to: 'Planning', dossier: 'Dossier Bram L.' },
+            { title: 'Registratie week 45', from: 'Van je klant', to: 'Administratie', dossier: 'Dossier werf Noord' },
+            { title: 'Factuur oktober', from: 'Van je leverancier', to: 'Boekhouding', dossier: 'Dossier leverancier' }
         ],
         note: 'Niemand moest iets doorsturen.'
     },
     en: {
-        label: 'Three requests in the portal. A new driver goes to planning automatically, a registration to the office and an invoice to accounting, each in the right file. Nobody has to forward anything.',
+        label: 'Three requests in the portal. A new driver goes to planning automatically, a registration to admin and an invoice to accounting, each in the right file. Nobody has to forward anything.',
         heading: 'Client portal',
         sub: 'Requests',
         rows: [
-            { title: 'New driver', from: 'From your subcontractor', to: 'Planning', dossier: 'File of Bram L.' },
-            { title: 'Registration week 45', from: 'From your customer', to: 'Office', dossier: 'File of Site North' },
+            { title: 'New driver', from: 'From your subcontractor', to: 'Planning', dossier: 'Bram L.\'s file' },
+            { title: 'Week 45 registration', from: 'From your client', to: 'Admin', dossier: 'Site North file' },
             { title: 'October invoice', from: 'From your supplier', to: 'Accounting', dossier: 'Supplier file' }
         ],
         note: 'Nobody had to forward anything.'
@@ -322,7 +322,7 @@ const FOLLOW_TEXT = {
         button: 'Registratie invullen'
     },
     en: {
-        label: 'A timeline. The registration for week 45 is still missing. On 9 and 11 November a reminder goes to the partner automatically, on 12 November the registration is submitted, without a phone call, and then the invoice can go out.',
+        label: 'A timeline. The registration for week 45 is still missing. On 9 and 11 November, a reminder goes to the partner automatically. On 12 November the registration is submitted, without a phone call, and then the invoice can go out.',
         heading: 'Client portal',
         sub: 'Follow-up',
         steps: [
@@ -333,7 +333,7 @@ const FOLLOW_TEXT = {
         ],
         auto: 'Sent automatically',
         subject: 'The registration for week 45 is still missing',
-        body: 'Fill it in here and everything is in order.',
+        body: 'Fill it in here and you are all set.',
         button: 'Fill in registration'
     }
 };

@@ -48,12 +48,13 @@ export default function ProjectDetail() {
             <Seo title={`${project.title[language]} | TriaCore AI`} description={project.description[language]} />
             <Navbar />
 
-            <main className="relative flex-grow px-6 md:px-16 lg:px-24 pt-36 md:pt-44 pb-16 md:pb-24">
+            {/* Op een liggende gsm (laag scherm) minder ruimte bovenaan, zoals bij de paginaheader */}
+            <main className="relative flex-grow px-6 md:px-16 lg:px-24 pt-36 md:pt-44 max-xl:[@media(max-height:500px)]:pt-32 pb-16 md:pb-24">
                 {/* De leeskolom staat gecentreerd op het scherm, de tekst erin links uitgelijnd */}
                 <div className="max-w-3xl mx-auto">
                     <Link
                         to="/projecten"
-                        className="detail-fade-top group inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-accent transition-colors duration-300"
+                        className="detail-fade-top group inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-accent transition-colors duration-300 max-lg:py-3 max-lg:-my-3"
                     >
                         <ArrowLeft size={16} strokeWidth={1.75} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
                         {nl ? 'Alle projecten' : 'All projects'}
@@ -91,7 +92,7 @@ export default function ProjectDetail() {
                                 {nl ? 'Ook processen die vastlopen?' : 'Processes getting stuck too?'}
                             </p>
                             <p className="mt-4 text-lg text-foreground/60 leading-relaxed max-w-lg">
-                                {nl ? 'Plan een gesprek en we denken vrijblijvend met u mee.' : 'Book a call and we will think along, no strings attached.'}
+                                {nl ? 'Plan een gesprek en we denken vrijblijvend met je mee.' : 'Book a call and we will think along, no strings attached.'}
                             </p>
                             <div className="mt-8">
                                 <CTAButton to="/contact">{nl ? 'Plan een gesprek' : 'Book a call'}</CTAButton>

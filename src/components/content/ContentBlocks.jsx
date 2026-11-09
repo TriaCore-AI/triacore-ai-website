@@ -440,9 +440,10 @@ function renderNieuw(block, language) {
                 </blockquote>
             );
 
+        // Drie kaarten pas naast elkaar vanaf 1024px; op een tablet worden ze anders te smal voor hun titel
         case 'cards':
             return (
-                <div className={`my-10 grid grid-cols-1 gap-5 ${block.items.length === 3 ? 'md:grid-cols-3' : 'sm:grid-cols-2'}`}>
+                <div className={`my-10 grid grid-cols-1 gap-5 ${block.items.length === 3 ? 'lg:grid-cols-3' : 'sm:grid-cols-2'}`}>
                     {block.items.map((item, i) => {
                         const Icon = item.icon && CARD_ICONS[item.icon];
                         return (

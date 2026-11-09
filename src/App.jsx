@@ -41,7 +41,7 @@ const klantQuotes = [
     role: 'Planner · Croes NV',
     quote: {
       nl: 'Met de app zien we snel op welke werf er grond verzet wordt, met hoeveel en met welke vrachtwagens. Vroeger moesten we wachten op de bonnen, die pas veel later binnenkwamen, en hadden we geen zicht op wat er die dag gebeurde. Omdat de app op maat van ons bedrijf gemaakt is, hadden we hem meteen onder de knie. Ook de chauffeurs zijn enthousiast: ze moeten geen grondbankbonnen meer schrijven. TriaCore luisterde altijd naar onze feedback, dacht mee en was steeds bereikbaar. Door hun gedrevenheid en hun service zal ik hen zeker aanbevelen aan andere bedrijven.',
-      en: 'With the app we can quickly see on which site soil is being moved, with how many trucks and which ones. We used to wait for the delivery notes, which came in much later, and we had no view of what was happening that day. Because the app was built around our company, we had the hang of it right away. The drivers are enthusiastic too: they no longer have to write out delivery notes. TriaCore always listened to our feedback, thought along with us and was always reachable. Thanks to their drive and their service, I will certainly recommend them to other companies.'
+      en: 'With the app we can quickly see on which site soil is being moved, how much and with which trucks. We used to wait for the delivery notes, which came in much later, and we had no view of what was happening that day. Because the app was built around our company, we got the hang of it right away. The drivers are enthusiastic too: they no longer have to write out delivery notes. TriaCore always listened to our feedback, thought along with us and was always reachable. Thanks to their drive and their service, I will certainly recommend them to other companies.'
     }
   },
   {
@@ -64,7 +64,10 @@ const klantQuotes = [
     logo: theBoxLogo,
     photo: estherPhoto,
     name: 'Esther Vandebroek',
-    role: 'Beleidsmedewerker Ondernemen Stebo vzw · Projectmanager The Box Vlaanderen',
+    role: {
+      nl: 'Beleidsmedewerker Ondernemen Stebo vzw · Projectmanager The Box Vlaanderen',
+      en: 'Entrepreneurship Policy Officer, Stebo vzw · Project Manager, The Box Vlaanderen'
+    },
     quote: {
       nl: 'Een schot in de roos! Tijdens vier leer- & netwerkavonden van The Box Vlaanderen inspireerden Lucas en Rian van TriaCore AI meer dan 70 startende ondernemers in Hasselt, Turnhout, Antwerpen en Aarschot. We werkten eerder al met andere sprekers rond AI, maar voor onze doelgroep was deze workshop echt spot on. Geen ingewikkelde theorie, maar concrete tools waarmee ondernemers meteen aan de slag kunnen, ongeacht hun kennisniveau. Een absolute aanrader!',
       en: 'Spot on! Across four learning and networking evenings for The Box Vlaanderen, Lucas and Rian of TriaCore AI inspired more than 70 starting entrepreneurs in Hasselt, Turnhout, Antwerp and Aarschot. We had worked with other AI speakers before, but for our audience this workshop was exactly right. No complicated theory, just practical tools entrepreneurs can put to work straight away, whatever their level. Highly recommended!'
@@ -77,7 +80,7 @@ const faqVragen = [
   {
     q: { nl: 'Waarom zouden we niet gewoon ChatGPT gebruiken?', en: 'Why wouldn\'t we just use ChatGPT?' },
     a: {
-      nl: 'Voor veel taken is dat een prima begin, en we leren uw team graag hoe het er meer uit haalt. Maar een proces met veel mensen, stappen en gegevens lost u niet op met één prompt. Daarvoor is meer structuur nodig, en soms een tool op maat.',
+      nl: 'Voor veel taken is dat een prima begin, en we leren je team graag hoe het er meer uit haalt. Maar een proces met veel mensen, stappen en gegevens los je niet op met één prompt. Daarvoor is meer structuur nodig, en soms een tool op maat.',
       en: 'For many tasks that is a great start, and we are happy to teach your team how to get more out of it. But a process with many people, steps and data is not something you solve with one prompt. That takes more structure, and sometimes a custom tool.'
     }
   },
@@ -85,34 +88,34 @@ const faqVragen = [
     q: { nl: 'Wat kost een custom tool?', en: 'What does a custom tool cost?' },
     a: {
       nl: 'De kostprijs hangt af van de complexiteit van het probleem, het aantal gebruikers en de technieken die we inzetten. We werken nooit met een vast prijskaartje omdat elke tool anders is. Na een eerste gesprek maken we een duidelijke inschatting zonder verborgen kosten.',
-      en: 'The cost depends on the complexity of the problem, the number of users and the techniques we use. We never work with a fixed price tag because every tool is different. After a first conversation, we make a clear estimate without hidden costs.'
+      en: 'The cost depends on the complexity of the problem, the number of users and the techniques we use. We never work with a fixed price tag because every tool is different. After an initial conversation, we give you a clear estimate with no hidden costs.'
     }
   },
   {
     q: { nl: 'Hoe lang duurt het om een custom tool te bouwen?', en: 'How long does it take to build a custom tool?' },
     a: {
-      nl: 'Een eerste werkende versie bouwen we doorgaans in zes tot twaalf weken. We werken iteratief: u ziet vroeg resultaat en geeft feedback voor we verder bouwen.',
+      nl: 'Een eerste werkende versie bouwen we doorgaans in zes tot twaalf weken. We werken iteratief: je ziet vroeg resultaat en geeft feedback voor we verder bouwen.',
       en: 'We typically build a first working version in six to twelve weeks. We work iteratively: you see results early and give feedback before we build further.'
     }
   },
   {
-    q: { nl: 'Bouwen jullie altijd custom of raden jullie soms een bestaande tool aan?', en: 'Do you always build custom or do you sometimes recommend an existing tool?' },
+    q: { nl: 'Bouwen jullie altijd custom of raden jullie soms een bestaande tool aan?', en: 'Do you always build custom, or do you sometimes recommend an existing tool?' },
     a: {
-      nl: 'Niet elk probleem vraagt om maatwerk. Als een bestaande tool uw probleem oplost, zeggen we dat eerlijk en helpen we u op weg. We bouwen een custom tool alleen als het de juiste keuze is.',
-      en: 'Not every problem needs custom work. If an existing tool solves your problem, we say so honestly and help you get started. We only build a custom tool when it is the right choice.'
+      nl: 'Niet elk probleem vraagt om maatwerk. Als een bestaande tool jouw probleem oplost, zeggen we dat eerlijk en helpen we je op weg. We bouwen een custom tool alleen als het de juiste keuze is.',
+      en: 'Not every problem calls for custom software. If an existing tool solves your problem, we say so honestly and help you get started. We only build a custom tool when it is the right choice.'
     }
   },
   {
-    q: { nl: 'Moet ik meteen een volledig systeem bouwen of kan ik stapsgewijs starten?', en: 'Do I have to build a full system right away or can I start step by step?' },
+    q: { nl: 'Moet ik meteen een volledig systeem bouwen of kan ik stapsgewijs starten?', en: 'Do I need to build a complete system straight away, or can I start step by step?' },
     a: {
-      nl: 'U hoeft niet alles in één keer te bouwen. We starten vaak met één concreet proces, bewijzen de waarde en bouwen daarna verder. Zo houdt u controle over de investering en ziet u snel resultaat.',
+      nl: 'Je hoeft niet alles in één keer te bouwen. We starten vaak met één concreet proces, bewijzen de waarde en bouwen daarna verder. Zo hou je controle over de investering en zie je snel resultaat.',
       en: 'You do not have to build everything at once. We often start with one concrete process, prove its value and then build further. That way you stay in control of the investment and see results quickly.'
     }
   },
   {
     q: { nl: 'Werkt dit samen met de systemen die we al gebruiken?', en: 'Does this work with the systems we already use?' },
     a: {
-      nl: 'Dat bekijken we altijd vooraf. Waar het kan, koppelen we aan uw bestaande systemen, zodat uw team gegevens niet dubbel hoeft in te geven.',
+      nl: 'Dat bekijken we altijd vooraf. Waar het kan, koppelen we aan je bestaande systemen, zodat je team gegevens niet dubbel hoeft in te geven.',
       en: 'We always check that up front. Where possible, we connect to your existing systems, so your team does not have to enter data twice.'
     }
   }
@@ -173,7 +176,7 @@ const aanpakPijlers = {
   en: [
     { word: 'Understand', desc: 'We get to know your challenges inside out.' },
     { word: 'Translate', desc: 'We turn your challenge into an actionable plan.' },
-    { word: 'Deliver', desc: 'We deliver your solution and guide you along the way.' }
+    { word: 'Deliver', desc: 'We build your solution and support you along the way.' }
   ]
 };
 
@@ -392,8 +395,8 @@ function App() {
           ? 'TriaCore AI | AI voor operationele vooruitgang'
           : 'TriaCore AI | AI for operational progress'}
         description={language === 'nl'
-          ? "AI die in uw processen werkt, niet ernaast. TriaCore AI uit Hasselt bouwt software op maat, geeft AI-workshops en begeleidt teams bij het inzetten van AI."
-          : "AI that works inside your processes, not next to them. TriaCore AI from Hasselt builds custom software, runs AI workshops and guides teams in putting AI to work."}
+          ? "AI voor bedrijven met veel mensen, veel materieel en veel administratie. TriaCore AI uit Hasselt bouwt software op maat met AI en geeft AI-workshops."
+          : "AI for businesses with lots of people, lots of equipment and lots of paperwork. TriaCore AI from Hasselt builds custom software with AI and runs AI workshops."}
       />
 
       <Navbar />
@@ -410,13 +413,15 @@ function App() {
       {/* B. HERO SECTION */}
       {/* Rustig en gecentreerd: één korte titel, één zin, één knop. Daaronder stil bewijs, op een vaste
           afstand (niet onderaan een schermhoge hero, waar de logo's los van de rest kwamen te staan) */}
-      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-8 md:pb-[72px]">
+      {/* Gsm liggend (lage schermen onder 1280): minder ruimte boven de titel, anders staat enkel de titel in beeld */}
+      <section id="home" className="relative flex flex-col min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-8 md:pb-[72px]">
         <HeroScene />
         <div className="relative max-w-7xl mx-auto w-full flex flex-col">
           <div className="max-w-6xl mx-auto text-center">
             {/* Regel per regel: elke regel komt als geheel binnen uit zijn eigen richting (data-from).
-                Elke regel is zo breed als zijn tekst, zodat de veeg op de tekst zelf loopt en niet op lege ruimte */}
-            <h1 className="hero-title text-foreground text-[clamp(3.5rem,17vw,4.25rem)] sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.02]">
+                Elke regel is zo breed als zijn tekst, zodat de veeg op de tekst zelf loopt en niet op lege ruimte.
+                Tussen 1024 en 1280 schaalt de titel mee, zodat de eerste regel op één lijn blijft */}
+            <h1 className="hero-title text-foreground text-[clamp(3.5rem,17vw,4.25rem)] sm:text-6xl md:text-7xl lg:text-[7.5rem] lg:max-xl:text-[min(7.5rem,10.2vw)] leading-[1.02]">
               <span className="hero-row block w-fit mx-auto" data-from="left">
                 {language === 'nl' ? 'AI voor operationele' : 'AI for operational'}
               </span>
@@ -425,31 +430,37 @@ function App() {
               </span>
             </h1>
 
-            <p className="hero-fade mt-8 md:mt-10 mx-auto text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl">
+            {/* Eerst voor wie (breed genoeg voor een aannemer, een autogroep en een verhuurder), dan wat we doen:
+                nieuwe software bouwen of koppelen aan wat er al is, met AI waar het rendeert. Kort gehouden, zodat de
+                klantlogo's eronder in beeld blijven */}
+            <p className="hero-fade mt-8 md:mt-10 mx-auto text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-2xl text-balance">
               {language === 'nl'
-                ? 'AI die in uw processen werkt, niet ernaast. Met software op maat, workshops en begeleiding.'
-                : 'AI that works inside your processes, not next to them. With custom software, workshops and guidance.'}
+                ? 'Voor bedrijven met planning, mensen op de baan en veel administratief werk. Wij bouwen software op maat of koppelen aan wat je al gebruikt, met AI waar het rendeert.'
+                : 'For businesses with schedules to manage, people on the road and a lot of paperwork. We build custom software or connect to what you already use, with AI where it pays off.'}
             </p>
 
-            <div className="hero-fade mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
+            {/* Op gsm is de tekstlink 44px hoog om op te tikken; de kleinere rijafstand houdt de witruimte gelijk */}
+            {/* data-schijven-rust: rond deze knoppen reageren de schijven achter de hero niet op de muis */}
+            <div data-schijven-rust className="hero-fade mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5 max-md:gap-y-3">
               <CTAButton to="/contact" size="md">
                 {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
               </CTAButton>
-              <a href="#oplossingen" className="group/hero-link inline-flex items-center gap-2 text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
-                {language === 'nl' ? 'Bekijk onze oplossingen' : 'View our solutions'}
+              <Link to="/custom-oplossingen" className="group/hero-link inline-flex items-center gap-2 max-md:py-2 text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
+                {language === 'nl' ? 'Bekijk onze tools' : 'View our tools'}
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover/hero-link:translate-x-1" />
-              </a>
+              </Link>
             </div>
           </div>
 
-          {/* Stil bewijs: logo's van klanten, in kleur, boven de schijven */}
-          <div className="hero-logorij mt-16 md:mt-24 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+          {/* Stil bewijs: logo's van klanten, in kleur, boven de schijven. Pas vanaf 1280 staat "Onder meer voor"
+              naast de logo's; op tablet staat het erboven, anders wringen de logo's zich in drie rijen */}
+          <div data-schijven-rust className="hero-logorij mt-16 md:mt-24 flex flex-col xl:flex-row items-center justify-center gap-6 xl:gap-12">
             <span className="hero-fade text-xl md:text-2xl text-foreground/70 shrink-0">
               {language === 'nl' ? 'Onder meer voor' : 'Trusted by'}
             </span>
             {/* Op desktop één rustige rij. Op gsm schuiven ze op één lijn zonder einde door: daarvoor staan de
                 logo's er drie keer, en de kopieën zijn verborgen op desktop en voor schermlezers */}
-            <div className="hero-logos flex flex-wrap items-center justify-center gap-x-[52px] gap-y-6">
+            <div className="hero-logos flex flex-wrap items-center justify-center gap-x-[52px] md:max-lg:gap-x-10 gap-y-6">
               {[0, 1, 2].flatMap((set) => [
                 ...projecten.map((p) => ({ name: p.client, logo: p.logo })),
                 ...workshopKlanten.map((w) => ({ name: w.name, logo: w.logo }))
@@ -479,8 +490,8 @@ function App() {
             </div>
             <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-xl mx-auto">
               {language === 'nl'
-                ? 'Bedrijven waarmee we processen herbouwden, geen losstaande experimenten.'
-                : 'Companies whose processes we rebuilt, not standalone experiments.'}
+                ? 'Bedrijven die we verder hielpen, met een tool op maat of een workshop voor hun team.'
+                : 'Companies we helped move forward, with a custom tool or a workshop for their team.'}
             </p>
           </div>
 
@@ -515,23 +526,18 @@ function App() {
                 to: '/custom-oplossingen',
                 title: language === 'nl' ? 'Custom tools' : 'Custom tools',
                 desc: language === 'nl'
-                  ? 'Processen met veel mensen, stappen en gegevens lost u niet op met één prompt. Daarvoor bouwen we een tool op maat van uw bedrijf, waarin AI veilig met uw data werkt en stappen overneemt.'
-                  : 'Processes with many people, steps and data cannot be solved with a single prompt. That is why we build a tool tailored to your business, where AI works safely with your data and takes over steps.'
+                  ? 'Processen met veel mensen, stappen en gegevens los je niet op met één prompt. Daarvoor bouwen we een tool op maat van jouw bedrijf, waarin AI veilig met je data werkt en stappen overneemt.'
+                  : 'Processes with many people, steps and data cannot be solved with a single prompt. That is why we build a tool tailored to your business, in which AI works safely with your data and takes steps off your hands.'
               },
               {
                 to: '/workshops',
                 title: 'Workshops',
                 desc: language === 'nl'
-                  ? 'Meer dan wat chatten met ChatGPT. Uw team leert AI structureel inzetten in het eigen werk, en er meer uit halen dan een snel antwoord.'
+                  ? 'Meer dan wat chatten met ChatGPT. Jouw team leert AI structureel inzetten in het eigen werk, en er meer uit halen dan een snel antwoord.'
                   : 'More than a bit of chatting with ChatGPT. Your team learns to use AI in a structured way in their own work, and to get more out of it than a quick answer.'
-              },
-              {
-                to: '/ai-begeleiding',
-                title: language === 'nl' ? 'Tweede brein' : 'Second Brain',
-                desc: language === 'nl'
-                  ? 'De kennis van uw bedrijf op één plek, zo geordend dat AI ermee kan werken. We zetten het samen met u op, zodat u niet telkens opnieuw hoeft uit te leggen wie uw klanten zijn en hoe u werkt.'
-                  : 'Your company’s knowledge in one place, organised so AI can work with it. We set it up together with you, so you no longer have to keep explaining who your clients are and how you work.'
               }
+              // De rij over AI-agents (/ai-begeleiding) is tijdelijk weg tot er genoeg bewijs is (beslissing
+              // Lucas, 6/11). Ze komt later terug als derde rij
             ].map((s, i) => (
               <Link
                 key={s.to}
@@ -549,9 +555,10 @@ function App() {
 
                 <div className="lg:order-1 lg:col-span-5 flex flex-col">
                   <p className="rv-fade text-lg text-foreground/70 leading-relaxed max-w-sm">{s.desc}</p>
+                  {/* Op aanraakschermen is er geen hover: daar staat het pijltje er altijd, zodat de rij als link herkenbaar is */}
                   <div className="rv-fade mt-8 lg:mt-auto flex items-center gap-3 text-sm text-foreground/40">
                     <span className="tabular-nums">/{String(i + 1).padStart(2, '0')}</span>
-                    <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all duration-300 text-accent group-hover:opacity-100 group-hover:translate-x-0" />
+                    <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all duration-300 text-accent group-hover:opacity-100 group-hover:translate-x-0 max-xl:pointer-coarse:opacity-100 max-xl:pointer-coarse:translate-x-0" />
                   </div>
                 </div>
               </Link>
@@ -666,7 +673,7 @@ function App() {
 
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-14 sm:gap-10 md:gap-14">
             {[
-              { name: 'Lucas Curto', role: language === 'nl' ? 'AI & Strategie' : 'AI & Strategy', image: '/team/lucas', desc: language === 'nl' ? 'Vertaalt nieuwe AI-mogelijkheden naar wat ze voor uw bedrijf betekenen.' : 'Translates new AI possibilities into what they mean for your business.' },
+              { name: 'Lucas Curto', role: language === 'nl' ? 'AI & Strategie' : 'AI & Strategy', image: '/team/lucas', desc: language === 'nl' ? 'Vertaalt nieuwe AI-mogelijkheden naar wat ze voor jouw bedrijf betekenen.' : 'Translates new AI possibilities into what they mean for your business.' },
               { name: 'Rian Mathijs', role: language === 'nl' ? 'Sales & Klantrelaties' : 'Sales & Client Relations', image: '/team/rian', desc: language === 'nl' ? 'Eerste aanspreekpunt voor klanten en zorgt voor duidelijke afstemming en opvolging.' : 'First point of contact for clients, ensuring clear alignment and follow-up.' },
               { name: 'Jorn Van Breemaat', role: language === 'nl' ? 'Softwareontwikkeling & ICT-advies' : 'Software Development & IT Advisory', image: '/team/jorn', desc: language === 'nl' ? 'Ontwerpt en bouwt onze oplossingen en adviseert op technisch en ICT-vlak.' : 'Designs and builds our solutions and advises on technical and IT matters.' }
             ].map((member, i) => (
@@ -734,7 +741,7 @@ function App() {
           </div>
           <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-xl mx-auto">
             {language === 'nl'
-              ? 'Vertel ons hoe uw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.'
+              ? 'Vertel ons hoe jouw bedrijf werkt. We luisteren eerst en tonen dan wat mogelijk is.'
               : 'Tell us how your business works. We listen first, then show you what is possible.'}
           </p>
           <div className="rv-fade mt-10 flex justify-center">
@@ -749,11 +756,12 @@ function App() {
               </div>
               <div>
                 <p className="text-base font-medium text-foreground leading-tight">
-                  Rian Mathijs <span className="font-normal text-foreground/50">· {language === 'nl' ? 'uw eerste aanspreekpunt' : 'your first point of contact'}</span>
+                  Rian Mathijs <span className="font-normal text-foreground/50">· {language === 'nl' ? 'je eerste aanspreekpunt' : 'your first point of contact'}</span>
                 </p>
-                <p className="mt-1 text-sm text-foreground/60">
+                {/* Op gsm past dit niet op één regel: mail en telefoon dan onder elkaar, zonder het puntje */}
+                <p className="mt-1 text-sm text-foreground/60 max-sm:mt-1.5 max-sm:flex max-sm:flex-col max-sm:items-start max-sm:gap-1">
                   <a href="mailto:rian.mathijs@triacore.be" className="hover:text-accent transition-colors">rian.mathijs@triacore.be</a>
-                  <span className="mx-2 text-foreground/30">·</span>
+                  <span className="mx-2 text-foreground/30 max-sm:hidden">·</span>
                   <a href="tel:+32499874662" className="hover:text-accent transition-colors">+32 499 87 46 62</a>
                 </p>
               </div>

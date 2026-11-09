@@ -45,11 +45,13 @@ export default function SolutionPicker({ items, label, placeholder, aiLabel, mor
         return () => ctx.revert();
     }, []);
 
-    // Kiezen; op gsm schuift de rij mee zodat de gekozen naam in beeld staat
+    // Kiezen; op gsm schuift de rij mee zodat de gekozen naam in beeld staat. De rij heeft daar een eigen
+    // binnenmarge (tot de rand van het scherm), die telt niet mee
     const select = (i) => {
         setActive(i);
         const el = tabRefs.current[i];
-        scrollerRef.current?.scrollTo({ left: Math.max(0, el.offsetLeft - 24), behavior: 'smooth' });
+        const pad = parseFloat(getComputedStyle(el.parentElement).paddingLeft) || 0;
+        scrollerRef.current?.scrollTo({ left: Math.max(0, el.offsetLeft - pad - 24), behavior: 'smooth' });
     };
 
     // Pijltjestoetsen, Home en End verspringen tussen de namen, zoals bij gewone tabs
@@ -67,14 +69,16 @@ export default function SolutionPicker({ items, label, placeholder, aiLabel, mor
 
     return (
         <div ref={ref}>
-            <div className="relative">
-                <span aria-hidden="true" className="sp-base absolute inset-x-0 bottom-0 h-px bg-foreground/15 origin-left" />
+            {/* Onder 1280 px schuift de rij met namen door tot aan de rand van het scherm; de lijn eronder blijft
+                even breed als de inhoud */}
+            <div className="relative max-md:-mx-6 md:max-lg:-mx-16 lg:max-xl:-mx-24">
+                <span aria-hidden="true" className="sp-base absolute inset-x-0 max-md:inset-x-6 md:max-lg:inset-x-16 lg:max-xl:inset-x-24 bottom-0 h-px bg-foreground/15 origin-left" />
                 <div ref={scrollerRef} className="no-scrollbar overflow-x-auto">
                     <div
                         role="tablist"
                         aria-label={label}
                         onKeyDown={onKeyDown}
-                        className="relative flex w-max gap-8 2xl:gap-12"
+                        className="relative flex w-max gap-8 2xl:gap-12 max-md:px-6 md:max-lg:px-16 lg:max-xl:px-24"
                     >
                         {items.map((item, i) => {
                             const on = i === active;
@@ -150,6 +154,14 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel, prevLabel, nextLabel
     const tweenRef = useRef(null);
     const running = rotates && on && inView && !held;
 
+    // Een visual wordt pas gebouwd als hij voor het eerst aan de beurt is, en blijft daarna staan. Anders bouwt
+    // de pagina bij het openen alle twintig geanimeerde visuals tegelijk op, ook van tabs die je nog niet zag,
+    // en duurt het lang voor ze verschijnt
+    const [gezien, setGezien] = useState(() => new Set(on ? [0] : []));
+    useEffect(() => {
+        if (on) setGezien((s) => (s.has(current) ? s : new Set(s).add(current)));
+    }, [on, current]);
+
     useEffect(() => {
         if (!rotates || !slotRef.current) return undefined;
         const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 });
@@ -208,9 +220,11 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel, prevLabel, nextLabel
             aria-labelledby={`sp-tab-${item.key}`}
             aria-hidden={!on}
             inert={!on}
-            className={`[grid-area:1/1] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 lg:items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-3 pointer-events-none'}`}
+            className={`[grid-area:1/1] grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-16 xl:items-center max-xl:max-w-4xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-3 pointer-events-none'}`}
         >
-            <div className="lg:col-span-6">
+            {/* Naast elkaar pas vanaf 1280 px: smaller wordt de visual te klein om te lezen. Daaronder staat alles
+                onder elkaar, hoogstens 4xl breed, zodat de visual niet hoger wordt dan een laptopscherm */}
+            <div className="xl:col-span-6">
                 <h3 className="text-2xl font-medium text-foreground leading-tight">{item.lead}</h3>
                 <p className="mt-4 text-base md:text-lg text-foreground/70 leading-relaxed">{item.desc}</p>
                 {/* Op gsm vervaagt de onderkant van de visual in de pagina, net onder de knoppen in de visuals */}
@@ -223,10 +237,10 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel, prevLabel, nextLabel
                                 aria-hidden={i !== current}
                                 className={`absolute inset-0 flex items-center justify-center transition-opacity ${i === current ? 'z-10 opacity-100 duration-700' : 'z-0 opacity-0 duration-0 delay-700'}`}
                             >
-                                {a.visual || <span className="text-sm text-foreground/40">{placeholder}</span>}
+                                {gezien.has(i) && (a.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
                             </div>
                         ))
-                        : (item.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
+                        : gezien.size > 0 && (item.visual || <span className="text-sm text-foreground/40">{placeholder}</span>)}
                 </div>
                 <MobileCaption
                     items={item.ai}
@@ -239,7 +253,7 @@ function Panel({ item, on, placeholder, aiLabel, moreLabel, prevLabel, nextLabel
             </div>
 
             {/* Vanaf tablet de vier kaartjes; op gsm staat enkel het kaartje onder de visual */}
-            <div className="hidden sm:block lg:col-span-6">
+            <div className="hidden sm:block xl:col-span-6">
                 <h4 className="text-xl font-medium text-foreground leading-tight">{aiLabel}</h4>
                 <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 sm:auto-rows-fr gap-4">
                     {item.ai.map((a, i) => <AiCard key={a.name} item={a} index={i} choose={rotates ? choose : null} />)}

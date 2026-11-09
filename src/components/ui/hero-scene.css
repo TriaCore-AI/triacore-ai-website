@@ -29,6 +29,10 @@
   .hero-logorij { padding: 16px 44px; }
   .hero-logo-kopie { display: none; }
 }
+/* Tablet (768 tot 1024): geen zijmarge, zodat de vier logo's op één rij passen (samen ongeveer 620px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-logorij { padding-left: 0; padding-right: 0; }
+}
 
 /* Gsm: de logo's schuiven op één lijn van rand tot rand, traag en zonder einde.
    Elk logo beweegt zelf (niet de hele rij), anders kan het niet meer met de achtergrond mengen. Alle logo's

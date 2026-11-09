@@ -38,6 +38,7 @@ const PHOTO_TEXT = {
         material: 'Materiaal',
         materialValue: 'Steenslag',
         weight: 'Gewicht',
+        weightValue: '18,4 t',
         signature: 'Handtekening',
         screen: 'Nieuwe bon',
         photo: 'Foto van de bon',
@@ -48,13 +49,14 @@ const PHOTO_TEXT = {
     },
     en: {
         label: 'A driver takes a photo of a paper slip. The AI reads the photo and fills in the number, location, material and weight on the phone. It also notices that a signature is missing from the slip, so the driver can fix this on the spot.',
-        bon: 'Weighing slip',
+        bon: 'Weigh slip',
         number: 'Slip number',
         place: 'Location',
         placeValue: 'Site North',
         material: 'Material',
         materialValue: 'Crushed stone',
         weight: 'Weight',
+        weightValue: '18.4 t',
         signature: 'Signature',
         screen: 'New slip',
         photo: 'Photo of the slip',
@@ -69,7 +71,7 @@ const fieldsOf = (t) => [
     [t.number, '20461'],
     [t.place, t.placeValue],
     [t.material, t.materialValue],
-    [t.weight, '18,4 t']
+    [t.weight, t.weightValue]
 ];
 
 // De bon op papier, licht schuin, met de hoeken van de camera eromheen
@@ -172,7 +174,7 @@ const ASK_TEXT = {
         label: 'Een chat op het kantoorscherm. Iemand op kantoor vraagt hoeveel er deze week naar werf Noord ging. De AI antwoordt meteen: 73,2 ton, met de vier bonnen en hun chauffeurs erbij. Alle bonnen zijn in orde, en Karim B. en Els M. zijn onderaannemers.',
         heading: 'Registraties',
         assistant: 'AI-assistent',
-        placeholder: 'Stel een vraag aan uw registraties',
+        placeholder: 'Stel een vraag aan je registraties',
         office: 'Op kantoor',
         question: 'Hoeveel ging er deze week naar werf Noord?',
         answer: 'Deze week ging er 73,2 ton naar werf Noord.',

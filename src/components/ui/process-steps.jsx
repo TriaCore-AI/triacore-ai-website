@@ -41,7 +41,8 @@ export default function ProcessSteps({ steps }) {
                         <span aria-hidden="true" className="md:hidden absolute left-0 top-1 bottom-1 w-px bg-foreground/15" />
                         <div className="ps-content">
                             <span className="block text-sm text-accent tabular-nums">/{String(i + 1).padStart(2, '0')}</span>
-                            <h3 className="mt-3 text-3xl lg:text-4xl font-medium text-foreground leading-tight">{s.word}</h3>
+                            {/* Op tablet zijn de vier kolommen smal: daar is het woord kleiner, zodat het binnen zijn kolom blijft */}
+                            <h3 className="mt-3 text-3xl md:max-lg:text-2xl lg:max-xl:text-3xl xl:text-4xl font-medium text-foreground leading-tight">{s.word}</h3>
                             <p className="mt-4 text-base text-foreground/60 leading-relaxed max-w-xs">{s.desc}</p>
                         </div>
                     </li>

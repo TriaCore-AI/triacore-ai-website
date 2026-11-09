@@ -17,10 +17,11 @@ import sprekerFoto from '../../assets/workshops/box-vlaanderen-spreker.jpg';
 // De foto's staan in grijstinten en lichten om de beurt rustig op: in kleur, met de L lijn errond. Hover
 // over een foto neemt het over; bij weggaan loopt de volgorde verder met de foto erna.
 
-// Hoe lang een foto oplicht, hoe lang het daarna rustig blijft, en wanneer de eerste oplicht (na de intro), in ms
-const AAN = 2500;
+// Hoe lang een foto oplicht, hoe lang het daarna rustig blijft, en wanneer de eerste oplicht (tijdens de intro,
+// zodra de zaalfoto zo goed als open is), in ms
+const AAN = 3500;
 const RUST = 2200;
-const START = 4200;
+const START = 1200;
 const AANTAL = 3;
 
 // Eén foto. De L lijn van CornerTrace reageert normaal op hover; hier zetten we ze vanuit `on`, zodat
@@ -32,7 +33,7 @@ function Foto({ src, alt, position = '', staand, spiegel, on, onEnter, onLeave, 
         <div
             onPointerEnter={(e) => e.pointerType === 'mouse' && onEnter()}
             onPointerLeave={(e) => e.pointerType === 'mouse' && onLeave()}
-            className={`absolute [&>svg_path]:duration-[1200ms] ${className} ${on ? '[&>svg_path]:[stroke-dashoffset:0]' : ''} ${spiegel ? '[&>svg]:[transform:scaleX(-1)]' : ''}`}
+            className={`absolute [&>svg_path]:duration-[1600ms] ${className} ${on ? '[&>svg_path]:[stroke-dashoffset:0]' : ''} ${spiegel ? '[&>svg]:[transform:scaleX(-1)]' : ''}`}
         >
             <div
                 className={staand ? 'wh-reveal wh-frame bg-grain p-1.5 rounded-[30px]' : 'wh-reveal'}
@@ -43,7 +44,7 @@ function Foto({ src, alt, position = '', staand, spiegel, on, onEnter, onLeave, 
                         <img
                             src={src}
                             alt={alt}
-                            className={`w-full h-full object-cover transition duration-[1200ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${on ? 'grayscale-0 scale-[1.03]' : 'grayscale'} ${position}`}
+                            className={`w-full h-full object-cover transition duration-[1600ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${on ? 'grayscale-0 scale-[1.03]' : 'grayscale'} ${position}`}
                         />
                     </div>
                 </div>
@@ -79,7 +80,8 @@ export default function WorkshopsHero() {
                 t = setTimeout(licht, RUST);
             }, AAN);
         };
-        t = setTimeout(licht, Math.max(RUST, START - (Date.now() - geladen.current)));
+        const verstreken = Date.now() - geladen.current;
+        t = setTimeout(licht, verstreken < START ? START - verstreken : RUST);
         return () => clearTimeout(t);
     }, [hover]);
 
@@ -124,11 +126,11 @@ export default function WorkshopsHero() {
                 .from('.wh-fade', { y: 10, opacity: 0, duration: 1.4, ease: 'power2.out', stagger: 0.12 }, 1.1);
             gsap.utils.toArray('.wh-reveal').forEach((el, i) => {
                 const r = el.dataset.radius;
-                const at = 0.4 + i * 0.3;
+                const at = 0.1 + i * 0.2;
                 tl.fromTo(el,
                     { clipPath: `inset(100% 0% 0% 0% round ${r}px)` },
-                    { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 2, ease: 'power4.inOut', clearProps: 'clipPath' }, at)
-                    .from(el.querySelector('.wh-zoom'), { scale: 1.25, duration: 2.8, ease: 'expo.out' }, at);
+                    { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.5, ease: 'power4.inOut', clearProps: 'clipPath' }, at)
+                    .from(el.querySelector('.wh-zoom'), { scale: 1.25, duration: 2.2, ease: 'expo.out' }, at);
             });
             const play = () => tl.play();
             if (document.fonts && document.fonts.ready) document.fonts.ready.then(play);
@@ -146,7 +148,7 @@ export default function WorkshopsHero() {
                     </h1>
                     <p className="wh-fade mt-8 md:mt-10 text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl">
                         {nl
-                            ? 'Uw team leert zelf werken met AI. Praktisch, op maat van uw sector en met voorbeelden uit het eigen werk.'
+                            ? 'Jouw team leert zelf werken met AI. Praktisch, op maat van je sector en met voorbeelden uit het eigen werk.'
                             : 'Your team learns to work with AI themselves. Practical, tailored to your sector and with examples from their own work.'}
                     </p>
                     <div className="wh-fade mt-10 md:mt-12 flex">

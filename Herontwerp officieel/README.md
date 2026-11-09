@@ -70,7 +70,7 @@ De belangrijkste regels:
 - **Letters:** Cormorant Garamond (500) voor titels, Jost voor de rest. Alle sectietitels even groot, eindigend op een punt.
 - **Geen** donkere secties, eyebrows, labels in hoofdletters, schaduwen onder kaarten, bollen of blobs, stock of AI beelden.
 - **Beweging:** zacht en traag genoeg om te lezen; een scrollanimatie speelt één keer; **de pagina nooit vastzetten** tijdens het scrollen.
-- **Taal:** u-vorm, kort en concreet. Geen gedachtestreepjes, wel correcte koppeltekens ("AI-begeleiding", "AI-workshops").
+- **Taal:** je-vorm (je en jouw, sinds 9 november 2026; daarvoor u), kort en concreet. Geen gedachtestreepjes, wel correcte koppeltekens ("AI-begeleiding", "AI-workshops").
 
 ---
 

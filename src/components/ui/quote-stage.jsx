@@ -13,11 +13,21 @@ export default function QuoteStage({ items }) {
     const { language } = useLanguage();
     const [active, setActive] = useState(0);
     const [reduced, setReduced] = useState(false);
+    const [aanraak, setAanraak] = useState(false);
     const many = items.length > 1;
 
     useEffect(() => {
         setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        setAanraak(window.matchMedia('(hover: none) and (max-width: 1279px)').matches);
     }, []);
+
+    // Op gsm en tablet kan je niet pauzeren met de muis. Daar blijft een quote zo lang staan als nodig
+    // om ze rustig uit te lezen (ongeveer een kwart seconde per woord), en nooit korter dan op desktop
+    const duur = (q) => {
+        if (!aanraak) return DURATION;
+        const woorden = (q.quote[language] || q.quote.en).split(/\s+/).length;
+        return Math.max(DURATION, woorden * 250);
+    };
 
     const next = () => setActive((a) => (a + 1) % items.length);
 
@@ -46,7 +56,7 @@ export default function QuoteStage({ items }) {
                                 )}
                                 <div className="min-w-0">
                                     <p className="text-base font-medium text-foreground leading-tight">{q.name}</p>
-                                    <p className="mt-0.5 text-sm text-foreground/50 leading-snug">{q.role}</p>
+                                    <p className="mt-0.5 text-sm text-foreground/50 leading-snug">{typeof q.role === 'object' ? (q.role[language] || q.role.nl) : q.role}</p>
                                 </div>
                             </figcaption>
                         </figure>
@@ -72,16 +82,17 @@ export default function QuoteStage({ items }) {
                                         <span
                                             key={`${active}-${language}`}
                                             className="absolute inset-y-0 left-0 bg-foreground/70 group-hover/quotes:[animation-play-state:paused]"
-                                            style={reduced ? { width: '100%' } : { animation: `quote-progress ${DURATION}ms linear forwards` }}
+                                            style={reduced ? { width: '100%' } : { animation: `quote-progress ${duur(q)}ms linear forwards` }}
                                             onAnimationEnd={next}
                                         />
                                     )}
                                 </span>
+                                {/* Op een smalle gsm is een tab smaller dan 100px: het logo blijft dan binnen zijn tab */}
                                 <span className="mt-4 flex h-8 items-center">
                                     <img
                                         src={q.logo}
                                         alt=""
-                                        className={`max-h-7 max-w-[100px] w-auto object-contain mix-blend-multiply transition duration-500 ${on ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale group-hover/tab:opacity-70'}`}
+                                        className={`max-h-7 max-w-[100px] max-md:max-w-[min(100px,100%)] w-auto object-contain mix-blend-multiply transition duration-500 ${on ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale group-hover/tab:opacity-70'}`}
                                     />
                                 </span>
                             </button>

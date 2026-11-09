@@ -25,8 +25,9 @@ export default function PageHeader({ title, intro, children, titleSize = 'text-5
         return () => ctx.revert();
     }, [title]);
 
+    // Op een liggende gsm (laag scherm) minder ruimte boven de titel, zoals bij de hero van de homepage
     return (
-        <section ref={ref} className="px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-20 md:pb-28">
+        <section ref={ref} className="px-6 md:px-16 lg:px-24 pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-20 md:pb-28">
             <div className="max-w-7xl mx-auto">
                 <h1 className={`ph-title hero-title text-foreground ${titleSize} leading-[1.02]`}>
                     {title}

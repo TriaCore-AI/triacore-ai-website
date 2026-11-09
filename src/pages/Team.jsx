@@ -21,7 +21,7 @@ const TEAM = [
         bio: {
             nl: [
                 'Lucas staat in voor AI en strategie binnen TriaCore AI. Hij is altijd op zoek naar wat er nieuw is in AI en bekijkt telkens wat daarvan echt nuttig is voor onze klanten.',
-                'Wat hij ontdekt, vertaalt hij naar de dagelijkse praktijk van uw bedrijf. Met een sterke focus op duidelijke uitleg maakt hij AI begrijpelijk en haalbaar, ook voor wie er nog niet elke dag mee werkt.'
+                'Wat hij ontdekt, vertaalt hij naar de dagelijkse praktijk van jouw bedrijf. Met een sterke focus op duidelijke uitleg maakt hij AI begrijpelijk en haalbaar, ook voor wie er nog niet elke dag mee werkt.'
             ],
             en: [
                 'Lucas is responsible for AI and strategy at TriaCore AI. He is always looking for what is new in AI and considers what is genuinely useful for our clients.',
@@ -40,7 +40,7 @@ const TEAM = [
         bio: {
             nl: [
                 'Rian is het eerste aanspreekpunt voor onze klanten en bewaakt de volledige samenwerking van begin tot eind. Met een sterke focus op duidelijke communicatie en relaties voor de lange termijn zorgt hij ervoor dat verwachtingen, doelstellingen en uitvoering op elkaar afgestemd blijven.',
-                'Hij vertaalt bedrijfsuitdagingen naar concrete trajecten en bewaakt de rode draad tijdens het volledige project. Voor onze klanten is hij het vaste referentiepunt: u kan altijd bij hem terecht.'
+                'Hij vertaalt bedrijfsuitdagingen naar concrete trajecten en bewaakt de rode draad tijdens het volledige project. Voor onze klanten is hij het vaste referentiepunt: je kan altijd bij hem terecht.'
             ],
             en: [
                 'Rian is the first point of contact for our clients and oversees the entire collaboration from start to finish. With a strong focus on clear communication and long term relationships, he makes sure expectations, goals and execution stay aligned.',
@@ -132,8 +132,9 @@ export default function Team() {
                                     {m.bio[language].map((p, j) => (
                                         <p key={j} className="member-fade mt-4 text-lg text-foreground/70 leading-relaxed max-w-xl">{p}</p>
                                     ))}
+                                    {/* Onder 1024px krijgt elke link een ruimer tikvlak; de negatieve marge houdt de opmaak gelijk */}
                                     {(m.email || m.phone || m.linkedin) && (
-                                        <div className="member-fade mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium">
+                                        <div className="member-fade mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium max-lg:[&>a]:py-2 max-lg:[&>a]:-my-2">
                                             {m.email && <a href={`mailto:${m.email}`} className="text-foreground/70 hover:text-accent transition-colors">{m.email}</a>}
                                             {m.phone && <a href={`tel:${m.tel}`} className="text-foreground/70 hover:text-accent transition-colors">{m.phone}</a>}
                                             {m.linkedin && (

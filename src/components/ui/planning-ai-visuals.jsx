@@ -35,20 +35,22 @@ const LEARN_LAYOUTS = {
 const LEARN_TEXT = {
     nl: {
         label: 'De AI stelt vier transporten voor, elk met een knop om aan te passen. De planner past vrachtwagen 12 aan van 24 naar 18 ton, met de opmerking dat deze vrachtwagen maar 18 ton kan laden. De AI antwoordt dat ze dat onthouden heeft voor de volgende keer.',
+        heading: 'Planning',
         sub: 'Voorstel van de AI',
         truck: 'Vrachtwagen',
         day: 'ma',
         adjust: 'Aanpassen',
         load: 'Lading',
-        note: 'Uw opmerking',
+        note: 'Jouw opmerking',
         feedback: 'Deze vrachtwagen kan maar 18 ton laden.',
         assistant: 'AI-assistent',
         title: 'Oké, dit heb ik onthouden voor de volgende keer.',
         rule: 'Vrachtwagen 12: maximaal 18 ton'
     },
     en: {
-        label: 'The AI proposes four transports, each with a button to adjust it. The planner changes truck 12 from 24 to 18 tonnes, noting that this truck can only carry 18 tonnes. The AI replies that it has remembered this for next time.',
-        sub: 'Proposal from the AI',
+        label: 'The AI suggests four trips, each with a button to adjust it. The planner changes truck 12 from 24 to 18 tonnes, noting that this truck can only carry 18 tonnes. The AI replies that it will remember this for next time.',
+        heading: 'Schedule',
+        sub: 'AI suggestion',
         truck: 'Truck',
         day: 'Mon',
         adjust: 'Adjust',
@@ -56,10 +58,13 @@ const LEARN_TEXT = {
         note: 'Your note',
         feedback: 'This truck can only carry 18 tonnes.',
         assistant: 'AI assistant',
-        title: 'OK, I have remembered this for next time.',
+        title: 'Got it, I will remember this for next time.',
         rule: 'Truck 12: 18 tonnes maximum'
     }
 };
+
+// Steden die in het Engels een eigen naam hebben
+const CITY_EN = { Luik: 'Liège', Antwerpen: 'Antwerp', Gent: 'Ghent' };
 
 // Het gekozen transport staat onderaan, zodat het paneel de andere niet bedekt
 const TRANSPORTS = [
@@ -74,7 +79,7 @@ function TransportRow({ transport, top, layout, t }) {
     const { nr, from, to, time, load, selected } = transport;
     const route = (
         <span className="flex items-center whitespace-nowrap text-foreground/60 leading-tight" style={{ gap: u(3), fontSize: u(fonts.route) }}>
-            {from}<ArrowRight strokeWidth={1.75} className="shrink-0" style={{ width: u(10), height: u(10) }} />{to}
+            {(t.en && CITY_EN[from]) || from}<ArrowRight strokeWidth={1.75} className="shrink-0" style={{ width: u(10), height: u(10) }} />{(t.en && CITY_EN[to]) || to}
         </span>
     );
     return (
@@ -154,7 +159,7 @@ function LearnStage({ layout, t }) {
     const { W, H, win, pad, heading, sub, rows, firstRow, rowH, rowGap } = layout;
     return (
         <ToolStage W={W} H={H}>
-            <ToolWindow win={win} pad={pad} heading="Planning" sub={t.sub} headingSize={heading} subSize={sub} />
+            <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub} />
             {TRANSPORTS.slice(-rows).map((transport, i) => (
                 <TransportRow key={transport.nr} transport={transport} top={firstRow + i * (rowH + rowGap)} layout={layout} t={t} />
             ))}
@@ -165,7 +170,7 @@ function LearnStage({ layout, t }) {
 
 export function PlanningLearnVisual() {
     const { language } = useLanguage();
-    const t = LEARN_TEXT[language];
+    const t = { ...LEARN_TEXT[language], en: language === 'en' };
     return <ToolVisual label={t.label} narrow={<LearnStage layout={LEARN_LAYOUTS.narrow} t={t} />} wide={<LearnStage layout={LEARN_LAYOUTS.wide} t={t} />} />;
 }
 

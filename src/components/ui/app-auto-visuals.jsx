@@ -50,20 +50,20 @@ const TAP_TEXT = {
         sideDriver: 'De chauffeur vult enkel nog in'
     },
     en: {
-        label: 'On the phone, the driver taps Unloaded. The time and place appear right away, and the driver only has to fill in the quantity.',
+        label: 'On the phone, the driver taps Unloaded. The time and location appear right away, and the driver only has to add the quantity.',
         screen: 'Today\'s trip',
         destination: 'Liège',
         loaded: 'Loaded',
         unloaded: 'Unloaded',
         time: 'Time',
-        place: 'Place',
+        place: 'Location',
         placeValue: 'Site North',
         amount: 'Quantity',
         amountValue: '18.4 t',
-        filled: 'Filled in by itself',
+        filled: 'Filled in automatically',
         confirm: 'Confirm',
-        sideTitle: 'One tap, and this is right',
-        sideDriver: 'The driver only fills in'
+        sideTitle: 'One tap gets this right',
+        sideDriver: 'The driver only adds'
     }
 };
 
@@ -167,13 +167,13 @@ const FIELD_TEXT = {
         ]
     },
     en: {
-        label: 'Two phone screens. For a delivery the app asks for customer, location, weight and signature, for a repair for machine, problem, hours and parts. The parts are still missing on the repair, so it cannot be sent yet.',
+        label: 'Two phone screens. For a delivery, the app asks for the client, location, weight and signature. For a repair, it asks for the machine, problem, hours and parts. The parts are still missing on the repair, so it cannot be sent yet.',
         send: 'Send',
-        open: 'Still to fill in',
+        open: 'Not filled in yet',
         forms: [
             {
                 title: 'Delivery',
-                fields: [['Customer', 'Site North'], ['Location', 'Hasselt'], ['Weight', '18.4 t'], ['Signature', 'Signed']]
+                fields: [['Client', 'Site North'], ['Location', 'Hasselt'], ['Weight', '18.4 t'], ['Signature', 'Signed']]
             },
             {
                 title: 'Repair',

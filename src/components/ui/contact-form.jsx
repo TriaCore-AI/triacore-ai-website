@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
 import CTAButton from './cta-button';
+import WorkshopFormulier from '../workshops/workshop-formulier';
+import SuccesMelding from './succes-melding';
 import { useLanguage } from '../../context/LanguageContext';
 
 // Het contactformulier, in de nieuwe stijl: witte velden zonder kader eromheen, een keuze voor het
 // onderwerp als witte knoppen die groen worden bij hover of als ze gekozen zijn, en één primaire knop.
+// Het onderwerp is verplicht en staat bovenaan. Kies je "Workshop", dan verschijnt hetzelfde
+// offerteformulier als op de workshoppagina (workshop-formulier.jsx); wat je al invulde, blijft staan.
 // Het formulier rekt mee in de hoogte (het berichtveld groeit), zodat het even hoog kan staan als de
 // kolom ernaast. Verstuurt naar Netlify Forms (formulier "contact").
+// Na het versturen verschijnt een klein bevestigingsvenster (succes-melding.jsx) en is het formulier weer leeg.
 // Let op: elk veld moet ook in het verborgen formulier in index.html staan, anders laat Netlify het weg.
 const TOPICS = [
     { value: 'Custom tool', nl: 'Custom tool', en: 'Custom tool' },
     { value: 'Workshop', nl: 'Workshop', en: 'Workshop' },
-    { value: 'AI-begeleiding', nl: 'AI-begeleiding', en: 'AI guidance' },
     { value: 'Weet ik nog niet', nl: 'Weet ik nog niet', en: 'Not sure yet' }
 ];
 
@@ -21,25 +24,44 @@ const labelClass = 'block mb-2 text-sm text-foreground/60';
 export default function ContactForm() {
     const { language } = useLanguage();
     const nl = language === 'nl';
-    const [status, setStatus] = useState('idle'); // idle, loading, success, error
-    const empty = { name: '', company: '', email: '', phone: '', topic: '', message: '' };
+    const [status, setStatus] = useState('idle'); // idle, loading, error
+    const [melding, setMelding] = useState(false);
+    const empty = { name: '', company: '', email: '', phone: '', topic: '', message: '', aantal: '', locatie: '' };
     const [formData, setFormData] = useState(empty);
+    const workshop = formData.topic === 'Workshop';
 
-    const isFormValid = formData.name && formData.email;
+    const isFormValid = formData.topic && formData.name && formData.email && formData.message.trim();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
         setStatus('loading');
+        // Lokaal (npm run dev) bestaat Netlify Forms niet: daar doen we alsof het lukte, zodat je het
+        // bevestigingsvenster kan bekijken. Er wordt dan niets verstuurd
+        if (import.meta.env.DEV) {
+            setStatus('idle');
+            setFormData(empty);
+            setMelding(true);
+            return;
+        }
         try {
             const res = await fetch('/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ 'form-name': 'contact', ...formData }).toString()
+                body: new URLSearchParams({
+                    'form-name': 'contact',
+                    name: formData.name,
+                    company: formData.company,
+                    email: formData.email,
+                    phone: formData.phone,
+                    topic: formData.topic,
+                    message: formData.message
+                }).toString()
             });
             if (res.ok) {
-                setStatus('success');
+                setStatus('idle');
                 setFormData(empty);
+                setMelding(true);
             } else {
                 setStatus('error');
             }
@@ -53,31 +75,11 @@ export default function ContactForm() {
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
-    if (status === 'success') {
-        return (
-            <div className="py-16">
-                <span className="w-14 h-14 rounded-full border border-accent/40 text-accent flex items-center justify-center">
-                    <Check size={24} strokeWidth={1.75} />
-                </span>
-                <h3 className="mt-8 font-serif text-4xl text-foreground">{nl ? 'Bedankt.' : 'Thank you.'}</h3>
-                <p className="mt-4 text-lg text-foreground/60 max-w-md leading-relaxed">
-                    {nl ? 'We hebben uw aanvraag goed ontvangen en nemen binnen 24 uur contact met u op.' : 'We have received your request and will get back to you within 24 hours.'}
-                </p>
-                <button
-                    type="button"
-                    onClick={() => setStatus('idle')}
-                    className="mt-8 text-sm font-medium text-foreground/70 hover:text-accent transition-colors"
-                >
-                    {nl ? 'Nog een bericht sturen' : 'Send another message'}
-                </button>
-            </div>
-        );
-    }
-
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-6 h-full">
+            <SuccesMelding open={melding} onClose={() => setMelding(false)} />
             <div>
-                <p className={labelClass}>{nl ? 'Waarover gaat het?' : 'What is it about?'}</p>
+                <p className={labelClass}>{nl ? 'Waarover gaat het? *' : 'What is it about? *'}</p>
                 <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={nl ? 'Onderwerp' : 'Topic'}>
                     {TOPICS.map((t) => {
                         const on = formData.topic === t.value;
@@ -87,8 +89,8 @@ export default function ContactForm() {
                                 type="button"
                                 role="radio"
                                 aria-checked={on}
-                                onClick={() => setFormData((prev) => ({ ...prev, topic: on ? '' : t.value }))}
-                                className={`px-4 py-2 rounded-full border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${on ? 'bg-foreground border-foreground text-background' : 'bg-transparent border-foreground/15 text-foreground/70 hover:border-foreground/40 hover:text-foreground'}`}
+                                onClick={() => setFormData((prev) => ({ ...prev, topic: t.value }))}
+                                className={`px-4 py-2 max-lg:py-3 rounded-full border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${on ? 'bg-foreground border-foreground text-background' : 'bg-transparent border-foreground/15 text-foreground/70 hover:border-foreground/40 hover:text-foreground'}`}
                             >
                                 {t[language]}
                             </button>
@@ -97,6 +99,14 @@ export default function ContactForm() {
                 </div>
             </div>
 
+            {workshop ? (
+                <WorkshopFormulier
+                    data={formData}
+                    setData={setFormData}
+                    onSucces={() => { setFormData(empty); setMelding(true); }}
+                />
+            ) : (
+            <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="name" className={labelClass}>{nl ? 'Naam *' : 'Name *'}</label>
@@ -117,8 +127,8 @@ export default function ContactForm() {
             </div>
 
             <div className="flex-1 flex flex-col">
-                <label htmlFor="message" className={labelClass}>{nl ? 'Uw vraag' : 'Your question'}</label>
-                <textarea id="message" rows="5" value={formData.message} onChange={handleInputChange} className={`${fieldClass} resize-none flex-1 min-h-[140px]`} placeholder={nl ? 'Beschrijf kort uw situatie of wat u wilt bereiken.' : 'Briefly describe your situation or what you want to achieve.'} />
+                <label htmlFor="message" className={labelClass}>{nl ? 'Wat wil je bespreken? *' : 'What would you like to discuss? *'}</label>
+                <textarea required id="message" rows="5" value={formData.message} onChange={handleInputChange} className={`${fieldClass} resize-none flex-1 min-h-[140px]`} placeholder={nl ? 'Beschrijf kort je situatie of wat je wilt bereiken.' : 'Briefly describe your situation or what you want to achieve.'} />
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center gap-5 mt-2">
@@ -131,6 +141,8 @@ export default function ContactForm() {
                     </p>
                 )}
             </div>
-        </form>
+            </form>
+            )}
+        </div>
     );
 }

@@ -27,7 +27,7 @@ const STATIC_ROUTES = [
     { path: '/', priority: '1.0', changefreq: 'weekly' },
     { path: '/custom-oplossingen', priority: '0.8', changefreq: 'monthly' },
     { path: '/workshops', priority: '0.8', changefreq: 'monthly' },
-    { path: '/ai-begeleiding', priority: '0.8', changefreq: 'monthly' },
+    // /ai-begeleiding (AI-agents) is tijdelijk offline en staat daarom niet in de sitemap (6/11)
     { path: '/team', priority: '0.6', changefreq: 'monthly' },
     { path: '/contact', priority: '0.7', changefreq: 'monthly' },
     { path: '/projecten', priority: '0.8', changefreq: 'weekly' },

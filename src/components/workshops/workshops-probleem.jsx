@@ -20,29 +20,29 @@ const situaties = {
     nl: [
         {
             title: 'Iedereen doet zijn eigen ding',
-            desc: 'De een gebruikt ChatGPT, de ander Copilot, een derde nog niets. Wat werkt, blijft bij één persoon hangen.'
+            desc: 'Je ene collega gebruikt ChatGPT, de andere Copilot, een derde niets. Iedereen zoekt het zelf uit en niemand weet wat de ander doet.'
         },
         {
             title: 'Elke keer opnieuw uitleggen',
-            desc: 'AI weet niets over uw klanten, uw producten of uw manier van werken. Dus krijgt uw team algemene antwoorden, of begint het elk gesprek van nul.'
+            desc: 'Elke nieuwe chat begint bij nul. Je typt telkens opnieuw wat je bedrijf doet, voor wie, en hoe je het graag hebt.'
         },
         {
             title: 'Chatten in plaats van laten werken',
-            desc: 'Vraag, antwoord, kopiëren, plakken, bijsturen. Het helpt, maar het eigenlijke werk blijft bij uw team liggen.'
+            desc: 'Je stelt een vraag, past het antwoord drie keer aan en kopieert het dan in je mail. AI helpt, maar het meeste werk doe je nog altijd zelf.'
         }
     ],
     en: [
         {
             title: 'Everyone does their own thing',
-            desc: 'One person uses ChatGPT, another Copilot, a third nothing yet. What works stays with one person.'
+            desc: 'One colleague uses ChatGPT, another Copilot, a third nothing at all. Everyone figures it out alone and nobody knows what the others do.'
         },
         {
             title: 'Explaining it all again, every time',
-            desc: 'AI knows nothing about your customers, your products or the way you work. So your team gets generic answers, or starts every conversation from scratch.'
+            desc: 'Every new chat starts from scratch. You type out again and again what your company does, for whom, and how you like things done.'
         },
         {
             title: 'Chatting instead of letting it work',
-            desc: 'Question, answer, copy, paste, adjust. It helps, but the actual work stays with your team.'
+            desc: 'You ask a question, adjust the answer three times and then copy it into your email. AI helps, but you still do most of the work yourself.'
         }
     ]
 };
@@ -54,30 +54,39 @@ export default function WorkshopsProbleem() {
     return (
         <section id="uitdaging" className="px-6 md:px-16 lg:px-24 pt-16 md:pt-24 pb-24 md:pb-32">
             <div className="max-w-7xl mx-auto">
-                <div data-reveal className="overflow-hidden pb-3 mb-12 md:mb-16">
-                    <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
-                        {nl ? 'AI is er. De werkwijze nog niet.' : 'AI is here. The way of working is not yet.'}
-                    </h2>
+                <div data-reveal className="mb-12 md:mb-16">
+                    <div className="overflow-hidden pb-3 mb-3">
+                        <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
+                            {nl ? 'Herkenbaar?' : 'Sound familiar?'}
+                        </h2>
+                    </div>
+                    <p className="rv-fade text-foreground/60 text-lg md:text-xl leading-relaxed max-w-xl">
+                        {nl
+                            ? 'Drie dingen die we in bijna elk bedrijf tegenkomen, bij kleine en grote teams.'
+                            : 'Three things we come across in almost every company, in small and large teams alike.'}
+                    </p>
                 </div>
 
                 {/* Drie lichte kaarten naast elkaar, op gsm onder elkaar: nummer en titel, een vak voor een foto of
                     animatie, dan de uitleg. De titel is altijd twee regels hoog, zodat de beeldvakken op één lijn staan.
-                    Bij hover wordt de kaart wit en tekent de L lijn zich, zoals de andere kaarten op de site */}
-                <div data-reveal className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+                    Bij hover wordt de kaart wit en tekent de L lijn zich, zoals de andere kaarten op de site.
+                    Naast elkaar pas vanaf 1280 px: op tablet en kleine laptop (768 tot 1279) staan de kaarten onder
+                    elkaar en liggend, met de tekst links en het beeld rechts, zodat de visuals hun leesbare maat houden */}
+                <div data-reveal className="grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-10">
                     {situaties[language].map((s, i) => (
                         <div
                             key={i}
-                            className="rv-card group relative flex flex-col rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-8 md:p-9 transition-colors duration-500 hover:bg-white hover:border-foreground/15"
+                            className="rv-card group relative flex flex-col rounded-3xl bg-[#fafafa] border border-foreground/[0.07] p-8 md:p-9 transition-colors duration-500 hover:bg-white hover:border-foreground/15 md:max-xl:grid md:max-xl:grid-cols-2 md:max-xl:grid-rows-[auto_auto_1fr] md:max-xl:gap-x-10 md:max-xl:items-start"
                         >
                             <CornerTrace />
                             <span className="text-sm text-accent tabular-nums">/{String(i + 1).padStart(2, '0')}</span>
-                            <h3 className="mt-3 min-h-[2.5em] text-2xl font-medium text-foreground leading-tight">{s.title}</h3>
-                            <div className="relative mt-6 aspect-[4/3] rounded-2xl overflow-hidden bg-foreground/[0.04] flex items-center justify-center">
+                            <h3 className="mt-3 min-h-[2.5em] max-xl:min-h-0 text-2xl font-medium text-foreground leading-tight">{s.title}</h3>
+                            <div className="relative mt-6 md:max-xl:mt-0 md:max-xl:[grid-column:2] md:max-xl:[grid-row:1/4] aspect-[4/3] rounded-2xl overflow-hidden bg-foreground/[0.04] flex items-center justify-center">
                                 {beelden[i] || (import.meta.env.DEV && (
                                     <span className="text-sm text-foreground/30">{nl ? 'Beeld volgt' : 'Visual to follow'}</span>
                                 ))}
                             </div>
-                            <p className="mt-7 text-foreground/60 text-base leading-relaxed">{s.desc}</p>
+                            <p className="mt-7 md:max-xl:mt-4 text-foreground/60 text-base leading-relaxed">{s.desc}</p>
                         </div>
                     ))}
                 </div>

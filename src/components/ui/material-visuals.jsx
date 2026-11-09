@@ -64,7 +64,7 @@ const PHOTO_LAYOUTS = {
 
 const PHOTO_TEXT = {
     nl: {
-        label: 'Twee foto\'s van dezelfde minikraan, bij de uitgifte en bij de terugkomst. De AI vergelijkt ze en wijst op nieuwe schade aan de romp. U kiest: de schade doorrekenen of aangeven dat er geen schade is.',
+        label: 'Twee foto\'s van dezelfde minikraan, bij de uitgifte en bij de terugkomst. De AI vergelijkt ze en wijst op nieuwe schade aan de romp. Jij kiest: de schade doorrekenen of aangeven dat er geen schade is.',
         heading: 'Materiaalbeheer',
         sub: 'Minikraan 4',
         before: 'Bij uitgifte',
@@ -76,8 +76,8 @@ const PHOTO_TEXT = {
         none: 'Geen schade'
     },
     en: {
-        label: 'Two photos of the same mini excavator, at handover and at return. The AI compares them and points out new damage to the body. You choose: charge for the damage or mark it as no damage.',
-        heading: 'Equipment management',
+        label: 'Two photos of the same mini excavator, at handover and at return. The AI compares them and points out new damage to the body. You choose: charge for the damage or confirm there is no damage.',
+        heading: 'Equipment',
         sub: 'Mini excavator 4',
         before: 'At handover',
         after: 'At return',
@@ -130,21 +130,21 @@ const ASK_TEXT = {
         label: 'Een chat. Een medewerker vraagt waar de minikraan staat. De AI antwoordt meteen: op werf Noord, bij Jan R., tot vrijdag 6 november, en vrij vanaf maandag 9 november.',
         heading: 'Materiaalbeheer',
         assistant: 'AI-assistent',
-        placeholder: 'Stel een vraag aan uw materiaal',
-        person: 'Uw medewerker',
+        placeholder: 'Stel een vraag aan je materiaal',
+        person: 'Je medewerker',
         question: 'Waar staat de minikraan?',
         answer: 'De minikraan staat op werf Noord.',
         rows: [['Bij', 'Jan R.'], ['Tot', 'Vrijdag 6 november'], ['Weer vrij', 'Maandag 9 november']]
     },
     en: {
-        label: 'A chat. An employee asks where the mini excavator is. The AI answers right away: at Site North, with Jan R., until Friday 6 November, and free from Monday 9 November.',
-        heading: 'Equipment management',
+        label: 'A chat. An employee asks where the mini excavator is. The AI answers right away: at Site North, with Jan R. until Friday 6 November, and available again from Monday 9 November.',
+        heading: 'Equipment',
         assistant: 'AI assistant',
         placeholder: 'Ask your equipment a question',
         person: 'Your employee',
         question: 'Where is the mini excavator?',
         answer: 'The mini excavator is at Site North.',
-        rows: [['With', 'Jan R.'], ['Until', 'Friday 6 November'], ['Free again', 'Monday 9 November']]
+        rows: [['With', 'Jan R.'], ['Until', 'Friday 6 November'], ['Available from', 'Monday 9 November']]
     }
 };
 
@@ -210,7 +210,7 @@ const SCAN_TEXT = {
         machine: 'Mini excavator 4',
         screen: 'Handover',
         scanned: 'Scanned',
-        fields: [['To', 'Jan R.'], ['Going to', 'Site North'], ['Until', 'Friday 6 November']],
+        fields: [['Issued to', 'Jan R.'], ['Destination', 'Site North'], ['Until', 'Friday 6 November']],
         confirm: 'Confirm'
     }
 };
@@ -297,7 +297,7 @@ const ALERT_TEXT = {
     },
     en: {
         label: 'A list of three machines. Aerial lift 2 is three days overdue, excavator 7 has been sitting unused at Site North for five weeks, and mini excavator 4 is on schedule.',
-        heading: 'Equipment management',
+        heading: 'Equipment',
         sub: 'Alerts',
         items: [
             { name: 'Aerial lift 2', detail: 'Rented out until 1 November', status: '3 days overdue', alert: true },

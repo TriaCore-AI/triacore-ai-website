@@ -31,7 +31,10 @@ const quotes = [
         logo: theBoxLogo,
         photo: estherPhoto,
         name: 'Esther Vandebroek',
-        role: 'Beleidsmedewerker Ondernemen Stebo vzw · Projectmanager The Box Vlaanderen',
+        role: {
+            nl: 'Beleidsmedewerker Ondernemen Stebo vzw · Projectmanager The Box Vlaanderen',
+            en: 'Entrepreneurship Policy Officer, Stebo vzw · Project Manager, The Box Vlaanderen'
+        },
         quote: {
             nl: 'Een schot in de roos! Tijdens vier leer- & netwerkavonden van The Box Vlaanderen inspireerden Lucas en Rian van TriaCore AI meer dan 70 startende ondernemers in Hasselt, Turnhout, Antwerpen en Aarschot. We werkten eerder al met andere sprekers rond AI, maar voor onze doelgroep was deze workshop echt spot on. Geen ingewikkelde theorie, maar concrete tools waarmee ondernemers meteen aan de slag kunnen, ongeacht hun kennisniveau. Een absolute aanrader!',
             en: 'Spot on! Across four learning and networking evenings for The Box Vlaanderen, Lucas and Rian of TriaCore AI inspired more than 70 starting entrepreneurs in Hasselt, Turnhout, Antwerp and Aarschot. We had worked with other AI speakers before, but for our audience this workshop was exactly right. No complicated theory, just practical tools entrepreneurs can put to work straight away, whatever their level. Highly recommended!'

@@ -56,14 +56,14 @@ const SORT_TEXT = {
         options: ['Contract', 'Offerte']
     },
     en: {
-        label: 'Four new files with unclear names. The AI reads them, recognises a slip, a licence and a contract, pulls out the data and puts them in the right folder. With the fourth, the AI is unsure between contract and quote, and asks a person.',
+        label: 'Four new files with unclear names. The AI reads them, recognises a slip, a licence and a contract, pulls out the data and files each one in the right folder. With the fourth, the AI cannot decide between contract and quote, so it asks a person.',
         heading: 'Documents',
         sub: 'Just in',
         files: [
             { file: 'scan_0412.pdf', seen: 'Slip 20461', data: 'Site North, 18.4 t', folder: 'Slips' },
-            { file: 'IMG_2087.jpg', seen: 'Licence Tom V.', data: 'Valid until 2031', folder: 'Licences' },
+            { file: 'IMG_2087.jpg', seen: 'Tom V.\'s licence', data: 'Valid until 2031', folder: 'Licences' },
             { file: 'doc_nov_final.pdf', seen: 'Supplier contract', data: 'Runs until 30 June 2027', folder: 'Contracts' },
-            { file: 'document (3).pdf', seen: 'Contract or quote?', data: 'Still to check', folder: 'To check', doubt: true }
+            { file: 'document (3).pdf', seen: 'Contract or quote?', data: 'To be checked', folder: 'To check', doubt: true }
         ],
         assistant: 'AI assistant',
         doubt: 'I am unsure: is this a contract or a quote?',
@@ -137,10 +137,10 @@ const ASK_TEXT = {
         label: 'Een chat. Een medewerker vraagt waar de bon van werf Noord van maandag is. De AI toont meteen de juiste bon, met het nummer, de datum en het gewicht, en een knop om ze te openen.',
         heading: 'Documenten',
         assistant: 'AI-assistent',
-        placeholder: 'Stel een vraag aan uw documenten',
-        person: 'Uw medewerker',
+        placeholder: 'Stel een vraag aan je documenten',
+        person: 'Je medewerker',
         question: 'Waar is de bon van werf Noord van maandag?',
-        answer: 'Dit is de bon die u zoekt.',
+        answer: 'Dit is de bon die je zoekt.',
         rows: [['Bon', '20461'], ['Datum', 'Maandag 2 november'], ['Gewicht', '18,4 t']],
         open: 'Open de bon'
     },
@@ -151,7 +151,7 @@ const ASK_TEXT = {
         placeholder: 'Ask your documents a question',
         person: 'Your employee',
         question: 'Where is Monday\'s slip for Site North?',
-        answer: 'This is the slip you are looking for.',
+        answer: 'Here is the slip you are looking for.',
         rows: [['Slip', '20461'], ['Date', 'Monday 2 November'], ['Weight', '18.4 t']],
         open: 'Open the slip'
     }
@@ -218,13 +218,13 @@ const MISSING_TEXT = {
         text: 'De code 95 van Els M. en het contract van Jan R.'
     },
     en: {
-        label: 'An overview of five drivers and their documents. Almost everything has a tick, but the code 95 of Els M. and the contract of Jan R. are missing.',
+        label: 'An overview of five drivers and their documents. Almost everything has a tick, but Els M.\'s Code 95 and Jan R.\'s contract are missing.',
         heading: 'Documents',
         sub: 'What is missing',
         columns: ['Licence', 'Code 95', 'Contract', 'Medical check'],
         missing: 'Missing',
         title: 'Two documents are missing.',
-        text: 'The code 95 of Els M. and the contract of Jan R.'
+        text: 'Els M.\'s Code 95 and Jan R.\'s contract.'
     }
 };
 
@@ -308,20 +308,20 @@ const EXPIRY_TEXT = {
         ],
         auto: 'Vanzelf verstuurd',
         subject: 'De keuring van heftruck 3 vervalt op 4 december',
-        body: 'U hebt nog een maand om de nieuwe keuring in te plannen.'
+        body: 'Je hebt nog een maand om de nieuwe keuring in te plannen.'
     },
     en: {
-        label: 'A list of what expires soon: the inspection of forklift 3 on 4 December, the licence of Karim B. on 9 December and a contract on 31 January. For each of them a reminder goes out automatically a month in advance.',
+        label: 'A list of what expires soon: the inspection of forklift 3 on 4 December, Karim B.\'s licence on 9 December and a supplier contract on 31 January. For each one, a reminder goes out automatically a month in advance.',
         heading: 'Documents',
         sub: 'Expiry dates',
         items: [
             { name: 'Forklift 3 inspection', date: '4 December 2026', status: 'Reminder sent', sent: true },
-            { name: 'Licence Karim B.', date: '9 December 2026', status: 'Reminder on 9 November' },
+            { name: 'Karim B.\'s licence', date: '9 December 2026', status: 'Reminder on 9 November' },
             { name: 'Supplier contract', date: '31 January 2027', status: 'Reminder on 31 December' }
         ],
         auto: 'Sent automatically',
-        subject: 'The inspection of forklift 3 expires on 4 December',
-        body: 'You have one more month to schedule the new inspection.'
+        subject: 'Forklift 3 inspection expires on 4 December',
+        body: 'You have a month left to schedule the new inspection.'
     }
 };
 

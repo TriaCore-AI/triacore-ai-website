@@ -14,45 +14,50 @@ import { useLanguage } from '../../context/LanguageContext';
 
 // Elk woord heeft een vaste plaats, met de hand gekozen op de volle breedte (de linkerkant van de kaart op
 // 520 px): x is het midden van het woord, dy de afstand boven (-) of onder (+) het midden van de trechter.
-// Drie zones: aan de buitenkant, waar de trechter het wijdst is, de lange woorden over de volle hoogte (ze
-// mogen er een beetje uit lopen, waar de bogen vervagen); in het midden de middellange; bij de kaart de
-// korte. Woorden die horizontaal overlappen, liggen minstens 50 px uit elkaar in de hoogte; woorden op
-// ongeveer dezelfde hoogte raken elkaar horizontaal niet. Een paar woorden staan iets groter en vet (b).
-// Op een kleiner scherm blijven de woorden in dezelfde verhouding staan (zie placeWords)
-const PLACES = [
-    { x: 95, dy: -250, size: 16 },
-    { x: 110, dy: -60, size: 19, b: true },
-    { x: 120, dy: 60, size: 16 },
-    { x: 140, dy: 170, size: 18, b: true },
-    { x: 95, dy: 255, size: 15 },
-    { x: 150, dy: -165, size: 15 },
-    { x: 290, dy: -115, size: 15 },
-    { x: 300, dy: 120, size: 15 },
-    { x: 300, dy: -35, size: 17, b: true },
-    { x: 455, dy: -15, size: 16, b: true },
-    { x: 470, dy: 35, size: 14 },
-    { x: 265, dy: 45, size: 19, b: true },
-    { x: 400, dy: -50, size: 15 },
-    { x: 395, dy: 40, size: 15 },
-    { x: 497, dy: -40, size: 13 }
+// De woorden staan in ringen die mee met de trechter naar de kaart toe lopen: 5, 4, 3, 2 en 1 woord(en).
+// Elke ring staat op een vaste afstand van de vorige, en zijn woorden vallen telkens precies tussen die van
+// de ring ervoor (ROW: de afstand tussen twee woorden in dezelfde ring). Zo vormen ze samen een driehoek die
+// in de kaart uitkomt. De lange woorden staan in de buitenste ring, de kortste vlak bij de kaart. Een paar
+// woorden staan iets groter en vet (b). Op een kleiner scherm blijven de woorden in dezelfde verhouding
+// staan (zie placeWords)
+const ROW = 110;
+const RINGS = [
+    { x: 120, size: 16 },
+    { x: 225, size: 15 },
+    { x: 320, size: 15 },
+    { x: 405, size: 15 },
+    { x: 475, size: 14 }
 ];
+// Per ring de woorden van boven naar onder, verwijzend naar WORDS, en welke vet staan
+const RING_WORDS = [[0, 1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11], [13, 12], [14]];
+const BOLD = [1, 3, 6, 12];
+const PLACES = [];
+RING_WORDS.forEach((ids, r) => ids.forEach((i, n) => {
+    PLACES[i] = {
+        x: RINGS[r].x,
+        dy: (n - (ids.length - 1) / 2) * ROW,
+        size: RINGS[r].size + (BOLD.includes(i) ? 2 : 0),
+        b: BOLD.includes(i)
+    };
+}));
 
 const SHOW_WORDS = true;
 
 const WORDS = {
     nl: [
-        'Verspreide documenten', 'Wachten op goedkeuring', 'Manuele verwerking',
-        'Papieren werkbonnen', 'Kopiëren en plakken', 'Dubbele registratie',
-        'Bellen naar kantoor', 'Onvolledige bonnen', 'Losse mails',
-        'Excel', 'Zoeken', 'Overtypen',
-        'Papierwerk', 'Dubbel werk', 'Fouten'
+        // Per ring, van buiten naar binnen
+        'Verspreide documenten', 'Wachten op goedkeuring', 'Kopiëren en plakken', 'Ingewikkelde planning', 'Papieren werkbonnen',
+        'WhatsApp-groepen', 'Geen overzicht', 'Werken in Excel', 'Achteraf invullen',
+        'Losse mails', 'Manueel werk', 'Dubbel werk',
+        'Overtypen', 'Post-its',
+        'Zoeken'
     ],
     en: [
-        'Scattered documents', 'Waiting for approval', 'Manual processing',
-        'Paper work orders', 'Copy and paste', 'Double entry',
-        'Calling the office', 'Incomplete notes', 'Loose emails',
-        'Excel', 'Searching', 'Retyping',
-        'Paperwork', 'Double work', 'Errors'
+        'Scattered documents', 'Waiting for approval', 'Copy and paste', 'Complex scheduling', 'Paper job sheets',
+        'WhatsApp groups', 'No overview', 'Working in Excel', 'Filling in later',
+        'Stray emails', 'Manual work', 'Duplicate work',
+        'Retyping', 'Sticky notes',
+        'Searching'
     ]
 };
 
@@ -67,8 +72,8 @@ const RESULT_STYLE = {
     1: { xr: (cL) => 0.25 * cL, gap: 50, size: 16 }
 };
 const RESULT_TEXT = {
-    nl: ['Live overzicht', 'Alles op één plek', 'Meteen terug te vinden', 'Correcte facturen', 'Minder fouten', 'Tijd voor het echte werk'],
-    en: ['Live overview', 'Everything in one place', 'Found right away', 'Correct invoices', 'Fewer errors', 'Time for the real work']
+    nl: ['Live overzicht', 'Alles op één plek', 'Eén keer ingeven', 'Minder fouten', 'Werk dat vanzelf loopt', 'Meer gedaan met hetzelfde team'],
+    en: ['Live overview', 'Everything in one place', 'Enter it once', 'Fewer errors', 'Work that runs itself', 'More done with the same team']
 };
 
 // Een vaste, licht wisselende tint en dikte per woord. Een vaste reeks, zodat het er bij elk bezoek
@@ -99,7 +104,7 @@ const fitHeight = (w) => {
 // De groene lijntjes: hoe lang ze zijn (als deel van het hele pad), hoeveel seconden één tocht duurt, om de
 // hoeveel seconden er een nieuw vertrekt, en hoe sterk de kleur is op haar sterkst. Vertrekken ze sneller na
 // elkaar dan één tocht duurt, dan lopen er meerdere tegelijk op een boog (copies)
-const FLOW = { segment: 0.16, duration: 5, every: 3, opacity: 0.5 };
+const FLOW = { segment: 0.16, duration: 8, every: 3, opacity: 0.22 };
 const FLOW_COPIES = Math.ceil(FLOW.duration / FLOW.every);
 // De straal van de hoeken van de kaart (rounded-3xl)
 const CARD_RADIUS = 24;
@@ -192,25 +197,12 @@ const fromOuter = (xo, yo, xc, yc) => `M${xo} ${yo} Q${ctrlX(xo, xc)} ${ctrlY(yo
 // Van de kaart terug naar de buitenkant, als vervolg van een pad
 const toOuter = (xc, yc, xo, yo) => `Q${ctrlX(xo, xc)} ${ctrlY(yo, yc)} ${xo} ${yo}`;
 
-// Hoe ver de linker trechter op horizontale positie x boven en onder het midden reikt (de halve hoogte),
-// precies volgens de boog hierboven
-const halfAt = (d, x) => {
-    const qx = ctrlX(0, d.cL);
-    const qy = ctrlY(d.pad, d.mT);
-    const a = d.cL - 2 * qx;
-    const b = 2 * qx;
-    const u = Math.min(1, Math.max(0, Math.abs(a) < 1e-6 ? x / b : (-b + Math.sqrt(b * b + 4 * a * x)) / (2 * a)));
-    const top = (1 - u) * (1 - u) * d.pad + 2 * u * (1 - u) * qy + u * u * d.mT;
-    return d.h / 2 - top;
-};
+// Welke woorden als eerste een plaats krijgen, verwijzend naar WORDS: ring per ring, van buiten naar binnen
+const PRIORITY = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-// Welke woorden als eerste een plaats krijgen, verwijzend naar WORDS. Eerst de vette, verspreid over de
-// trechter, dan telkens een woord uit een andere zone, zodat wat overblijft ook met minder woorden
-// gelijkmatig verspreid staat
-const PRIORITY = [1, 3, 8, 11, 9, 6, 7, 10, 0, 4, 5, 2, 12, 13, 14];
-
-// Elk woord op dezelfde plaats als op een groot scherm, in verhouding tot de compositie. Past een woord daar
-// niet zonder een ander te raken, of niet tussen de rand van het scherm en de kaart, dan valt het weg
+// Elk woord op dezelfde plaats als op een groot scherm, in verhouding tot de compositie. De woorden mogen
+// over de bogen vallen, zodat de ringen hun vorm houden. Past een woord niet zonder een ander te raken, of
+// niet tussen de rand van het scherm en de kaart, dan valt het weg
 const placeWords = (d, texts) => {
     const k = d.cL / 520;
     const edge = 10 - (window.innerWidth - d.w) / 2;
@@ -223,8 +215,7 @@ const placeWords = (d, texts) => {
         const max = d.cL - 10 - half;
         if (min > max) return;
         const x = Math.max(min, Math.min(max, pl.x * k));
-        const room = Math.max(0, halfAt(d, x) - size);
-        const dy = Math.max(-room, Math.min(room, pl.dy * d.hk));
+        const dy = pl.dy * d.hk;
         const clash = placed.some((o) => Math.abs(o.x - x) < o.half + half + 2 && Math.abs(o.dy - dy) < (o.size + size) / 2 + 6);
         if (!clash) placed.push({ i, x, dy, size, half });
     });
@@ -232,7 +223,7 @@ const placeWords = (d, texts) => {
 };
 
 // De trechter rechtop, voor een gsm. Bovenaan is hij breed en wordt hij smal naar de kaart toe, onderaan gaat
-// hij weer open. Boven staan de woorden, verspreid; onder de resultaten, om de beurt links en rechts. De
+// hij weer open. Boven staan de woorden, verspreid; onder de resultaten, gecentreerd onder elkaar. De
 // bogen vertrekken op de boven- en onderkant van de kaart, op een kwart van de breedte naar binnen, en lopen
 // tot de rand.
 
@@ -241,15 +232,15 @@ const placeWords = (d, texts) => {
 // korte woorden bij de kaart
 const VERTICAL_WORDS = [
     { i: 0, v: 0.08, c: -0.55, size: 13 },
-    { i: 9, v: 0.2, c: -0.8, size: 15 },
-    { i: 7, v: 0.2, c: 0.45, size: 13 },
+    { i: 7, v: 0.2, c: -0.8, size: 15 },
+    { i: 6, v: 0.2, c: 0.45, size: 13 },
     { i: 1, v: 0.32, c: -0.1, size: 15 },
-    { i: 10, v: 0.44, c: -0.75, size: 13 },
-    { i: 12, v: 0.44, c: 0.7, size: 13 },
-    { i: 8, v: 0.56, c: -0.2, size: 15 },
-    { i: 11, v: 0.68, c: 0.45, size: 15 },
-    { i: 13, v: 0.8, c: -0.35, size: 13 },
-    { i: 14, v: 0.92, c: 0.1, size: 13 }
+    { i: 14, v: 0.44, c: -0.75, size: 13 },
+    { i: 13, v: 0.44, c: 0.7, size: 13 },
+    { i: 9, v: 0.56, c: -0.2, size: 15 },
+    { i: 12, v: 0.68, c: 0.45, size: 15 },
+    { i: 11, v: 0.8, c: -0.35, size: 13 },
+    { i: 3, v: 0.92, c: 0.1, size: 13 }
 ];
 
 function FunnelVertical({ w, h }) {
@@ -279,16 +270,14 @@ function FunnelVertical({ w, h }) {
     });
 
     const resultGap = (h - cB - 16) / RESULT_TEXT[language].length;
-    // De resultaten staan om de beurt links en rechts, elk op een eigen hoogte, en mogen buiten de trechter vallen
-    const results = RESULT_TEXT[language].map((text, i, all) => {
-        const half = text.length * 15 * 0.27;
-        return {
-            text,
-            x: mid + (i % 2 ? 1 : -1) * 0.6 * Math.max(0, screenHalf - half),
-            y: cB + resultGap * (i + 0.6),
-            accent: i === all.length - 1
-        };
-    });
+    // De resultaten staan gecentreerd onder elkaar in het midden van de trechter, elk op een eigen hoogte:
+    // orde tegenover de verspreide woorden erboven
+    const results = RESULT_TEXT[language].map((text, i, all) => ({
+        text,
+        x: mid,
+        y: cB + resultGap * (i + 0.6),
+        accent: i === all.length - 1
+    }));
 
     return (
         <div className="absolute inset-0">
@@ -331,7 +320,7 @@ function FunnelVertical({ w, h }) {
                 <div className="flex flex-col items-center">
                     <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="h-11 w-auto" />
                     <span className="mt-1 text-xs text-foreground/60 whitespace-nowrap">
-                        {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
+                        {language === 'nl' ? 'Jouw tool op maat' : 'Your custom tool'}
                     </span>
                 </div>
             </div>
@@ -490,7 +479,7 @@ export default function FunnelVisual() {
                         <div className="flex flex-col items-center">
                             <img src="/logo/TriaCore%20Logo%20Zwart.svg" alt="" className="w-auto" style={{ height: 96 * d.s }} />
                             <span className="mt-2 text-foreground/60 whitespace-nowrap" style={{ fontSize: Math.max(12, 15 * d.s) }}>
-                                {language === 'nl' ? 'Uw tool op maat' : 'Your custom tool'}
+                                {language === 'nl' ? 'Jouw tool op maat' : 'Your custom tool'}
                             </span>
                         </div>
                     </div>

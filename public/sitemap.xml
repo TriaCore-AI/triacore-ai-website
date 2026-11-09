@@ -16,11 +16,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://triacore.be/ai-begeleiding</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://triacore.be/team</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

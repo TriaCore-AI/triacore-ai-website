@@ -61,7 +61,7 @@ const DRIVER_TEXT = {
         note: 'Staat meteen in de planning op kantoor.'
     },
     en: {
-        label: 'The driver\'s phone shows the trip from Hasselt to Liège, with loaded and unloaded ticked off. What the driver registers appears right away in the right place in the planning at the office, without paper or a phone call.',
+        label: 'The driver\'s phone shows the trip from Hasselt to Liège, with loaded and unloaded ticked off. What the driver logs appears instantly in the right place in the office schedule, with no paper or phone calls.',
         screen: 'My trips',
         today: 'Today',
         loaded: 'Loaded',
@@ -69,11 +69,11 @@ const DRIVER_TEXT = {
         signed: 'Slip signed',
         next: 'Next trip',
         finish: 'Finish trip',
-        office: 'Planning at the office',
+        office: 'Office schedule',
         driver: 'Tom V.',
-        recorded: 'Registered right away',
-        none: 'Without paper or a phone call',
-        note: 'Appears right away in the planning at the office.'
+        recorded: 'Logged instantly',
+        none: 'No paper, no phone calls',
+        note: 'Shows up in the office schedule instantly.'
     }
 };
 
@@ -181,6 +181,8 @@ const CHECK_LAYOUTS = {
 const CHECK_TEXT = {
     nl: {
         label: 'Een weekplanning waarin twee ritten opvallen. Karim B. heeft op dinsdag om 06:30 twee ritten, en de rit van Els M. op woensdag lijkt niet te kloppen: 38 ton op een wagen van 24 ton. De planner kan beide aanpassen voor ze doorgaan.',
+        heading: 'Planning',
+        cities: {},
         sub: 'Week 46',
         days: ['Maandag', 'Dinsdag', 'Woensdag'],
         off: 'Vrij',
@@ -193,7 +195,10 @@ const CHECK_TEXT = {
         ]
     },
     en: {
-        label: 'A weekly schedule in which two trips stand out. Karim B. has two trips on Tuesday at 06:30, and the trip of Els M. on Wednesday does not seem right: 38 tonnes on a 24-tonne truck. The planner can change both before they go ahead.',
+        label: 'A weekly schedule in which two trips stand out. Karim B. has two trips on Tuesday at 06:30, and Els M.\'s trip on Wednesday looks wrong: 38 tonnes on a 24-tonne truck. The planner can change both before they go ahead.',
+        heading: 'Schedule',
+        // Steden met een eigen Engelse naam
+        cities: { Gent: 'Ghent' },
         sub: 'Week 46',
         days: ['Monday', 'Tuesday', 'Wednesday'],
         off: 'Off',
@@ -202,7 +207,7 @@ const CHECK_TEXT = {
         adjust: 'Adjust',
         issues: [
             ['Double booking:', 'Karim B. has two trips on Tuesday at 06:30.'],
-            ['Does not seem right:', 'Wednesday 38 t for Els M., on a 24 t truck.']
+            ['Looks wrong:', 'Wednesday 38 t for Els M., on a 24 t truck.']
         ]
     }
 };
@@ -226,7 +231,7 @@ function CheckTrip({ trip, fonts, t }) {
     const [from, to, time, load, problem] = trip;
     return (
         <div className={`h-full flex flex-col justify-center overflow-hidden rounded-md bg-white border ${problem ? 'border-accent' : 'border-foreground/[0.08]'}`} style={{ paddingLeft: u(9) }}>
-            <span className="text-foreground leading-tight"><Route from={from} to={to} size={fonts.route} /></span>
+            <span className="text-foreground leading-tight"><Route from={from} to={t.cities[to] || to} size={fonts.route} /></span>
             <span className={`whitespace-nowrap leading-tight ${problem ? 'font-medium text-foreground' : 'text-foreground/50'}`} style={{ marginTop: u(2), fontSize: u(fonts.meta) }}>
                 {problem === 'double' ? t.twoTrips : `${time}, ${load} t`}
             </span>
@@ -239,7 +244,7 @@ function CheckStage({ layout, t }) {
     const template = `repeat(${columns.length}, 1fr)`;
     return (
         <ToolStage W={W} H={H}>
-            <ToolWindow win={win} pad={pad} heading="Planning" sub={t.sub} headingSize={heading} subSize={sub}>
+            <ToolWindow win={win} pad={pad} heading={t.heading} sub={t.sub} headingSize={heading} subSize={sub}>
                 <div className="absolute" style={{ left: u(pad), right: u(pad), top: u(gridY) }}>
                     <div className="grid" style={{ marginLeft: u(nameW), gridTemplateColumns: template, columnGap: u(gap), height: u(dayH) }}>
                         {columns.map((c) => <span key={c} className="font-medium text-foreground" style={{ fontSize: u(11.5), paddingLeft: u(2) }}>{t.days[c]}</span>)}
