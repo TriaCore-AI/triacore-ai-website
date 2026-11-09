@@ -240,7 +240,7 @@ const oplossingen = [
                 name: { nl: 'Vanzelf opgevolgd', en: 'Followed up automatically' },
                 desc: {
                     nl: 'Herinnert partners aan wat nog ontbreekt. Niemand moet er nog achteraan bellen.',
-                    en: 'Reminds partners of what is still missing. Nobody has to chase them by phone anymore.'
+                    en: 'Reminds partners of what is still missing. Nobody has to chase them by phone any more.'
                 }
             }
         ]
@@ -251,7 +251,7 @@ const oplossingen = [
         lead: { nl: 'Weet altijd waar elke wagen en machine staat.', en: 'Always know where every vehicle and machine is.' },
         desc: {
             nl: 'Op het terrein, op een werf of verhuurd: per wagen of machine zie je waar ze staat, bij wie en tot wanneer. Zo zoekt niemand nog naar een machine en weet je meteen wat er vrij is.',
-            en: 'In the yard, on a site or rented out: for every vehicle or machine you see where it is, who has it and until when. Nobody goes looking for a machine anymore, and you know right away what is available.'
+            en: 'In the yard, on a site or rented out: for every vehicle or machine you see where it is, who has it and until when. Nobody goes looking for a machine any more, and you know right away what is available.'
         },
         ai: [
             {
@@ -463,7 +463,7 @@ export default function CustomOplossingen() {
                                         <img src={k.logo} alt={k.client} className="max-h-10 max-w-[130px] w-auto object-contain mix-blend-multiply" />
                                     </span>
                                     <span className="inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors duration-300 group-hover:text-accent">
-                                        {nl ? 'Lees de case' : 'Read the case'}
+                                        {nl ? 'Lees de case' : 'Read the case study'}
                                         <ArrowRight size={14} strokeWidth={1.75} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                                     </span>
                                 </Link>

@@ -78,7 +78,7 @@ export default function CookieBanner() {
                             <p className="text-[11px] max-md:text-[13px] text-foreground/50 leading-relaxed">
                                 {language === 'nl'
                                     ? 'Wij gebruiken noodzakelijke cookies voor een optimale ervaring.'
-                                    : 'We use necessary cookies for an optimal experience.'}
+                                    : 'We use necessary cookies for the best possible experience.'}
                             </p>
                         </div>
                         <div className="flex flex-col items-center gap-2 w-full">
@@ -92,7 +92,7 @@ export default function CookieBanner() {
                                 onClick={handleAcceptNecessary}
                                 className="w-full px-8 py-2.5 text-xs font-bold bg-slate-100 text-foreground rounded-full hover:bg-slate-200 transition-all shadow-sm"
                             >
-                                {language === 'nl' ? 'Weigeren' : 'Refuse'}
+                                {language === 'nl' ? 'Weigeren' : 'Decline'}
                             </button>
                             <button
                                 onClick={() => setShowSettings(true)}
@@ -131,11 +131,11 @@ export default function CookieBanner() {
                             {/* Analytics Toggle */}
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex-1">
-                                    <h4 className="text-sm font-bold text-foreground mb-1 uppercase tracking-tight">{language === 'nl' ? 'Analytische cookies' : 'Analytical cookies'}</h4>
+                                    <h4 className="text-sm font-bold text-foreground mb-1 uppercase tracking-tight">{language === 'nl' ? 'Analytische cookies' : 'Analytics cookies'}</h4>
                                     <p className="text-xs text-foreground/40 leading-relaxed">
                                         {language === 'nl'
                                             ? 'Helpt ons geanonimiseerde inzichten te verkrijgen in websitegebruik om de ervaring te verbeteren.'
-                                            : 'Helps us gain anonymized insights into website usage to improve the experience.'}
+                                            : 'Helps us gain anonymised insights into how the website is used, so we can improve it.'}
                                     </p>
                                 </div>
                                 <button

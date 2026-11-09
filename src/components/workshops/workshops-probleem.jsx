@@ -34,11 +34,11 @@ const situaties = {
     en: [
         {
             title: 'Everyone does their own thing',
-            desc: 'One colleague uses ChatGPT, another Copilot, a third nothing at all. Everyone figures it out alone and nobody knows what the others do.'
+            desc: 'One colleague uses ChatGPT, another Copilot, a third nothing at all. Everyone figures it out on their own and nobody knows what the others are doing.'
         },
         {
             title: 'Explaining it all again, every time',
-            desc: 'Every new chat starts from scratch. You type out again and again what your company does, for whom, and how you like things done.'
+            desc: 'Every new chat starts from scratch. Each time, you type out again what your company does, who it serves and how you like things done.'
         },
         {
             title: 'Chatting instead of letting it work',

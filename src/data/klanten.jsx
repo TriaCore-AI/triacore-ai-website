@@ -31,7 +31,7 @@ export const workshopKlanten = [
         sector: { nl: 'Medische technologie', en: 'Medical technology' },
         description: {
             nl: 'We gaven het internationale sales- en marketingteam van Medtronic een AI-training van anderhalf uur, onder meer over een Second Brain. De focus lag op praktische toepassingen die hun dagelijkse werk vlotter en productiever maken.',
-            en: "We gave Medtronic's international sales and marketing team a 90-minute AI training, covering topics such as the Second Brain. The focus was on practical applications that make their daily work smoother and more productive."
+            en: "We gave Medtronic's international sales and marketing team a 90-minute AI training session, covering topics such as building a Second Brain. The focus was on practical applications that make their daily work smoother and more productive."
         }
     },
     {
@@ -42,7 +42,7 @@ export const workshopKlanten = [
         sector: { nl: 'Ondernemerschap', en: 'Entrepreneurship' },
         description: {
             nl: 'Tijdens vier leer- en netwerkavonden gaven we meer dan 70 startende ondernemers een workshop over AI, in Hasselt, Turnhout, Antwerpen en Aarschot. Ze kregen concrete tools waarmee ze meteen aan de slag konden, ongeacht hun kennisniveau.',
-            en: 'Across four learning and networking evenings, we gave more than 70 starting entrepreneurs a workshop on AI, in Hasselt, Turnhout, Antwerp and Aarschot. They left with practical tools they could put to work straight away, whatever their level.'
+            en: 'Across four learning and networking evenings, we ran an AI workshop for more than 70 early-stage entrepreneurs in Hasselt, Turnhout, Antwerp and Aarschot. They left with practical tools they could put to work straight away, whatever their level.'
         }
     }
 ];
@@ -58,7 +58,7 @@ export function klantKaarten(language) {
             client: p.client,
             sector: p.sector[language],
             description: p.description[language],
-            cta: nl ? 'Bekijk de case' : 'View the case'
+            cta: nl ? 'Bekijk de case' : 'View the case study'
         })),
         ...workshopKlanten.map((w) => ({
             key: w.key,

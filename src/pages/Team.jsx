@@ -24,8 +24,8 @@ const TEAM = [
                 'Wat hij ontdekt, vertaalt hij naar de dagelijkse praktijk van jouw bedrijf. Met een sterke focus op duidelijke uitleg maakt hij AI begrijpelijk en haalbaar, ook voor wie er nog niet elke dag mee werkt.'
             ],
             en: [
-                'Lucas is responsible for AI and strategy at TriaCore AI. He is always looking for what is new in AI and considers what is genuinely useful for our clients.',
-                'What he discovers, he translates into the daily reality of your business. With a strong focus on clear explanation, he makes AI understandable and achievable, even for people who don\'t work with it every day.'
+                'Lucas is responsible for AI and strategy at TriaCore AI. He keeps a close eye on what is new in AI and works out what is genuinely useful for our clients.',
+                'He translates what he finds into the day-to-day reality of your business. With a strong focus on clear explanations, he makes AI understandable and achievable, even for people who don\'t use it every day.'
             ]
         },
         email: 'lucas.curto@triacore.be',
@@ -43,8 +43,8 @@ const TEAM = [
                 'Hij vertaalt bedrijfsuitdagingen naar concrete trajecten en bewaakt de rode draad tijdens het volledige project. Voor onze klanten is hij het vaste referentiepunt: je kan altijd bij hem terecht.'
             ],
             en: [
-                'Rian is the first point of contact for our clients and oversees the entire collaboration from start to finish. With a strong focus on clear communication and long term relationships, he makes sure expectations, goals and execution stay aligned.',
-                'He translates business challenges into concrete trajectories and keeps the common thread throughout the project. For our clients, he is the fixed point of reference: you can always turn to him.'
+                'Rian is the first point of contact for our clients and oversees the entire collaboration from start to finish. With a strong focus on clear communication and long-term relationships, he makes sure expectations, goals and execution stay aligned.',
+                'He turns business challenges into concrete plans and keeps the project on course throughout. For our clients, he is the constant point of contact: you can always turn to him.'
             ]
         },
         email: 'rian.mathijs@triacore.be',

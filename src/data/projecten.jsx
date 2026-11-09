@@ -34,7 +34,7 @@ export const projecten = [
         sector: { nl: 'Afbraak- en grondwerken', en: 'Demolition & earthworks' },
         title: {
             nl: 'Van papieren bonnen naar realtime overzicht bij Croes NV',
-            en: 'From paper notes to a real-time overview at Croes NV',
+            en: 'From paper transport notes to a real-time overview at Croes NV',
         },
         description: {
             nl: 'Chauffeurs vulden hun grondbankbonnen met de hand in en het kantoor typte ze achteraf over. Met een platform en een chauffeursapp komt elke bon nu meteen binnen, en Croes ziet live wat er op elke werf gebeurt.',
@@ -70,8 +70,8 @@ export const projecten = [
                     'Geen zicht: niemand zag live wat er op een werf gebeurde.',
                 ],
                 en: [
-                    'Late: notes often came in much later, sometimes after weeks.',
-                    'Double work: the office retyped every note, as well as the subcontractor drivers who were passed on by phone.',
+                    'Late: notes often came in much later, sometimes weeks afterwards.',
+                    'Duplicate work: the office retyped every note, and also entered the subcontractors\' drivers, whose details came in by phone.',
                     'No visibility: nobody could see live what was happening on a site.',
                 ],
             },
@@ -84,7 +84,7 @@ export const projecten = [
             {
                 type: 'paragraph',
                 nl: 'We bouwden een platform dat het grondtransport registreert, van transportopdracht tot grondbankbon. Het werkt op maat van de manier waarop de planner plant, en bestaat uit drie delen:',
-                en: 'We built a platform that registers soil transport, from transport order to soil transport note. It is tailored to the way the planner works, and consists of three parts:',
+                en: 'We built a platform that records soil transport, from transport order to soil transport note. It is tailored to the way the planner works, and consists of three parts:',
             },
             {
                 type: 'cards',
@@ -93,13 +93,13 @@ export const projecten = [
                         icon: 'Monitor',
                         label: { nl: 'Kantoor', en: 'Office' },
                         nl: 'Plant de transporten in een weekrooster, kijkt de bonnen na en maakt de officiële vrachtbonnen als PDF.',
-                        en: 'Plans the transports in a weekly schedule, checks the notes and creates the official transport documents as PDFs.',
+                        en: 'Plans transports in a weekly schedule, checks the notes and creates the official transport documents as PDFs.',
                     },
                     {
                         icon: 'Smartphone',
                         label: { nl: 'Chauffeurs', en: 'Drivers' },
                         nl: 'Starten en stoppen elke rit in de app en dienen daarna de bon in. De uren staan er vanzelf in, en de app werkt ook zonder bereik.',
-                        en: 'Start and stop every trip in the app and then submit the note. The times are filled in automatically, and the app also works without a signal.',
+                        en: 'Start and stop every trip in the app and then submit the note. The times are filled in automatically, and the app also works without signal.',
                     },
                     {
                         icon: 'Users',
@@ -112,12 +112,12 @@ export const projecten = [
             {
                 type: 'paragraph',
                 nl: "Ook 's nachts werkt het platform door: het dient vergeten bonnen zelf in en voegt bonnen samen die in stukken werden ingediend.",
-                en: 'The platform also keeps working at night: it submits forgotten notes itself and merges notes that were submitted in pieces.',
+                en: 'The platform also keeps working at night: it submits forgotten notes on its own and merges notes that were submitted in parts.',
             },
             {
                 type: 'quote',
                 nl: 'Voor de chauffeurs is het een hele stap vooruit, nu moeten ze geen grondbankbons meer schrijven en is ook alles voor de administratie gemakkelijker geworden!',
-                en: 'For the drivers it is a real step forward: they no longer have to write out soil transport notes, and everything has become easier for the administration too!',
+                en: 'For the drivers it is a real step forward: they no longer have to write out soil transport notes, and everything has become easier for the office too!',
                 source: {
                     nl: 'Alain Vangeebergen, planner bij Croes NV',
                     en: 'Alain Vangeebergen, planner at Croes NV',
@@ -150,7 +150,7 @@ export const projecten = [
                     head: ['', 'Before', 'Now'],
                     rows: [
                         ['Filling in a note', 'By hand, on paper', 'Starting and stopping a trip in the app'],
-                        ['Note at the office', 'Sometimes only after weeks', 'Right away, and none get lost anymore'],
+                        ['Note at the office', 'Sometimes only after weeks', 'Right away, and none get lost any more'],
                         ['Processing', 'Retyping everything', 'Nothing left to retype'],
                         ['Subcontractors', 'By phone', 'Sign in their own drivers'],
                         ['Overview', 'No live view', 'Live per site'],
@@ -171,7 +171,7 @@ export const projecten = [
         },
         description: {
             nl: 'De planning van het wagentransport tussen de vestigingen liep via twee Excels en kostte de planner ongeveer vier uur per dag. Met een eigen platform en chauffeursapp volgt nu iedereen hetzelfde transport, van aanvraag tot aflevering.',
-            en: 'Planning vehicle transport between the branches ran through two spreadsheets and took the planner about four hours a day. With a dedicated platform and driver app, everyone now follows the same transport, from request to delivery.',
+            en: 'Planning vehicle transport between the branches ran through two spreadsheets and took the planner about four hours a day. With a dedicated platform and driver app, everyone now follows each transport in the same place, from request to delivery.',
         },
         blocks: [
             {
@@ -205,7 +205,7 @@ export const projecten = [
                 en: [
                     'A lot of manual work: every afternoon the planner built the schedule in a second spreadsheet by cutting and pasting. That took about four hours a day.',
                     'No control: in the shared file with requests, anyone could change anything, and nobody could see what had changed.',
-                    'Little visibility: branches had to look up the status of their own requests, and drivers set off with a printed schedule. If something changed along the way, the phone was all that was left.',
+                    'Little visibility: branches had to look up the status of their own requests, and drivers set off with a printed schedule. If something changed on the way, the only option was to phone.',
                 ],
             },
             { type: 'divider' },
@@ -217,7 +217,7 @@ export const projecten = [
             {
                 type: 'paragraph',
                 nl: 'Samen met het team brachten we eerst in kaart hoe het transport dagelijks verloopt en waar het vastliep. Daarop bouwden we de A&M Transporttool, die sinds 1 oktober 2026 live staat. Ook die bestaat uit drie delen:',
-                en: 'Together with the team, we first mapped out how transport runs day to day and where it got stuck. On that basis we built the A&M Transport Tool, which has been live since 1 October 2026. It also consists of three parts:',
+                en: 'Together with the team, we first mapped out how transport runs day to day and where it got stuck. Based on that, we built the A&M Transport Tool, which has been live since 1 October 2026. It also consists of three parts:',
             },
             {
                 type: 'cards',
@@ -232,7 +232,7 @@ export const projecten = [
                         icon: 'CalendarDays',
                         label: { nl: 'Planner', en: 'Planner' },
                         nl: 'Sleept de aanvragen op een camion en een dag. Wie het langst wacht, staat vooraan in de wachtrij, en spoed gaat voor.',
-                        en: 'Drags requests onto a truck and a day. Whoever has waited longest is at the front of the queue, and urgent requests go first.',
+                        en: 'Drags requests onto a truck and a day. Requests that have waited longest are at the front of the queue, and urgent ones go first.',
                     },
                     {
                         icon: 'Smartphone',
@@ -268,8 +268,8 @@ export const projecten = [
                     head: ['', 'Before', 'Now'],
                     rows: [
                         ['Requests', 'In a shared spreadsheet', 'Through a form, per branch'],
-                        ['Planning', 'Cutting and pasting between two spreadsheets', 'Dragging onto a truck and a day'],
-                        ['Status', 'Looking it up in the file', 'Followed in the tool, without calling'],
+                        ['Scheduling', 'Cutting and pasting between two spreadsheets', 'Dragging onto a truck and a day'],
+                        ['Status', 'Looking it up in the file', 'Tracked in the tool, no phone calls needed'],
                         ['On the road', 'Printed schedule and phone', 'A schedule that stays up to date in the app'],
                     ],
                 },
@@ -277,7 +277,7 @@ export const projecten = [
             {
                 type: 'paragraph',
                 nl: 'De tool legt ook elke stap en elke wijziging vast. Die gegevens dienen later voor een planningsvoorstel met AI.',
-                en: 'The tool also records every step and every change. That data will later be used for a planning proposal with AI.',
+                en: 'The tool also records every step and every change. Later, that data will let AI suggest a schedule.',
             },
         ],
     },

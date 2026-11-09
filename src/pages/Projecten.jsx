@@ -41,7 +41,7 @@ export default function Projecten() {
                 title={nl ? 'Projecten | TriaCore AI' : 'Projects | TriaCore AI'}
                 description={nl
                     ? 'Ontdek hoe bedrijven als Croes NV en A&M Group hun processen herbouwden met TriaCore AI, en voor wie we workshops gaven.'
-                    : 'Discover how companies like Croes NV and A&M Group rebuilt their processes with TriaCore AI, and who we gave workshops to.'}
+                    : 'Discover how companies like Croes NV and A&M Group rebuilt their processes with TriaCore AI, and which organisations we ran workshops for.'}
             />
             <Navbar />
             <main className="relative flex-grow">

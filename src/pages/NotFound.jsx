@@ -29,7 +29,7 @@ export default function NotFound() {
                         : 'This page does not exist or has moved. No problem: you can find your way back below.'}
                 >
                     <div className="flex flex-wrap items-center gap-4">
-                        <CTAButton to="/" size="md">{nl ? 'Naar de homepage' : 'Go to the homepage'}</CTAButton>
+                        <CTAButton to="/" size="md">{nl ? 'Naar de homepage' : 'Back to the homepage'}</CTAButton>
                         <CTAButton to="/contact" size="md" variant="secondary">{nl ? 'Plan een gesprek' : 'Book a call'}</CTAButton>
                     </div>
                 </PageHeader>

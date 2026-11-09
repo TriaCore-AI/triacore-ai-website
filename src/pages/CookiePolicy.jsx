@@ -16,8 +16,8 @@ export default function CookiePolicy() {
             title={language === 'nl' ? 'Cookiebeleid.' : 'Cookie policy.'}
             intro={language === 'nl'
                 ? 'Op deze pagina leggen wij transparant uit hoe wij cookies gebruiken en welke keuzes je daarbij hebt.'
-                : 'On this page we transparently explain how we use cookies and what choices you have.'}
-            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on March 3, 2026'}
+                : 'On this page we explain clearly how we use cookies and what choices you have.'}
+            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on 3 March 2026'}
         >
 
             <section>
@@ -40,7 +40,7 @@ export default function CookiePolicy() {
 
             <section>
                 <h2>{language === 'nl' ? '3. Welke cookies gebruikt TriaCore AI?' : '3. What cookies does TriaCore AI use?'}</h2>
-                <p>{language === 'nl' ? 'De website van TriaCore AI gebruikt uitsluitend:' : 'The TriaCore AI website uses exclusively:'}</p>
+                <p>{language === 'nl' ? 'De website van TriaCore AI gebruikt uitsluitend:' : 'The TriaCore AI website only uses:'}</p>
                 <ul>
                     <li>
                         <strong>{language === 'nl' ? 'Strikt noodzakelijke cookies:' : 'Strictly necessary cookies:'}</strong><br />
@@ -49,16 +49,16 @@ export default function CookiePolicy() {
                             : 'These cookies are necessary for the proper functioning, security and stability of the website.'}
                     </li>
                     <li>
-                        <strong>{language === 'nl' ? 'Beperkte, privacyvriendelijke analytische cookies:' : 'Limited, privacy-friendly analytical cookies:'}</strong><br />
+                        <strong>{language === 'nl' ? 'Beperkte, privacyvriendelijke analytische cookies:' : 'Limited, privacy-friendly analytics cookies:'}</strong><br />
                         {language === 'nl'
                             ? 'Wij maken gebruik van Google Analytics 4 om geanonimiseerde inzichten te verkrijgen in het gebruik van onze website. Hierbij worden gegevens verzameld zoals paginabezoeken, sessieduur, apparaattype en locatie op landniveau. Deze data wordt 14 maanden bewaard. Je kan je toestemming op elk moment intrekken.'
-                            : 'We use Google Analytics 4 to gain anonymized insights into the use of our website. This collects data such as page views, session duration, device type, and country-level location. This data is kept for 14 months. You can withdraw your consent at any time.'}
+                            : 'We use Google Analytics 4 to gain anonymised insights into how our website is used. This collects data such as page views, session duration, device type and country-level location. This data is kept for 14 months. You can withdraw your consent at any time.'}
                     </li>
                 </ul>
                 <p className="font-medium text-foreground">
                     {language === 'nl'
                         ? 'Wij gebruiken geen marketingcookies, geen advertentiecookies en geen trackingcookies voor sociale media.'
-                        : 'We do not use marketing cookies, advertising cookies and no tracking cookies for social media.'}
+                        : 'We do not use marketing cookies, advertising cookies or social media tracking cookies.'}
                 </p>
             </section>
 
@@ -68,7 +68,7 @@ export default function CookiePolicy() {
                 <p>
                     {language === 'nl'
                         ? 'Niet-noodzakelijke cookies worden enkel geplaatst indien je hiervoor toestemming geeft. Je kan je cookievoorkeuren op elk moment aanpassen via de instellingen op de website of je internetbrowser.'
-                        : 'Non-necessary cookies are only placed if you consent to this. You can adjust your cookie preferences at any time via the settings on the website or your internet browser.'}
+                        : 'Cookies that are not strictly necessary are only placed with your consent. You can adjust your cookie preferences at any time via the settings on the website or your internet browser.'}
                 </p>
             </section>
 
@@ -109,7 +109,7 @@ export default function CookiePolicy() {
                 <h2>{language === 'nl' ? '8. Contact' : '8. Contact'}</h2>
                 <p>{language === 'nl' ? 'Heb je vragen over dit cookiebeleid of over het gebruik van cookies op onze website?' : 'Do you have questions about this cookie policy or about the use of cookies on our website?'}</p>
                 <p className="rij font-medium text-foreground">TriaCore AI</p>
-                <p className="rij">E-mail: <a href="mailto:info@triacore.be">info@triacore.be</a></p>
+                <p className="rij">{language === 'nl' ? 'E-mail' : 'Email'}: <a href="mailto:info@triacore.be">info@triacore.be</a></p>
                 <p>Website: <a href="https://www.triacore.be" target="_blank" rel="noopener noreferrer">www.triacore.be</a></p>
             </section>
         </LegalPage>

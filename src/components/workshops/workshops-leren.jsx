@@ -25,12 +25,12 @@ const onderwerpen = {
         { icon: Workflow, title: 'AI laten werken', desc: 'Je geeft een opdracht in plaats van een vraag. AI voert de stappen zelf uit, en jij kijkt het resultaat na.' }
     ],
     en: [
-        { icon: ShieldCheck, title: 'Working safely', desc: 'Which data you can put into AI and which you cannot. And how to check an answer before you use it.' },
-        { icon: Compass, title: 'The right tools', desc: 'ChatGPT, Copilot, Claude: how they differ and what each does best. So you choose what fits your business.' },
-        { icon: Brain, title: 'A second brain', desc: 'Your customers, products and way of working in one place, in a form AI can read. So you stop explaining who you are every time.' },
+        { icon: ShieldCheck, title: 'Working safely', desc: 'Which data you can and cannot share with AI. And how to check an answer before you use it.' },
+        { icon: Compass, title: 'The right tools', desc: 'ChatGPT, Copilot, Claude: how they differ and what each does best. So you can choose what fits your business.' },
+        { icon: Brain, title: 'A second brain', desc: 'Your clients, products and way of working in one place, in a form AI can read. So you no longer have to explain who you are every time.' },
         { icon: ListChecks, title: 'Skills', desc: 'A skill is a recurring task you explain properly once, like a quote or a report. After that, AI does it the same way every time.' },
-        { icon: Plug, title: 'Connectors', desc: 'You connect AI to your email, calendar or CRM. It then looks up the information itself, with no more copying and pasting.' },
-        { icon: Workflow, title: 'Letting AI work', desc: 'You give an assignment instead of asking a question. AI carries out the steps itself, and you check the result.' }
+        { icon: Plug, title: 'Connectors', desc: 'You connect AI to your email, calendar or CRM. AI then looks up the information itself, so you no longer need to copy and paste.' },
+        { icon: Workflow, title: 'Letting AI work', desc: 'You give AI a task instead of asking a question. AI carries out the steps itself, and you check the result.' }
     ]
 };
 

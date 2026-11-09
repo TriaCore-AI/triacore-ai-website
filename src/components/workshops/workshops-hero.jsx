@@ -149,11 +149,11 @@ export default function WorkshopsHero() {
                     <p className="wh-fade mt-8 md:mt-10 text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl">
                         {nl
                             ? 'Jouw team leert zelf werken met AI. Praktisch, op maat van je sector en met voorbeelden uit het eigen werk.'
-                            : 'Your team learns to work with AI themselves. Practical, tailored to your sector and with examples from their own work.'}
+                            : 'Your team learns to work with AI on their own. Practical, tailored to your sector, with examples from their own work.'}
                     </p>
                     <div className="wh-fade mt-10 md:mt-12 flex">
                         <CTAButton to="/contact" size="md">
-                            {nl ? 'Plan een workshop' : 'Plan a workshop'}
+                            {nl ? 'Plan een workshop' : 'Book a workshop'}
                         </CTAButton>
                     </div>
                 </div>
@@ -178,7 +178,7 @@ export default function WorkshopsHero() {
                         staand
                         spiegel
                         src={slideFoto}
-                        alt={nl ? 'Lucas Curto bij de slide "AI voor je winkel"' : 'Lucas Curto at the slide "AI voor je winkel"'}
+                        alt={nl ? 'Lucas Curto bij de slide "AI voor je winkel"' : 'Lucas Curto next to a slide on AI for your shop'}
                         position="object-[50%_55%]"
                         on={actief === 1}
                         onEnter={() => enter(1)}

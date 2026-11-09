@@ -44,7 +44,7 @@ export default function Contact() {
                 title="Contact | TriaCore AI"
                 description={nl
                     ? 'Plan een vrijblijvend gesprek. Vertel waar je processen vastlopen en we bekijken samen wat software op maat en AI voor jouw bedrijf kunnen betekenen.'
-                    : 'Book a no obligation call. Tell us where your processes get stuck and we will explore together what custom software and AI can do for your business.'}
+                    : 'Book a no-obligation call. Tell us where your processes get stuck and we will explore together what custom software and AI can do for your business.'}
             />
             <Navbar />
             <main className="relative flex-grow">

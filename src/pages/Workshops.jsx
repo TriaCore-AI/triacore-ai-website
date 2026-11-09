@@ -43,7 +43,7 @@ export default function Workshops() {
                 title="Workshops | TriaCore AI"
                 description={nl
                     ? 'Praktische AI-workshops van TriaCore AI: je team leert zelf werken met AI, op maat van je sector en met voorbeelden uit het eigen werk.'
-                    : 'Practical AI workshops by TriaCore AI: your team learns to work with AI themselves, tailored to your sector and with examples from their own work.'}
+                    : 'Practical AI workshops by TriaCore AI: your team learns to work with AI on their own, tailored to your sector and with examples from their own work.'}
             />
             <Navbar />
             <SectionNav items={snelmenu[language]} />

@@ -89,10 +89,10 @@ export default function ProjectDetail() {
                         {/* Rustige oproep onderaan */}
                         <div className="mt-20 pt-14 border-t border-foreground/15">
                             <p className="hero-title text-foreground text-3xl md:text-4xl">
-                                {nl ? 'Ook processen die vastlopen?' : 'Processes getting stuck too?'}
+                                {nl ? 'Ook processen die vastlopen?' : 'Processes getting stuck at your company?'}
                             </p>
                             <p className="mt-4 text-lg text-foreground/60 leading-relaxed max-w-lg">
-                                {nl ? 'Plan een gesprek en we denken vrijblijvend met je mee.' : 'Book a call and we will think along, no strings attached.'}
+                                {nl ? 'Plan een gesprek en we denken vrijblijvend met je mee.' : 'Book a call and we will think it through with you, with no obligation.'}
                             </p>
                             <div className="mt-8">
                                 <CTAButton to="/contact">{nl ? 'Plan een gesprek' : 'Book a call'}</CTAButton>

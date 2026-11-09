@@ -9,8 +9,8 @@ import { useLanguage } from '../../context/LanguageContext';
 // met als onderwerp "Workshop". Aantal personen en locatie komen in het berichtveld, altijd in het
 // Nederlands, zodat elke aanvraag in dezelfde inbox herkenbaar binnenkomt.
 const LOCATIES = [
-    { value: 'Ja', nl: 'Ja, bij ons', en: 'Yes, at our place' },
-    { value: 'Liever elders', nl: 'Liever elders', en: 'Rather elsewhere' },
+    { value: 'Ja', nl: 'Ja, bij ons', en: 'Yes, at our premises' },
+    { value: 'Liever elders', nl: 'Liever elders', en: 'Preferably elsewhere' },
     { value: 'Weet ik nog niet', nl: 'Weet ik nog niet', en: 'Not sure yet' }
 ];
 

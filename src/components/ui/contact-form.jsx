@@ -79,7 +79,7 @@ export default function ContactForm() {
         <div className="flex flex-col gap-6 h-full">
             <SuccesMelding open={melding} onClose={() => setMelding(false)} />
             <div>
-                <p className={labelClass}>{nl ? 'Waarover gaat het? *' : 'What is it about? *'}</p>
+                <p className={labelClass}>{nl ? 'Waarover gaat het? *' : 'What is this about? *'}</p>
                 <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={nl ? 'Onderwerp' : 'Topic'}>
                     {TOPICS.map((t) => {
                         const on = formData.topic === t.value;

@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
             intro={language === 'nl'
                 ? 'Bij TriaCore AI hechten wij veel belang aan de bescherming van persoonsgegevens. In deze verklaring leggen wij helder uit hoe wij met gegevens omgaan.'
                 : 'At TriaCore AI we attach great importance to the protection of personal data. In this policy we clearly explain how we handle your data.'}
-            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on March 3, 2026'}
+            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on 3 March 2026'}
         >
 
             <section>
@@ -30,8 +30,8 @@ export default function PrivacyPolicy() {
                 <p>{language === 'nl' ? 'Deze verklaring is van toepassing op:' : 'This policy applies to:'}</p>
                 <ul>
                     <li>{language === 'nl' ? 'bezoekers van onze website;' : 'visitors to our website;'}</li>
-                    <li>{language === 'nl' ? 'personen die ons contacteren;' : 'persons who contact us;'}</li>
-                    <li>{language === 'nl' ? 'zakelijke contacten en klanten.' : 'business contacts and customers.'}</li>
+                    <li>{language === 'nl' ? 'personen die ons contacteren;' : 'people who contact us;'}</li>
+                    <li>{language === 'nl' ? 'zakelijke contacten en klanten.' : 'business contacts and clients.'}</li>
                 </ul>
                 <p>{language === 'nl' ? 'TriaCore AI handelt daarbij steeds als verwerkingsverantwoordelijke in de zin van de GDPR.' : 'TriaCore AI always acts as the data controller within the meaning of the GDPR.'}</p>
             </section>
@@ -43,8 +43,8 @@ export default function PrivacyPolicy() {
                 <p className="rij">{language === 'nl' ? 'Kantoor' : 'Office'}: Kempische Steenweg 303, 3500 Hasselt (Corda Incubator)</p>
                 <p className="rij">{language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 1042.233.821</p>
                 <p className="rij">{language === 'nl' ? 'BTW nummer' : 'VAT number'}: BE 1042.233.821</p>
-                <p className="rij">RPR Antwerpen, {language === 'nl' ? 'afdeling Hasselt' : 'Hasselt division'}</p>
-                <p className="rij">E-mail: <a href="mailto:info@triacore.be">info@triacore.be</a></p>
+                <p className="rij">{language === 'nl' ? 'RPR Antwerpen, afdeling Hasselt' : 'RLE Antwerp, Hasselt division'}</p>
+                <p className="rij">{language === 'nl' ? 'E-mail' : 'Email'}: <a href="mailto:info@triacore.be">info@triacore.be</a></p>
                 <p>Website: <a href="https://www.triacore.be" target="_blank" rel="noopener noreferrer">www.triacore.be</a></p>
                 <p className="noot">{language === 'nl' ? 'Voor vragen of verzoeken met betrekking tot privacy kan je ons contacteren via bovenstaande gegevens.' : 'For questions or requests regarding privacy, you can contact us using the details above.'}</p>
             </section>
@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
                 </ul>
 
                 <h3>{language === 'nl' ? 'Via onze website (Google Analytics 4):' : 'Via our website (Google Analytics 4):'}</h3>
-                <p>{language === 'nl' ? 'Indien je hiervoor via de cookiebanner toestemming hebt gegeven, verzamelen wij analytische gegevens:' : 'If you have given consent via the cookie banner, we collect analytical data:'}</p>
+                <p>{language === 'nl' ? 'Indien je hiervoor via de cookiebanner toestemming hebt gegeven, verzamelen wij analytische gegevens:' : 'If you have given consent via the cookie banner, we collect analytics data:'}</p>
                 <ul>
                     <li>{language === 'nl' ? 'paginabezoeken en interacties;' : 'page views and interactions;'}</li>
                     <li>{language === 'nl' ? 'sessieduur;' : 'session duration;'}</li>
@@ -106,7 +106,7 @@ export default function PrivacyPolicy() {
                     <li>{language === 'nl' ? 'het beantwoorden van vragen en berichten;' : 'answering questions and messages;'}</li>
                     <li>{language === 'nl' ? 'het opvolgen van zakelijke contacten en aanvragen;' : 'following up on business contacts and requests;'}</li>
                     <li>{language === 'nl' ? 'het uitvoeren van onze dienstverlening;' : 'carrying out our services;'}</li>
-                    <li>{language === 'nl' ? 'klantenbeheer en communicatie;' : 'customer management and communication;'}</li>
+                    <li>{language === 'nl' ? 'klantenbeheer en communicatie;' : 'client management and communication;'}</li>
                     <li>{language === 'nl' ? 'het versturen van onze nieuwsbrief met resource-updates, indien je je daarvoor hebt ingeschreven;' : 'sending our newsletter with resource updates, if you have subscribed to it;'}</li>
                     <li>{language === 'nl' ? 'administratieve en wettelijke verplichtingen.' : 'administrative and legal obligations.'}</li>
                 </ul>
@@ -114,24 +114,24 @@ export default function PrivacyPolicy() {
 
             <section>
                 <h2>{language === 'nl' ? '6. Op basis waarvan mogen wij dit doen?' : '6. On what basis may we do this?'}</h2>
-                <p>{language === 'nl' ? 'De verwerking van je persoonsgegevens gebeurt op basis van:' : 'The processing of your personal data happens on the basis of:'}</p>
+                <p>{language === 'nl' ? 'De verwerking van je persoonsgegevens gebeurt op basis van:' : 'We process your personal data on the basis of:'}</p>
                 <ul>
                     <li>{language === 'nl' ? 'je toestemming;' : 'your consent;'}</li>
-                    <li>{language === 'nl' ? 'de uitvoering van een overeenkomst of voorbereidende stappen daartoe;' : 'the execution of an agreement or preparatory steps thereto;'}</li>
+                    <li>{language === 'nl' ? 'de uitvoering van een overeenkomst of voorbereidende stappen daartoe;' : 'the performance of a contract or steps taken in preparation for one;'}</li>
                     <li>{language === 'nl' ? 'wettelijke verplichtingen;' : 'legal obligations;'}</li>
-                    <li>{language === 'nl' ? 'ons gerechtvaardigd belang om professioneel te kunnen communiceren en werken binnen een B2B-context.' : 'our legitimate interest to communicate and work professionally within a B2B context.'}</li>
+                    <li>{language === 'nl' ? 'ons gerechtvaardigd belang om professioneel te kunnen communiceren en werken binnen een B2B-context.' : 'our legitimate interest in communicating and working professionally within a B2B context.'}</li>
                 </ul>
             </section>
 
             <section>
-                <h2>{language === 'nl' ? '7. Met wie worden gegevens gedeeld?' : '7. Who will the data be shared with?'}</h2>
+                <h2>{language === 'nl' ? '7. Met wie worden gegevens gedeeld?' : '7. Who do we share data with?'}</h2>
                 <p>{language === 'nl' ? 'Je persoonsgegevens blijven in principe intern en worden enkel gedeeld wanneer dat functioneel noodzakelijk is, bijvoorbeeld met:' : 'Your personal data will in principle remain internal and will only be shared when functionally necessary, for example with:'}</p>
                 <ul>
                     <li>{language === 'nl' ? 'interne opvolgsystemen (zoals spreadsheets of CRM-software);' : 'internal tracking systems (such as spreadsheets or CRM software);'}</li>
                     <li>{language === 'nl' ? 'onze e-mailverzenddienst Resend, die de nieuwsbrieflijst beheert en onze e-mails verstuurt;' : 'our email delivery service Resend, which manages the newsletter list and sends our emails;'}</li>
                     <li>{language === 'nl' ? 'technische of administratieve dienstverleners die ons ondersteunen.' : 'technical or administrative service providers who support us.'}</li>
                 </ul>
-                <p>{language === 'nl' ? 'Je gegevens worden niet verkocht en niet gebruikt voor commerciële doeleinden van derden.' : 'Your data is not sold and is not used for commercial purposes of third parties.'}</p>
+                <p>{language === 'nl' ? 'Je gegevens worden niet verkocht en niet gebruikt voor commerciële doeleinden van derden.' : 'Your data is never sold and is not used for third-party commercial purposes.'}</p>
             </section>
 
             <section>
@@ -153,7 +153,7 @@ export default function PrivacyPolicy() {
 
             <section>
                 <h2>{language === 'nl' ? '10. Hoe beschermen wij je gegevens?' : '10. How do we protect your data?'}</h2>
-                <p>{language === 'nl' ? 'TriaCore AI neemt redelijke technische en organisatorische maatregelen om persoonsgegevens te beveiligen. Toegang is beperkt tot personen die deze gegevens nodig hebben voor hun werkzaamheden.' : 'TriaCore AI takes reasonable technical and organizational measures to secure personal data. Access is restricted to persons who need this data for their work.'}</p>
+                <p>{language === 'nl' ? 'TriaCore AI neemt redelijke technische en organisatorische maatregelen om persoonsgegevens te beveiligen. Toegang is beperkt tot personen die deze gegevens nodig hebben voor hun werkzaamheden.' : 'TriaCore AI takes reasonable technical and organisational measures to secure personal data. Access is restricted to persons who need this data for their work.'}</p>
             </section>
 
             <section>
@@ -174,13 +174,15 @@ export default function PrivacyPolicy() {
                 <h2>{language === 'nl' ? '12. Toezicht en klachten' : '12. Supervision and complaints'}</h2>
                 <p>{language === 'nl' ? 'Ben je van mening dat wij je gegevens onzorgvuldig verwerken, dan kan je een klacht indienen bij de Belgische toezichthouder:' : 'If you believe that we process your data carelessly, you can file a complaint with the Belgian supervisory authority:'}</p>
                 <p className="font-medium text-foreground">{language === 'nl' ? 'Gegevensbeschermingsautoriteit' : 'Data Protection Authority'}</p>
-                <p>Drukpersstraat 35, 1000 Brussel</p>
-                <p><a href="https://www.gegevensbeschermingsautoriteit.be" target="_blank" rel="noopener noreferrer">www.gegevensbeschermingsautoriteit.be</a></p>
+                <p>{language === 'nl' ? 'Drukpersstraat 35, 1000 Brussel' : 'Rue de la Presse 35, 1000 Brussels'}</p>
+                {language === 'nl'
+                    ? <p><a href="https://www.gegevensbeschermingsautoriteit.be" target="_blank" rel="noopener noreferrer">www.gegevensbeschermingsautoriteit.be</a></p>
+                    : <p><a href="https://www.dataprotectionauthority.be" target="_blank" rel="noopener noreferrer">www.dataprotectionauthority.be</a></p>}
             </section>
 
             <section>
                 <h2>{language === 'nl' ? '13. Aanpassingen aan deze verklaring' : '13. Changes to this policy'}</h2>
-                <p>{language === 'nl' ? 'Deze privacyverklaring kan worden aangepast indien onze werking of de wetgeving wijzigt. De meest recente versie is steeds beschikbaar op onze website.' : 'This privacy policy may be amended if our operations or the legislation changes. The most recent version is always available on our website.'}</p>
+                <p>{language === 'nl' ? 'Deze privacyverklaring kan worden aangepast indien onze werking of de wetgeving wijzigt. De meest recente versie is steeds beschikbaar op onze website.' : 'This privacy policy may be amended if our operations or the law change. The most recent version is always available on our website.'}</p>
             </section>
         </LegalPage>
     );
