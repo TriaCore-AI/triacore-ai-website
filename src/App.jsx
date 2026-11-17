@@ -426,10 +426,11 @@ function App() {
       {/* Rustig en gecentreerd: één korte titel, één zin, één knop. Daaronder stil bewijs, op een vaste
           afstand (niet onderaan een schermhoge hero, waar de logo's los van de rest kwamen te staan) */}
       {/* Gsm liggend (lage schermen onder 1280): minder ruimte boven de titel, anders staat enkel de titel in beeld.
-          Op gsm (onder 768) is alles compacter (titel, ondertitel, knoppen, logo's) en staat de inhoud verticaal
-          in het midden van een iets lagere hero (88% van het scherm), zodat er minder ruimte is tot "Bewezen in de
-          praktijk" */}
-      <section id="home" className="relative flex flex-col max-md:justify-center max-md:min-h-[88svh] md:min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-28 sm:pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-6 md:pb-[72px]">
+          Op gsm (onder 768) is alles compacter (titel, ondertitel, knoppen, logo's) en staat de inhoud verticaal in
+          het midden van de ruimte tussen de navigatiebalk en de onderrand van het zichtbare scherm (svh, dus zonder
+          de browserbalken): bovenaan 120 px (de navigatiebalk plus ademruimte), onderaan 40 px. Is de inhoud hoger
+          dan die ruimte, dan begint ze gewoon op 120 px en nooit hoger */}
+      <section id="home" className="relative flex flex-col max-md:justify-center min-h-svh overflow-x-clip px-6 md:px-16 lg:px-24 pt-[7.5rem] sm:pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-10 md:pb-[72px]">
         {/* Dezelfde achtergrond als de hero van AI-oplossingen en Workshops: de zijden lagen, die onderaan zacht
             uitvloeien in de pagina. Vroegere 3D-achtergrond (muur met raamlicht, eerst met schijven, daarna met een
             vloer): HeroScene (components/ui/hero-scene.jsx), terug te zetten in plaats van dit blok */}
