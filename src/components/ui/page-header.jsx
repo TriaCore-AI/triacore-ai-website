@@ -4,8 +4,9 @@ import gsap from 'gsap';
 // De header van elke pagina in de nieuwe stijl: een grote titel, links uitgelijnd zoals op de homepage,
 // eventueel met één zin uitleg en iets eronder (bv. een knop). De titel onthult zich vloeiend van links
 // naar rechts, daarna komt de rest zacht op. Start pas als de lettertypes geladen zijn.
-// titleSize vervangt de standaardmaten, voor een titel die anders niet op een smal scherm past.
-export default function PageHeader({ title, intro, children, titleSize = 'text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem]' }) {
+// De maten van titel en uitleg zijn die van elke hero op de site (titel-hero en tekst-hero in index.css).
+// titleSize voegt enkel nog iets toe voor een uitzondering, bv. een titel die op een heel smal scherm niet past.
+export default function PageHeader({ title, intro, children, titleSize = '' }) {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -29,11 +30,11 @@ export default function PageHeader({ title, intro, children, titleSize = 'text-5
     return (
         <section ref={ref} className="px-6 md:px-16 lg:px-24 pt-40 md:pt-48 max-xl:[@media(max-height:500px)]:pt-32 pb-20 md:pb-28">
             <div className="max-w-7xl mx-auto">
-                <h1 className={`ph-title hero-title text-foreground ${titleSize} leading-[1.02]`}>
+                <h1 className={`ph-title hero-title titel-hero text-foreground ${titleSize}`}>
                     {title}
                 </h1>
                 {intro && (
-                    <p className="ph-fade mt-8 md:mt-10 text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-2xl">
+                    <p className="ph-fade mt-8 md:mt-10 tekst-hero text-foreground/70 max-w-2xl">
                         {intro}
                     </p>
                 )}

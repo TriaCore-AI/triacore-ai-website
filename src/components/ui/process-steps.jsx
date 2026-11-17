@@ -34,7 +34,8 @@ export default function ProcessSteps({ steps }) {
     return (
         <div ref={ref} className="relative">
             <span aria-hidden="true" className="ps-line hidden md:block absolute inset-x-0 top-0 h-px bg-foreground/15 origin-left" />
-            <ol className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8 lg:gap-12">
+            {/* Vier stappen (AI-agents) of drie (AI-oplossingen): de kolommen volgen het aantal */}
+            <ol className={`grid grid-cols-1 ${steps.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-10 md:gap-8 lg:gap-12`}>
                 {steps.map((s, i) => (
                     <li key={s.word} className="relative pl-6 md:pl-0 md:pt-10">
                         <span aria-hidden="true" className="ps-tick hidden md:block absolute left-0 -top-1.5 h-3 w-px bg-accent" />
@@ -42,8 +43,19 @@ export default function ProcessSteps({ steps }) {
                         <div className="ps-content">
                             <span className="block text-sm text-accent tabular-nums">/{String(i + 1).padStart(2, '0')}</span>
                             {/* Op tablet zijn de vier kolommen smal: daar is het woord kleiner, zodat het binnen zijn kolom blijft */}
-                            <h3 className="mt-3 text-3xl md:max-lg:text-2xl lg:max-xl:text-3xl xl:text-4xl font-medium text-foreground leading-tight">{s.word}</h3>
-                            <p className="mt-4 text-base text-foreground/60 leading-relaxed max-w-xs">{s.desc}</p>
+                            {/* Met drie stappen (AI-oplossingen) een rustigere variant: kleinere, lichtere titel en een
+                                smallere tekst. Met vier (AI-agents) blijft de oorspronkelijke opmaak */}
+                            {steps.length === 3 ? (
+                                <>
+                                    <h3 className="mt-3 text-2xl xl:text-[1.75rem] text-foreground leading-tight">{s.word}</h3>
+                                    <p className="mt-3 text-[15px] text-foreground/60 leading-relaxed max-w-[19rem]">{s.desc}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 className="mt-3 text-3xl md:max-lg:text-2xl lg:max-xl:text-3xl xl:text-4xl font-medium text-foreground leading-tight">{s.word}</h3>
+                                    <p className="mt-4 text-base text-foreground/60 leading-relaxed max-w-xs">{s.desc}</p>
+                                </>
+                            )}
                         </div>
                     </li>
                 ))}

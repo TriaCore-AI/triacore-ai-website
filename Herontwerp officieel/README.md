@@ -48,7 +48,7 @@ De drie oplossingspagina's worden **tegelijk** uitgewerkt, elk in een eigen Clau
 |---|---|---|
 | AI-begeleiding | `src/pages/AiBegeleiding.jsx` | `/ai-begeleiding` |
 | Workshops | `src/pages/Workshops.jsx` | `/workshops` |
-| Custom oplossingen | `src/pages/CustomOplossingen.jsx` | `/custom-oplossingen` |
+| AI-oplossingen (vroeger Custom tools; `/custom-oplossingen` stuurt door) | `src/pages/AiOplossingen.jsx` | `/ai-oplossingen` |
 
 Afspraken voor die chats, zodat ze elkaar niet in de weg zitten:
 - Elke chat past **alleen zijn eigen paginabestand** aan. Nieuwe onderdelen komen in een nieuw bestand met een eigen naam.

@@ -9,7 +9,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import CookiePolicy from './pages/CookiePolicy.jsx'
 import Contact from './pages/Contact.jsx'
 
-import CustomOplossingen from './pages/CustomOplossingen.jsx'
+import AiOplossingen from './pages/AiOplossingen.jsx'
 import Projecten from './pages/Projecten.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import Workshops from './pages/Workshops.jsx'
@@ -29,7 +29,11 @@ createRoot(document.getElementById('root')).render(
           <Route path="/privacybeleid" element={<PrivacyPolicy />} />
           <Route path="/cookiebeleid" element={<CookiePolicy />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/custom-oplossingen" element={<CustomOplossingen />} />
+          <Route path="/ai-oplossingen" element={<AiOplossingen />} />
+          {/* Vroegere adressen van deze pagina (Custom tools en de conceptversie) sturen door naar AI-oplossingen;
+              op Netlify ook via public/_redirects */}
+          <Route path="/custom-oplossingen" element={<Navigate to="/ai-oplossingen" replace />} />
+          <Route path="/oplossingen-v2" element={<Navigate to="/ai-oplossingen" replace />} />
           <Route path="/projecten" element={<Projecten />} />
           <Route path="/projecten/:slug" element={<ProjectDetail />} />
           <Route path="/workshops" element={<Workshops />} />

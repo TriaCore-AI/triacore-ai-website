@@ -36,11 +36,10 @@ export default function LegalPage({ seo, title, intro, updated, children }) {
             <Seo title={seo.title} description={seo.description} />
             <Navbar />
             <main className="relative flex-grow">
-                {/* De titel is één lang woord: op gsm schaalt hij mee met de schermbreedte, zodat hij altijd past */}
+                {/* De titel heeft de vaste hero-maat; met die maat past ook een lang woord als Privacybeleid op gsm */}
                 <PageHeader
                     title={title}
                     intro={intro}
-                    titleSize="text-[min(12vw,3rem)] sm:text-6xl md:text-7xl lg:text-[7.5rem]"
                 >
                     <p className="text-sm text-foreground/50">{updated}</p>
                 </PageHeader>

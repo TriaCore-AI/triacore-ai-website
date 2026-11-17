@@ -54,7 +54,7 @@ export default function Footer() {
                     <div className="lg:col-span-6 lg:col-start-7 grid grid-cols-2 max-sm:grid-cols-[auto_1fr] gap-8">
                         <div className="flex flex-col gap-2.5">
                             <p className="text-sm font-medium text-white mb-1.5">{nl ? "Pagina's" : 'Pages'}</p>
-                            <Link to="/custom-oplossingen" className={linkClass}>{nl ? 'Custom tools' : 'Custom tools'}</Link>
+                            <Link to="/ai-oplossingen" className={linkClass}>{nl ? 'AI-oplossingen' : 'AI solutions'}</Link>
                             <Link to="/workshops" className={linkClass}>Workshops</Link>
                             <Link to="/projecten" className={linkClass}>{nl ? 'Projecten' : 'Projects'}</Link>
                             <Link to="/team" className={linkClass}>Team</Link>

@@ -206,7 +206,7 @@ export default function AiBegeleiding() {
                     {/* Op de achtergrond: zwevende pictogrammen die onderaan in de wolk vervagen */}
                     <TweedeBreinAchtergrond />
                     <div ref={heroContentRef} className="relative max-w-7xl mx-auto flex flex-col items-center text-center">
-                        <h1 className="tb-title hero-title text-foreground text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.02]">
+                        <h1 className="tb-title hero-title titel-hero text-foreground">
                             {/* Vanaf md op twee regels, met het resultaat in het groen zoals "vooruitgang" op de homepage */}
                             <span className="md:block">{nl ? 'AI-agents die' : 'AI agents that'}</span>{' '}
                             <span className="md:block">
@@ -217,7 +217,7 @@ export default function AiBegeleiding() {
                         {/* Iets kleiner dan de intro van de andere pagina's, omdat de tekst langer is. Zelfzeker:
                             eerst drie stukken werk die indruk maken, dan het verschil tussen een snel antwoord
                             uit één prompt en werk waarop u kunt bouwen (verder uitgelegd lager op de pagina) */}
-                        <p className="tb-fade mt-8 md:mt-10 max-w-3xl text-lg md:text-xl text-foreground/70 leading-relaxed">
+                        <p className="tb-fade mt-8 md:mt-10 max-w-3xl tekst-hero text-foreground/70">
                             {nl
                                 ? 'Uw concurrenten vergeleken op honderd punten. Elke ochtend de aanbestedingen die bij u passen. Al uw contracten doorgelezen. Een prompt geeft u snel een antwoord, onze agents leveren werk waarop u kunt bouwen.'
                                 : 'Your competitors compared on a hundred points. Every morning, the tenders that suit you. All your contracts read through. A prompt gives you a quick answer, our agents deliver work you can build on.'}

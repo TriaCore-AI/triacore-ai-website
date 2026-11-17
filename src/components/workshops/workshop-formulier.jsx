@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CTAButton from '../ui/cta-button';
+import { FoutTekst, foutRand, isEmail, naarEersteFout } from '../ui/formulier-fouten';
 import { useLanguage } from '../../context/LanguageContext';
 
 // Het formulier om een workshop-offerte aan te vragen. Staat op de workshoppagina (workshops-offerte.jsx) en op
@@ -8,6 +9,9 @@ import { useLanguage } from '../../context/LanguageContext';
 // Verstuurt naar het bestaande Netlify-formulier "contact" (zodat index.html niet aangepast moet worden),
 // met als onderwerp "Workshop". Aantal personen en locatie komen in het berichtveld, altijd in het
 // Nederlands, zodat elke aanvraag in dezelfde inbox herkenbaar binnenkomt.
+// De verstuurknop werkt pas als de verplichte velden (bedrijfsnaam, naam en een geldig e-mailadres) ingevuld
+// zijn; tot dan is hij grijs, zonder extra uitleg ernaast (beslissing Lucas). De controle bij het versturen
+// (formulier-fouten.jsx) blijft als vangnet.
 const LOCATIES = [
     { value: 'Ja', nl: 'Ja, bij ons', en: 'Yes, at our premises' },
     { value: 'Liever elders', nl: 'Liever elders', en: 'Preferably elsewhere' },
@@ -24,7 +28,20 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
     const nl = language === 'nl';
     const [status, setStatus] = useState('idle'); // idle, loading, error
 
-    const geldig = data.company && data.name && data.email;
+    // Wat er nog ontbreekt, per id van het veld. Pas zichtbaar na een eerste poging tot versturen
+    const [poging, setPoging] = useState(false);
+    const controleer = (d) => {
+        const f = {};
+        if (!d.company.trim()) f['wo-company'] = nl ? 'Vul je bedrijfsnaam in.' : 'Enter your company name.';
+        if (!d.name.trim()) f['wo-name'] = nl ? 'Vul je naam in.' : 'Enter your name.';
+        if (!d.email.trim()) f['wo-email'] = nl ? 'Vul je e-mailadres in.' : 'Enter your email address.';
+        else if (!isEmail(d.email)) f['wo-email'] = nl ? 'Dit e-mailadres klopt niet.' : 'This email address does not look right.';
+        return f;
+    };
+    const fouten = poging ? controleer(data) : {};
+    const heeftFouten = Object.keys(fouten).length > 0;
+    // Zijn alle verplichte velden in orde? Pas dan kan je versturen
+    const klaar = Object.keys(controleer(data)).length === 0;
 
     const wijzig = (e) => {
         const { name, value } = e.target;
@@ -33,12 +50,19 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
 
     const verstuur = async (e) => {
         e.preventDefault();
-        if (!geldig) return;
+        if (status === 'loading') return;
+        setPoging(true);
+        const f = controleer(data);
+        if (Object.keys(f).length) {
+            naarEersteFout(f, ['wo-company', 'wo-name', 'wo-email']);
+            return;
+        }
         setStatus('loading');
         // Lokaal (npm run dev) bestaat Netlify Forms niet: daar doen we alsof het lukte, zodat je het
         // bevestigingsvenster kan bekijken. Er wordt dan niets verstuurd
         if (import.meta.env.DEV) {
             setStatus('idle');
+            setPoging(false);
             onSucces();
             return;
         }
@@ -63,6 +87,7 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
             });
             if (res.ok) {
                 setStatus('idle');
+                setPoging(false);
                 onSucces();
             } else {
                 setStatus('error');
@@ -73,19 +98,22 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
     };
 
     return (
-        <form onSubmit={verstuur} className="flex flex-col gap-6">
+        <form noValidate onSubmit={verstuur} className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="wo-company" className={labelClass}>{nl ? 'Bedrijfsnaam *' : 'Company name *'}</label>
-                    <input required id="wo-company" name="company" type="text" autoComplete="organization" value={data.company} onChange={wijzig} className={fieldClass} placeholder={nl ? 'Bedrijfsnaam' : 'Company name'} />
+                    <input required id="wo-company" name="company" type="text" autoComplete="organization" value={data.company} onChange={wijzig} aria-invalid={!!fouten['wo-company']} className={`${fieldClass} ${foutRand(fouten['wo-company'])}`} placeholder={nl ? 'Bedrijfsnaam' : 'Company name'} />
+                    <FoutTekst>{fouten['wo-company']}</FoutTekst>
                 </div>
                 <div>
                     <label htmlFor="wo-name" className={labelClass}>{nl ? 'Naam *' : 'Name *'}</label>
-                    <input required id="wo-name" name="name" type="text" autoComplete="name" value={data.name} onChange={wijzig} className={fieldClass} placeholder={nl ? 'Voor- en achternaam' : 'First and last name'} />
+                    <input required id="wo-name" name="name" type="text" autoComplete="name" value={data.name} onChange={wijzig} aria-invalid={!!fouten['wo-name']} className={`${fieldClass} ${foutRand(fouten['wo-name'])}`} placeholder={nl ? 'Voor- en achternaam' : 'First and last name'} />
+                    <FoutTekst>{fouten['wo-name']}</FoutTekst>
                 </div>
                 <div>
                     <label htmlFor="wo-email" className={labelClass}>{nl ? 'E-mail *' : 'Email *'}</label>
-                    <input required id="wo-email" name="email" type="email" autoComplete="email" value={data.email} onChange={wijzig} className={fieldClass} placeholder={nl ? 'naam@bedrijf.be' : 'name@company.com'} />
+                    <input required id="wo-email" name="email" type="email" autoComplete="email" value={data.email} onChange={wijzig} aria-invalid={!!fouten['wo-email']} className={`${fieldClass} ${foutRand(fouten['wo-email'])}`} placeholder={nl ? 'naam@bedrijf.be' : 'name@company.com'} />
+                    <FoutTekst>{fouten['wo-email']}</FoutTekst>
                 </div>
                 <div>
                     <label htmlFor="wo-phone" className={labelClass}>{nl ? 'Telefoon' : 'Phone'}</label>
@@ -120,9 +148,12 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center gap-5 mt-2">
-                <CTAButton type="submit" disabled={!geldig || status === 'loading'} className="w-full md:w-auto">
+                <CTAButton type="submit" disabled={!klaar || status === 'loading'} className="w-full md:w-auto">
                     {status === 'loading' ? (nl ? 'Even geduld...' : 'One moment...') : (nl ? 'Vraag een offerte aan' : 'Request a quote')}
                 </CTAButton>
+                {heeftFouten && (
+                    <p className="text-sm text-red-600">{nl ? 'Vul de rood gemarkeerde velden nog aan.' : 'Please complete the fields marked in red.'}</p>
+                )}
                 {status === 'error' && (
                     <p className="text-sm text-red-600">
                         {nl ? 'Er ging iets mis. Probeer opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.

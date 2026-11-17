@@ -37,7 +37,7 @@ Juridisch: **TriaCore AI BV** | Zetel: Berkenstraat 44, 3850 Nieuwerkerken | Ond
 |---|---|---|
 | **Rian Mathijs** | Sales & Client Relations | rian.mathijs@triacore.be / 0499 87 46 62 |
 | **Lucas Curto** | AI & Strategie | lucas.curto@triacore.be / 0468 27 50 82 |
-| **Jorn Van Breemaat** | Softwareontwikkeling & ICT-advies | jorn.vanbreemaat@triacore.be / 0470 24 94 69 |
+| **Jorn van Breemaat** | Softwareontwikkeling & ICT-advies | jorn.vanbreemaat@triacore.be / 0470 24 94 69 |
 
 - **Rian** = eerste aanspreekpunt, bewaakt samenwerking van begin tot eind, vertaalt bedrijfsuitdagingen naar trajecten.
 - **Lucas** = volgt wat er nieuw is in AI en vertaalt dat duidelijk naar de klant.

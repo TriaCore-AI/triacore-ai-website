@@ -7,8 +7,9 @@ import { useLanguage } from '../../context/LanguageContext';
 // De oplossingen, samen in het dropdownmenu "Oplossingen". De pagina over AI-agents (/ai-begeleiding) is
 // tijdelijk uit het menu gehaald tot er genoeg bewijs is (beslissing Lucas, 6/11). Terugzetten:
 // { to: '/ai-begeleiding', title: { nl: 'AI-agents', en: 'AI agents' }, sub: { ... } }
+// AI-oplossingen (AiOplossingen.jsx) is de opvolger van Custom tools.
 const OPLOSSINGEN = [
-    { to: '/custom-oplossingen', title: { nl: 'Custom tools', en: 'Custom tools' }, sub: { nl: 'Software op maat rond jouw processen', en: 'Custom software around your processes' } },
+    { to: '/ai-oplossingen', title: { nl: 'AI-oplossingen', en: 'AI solutions' }, sub: { nl: 'Software en AI op maat van je bedrijf', en: 'Software and AI built around your business' } },
     { to: '/workshops', title: { nl: 'Workshops', en: 'Workshops' }, sub: { nl: 'Jouw team leert werken met AI', en: 'Your team learns to work with AI' } }
 ];
 

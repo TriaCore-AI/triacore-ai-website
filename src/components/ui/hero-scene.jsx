@@ -2,50 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import { FRAGMENT } from './hero-scene-shader';
 import './hero-scene.css';
 
-// De 3D-achtergrond van de homepage: een staaf van draaiende schijven voor een muur met raamlicht.
-// Onder de muis schuiven schijven zacht uit de rij. Zonder bibliotheek, en de pagina wacht er nooit op:
-// de shader laadt pas na de tekst, en zonder WebGL blijft de hero gewoon op het verloop staan.
-const SCENE = {
-  ro: [0, 0, 14],
-  ta: [0, 0, 0],
-  lens: 2.05,
-  licht: [0.62, 0.66, 0.42],
-  muis: [0.15, 0.06],
-  schijven: 64
-};
-// Het binnenkomen: de schijven draaien vlot in en vertragen zacht tot hun eindstand. Ze starten iets voorbij
-// de vlakke stand (uIn onder 0), zodat ze nog op volle snelheid draaien als de fade-in van de canvas af is
-const INTRO = 2.2;
-const INTRO_VAN = -0.3;
-const TIK_ACTIEF = 1000 / 61;
-// In rust schuift enkel het raamlicht, heel traag: daarvoor volstaan een paar beelden per seconde
-const TIK_RUST = 1000 / 12;
-
-const norm = (v) => {
-  const l = Math.hypot(v[0], v[1], v[2]);
-  return [v[0] / l, v[1] / l, v[2] / l];
-};
-const uitloop = (x) => 1 - Math.pow(1 - x, 3);
-
-// Welke schijf ligt onder de muis? Zelfde vorm en draaiing als map() in de shader.
-// Geeft het nummer van de schijf terug, of null als de muis naast de staaf staat
-function schijfOnder(o, d) {
-  const draai = (v) => {
-    const c = Math.cos(-0.62), s = Math.sin(-0.62);
-    const x = v[0] * c - v[2] * s, z = v[0] * s + v[2] * c;
-    const c2 = Math.cos(-0.05), s2 = Math.sin(-0.05);
-    return [x * c2 - v[1] * s2, x * s2 + v[1] * c2, z];
-  };
-  const a = draai(o), b = draai(d);
-  const oy = a[1] + 2.12, oz = a[2];
-  const A = b[1] * b[1] + b[2] * b[2];
-  const B = oy * b[1] + oz * b[2];
-  const C = oy * oy + oz * oz - 1.05 * 1.05;
-  const D = B * B - A * C;
-  if (D < 0) return null;
-  const t = (-B - Math.sqrt(D)) / A;
-  return Math.floor((a[0] + t * b[0]) / 0.44);
-}
+// De achtergrond van de homepage: een muur met raamlicht en daarvoor een vloer die naar voren oplost, zodat er
+// diepte in zit (hero-scene-shader.js). Het raamlicht schuift heel traag, en de camera beweegt een fractie mee
+// met de muis. Zonder bibliotheek, en de pagina wacht er nooit op: de shader laadt pas na de tekst, en zonder
+// WebGL blijft de hero gewoon op het verloop staan.
+// Vroeger stond voor de muur een staaf van draaiende schijven die op de muis reageerden; die is weg (17/11).
+const TIK_ACTIEF = 1000 / 61; // terwijl de camera de muis volgt
+const TIK_RUST = 1000 / 12;   // in rust schuift enkel het raamlicht: daarvoor volstaan een paar beelden per seconde
 
 export default function HeroScene() {
   const canvasRef = useRef(null);
@@ -67,7 +30,7 @@ export default function HeroScene() {
       return s;
     };
 
-    // Het compileren kan even duren: dat gebeurt pas na de eerste weergave, en waar het kan op de achtergrond
+    // Het compileren gebeurt pas na de eerste weergave, en waar het kan op de achtergrond
     const begin = () => {
       if (gestopt) return;
       const prog = gl.createProgram();
@@ -103,30 +66,11 @@ export default function HeroScene() {
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
       const u = {};
-      ['uRes', 'uT', 'uIn', 'uM', 'uRo', 'uTa', 'uL', 'uLens'].forEach((n) => { u[n] = gl.getUniformLocation(prog, n); });
-      const l = norm(SCENE.licht);
-      gl.uniform3f(u.uTa, SCENE.ta[0], SCENE.ta[1], SCENE.ta[2]);
-      gl.uniform3f(u.uL, l[0], l[1], l[2]);
-      gl.uniform1f(u.uLens, SCENE.lens);
-
-      // Per schijf hoe ver ze uit de rij staat. Elke schijf heeft haar eigen veer: ze start zacht,
-      // komt rustig tot stilstand en glijdt vanzelf terug als de muis weg is
-      const n = SCENE.schijven;
-      const hoog = new Float32Array(n), vaart = new Float32Array(n), data = new Uint8Array(n);
-      const tex = gl.createTexture();
-      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, n, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, data);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.uniform1i(gl.getUniformLocation(prog, 'uKaart'), 0);
+      ['uRes', 'uT', 'uM'].forEach((n) => { u[n] = gl.getUniformLocation(prog, n); });
 
       const m = { x: 0, y: 0, dx: 0, dy: 0 };
-      let muisX = null, muisY = null;
       let loopt = false, inBeeld = true, vorig = 0, klok = 0, laatste = 0, teller = 0, traag = 0;
-      let actief = true, frameId = 0;
+      let actief = false, frameId = 0;
       let kwaliteit = Math.min(window.devicePixelRatio || 1, 1.5);
 
       const maat = () => {
@@ -137,52 +81,9 @@ export default function HeroScene() {
         gl.uniform2f(u.uRes, canvas.width, canvas.height);
       };
 
-      // Rond de knoppen en de logo's (elementen in een ouder met data-schijven-rust) reageren de schijven niet:
-      // wie een knop wil aanklikken, moet de staaf erachter niet zien bewegen. De zone loopt RUST_MARGE
-      // pixels rond elk element, zodat de schijven niet springen als de muis net naast een knop komt
-      const RUST_MARGE = 32;
-      const inRust = () => [...hero.querySelectorAll('[data-schijven-rust] > *')].some((el) => {
-        const b = el.getBoundingClientRect();
-        return muisX > b.left - RUST_MARGE && muisX < b.right + RUST_MARGE
-          && muisY > b.top - RUST_MARGE && muisY < b.bottom + RUST_MARGE;
-      });
-
-      // Geeft true zolang er een schijf beweegt of de muis op de staaf staat
-      const schijvenBij = (dt) => {
-        let raak = null;
-        if (muisX !== null && klok > INTRO) {
-          const r = hero.getBoundingClientRect();
-          if (muisY >= r.top && muisY <= r.bottom && !inRust()) {
-            const ux = (muisX - r.left - r.width / 2) / r.height;
-            const uy = (r.top + r.height / 2 - muisY) / r.height;
-            const ro = [SCENE.ro[0] + m.x * SCENE.muis[0], SCENE.ro[1] + m.y * SCENE.muis[1], SCENE.ro[2]];
-            const f = norm([SCENE.ta[0] - ro[0], SCENE.ta[1] - ro[1], SCENE.ta[2] - ro[2]]);
-            const ri = norm([-f[2], 0, f[0]]);
-            const om = [ri[1] * f[2] - ri[2] * f[1], ri[2] * f[0] - ri[0] * f[2], ri[0] * f[1] - ri[1] * f[0]];
-            raak = schijfOnder(ro, norm([0, 1, 2].map((i) => ux * ri[i] + uy * om[i] + SCENE.lens * f[i])));
-          }
-        }
-        const stap = Math.min(dt, 1 / 30), helft = n / 2;
-        let beweegt = raak !== null;
-        for (let i = 0; i < n; i++) {
-          const afst = raak === null ? 9 : Math.abs(i - helft - raak);
-          const doel = afst === 0 ? 1 : afst === 1 ? 0.3 : afst === 2 ? 0.07 : 0;
-          // Omhoog vlot, terug trager. Beide kritisch gedempt, dus zonder na te veren
-          const K = doel > hoog[i] ? 34 : 13;
-          vaart[i] += ((doel - hoog[i]) * K - vaart[i] * 2 * Math.sqrt(K)) * stap;
-          hoog[i] += vaart[i] * stap;
-          data[i] = Math.round(Math.max(0, Math.min(1, hoog[i])) * 255);
-          if (data[i] > 0) beweegt = true;
-        }
-        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, n, 1, gl.LUMINANCE, gl.UNSIGNED_BYTE, data);
-        return beweegt;
-      };
-
       const teken = () => {
         gl.uniform1f(u.uT, stil ? 8 : klok + 8);
-        gl.uniform1f(u.uIn, stil ? 1 : INTRO_VAN + (1 - INTRO_VAN) * uitloop(Math.min(klok / INTRO, 1)));
         gl.uniform2f(u.uM, m.x, m.y);
-        gl.uniform3f(u.uRo, SCENE.ro[0] + m.x * SCENE.muis[0], SCENE.ro[1] + m.y * SCENE.muis[1], SCENE.ro[2]);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       };
 
@@ -203,9 +104,8 @@ export default function HeroScene() {
         const k = 1 - Math.exp(-dt * 2.4);
         m.x += (m.dx - m.x) * k;
         m.y += (m.dy - m.y) * k;
-        const schijven = schijvenBij(dt);
         teken();
-        actief = klok < INTRO || schijven || Math.abs(m.dx - m.x) + Math.abs(m.dy - m.y) > 0.001;
+        actief = Math.abs(m.dx - m.x) + Math.abs(m.dy - m.y) > 0.001;
         frameId = requestAnimationFrame(tik);
       };
 
@@ -218,17 +118,11 @@ export default function HeroScene() {
 
       const opMuis = (e) => {
         if (e.pointerType !== 'mouse' || stil) return;
-        muisX = e.clientX;
-        muisY = e.clientY;
         m.dx = e.clientX / window.innerWidth * 2 - 1;
         m.dy = -(e.clientY / window.innerHeight * 2 - 1);
         actief = true;
         wek();
       };
-      const muisWeg = () => { muisX = null; };
-      // Tijdens het scrollen staat de muis stil maar schuift de staaf eronder door: dan zouden er schijven
-      // bewegen zonder dat de muis bewoog. Daarom telt de muis pas weer na de volgende muisbeweging
-      const opScroll = () => { muisX = null; };
       const opVerlies = (e) => { e.preventDefault(); canvas.style.display = 'none'; };
 
       const zicht = new IntersectionObserver((e) => { inBeeld = e[0].isIntersecting; wek(); });
@@ -236,8 +130,6 @@ export default function HeroScene() {
       const formaat = new ResizeObserver(() => { maat(); teken(); });
       formaat.observe(hero);
       window.addEventListener('pointermove', opMuis, { passive: true });
-      window.addEventListener('scroll', opScroll, { passive: true });
-      document.documentElement.addEventListener('mouseleave', muisWeg);
       document.addEventListener('visibilitychange', wek);
       canvas.addEventListener('webglcontextlost', opVerlies);
 
@@ -251,11 +143,8 @@ export default function HeroScene() {
         zicht.disconnect();
         formaat.disconnect();
         window.removeEventListener('pointermove', opMuis);
-        window.removeEventListener('scroll', opScroll);
-        document.documentElement.removeEventListener('mouseleave', muisWeg);
         document.removeEventListener('visibilitychange', wek);
         canvas.removeEventListener('webglcontextlost', opVerlies);
-        gl.deleteTexture(tex);
         gl.deleteBuffer(buf);
         gl.deleteProgram(prog);
       };

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import CTAButton from '../ui/cta-button';
 import CornerTrace from '../ui/corner-trace';
+import { LagenLicht } from '../ui/hero-achtergronden';
 import { useLanguage } from '../../context/LanguageContext';
 import zaalFoto from '../../assets/workshops/box-vlaanderen-zaal.jpg';
 import slideFoto from '../../assets/workshops/box-vlaanderen-slide.jpg';
@@ -140,13 +141,25 @@ export default function WorkshopsHero() {
     }, []);
 
     return (
-        <section ref={ref} id="workshops" className="px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-20 md:pb-28">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[10fr_12fr] gap-14 lg:gap-20 items-center">
+        <section ref={ref} id="workshops" className="relative overflow-hidden px-6 md:px-16 lg:px-24 pt-40 md:pt-48 pb-20 md:pb-28">
+            {/* Dezelfde achtergrond als de hero van AI-oplossingen: de zijden lagen, die onderaan zacht uitvloeien
+                in de pagina (een masker, dus geen harde rand naar de volgende sectie) */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                    maskImage: 'linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%)'
+                }}
+            >
+                <LagenLicht />
+            </div>
+            <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[10fr_12fr] gap-14 lg:gap-20 items-center">
                 <div>
-                    <h1 className="wh-title hero-title text-foreground text-5xl sm:text-6xl md:text-7xl xl:text-[7.5rem] leading-[1.02]">
+                    <h1 className="wh-title hero-title titel-hero text-foreground">
                         Workshops
                     </h1>
-                    <p className="wh-fade mt-8 md:mt-10 text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl">
+                    <p className="wh-fade mt-8 md:mt-10 tekst-hero text-foreground/70 max-w-xl">
                         {nl
                             ? 'Jouw team leert zelf werken met AI. Praktisch, op maat van je sector en met voorbeelden uit het eigen werk.'
                             : 'Your team learns to work with AI on their own. Practical, tailored to your sector, with examples from their own work.'}

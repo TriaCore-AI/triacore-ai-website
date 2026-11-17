@@ -23,7 +23,8 @@
 }
 @media (prefers-reduced-motion: reduce) { .hero-scene { transition: none; } }
 
-/* De klantlogo's staan rechtstreeks op de achtergrond */
+/* De klantlogo's staan op de achtergrond, met erachter een zachte, lichte waas die de drukke golf van de
+   scène net genoeg dempt om de logo's goed leesbaar te houden (zonder zichtbare rand) */
 .hero-logorij {
   position: relative;
   width: fit-content;
@@ -31,6 +32,13 @@
   margin-left: auto;
   margin-right: auto;
   padding: 18px 28px;
+}
+.hero-logorij::before {
+  content: '';
+  position: absolute;
+  inset: -40px -80px;
+  background: radial-gradient(closest-side, rgb(246 249 247 / 0.85), rgb(246 249 247 / 0.5) 60%, transparent);
+  pointer-events: none;
 }
 .hero-logorij > * { position: relative; }
 @media (min-width: 768px) {
@@ -58,7 +66,8 @@
   .hero-logo {
     flex: none;
     width: 170px;
-    height: 44px;
+    /* Dezelfde verhoudingen als op desktop (--logo-h uit App.jsx), iets kleiner */
+    height: calc(var(--logo-h, 46px) * 0.8);
     max-width: none;
     padding: 0 18px;
     animation: hero-logos-schuif 30s linear infinite;

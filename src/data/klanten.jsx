@@ -17,7 +17,7 @@ import medtronicLogo from '../assets/klantcases/medtronic.png';
 import theBoxLogo from '../assets/klantcases/the-box.png';
 
 export const oplossingSoorten = [
-    { id: 'custom', nl: 'Custom tools', en: 'Custom tools' },
+    { id: 'custom', nl: 'AI-oplossingen', en: 'AI solutions' },
     { id: 'workshop', nl: 'Workshops', en: 'Workshops' },
     { id: 'begeleiding', nl: 'AI-begeleiding', en: 'AI guidance' }
 ];

@@ -1,4 +1,6 @@
 /resources    /  301
 /resources/*  /  301
 /ai-begeleiding  /  302
+/custom-oplossingen  /ai-oplossingen  301
+/oplossingen-v2  /ai-oplossingen  301
 /*  /index.html  200

@@ -53,7 +53,7 @@ const TEAM = [
         linkedin: 'https://www.linkedin.com/in/rian-mathijs-6a4350356/'
     },
     {
-        name: 'Jorn Van Breemaat',
+        name: 'Jorn van Breemaat',
         image: '/team/jorn',
         role: { nl: 'Softwareontwikkeling & ICT-advies', en: 'Software Development & IT Advisory' },
         bio: {
@@ -100,8 +100,8 @@ export default function Team() {
             <Seo
                 title="Team | TriaCore AI"
                 description={nl
-                    ? 'Maak kennis met het team achter TriaCore AI: Lucas Curto, Rian Mathijs en Jorn Van Breemaat uit Hasselt.'
-                    : 'Meet the team behind TriaCore AI: Lucas Curto, Rian Mathijs and Jorn Van Breemaat from Hasselt.'}
+                    ? 'Maak kennis met het team achter TriaCore AI: Lucas Curto, Rian Mathijs en Jorn van Breemaat uit Hasselt.'
+                    : 'Meet the team behind TriaCore AI: Lucas Curto, Rian Mathijs and Jorn van Breemaat from Hasselt.'}
             />
             <Navbar />
             <main className="relative flex-grow">
