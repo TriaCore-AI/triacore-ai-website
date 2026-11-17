@@ -19,7 +19,7 @@ Claude werkt hier in twee rollen tegelijk:
 ## Bedrijf
 
 **TriaCore AI** is een Belgisch AI- en softwarebedrijf gevestigd in Hasselt (Corda Incubator).
-Tagline: *"De AI-partner waar groeiende bedrijven op bouwen."*
+Tagline: *"De AI-partner waar ambitieuze bedrijven op bouwen."* (sinds 17/11/2026; vroeger "groeiende bedrijven")
 
 Ze bouwen **maatwerksoftware rond bedrijfsprocessen** en integreren AI waar het echt rendement oplevert — niet aan de oppervlakte (chatbots), maar diep in processen (automatisering, agents, platforms).
 

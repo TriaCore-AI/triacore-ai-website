@@ -216,8 +216,6 @@ const AANPAK = (() => {
 function App() {
   const { language } = useLanguage();
   const containerRef = useRef(null);
-  // Rondt het aanpakschema meteen af (gebruikt door het snelmenu); wordt gezet door de animatie hieronder
-  const finishAanpak = useRef(null);
 
   // Schaal van het aanpakschema: 1 als het past, kleiner op smallere schermen (192px = de zijmarges)
   const [aanpakScale, setAanpakScale] = useState(1);
@@ -361,8 +359,6 @@ function App() {
                 { opacity: 0, x: toRight ? -10 : 10 },
                 { opacity: 1, x: 0, duration: 1.4, ease: 'sine.out' }, `${at}+=1.5`);
           });
-          // Het snelmenu hoeft hier niets af te ronden: het schema volgt de scrollpositie altijd vanzelf
-          finishAanpak.current = null;
         }
 
         // Team: de verspringende foto schuift iets trager mee, voor wat diepte
@@ -384,27 +380,17 @@ function App() {
 
       <Seo
         title={language === 'nl'
-          ? 'TriaCore AI | AI voor operationele vooruitgang'
-          : 'TriaCore AI | AI for operational progress'}
+          ? 'TriaCore AI | De AI-partner waar ambitieuze bedrijven op bouwen'
+          : 'TriaCore AI | The AI partner that ambitious companies build on'}
         description={language === 'nl'
-          ? "AI voor bedrijven met veel mensen, veel materieel en veel administratie. TriaCore AI uit Hasselt bouwt software op maat met AI en geeft AI-workshops."
-          : "AI for businesses with lots of people, lots of equipment and lots of paperwork. TriaCore AI from Hasselt builds custom software with AI and runs AI workshops."}
+          ? 'TriaCore AI uit Hasselt helpt bedrijven om AI een vaste plaats te geven in hun werking, met AI-oplossingen op maat en AI-workshops voor je team.'
+          : 'TriaCore AI from Hasselt helps companies give AI a permanent place in how they work, with custom AI solutions and AI workshops for your team.'}
       />
 
       <Navbar />
-      <SectionNav
-        items={snelmenu[language]}
-        onBeforeJump={(id) => {
-          // Spring je voorbij Onze aanpak terwijl die nog niet afgespeeld is, rond ze dan eerst af,
-          // anders speelt het hele schema tussenin af en klopt de bestemming niet
-          const order = snelmenu.nl.map((s) => s.id);
-          if (order.indexOf(id) > order.indexOf('aanpak')) {
-            finishAanpak.current?.();
-            // Ook de kleine versie (onder 1280) mag dan niet meer stoppen onderweg
-            window.dispatchEvent(new Event('aanpak-klaar'));
-          }
-        }}
-      />
+      {/* Onze aanpak houdt de pagina nergens meer vast en volgt het scrollen vanzelf, dus een sprong via het
+          snelmenu hoeft niets meer af te ronden */}
+      <SectionNav items={snelmenu[language]} />
 
       {/* B. HERO SECTION */}
       {/* Rustig en gecentreerd: één korte titel, één zin, één knop. Daaronder stil bewijs, op een vaste
@@ -432,24 +418,24 @@ function App() {
           <div className="max-w-6xl mx-auto text-center">
             {/* Regel per regel: elke regel komt als geheel binnen uit zijn eigen richting (data-from).
                 Elke regel is zo breed als zijn tekst, zodat de veeg op de tekst zelf loopt en niet op lege ruimte.
-                De vaste hero-maat (titel-hero); enkel op een heel smal scherm schaalt de titel mee, zodat de
-                eerste regel op één lijn blijft */}
-            <h1 className="hero-title titel-hero max-sm:text-[min(2.5rem,10.5vw)]! text-foreground">
-              <span className="hero-row block w-fit mx-auto" data-from="left">
-                {language === 'nl' ? 'AI voor operationele' : 'AI for operational'}
+                De vaste hero-maat (titel-hero); op een smal scherm loopt de tweede regel gewoon door.
+                De titel is de tagline van TriaCore (17/11: "ambitieuze" in plaats van "groeiende"), naar het voorbeeld
+                van Distyl: een positionering in één zin. Het accent is schuin, niet vet, zoals op de andere pagina's */}
+            <h1 className="hero-title titel-hero text-foreground">
+              <span className="hero-row block w-fit max-w-full mx-auto" data-from="left">
+                {language === 'nl' ? 'De AI-partner waar' : 'The AI partner that'}
               </span>
-              <span className="hero-row block w-fit mx-auto italic font-bold text-accent" data-from="right">
-                {language === 'nl' ? 'vooruitgang' : 'progress'}
+              <span className="hero-row block w-fit max-w-full mx-auto italic text-accent" data-from="right">
+                {language === 'nl' ? 'ambitieuze bedrijven op bouwen.' : 'ambitious companies build on.'}
               </span>
             </h1>
 
-            {/* Eerst voor wie (breed genoeg voor een aannemer, een autogroep en een verhuurder), dan wat we doen:
-                nieuwe software bouwen of koppelen aan wat er al is, met AI waar het rendeert. Kort gehouden, zodat de
-                klantlogo's eronder in beeld blijven */}
+            {/* Naar de opbouw van Distyl: wat we doen (AI een vaste plaats geven) en hoe (op maat bouwen en erbij
+                blijven tot het resultaat er staat). Kort gehouden, zodat de klantlogo's eronder in beeld blijven */}
             <p className="hero-fade mt-5 sm:mt-8 md:mt-10 mx-auto tekst-hero text-foreground/70 max-w-2xl text-balance">
               {language === 'nl'
-                ? 'Voor bedrijven met planning, mensen op de baan en veel administratief werk. Wij bouwen software op maat of koppelen aan wat je al gebruikt, met AI waar het rendeert.'
-                : 'For businesses with schedules to manage, people on the road and a lot of paperwork. We build custom software or connect to what you already use, with AI where it pays off.'}
+                ? 'TriaCore AI helpt je om AI een vaste plaats te geven in je werking. We bouwen het op maat en blijven erbij tot het resultaat er staat.'
+                : 'TriaCore AI helps you give AI a permanent place in how you work. We build it to measure and stay involved until the results are there.'}
             </p>
 
             {/* Op gsm is de tekstlink 44px hoog om op te tikken; de kleinere rijafstand houdt de witruimte gelijk */}
