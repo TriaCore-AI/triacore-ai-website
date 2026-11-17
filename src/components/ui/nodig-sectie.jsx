@@ -116,10 +116,6 @@ export default function NodigSectie({ titel, intro, onderdelen, leeg }) {
     return (
         <section id="nodig" className="relative scroll-mt-28 pb-24 md:pb-32">
             {/* Gsm en tablet: de titel gewoon boven de onderdelen */}
-            <div className="lg:hidden px-6 md:px-16 pt-16 md:pt-24 mb-12 md:mb-16">
-                <h2 className="hero-title text-foreground text-4xl md:text-5xl leading-[1.08]">{titel}</h2>
-                {intro && <p className="mt-4 text-foreground/60 text-lg md:text-xl leading-relaxed max-w-xl">{intro}</p>}
-            </div>
 
             {/* Vanaf 1024px: titel, lijst en één kaart, samen vastgezet terwijl je door de sectie scrolt, in het
                 midden van het scherm (vastTop). Op een laag scherm (minder dan 900 px hoog) is alles iets compacter;
@@ -192,10 +188,19 @@ export default function NodigSectie({ titel, intro, onderdelen, leeg }) {
             {/* Gsm en tablet: per onderdeel één witte kaart met het nummer, de naam, de uitleg en het beeld. Elke kaart
                 komt zacht op zodra ze in beeld schuift (data-reveal-head en rv-fade, uitgevoerd door useReveal op de
                 pagina) */}
-            <div className="lg:hidden px-6 md:px-16 flex flex-col gap-5 md:gap-6">
+            {/* Net als op desktop staat de hele sectie op één grote witte kaart met afgeronde hoeken, over de volle
+                breedte, zodat duidelijk is waar ze begint en eindigt. De kaartjes per onderdeel erin zijn lichtgroen,
+                zonder rand, zodat ze zich zacht van de grote kaart onderscheiden */}
+            <div className="lg:hidden pt-10 md:pt-14">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] px-3 md:px-6 pt-12 md:pt-16 pb-3 md:pb-6">
+                    <div className="px-3 md:px-4 mb-10 md:mb-12">
+                        <h2 className="hero-title text-foreground text-4xl md:text-5xl leading-[1.08]">{titel}</h2>
+                        {intro && <p className="mt-4 text-foreground/60 text-lg md:text-xl leading-relaxed max-w-xl">{intro}</p>}
+                    </div>
+            <div className="flex flex-col gap-3 md:gap-4">
                 {onderdelen.map((o, i) => (
                     <div key={o.id} data-reveal-head>
-                        <article className="rv-fade rounded-3xl bg-white border border-foreground/[0.08] p-6 md:p-8">
+                        <article className="rv-fade rounded-3xl bg-[#f2f6f3] p-5 md:p-7">
                             <p className="text-sm font-medium text-accent tabular-nums">0{i + 1}</p>
                             <h3 className="mt-2 text-2xl md:text-3xl font-medium text-foreground leading-tight">{o.naam}</h3>
                             <div className="mt-4 flex flex-col gap-3">
@@ -213,6 +218,8 @@ export default function NodigSectie({ titel, intro, onderdelen, leeg }) {
                         </article>
                     </div>
                 ))}
+            </div>
+                </div>
             </div>
         </section>
     );
