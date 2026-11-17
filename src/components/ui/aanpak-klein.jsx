@@ -10,7 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 // - Wie verder scrolt of veegt, stopt bij "Vertalen"; nog eens verder en "Waarmaken" klapt open, waarna je
 //   meteen weer vrij doorscrolt. Tijdens het openklappen telt een nieuwe veeg niet mee, zodat het nooit
 //   twee stappen ineens neemt. Omhoog scrollen gaat een stap terug, en voorbij "Begrijpen" weer vrij omhoog.
-// - Het loopt één keer. Daarna blijft "Waarmaken" open en kan je op een balk tikken om die pijler te openen.
+// - Het werkt altijd, in beide richtingen (vraag van Lucas, 17/11): kom je van onderen terug naar boven, dan
+//   stopt de pagina op dezelfde plek en loopt het omgekeerd: "Waarmaken" klapt dicht tot "Vertalen", dan
+//   "Begrijpen", en daarna scrol je weer vrij omhoog. Een tik op een balk opent altijd die pijler.
 // Enkel op dit blok staat de pagina dus even stil, bewust: elders op de site nooit.
 // De hoogte ligt vast en er staat telkens maar één pijler open, dus wat eronder staat verspringt niet.
 // Bij "minder beweging" in het systeem staan alle pijlers gewoon open en stopt er niets.
@@ -35,8 +37,9 @@ export default function AanpakKlein({ pijlers }) {
 
     useEffect(() => {
         if (rustig) return undefined;
-        let klaar = false;
         let timer = null;
+        // Na een sprong via het snelmenu even niet stoppen, anders blijft de sprong onderweg hangen
+        let overslaanTot = 0;
 
         // Houdt de pagina op haar plaats zolang het blok stilstaat (ook als er nog vaart in het scrollen zit)
         const vast = ScrollTrigger.observe({
@@ -63,7 +66,6 @@ export default function AanpakKlein({ pijlers }) {
                 return;
             }
             if (volgende > 2) {
-                klaar = true;
                 los();
                 return;
             }
@@ -72,11 +74,8 @@ export default function AanpakKlein({ pijlers }) {
             clearTimeout(timer);
             timer = setTimeout(() => {
                 bezigRef.current = false;
-                // Bij "Waarmaken" ben je door: de pagina scrolt weer vrij
-                if (volgende === 2 && richting > 0) {
-                    klaar = true;
-                    los();
-                }
+                // Bij "Waarmaken" (naar beneden) ben je door: de pagina scrolt weer vrij
+                if (volgende === 2 && richting > 0) los();
             }, OPENKLAPPEN);
         };
 
@@ -91,23 +90,36 @@ export default function AanpakKlein({ pijlers }) {
         });
         intentie.disable();
 
-        // Het stoppunt: het logo staat iets boven het midden van het scherm. Enkel naar beneden, enkel onder 1280
-        // (daarboven staat het grote schema) en maar één keer
+        // Het stoppunt: het logo staat iets boven het midden van het scherm. Enkel onder 1280 (daarboven staat
+        // het grote schema), en telkens opnieuw: naar beneden opent het van "Begrijpen" naar "Waarmaken", naar
+        // boven sluit het van "Waarmaken" terug naar "Begrijpen"
+        const magStoppen = () => !vast.isEnabled && Date.now() > overslaanTot && window.matchMedia('(max-width: 1279px)').matches;
+        const stop = (self) => {
+            self.scroll(self.start);
+            vast.enable();
+            intentie.enable();
+        };
         const st = ScrollTrigger.create({
             trigger: wrapRef.current,
             start: 'center 55%',
             onEnter: (self) => {
-                if (klaar || vast.isEnabled || !window.matchMedia('(max-width: 1279px)').matches) return;
-                self.scroll(self.start);
-                vast.enable();
-                intentie.enable();
+                if (!magStoppen()) return;
+                stop(self);
+                zet(-1);
                 stap(1);
+            },
+            onLeaveBack: (self) => {
+                if (!magStoppen()) return;
+                // Het spiegelbeeld van naar beneden: vanuit "Waarmaken" meteen een stap terug naar "Vertalen"
+                stop(self);
+                zet(2);
+                stap(-1);
             }
         });
 
         // Springt het snelmenu voorbij dit blok, dan mag het onderweg niet stoppen: meteen afronden
         const afronden = () => {
-            klaar = true;
+            overslaanTot = Date.now() + 2500;
             los();
             if (actiefRef.current < 2) zet(2);
         };

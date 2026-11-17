@@ -216,8 +216,6 @@ const AANPAK = (() => {
 function App() {
   const { language } = useLanguage();
   const containerRef = useRef(null);
-  // Of het aanpakschema al eens volledig afgespeeld is; daarna blijft het staan
-  const aanpakDone = useRef(false);
   // Rondt het aanpakschema meteen af (gebruikt door het snelmenu); wordt gezet door de animatie hieronder
   const finishAanpak = useRef(null);
 
@@ -345,20 +343,11 @@ function App() {
           // de derde pijler op tijd volledig staat. De scrub laat het kort naijlen. De drie pijlers duren even
           // lang, dus ze gaan alle drie even snel. Bewust subtiel: de balken groeien met een zachte start en
           // stop, de tekst schuift maar een paar pixels en komt vooral zacht op.
-          // Eén keer volledig afgespeeld, blijft het staan: terugscrollen speelt niets meer achteruit.
-          // aanpakDone onthoudt dat ook als de animaties opnieuw opgebouwd worden (bv. bij een taalwissel)
+          // Het loopt altijd mee met het scrollen, in beide richtingen: scrol je terug omhoog, dan speelt het
+          // omgekeerd af (vraag van Lucas, 17/11)
           const tl = gsap.timeline({
             defaults: { ease: 'sine.inOut' },
-            paused: aanpakDone.current,
-            scrollTrigger: aanpakDone.current ? undefined : {
-              trigger: '.aanpak-diagram', start: 'top 92%', end: 'top 30%', scrub: 0.8,
-              onUpdate: (self) => {
-                if (self.progress < 0.97 || aanpakDone.current) return;
-                aanpakDone.current = true;
-                self.kill(false, true);
-                gsap.to(tl, { progress: 1, duration: 0.8, ease: 'sine.out' });
-              }
-            }
+            scrollTrigger: { trigger: '.aanpak-diagram', start: 'top 92%', end: 'top 30%', scrub: 0.8 }
           });
           texts.forEach((text, i) => {
             const at = `pijler${i}`;
@@ -372,13 +361,8 @@ function App() {
                 { opacity: 0, x: toRight ? -10 : 10 },
                 { opacity: 1, x: 0, duration: 1.4, ease: 'sine.out' }, `${at}+=1.5`);
           });
-          if (aanpakDone.current) tl.progress(1);
-          finishAanpak.current = () => {
-            if (aanpakDone.current) return;
-            aanpakDone.current = true;
-            tl.scrollTrigger?.kill(false, true);
-            tl.progress(1);
-          };
+          // Het snelmenu hoeft hier niets af te ronden: het schema volgt de scrollpositie altijd vanzelf
+          finishAanpak.current = null;
         }
 
         // Team: de verspringende foto schuift iets trager mee, voor wat diepte

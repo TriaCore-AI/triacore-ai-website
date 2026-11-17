@@ -29,7 +29,6 @@ export default function Navbar() {
     const { language, toggleLanguage } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [dropdown, setDropdown] = useState(false);
-    const [mobileSolutions, setMobileSolutions] = useState(false);
     const closeTimer = useRef(null);
     const location = useLocation();
 
@@ -81,10 +80,9 @@ export default function Navbar() {
         closeTimer.current = setTimeout(() => setDropdown(false), 150);
     };
 
-    // Het menu op gsm sluiten; de oplossingen staan de volgende keer weer dicht
+    // Het menu op gsm sluiten
     const closeMobile = () => {
         setIsOpen(false);
-        setMobileSolutions(false);
     };
 
     const linkClass = 'hover:text-foreground transition-colors';
@@ -177,8 +175,8 @@ export default function Navbar() {
             </nav>
 
             {/* Het menu op gsm: een effen vlak in het verloop van de huisstijl, zodat de pagina er niet doorheen
-                schemert. Alles gecentreerd in de titelletter. Oplossingen staat als gewone regel in de lijst, met
-                een pijltje, en klapt open tot de oplossingen */}
+                schemert. Alles gecentreerd in de titelletter. De oplossingen (AI-oplossingen, Workshops) staan hier
+                als gewone regels in de lijst, niet onder een uitklapbaar "Oplossingen" zoals op desktop (vraag Lucas, 17/11) */}
             <div
                 onClick={closeMobile}
                 style={{ background: 'linear-gradient(to bottom, #f5f7f6 0%, #ecf1ed 50%, #e2eae3 100%)' }}
@@ -190,27 +188,9 @@ export default function Navbar() {
                 >
                     <MobileLink to="/" active={location.pathname === '/'} onClick={() => { closeMobile(); window.scrollTo(0, 0); }}>Home</MobileLink>
 
-                    <button
-                        type="button"
-                        onClick={() => setMobileSolutions((open) => !open)}
-                        aria-expanded={mobileSolutions}
-                        aria-controls="mobile-oplossingen"
-                        className={`${mobileRow(oplossingActive)} inline-flex items-center gap-2`}
-                    >
-                        {language === 'nl' ? 'Oplossingen' : 'Solutions'}
-                        <ChevronDown strokeWidth={1.5} className={`w-6 h-6 transition-transform duration-300 ${mobileSolutions ? 'rotate-180' : ''}`} />
-                    </button>
-                    <div
-                        id="mobile-oplossingen"
-                        inert={!mobileSolutions}
-                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${mobileSolutions ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-                    >
-                        <div className="overflow-hidden min-h-0">
-                            {OPLOSSINGEN.map((o) => (
-                                <MobileLink key={o.to} small to={o.to} active={location.pathname === o.to} onClick={closeMobile}>{o.title[language]}</MobileLink>
-                            ))}
-                        </div>
-                    </div>
+                    {OPLOSSINGEN.map((o) => (
+                        <MobileLink key={o.to} to={o.to} active={location.pathname === o.to} onClick={closeMobile}>{o.title[language]}</MobileLink>
+                    ))}
 
                     <MobileLink to="/projecten" active={location.pathname.startsWith('/projecten')} onClick={closeMobile}>{language === 'nl' ? 'Projecten' : 'Projects'}</MobileLink>
                     <MobileLink to="/team" active={location.pathname === '/team'} onClick={closeMobile}>Team</MobileLink>
