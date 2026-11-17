@@ -75,7 +75,7 @@ export default function Footer() {
                 {/* Wettelijke gegevens */}
                 <div className="mt-12 pt-6 border-t border-white/[0.07] flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-xs text-white/35">
                     <p className="leading-relaxed">
-                        &copy; {new Date().getFullYear()} TriaCore AI BV · {nl ? 'Zetel' : 'Registered office'}: Berkenstraat 44, 3850 Nieuwerkerken · {nl ? 'Ondernemingsnummer en btw' : 'Company number and VAT'}: BE 1042.233.821 · {nl ? 'RPR Antwerpen, afdeling Hasselt' : 'RLE Antwerp, Hasselt division'} · {nl ? 'Site gemaakt door Lucas Curto' : 'Website by Lucas Curto'}
+                        &copy; {new Date().getFullYear()} TriaCore AI BV · {nl ? 'Zetel' : 'Registered office'}: Berkenstraat 44, 3850 Nieuwerkerken · {nl ? 'Ondernemingsnummer en btw' : 'Company number and VAT'}: BE 1042.233.821 · {nl ? 'RPR Antwerpen, afdeling Hasselt' : 'RLE Antwerp, Hasselt division'}
                     </p>
                     <div className="flex flex-wrap gap-x-5 gap-y-2 shrink-0">
                         <Link to="/privacybeleid" className="hover:text-white transition-colors max-lg:py-2 max-lg:-my-2">{nl ? 'Privacybeleid' : 'Privacy policy'}</Link>
