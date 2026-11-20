@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import CTAButton from './cta-button';
-import WorkshopFormulier from '../workshops/workshop-formulier';
 import SuccesMelding from './succes-melding';
 import { FoutTekst, foutRand, isEmail, naarEersteFout } from './formulier-fouten';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Het contactformulier, in de nieuwe stijl: witte velden zonder kader eromheen, een keuze voor het
-// onderwerp als witte knoppen die groen worden bij hover of als ze gekozen zijn, en één primaire knop.
-// Het onderwerp is verplicht en staat bovenaan. Kies je "Workshop", dan verschijnt hetzelfde
-// offerteformulier als op de workshoppagina (workshop-formulier.jsx); wat je al invulde, blijft staan.
+// Het contactformulier, in de nieuwe stijl: witte velden zonder kader eromheen en één primaire knop.
+// Geen keuze meer voor het onderwerp (AI-oplossing, AI-workshop, weet ik nog niet): die vond Lucas verwarrend
+// (20/11). Aanvragen van hier komen in Netlify binnen met onderwerp "Contactformulier"; een workshopofferte
+// vraag je aan op de workshoppagina (workshop-formulier.jsx, onderwerp "Workshop").
 // Het formulier rekt mee in de hoogte (het berichtveld groeit), zodat het even hoog kan staan als de
 // kolom ernaast. Verstuurt naar Netlify Forms (formulier "contact").
-// De verstuurknop werkt pas als het onderwerp gekozen is en de verplichte velden (naam, een geldig
-// e-mailadres en het bericht) ingevuld zijn; tot dan is hij grijs, zonder extra uitleg ernaast, net als op
-// het workshopformulier. De controle bij het versturen (formulier-fouten.jsx) blijft als vangnet.
+// De verstuurknop werkt pas als de verplichte velden (naam, een geldig e-mailadres en het bericht) ingevuld
+// zijn; tot dan is hij grijs, zonder extra uitleg ernaast, net als op het workshopformulier. De controle bij
+// het versturen (formulier-fouten.jsx) blijft als vangnet.
 // Na het versturen verschijnt een klein bevestigingsvenster (succes-melding.jsx) en is het formulier weer leeg.
-// Let op: elk veld moet ook in het verborgen formulier in index.html staan, anders laat Netlify het weg.
-const TOPICS = [
-    { value: 'AI-oplossing', nl: 'AI-oplossing', en: 'AI solution' },
-    { value: 'Workshop', nl: 'AI-workshop', en: 'AI workshop' },
-    { value: 'Weet ik nog niet', nl: 'Weet ik nog niet', en: 'Not sure yet' }
-];
+// Let op: elk veld en elk onderwerp moet ook in het verborgen formulier in index.html staan, anders laat Netlify
+// het weg.
+const ONDERWERP = 'Contactformulier';
 
 const fieldClass = 'w-full bg-white border border-foreground/10 rounded-2xl px-5 py-3.5 text-foreground placeholder:text-foreground/35 outline-none transition-colors duration-300 hover:border-foreground/20 focus:border-foreground/40';
 const labelClass = 'block mb-2 text-sm text-foreground/60';
@@ -30,15 +26,13 @@ export default function ContactForm() {
     const nl = language === 'nl';
     const [status, setStatus] = useState('idle'); // idle, loading, error
     const [melding, setMelding] = useState(false);
-    const empty = { name: '', company: '', email: '', phone: '', topic: '', message: '', aantal: '', locatie: '' };
+    const empty = { name: '', company: '', email: '', phone: '', message: '' };
     const [formData, setFormData] = useState(empty);
-    const workshop = formData.topic === 'Workshop';
 
     // Wat er nog ontbreekt, per id van het veld. Pas zichtbaar na een eerste poging tot versturen
     const [poging, setPoging] = useState(false);
     const controleer = (d) => {
         const f = {};
-        if (!d.topic) f.onderwerp = nl ? 'Kies waarover het gaat.' : 'Choose what this is about.';
         if (!d.name.trim()) f.name = nl ? 'Vul je naam in.' : 'Enter your name.';
         if (!d.email.trim()) f.email = nl ? 'Vul je e-mailadres in.' : 'Enter your email address.';
         else if (!isEmail(d.email)) f.email = nl ? 'Dit e-mailadres klopt niet.' : 'This email address does not look right.';
@@ -47,7 +41,7 @@ export default function ContactForm() {
     };
     const fouten = poging ? controleer(formData) : {};
     const heeftFouten = Object.keys(fouten).length > 0;
-    // Zijn het onderwerp en de verplichte velden in orde? Pas dan kan je versturen
+    // Zijn de verplichte velden in orde? Pas dan kan je versturen
     const klaar = Object.keys(controleer(formData)).length === 0;
 
     const handleSubmit = async (e) => {
@@ -56,7 +50,7 @@ export default function ContactForm() {
         setPoging(true);
         const f = controleer(formData);
         if (Object.keys(f).length) {
-            naarEersteFout(f, ['onderwerp', 'name', 'email', 'message']);
+            naarEersteFout(f, ['name', 'email', 'message']);
             return;
         }
         setStatus('loading');
@@ -79,7 +73,7 @@ export default function ContactForm() {
                     company: formData.company,
                     email: formData.email,
                     phone: formData.phone,
-                    topic: formData.topic,
+                    topic: ONDERWERP,
                     message: formData.message
                 }).toString()
             });
@@ -104,36 +98,6 @@ export default function ContactForm() {
     return (
         <div className="flex flex-col gap-6 h-full">
             <SuccesMelding open={melding} onClose={() => setMelding(false)} />
-            <div>
-                <p className={labelClass}>{nl ? 'Waarover gaat het? *' : 'What is this about? *'}</p>
-                <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={nl ? 'Onderwerp' : 'Topic'}>
-                    {TOPICS.map((t, i) => {
-                        const on = formData.topic === t.value;
-                        return (
-                            <button
-                                key={t.value}
-                                id={i === 0 ? 'onderwerp' : undefined}
-                                type="button"
-                                role="radio"
-                                aria-checked={on}
-                                onClick={() => setFormData((prev) => ({ ...prev, topic: t.value }))}
-                                className={`px-4 py-2 max-lg:py-3 rounded-full border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${on ? 'bg-foreground border-foreground text-background' : 'bg-transparent border-foreground/15 text-foreground/70 hover:border-foreground/40 hover:text-foreground'}`}
-                            >
-                                {t[language]}
-                            </button>
-                        );
-                    })}
-                </div>
-                <FoutTekst>{fouten.onderwerp}</FoutTekst>
-            </div>
-
-            {workshop ? (
-                <WorkshopFormulier
-                    data={formData}
-                    setData={setFormData}
-                    onSucces={() => { setPoging(false); setFormData(empty); setMelding(true); }}
-                />
-            ) : (
             <form noValidate onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -176,7 +140,6 @@ export default function ContactForm() {
                 )}
             </div>
             </form>
-            )}
         </div>
     );
 }

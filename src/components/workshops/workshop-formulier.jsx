@@ -3,8 +3,8 @@ import CTAButton from '../ui/cta-button';
 import { FoutTekst, foutRand, isEmail, naarEersteFout } from '../ui/formulier-fouten';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Het formulier om een workshop-offerte aan te vragen. Staat op de workshoppagina (workshops-offerte.jsx) en op
-// de contactpagina als iemand "Workshop" kiest (contact-form.jsx), zodat het overal hetzelfde is.
+// Het formulier om een workshop-offerte aan te vragen. Staat op de workshoppagina (workshops-offerte.jsx). Op de
+// contactpagina stond het vroeger ook, als iemand "Workshop" koos; die keuze is weg sinds 20/11.
 // De ouder houdt de gegevens bij (data, setData) en toont zelf het bedankbericht (onSucces).
 // Verstuurt naar het bestaande Netlify-formulier "contact" (zodat index.html niet aangepast moet worden),
 // met als onderwerp "Workshop". Aantal personen en locatie komen in het berichtveld, altijd in het

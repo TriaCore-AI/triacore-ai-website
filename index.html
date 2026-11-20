@@ -90,15 +90,16 @@
   <div id="root"></div>
 
   <!-- Verborgen formulier waaraan Netlify Forms de velden herkent. Elk veld dat de site verstuurt, moet hier
-       staan. De onderwerpen zijn dezelfde als de knoppen in contact-form.jsx: AI-oplossing en Weet ik nog niet
-       (bericht in "message"), Workshop (ook vanaf de workshoppagina; aantal personen en locatie staan dan in
-       "message"). -->
+       staan. Onderwerpen: Contactformulier (de contactpagina, sinds 20/11 zonder keuze), Workshop (de
+       workshoppagina; aantal personen en locatie staan dan in "message"). AI-oplossing en Weet ik nog niet
+       blijven staan voor oudere inzendingen. -->
   <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
     <input type="text" name="name" />
     <input type="text" name="company" />
     <input type="email" name="email" />
     <input type="tel" name="phone" />
     <select name="topic">
+      <option value="Contactformulier"></option>
       <option value="AI-oplossing"></option>
       <option value="Workshop"></option>
       <option value="Weet ik nog niet"></option>
