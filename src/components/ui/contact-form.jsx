@@ -18,7 +18,7 @@ import { useLanguage } from '../../context/LanguageContext';
 // Let op: elk veld moet ook in het verborgen formulier in index.html staan, anders laat Netlify het weg.
 const TOPICS = [
     { value: 'AI-oplossing', nl: 'AI-oplossing', en: 'AI solution' },
-    { value: 'Workshop', nl: 'Workshop', en: 'Workshop' },
+    { value: 'Workshop', nl: 'AI-workshop', en: 'AI workshop' },
     { value: 'Weet ik nog niet', nl: 'Weet ik nog niet', en: 'Not sure yet' }
 ];
 
@@ -171,7 +171,7 @@ export default function ContactForm() {
                 )}
                 {status === 'error' && (
                     <p className="text-sm text-red-600">
-                        {nl ? 'Er ging iets mis. Probeer opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.
+                        {nl ? 'Er ging iets mis. Probeer het opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.
                     </p>
                 )}
             </div>

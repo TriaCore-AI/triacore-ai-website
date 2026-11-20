@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const SITE_URL = 'https://triacore.be';
 const SITE_NAME = 'TriaCore AI';
-const DEFAULT_IMAGE = `${SITE_URL}/logo/triacore-mark.png`;
+const DEFAULT_IMAGE = `${SITE_URL}/og/triacore-og.png`;
 
 function setMetaTag(attr, key, content) {
     if (!content) return;

@@ -41,9 +41,9 @@ export default function CookieBanner() {
 
     const loadAnalytics = () => {
         if (!ReactGA.isInitialized) {
-            console.log('Google Analytics geïnitialiseerd...');
-            ReactGA.initialize('G-3STMTJMMHJ');
-            ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
+            // Geen automatische paginaweergave: de useEffect hierboven stuurt er precies één per pagina. Vroeger telde
+            // elke weergave twee tot drie keer (initialize, een extra send hier en de useEffect)
+            ReactGA.initialize('G-3STMTJMMHJ', { gtagOptions: { send_page_view: false } });
         }
     };
 
@@ -61,6 +61,8 @@ export default function CookieBanner() {
     const saveConsent = (newConsent) => {
         localStorage.setItem('triacore_cookie_consent', JSON.stringify(newConsent));
         setConsent(newConsent);
+        // Ook wie analytische cookies aanzet via de instellingen, krijgt Analytics meteen (niet pas na herladen)
+        if (newConsent.analytics) loadAnalytics();
         setIsVisible(false);
         setShowSettings(false);
     };
@@ -74,11 +76,11 @@ export default function CookieBanner() {
                 <div className="fixed bottom-8 inset-x-0 z-[100] px-6 pointer-events-none flex justify-center animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="w-full max-w-[340px] bg-white border border-slate-100 shadow-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col items-center text-center gap-5 pointer-events-auto">
                         <div className="text-center">
-                            <h3 className="text-base font-bold text-foreground mb-2">{language === 'nl' ? 'Cookies & privacy' : 'Cookies & privacy'}</h3>
+                            <p className="text-base font-bold text-foreground mb-2">Cookies &amp; privacy</p>
                             <p className="text-[11px] max-md:text-[13px] text-foreground/50 leading-relaxed">
                                 {language === 'nl'
-                                    ? 'Wij gebruiken noodzakelijke cookies voor een optimale ervaring.'
-                                    : 'We use necessary cookies for the best possible experience.'}
+                                    ? 'We gebruiken noodzakelijke cookies, en met je toestemming ook analytische cookies om de site te verbeteren.'
+                                    : 'We use necessary cookies and, with your consent, analytics cookies to improve the site.'}
                             </p>
                         </div>
                         <div className="flex flex-col items-center gap-2 w-full">
@@ -116,7 +118,7 @@ export default function CookieBanner() {
                             {/* Necessary (Read-only toggle) */}
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex-1">
-                                    <h4 className="text-sm font-bold text-foreground mb-1 uppercase tracking-tight">{language === 'nl' ? 'Strikt noodzakelijk' : 'Strictly necessary'}</h4>
+                                    <h4 className="text-sm font-bold text-foreground mb-1">{language === 'nl' ? 'Strikt noodzakelijk' : 'Strictly necessary'}</h4>
                                     <p className="text-xs text-foreground/40 leading-relaxed">
                                         {language === 'nl'
                                             ? 'Nodig voor de beveiliging en basisfunctionaliteit van de website. Deze kunnen niet worden uitgeschakeld.'
@@ -131,7 +133,7 @@ export default function CookieBanner() {
                             {/* Analytics Toggle */}
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex-1">
-                                    <h4 className="text-sm font-bold text-foreground mb-1 uppercase tracking-tight">{language === 'nl' ? 'Analytische cookies' : 'Analytics cookies'}</h4>
+                                    <h4 className="text-sm font-bold text-foreground mb-1">{language === 'nl' ? 'Analytische cookies' : 'Analytics cookies'}</h4>
                                     <p className="text-xs text-foreground/40 leading-relaxed">
                                         {language === 'nl'
                                             ? 'Helpt ons geanonimiseerde inzichten te verkrijgen in websitegebruik om de ervaring te verbeteren.'
@@ -139,6 +141,10 @@ export default function CookieBanner() {
                                     </p>
                                 </div>
                                 <button
+                                    type="button"
+                                    role="switch"
+                                    aria-checked={consent.analytics}
+                                    aria-label={language === 'nl' ? 'Analytische cookies' : 'Analytics cookies'}
                                     onClick={() => setConsent(prev => ({ ...prev, analytics: !prev.analytics }))}
                                     className={`w-10 h-6 rounded-full relative transition-colors duration-300 ${consent.analytics ? 'bg-accent' : 'bg-slate-200'}`}
                                 >

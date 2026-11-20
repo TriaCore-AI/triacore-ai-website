@@ -1,6 +1,19 @@
+# Het standaardadres van Netlify naar het echte domein, tegen dubbele inhoud in Google
+# (raakt triacore-staging.netlify.app en deploy previews niet)
+https://triacore.netlify.app/*  https://triacore.be/:splat  301!
+
+# Weggevallen pagina's van de nieuwe site
 /resources    /  301
 /resources/*  /  301
 /ai-begeleiding  /  302
 /custom-oplossingen  /ai-oplossingen  301
 /oplossingen-v2  /ai-oplossingen  301
+
+# Oude adressen van vroegere versies van de site die nog in Google staan (SEO-audit, 17/11/2026)
+/ai-agents  /ai-oplossingen  301
+/trajecten  /ai-oplossingen  301
+/over-ons  /team  301
+/triacore-ai-platform  /ai-oplossingen  301
+
+# Al de rest: de React-app (pagina's met een eigen HTML-bestand, zoals /workshops.html, gaan voor)
 /*  /index.html  200

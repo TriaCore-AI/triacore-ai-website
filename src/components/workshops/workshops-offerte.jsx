@@ -21,7 +21,7 @@ export default function WorkshopsOfferte() {
                 <div data-reveal className="lg:col-span-5">
                     <div className="overflow-hidden pb-3 mb-3">
                         <h2 className="rv-mask-inner hero-title text-foreground text-4xl md:text-5xl lg:text-6xl">
-                            {nl ? 'Een workshop voor je team?' : 'A workshop for your team?'}
+                            {nl ? 'Een AI-workshop voor je team?' : 'An AI workshop for your team?'}
                         </h2>
                     </div>
                     <p className="rv-fade text-foreground/60 text-lg md:text-xl leading-relaxed max-w-md">

@@ -39,7 +39,7 @@ const TEXT = {
         off: 'Vrij',
         assistant: 'AI-assistent',
         title: 'Dit is de optimale planning voor deze week.',
-        basis: 'Ik heb deze planning ingesteld op basis van:',
+        basis: 'Ik heb deze planning opgesteld op basis van:',
         basisShort: 'Op basis van beschikbaarheid, belading en routes.',
         reasons: ['Beschikbaarheid van de chauffeurs', 'Optimale belading van de vrachtwagens', 'Optimale routes', 'Rijtijden en openingsuren'],
         accept: 'Neem over',

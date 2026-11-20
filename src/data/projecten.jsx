@@ -16,6 +16,11 @@
 //                 detailpagina.
 //
 // Optioneel op 'live' projecten:
+//   seo         — { nl: { title, description }, en: { ... } }: wat Google
+//                 en sociale netwerken tonen (titel tot ±60 tekens,
+//                 omschrijving tot ±155). Zonder dit veld valt de pagina
+//                 terug op title en description hierboven, en die zijn
+//                 meestal te lang voor Google.
 //   blocks      — inhoud van de detailpagina (zie
 //                 src/components/content/ContentBlocks.jsx). Vaste
 //                 structuur en schrijfwijze: zie Projecten/_template.md
@@ -39,6 +44,16 @@ export const projecten = [
         description: {
             nl: 'Chauffeurs vulden hun grondbankbonnen met de hand in en het kantoor typte ze achteraf over. Met een platform en een chauffeursapp komt elke bon nu meteen binnen, en Croes ziet live wat er op elke werf gebeurt.',
             en: 'Drivers filled in their soil transport notes by hand and the office retyped them afterwards. With a platform and a driver app, every note now comes in right away, and Croes can see live what is happening on every site.',
+        },
+        seo: {
+            nl: {
+                title: 'Case Croes NV: digitale grondbankbonnen | TriaCore AI',
+                description: 'Hoe Croes NV papieren grondbankbonnen verving door een platform en chauffeursapp op maat. Elke bon komt meteen binnen, met een live overzicht per werf.',
+            },
+            en: {
+                title: 'Croes NV case: digital soil transport notes | TriaCore AI',
+                description: 'How Croes NV replaced paper soil transport notes with a custom platform and driver app. Every note comes in right away, with a live overview per site.',
+            },
         },
         blocks: [
             {
@@ -66,7 +81,7 @@ export const projecten = [
                 type: 'list',
                 nl: [
                     'Laat: bonnen kwamen vaak pas veel later binnen, soms na weken.',
-                    'Dubbel werk: het kantoor typte elke bon over, ook de chauffeurs van onderaannemers die telefonisch werden doorgegeven.',
+                    'Dubbel werk: het kantoor typte elke bon over en voerde ook de chauffeurs van onderaannemers in, die telefonisch werden doorgegeven.',
                     'Geen zicht: niemand zag live wat er op een werf gebeurde.',
                 ],
                 en: [
@@ -104,7 +119,7 @@ export const projecten = [
                     {
                         icon: 'Users',
                         label: { nl: 'Onderaannemers', en: 'Subcontractors' },
-                        nl: 'Krijgen een eigen link om hun chauffeurs aan of af te melden.',
+                        nl: 'Krijgen een eigen link om hun chauffeurs aan- of af te melden.',
                         en: 'Get their own link to sign their drivers in or out.',
                     },
                 ],
@@ -172,6 +187,16 @@ export const projecten = [
         description: {
             nl: 'De planning van het wagentransport tussen de vestigingen liep via twee Excels en kostte de planner ongeveer vier uur per dag. Met een eigen platform en chauffeursapp volgt nu iedereen hetzelfde transport, van aanvraag tot aflevering.',
             en: 'Planning vehicle transport between the branches ran through two spreadsheets and took the planner about four hours a day. With a dedicated platform and driver app, everyone now follows each transport in the same place, from request to delivery.',
+        },
+        seo: {
+            nl: {
+                title: 'Case A&M Group: één transportplatform | TriaCore AI',
+                description: 'Hoe A&M Group het wagentransport van twee Excels naar één platform en chauffeursapp bracht. Iedereen volgt elk transport, van aanvraag tot aflevering.',
+            },
+            en: {
+                title: 'A&M Group case: one transport platform | TriaCore AI',
+                description: 'How A&M Group moved vehicle transport from two spreadsheets to one platform and driver app. Everyone follows each transport, from request to delivery.',
+            },
         },
         blocks: [
             {

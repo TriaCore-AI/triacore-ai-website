@@ -18,7 +18,7 @@ import theBoxLogo from '../assets/klantcases/the-box.png';
 
 export const oplossingSoorten = [
     { id: 'custom', nl: 'AI-oplossingen', en: 'AI solutions' },
-    { id: 'workshop', nl: 'Workshops', en: 'Workshops' },
+    { id: 'workshop', nl: 'AI-workshops', en: 'AI workshops' },
     { id: 'begeleiding', nl: 'AI-begeleiding', en: 'AI guidance' }
 ];
 
@@ -68,7 +68,7 @@ export function klantKaarten(language) {
             client: w.name,
             sector: w.sector[language],
             description: w.description[language],
-            cta: nl ? 'Bekijk onze workshops' : 'View our workshops'
+            cta: nl ? 'Bekijk onze AI-workshops' : 'View our AI workshops'
         }))
     ];
 }

@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
+import { seoVoor } from '../data/seo';
 import OplossingenHero from '../components/ui/oplossingen-hero';
 import { heroTeksten } from '../data/oplossingen-hero';
 import { LagenLicht } from '../components/ui/hero-achtergronden';
@@ -23,58 +24,48 @@ import { useLanguage } from '../context/LanguageContext';
 // doorstuurt). Volgorde: hero met voorbeelden, wat een goede AI-oplossing nodig heeft, wat AI daarmee kan, hoe
 // we werken, de veelgestelde vragen en een korte afsluiter. Nog te doen: bewijs met klanten.
 
-// Wat een goede AI-oplossing nodig heeft, telkens vanuit wat het de AI geeft: twee korte alinea's per onderdeel
+// Wat een goede AI-oplossing nodig heeft. Per onderdeel twee of drie korte zinnen, neutraal en toegankelijk,
+// zonder concrete voorbeelden: wat het voor je bedrijf betekent, zodat iedereen denkt "ah ja, dat is dat"
+// (gekozen door Lucas, 20/11; lange uitleg wordt niet gelezen)
 const onderdelen = {
     nl: [
         { id: 'kennis', naam: 'Kennis', beeld: kennisBeeld, alt: 'Een geordende kast met mappen en documenten, waarvan één groene map met het teken van de AI, en erboven een tekstballonnetje', tekst: [
-            'AI weet niets over jouw bedrijf, tot je het haar vertelt. Documenten op schijven, prijzen, voorwaarden, interne regels en jullie manier van werken: dat is de kennis die het verschil maakt.',
-            'Wij brengen die kennis samen en maken ze raadpleegbaar voor AI. Zo antwoordt ze als een ervaren collega, met de bron erbij, en niet als een algemene chatbot.'
+            'Wat jullie weten, zit verspreid over mensen en documenten. Wij brengen het samen, zodat niemand het telkens opnieuw moet uitleggen. Zo antwoordt AI als een collega die je bedrijf door en door kent, en gaat er geen kennis verloren als iemand vertrekt.'
         ] },
         { id: 'gegevens', naam: 'Gegevens', beeld: gegevensBeeld, alt: 'Een databank met bovenop een nette tabel waarin één rij groen oplicht, met ernaast een klokje met een vinkje', tekst: [
-            'AI is zo goed als de gegevens die ze krijgt. Staan je ritten, klanten en planningen verspreid over Excels en papieren lijsten, dan geeft ze onbetrouwbare antwoorden.',
-            'Wij brengen alles samen in één systeem, met vaste afspraken over wat een klant, een rit of een bon is. Zo werkt AI met de juiste feiten, en elke wijziging wordt bewaard.'
+            'Goede beslissingen vragen juiste cijfers. Wij zorgen dat AI altijd met de meest recente gegevens werkt. Alles staat op één plek, zodat iedereen met dezelfde informatie werkt en je op de antwoorden kan vertrouwen.'
         ] },
         { id: 'invoer', naam: 'Invoer', beeld: invoerBeeld, alt: 'Een gsm met de foto van een bon en daaronder de velden die vanzelf ingevuld zijn, met ernaast een werfhelm', tekst: [
-            'AI heeft verse informatie nodig, en die ontstaat waar het werk gebeurt: op de baan, op de werf, aan de balie. Wat op papier blijft, bestaat voor AI niet.',
-            'Wij zorgen dat je mensen hun werk vastleggen in een eenvoudige app, ook zonder bereik. Een foto van een bon volstaat. Niemand typt nog iets over.'
+            'Hoe vlotter je mensen informatie doorgeven, hoe meer AI ermee kan. Wij maken dat zo licht mogelijk. Wat één keer is ingegeven, hoeft niemand nog over te typen, en het is meteen beschikbaar voor wie het nodig heeft.'
         ] },
         { id: 'koppelingen', naam: 'Koppelingen', beeld: koppelingenBeeld, alt: 'Puzzelstukken voor het ERP, de boekhouding en de planning die in elkaar passen rond een groen stuk met het teken van de AI, met ernaast een los stukje', tekst: [
-            'Een AI die enkel praat, levert weinig op. Pas als ze in je systemen kan werken, neemt ze echt werk over: een planning bijwerken, een offerte klaarzetten, een factuur voorbereiden.',
-            'Wij koppelen aan je ERP, je boekhouding en de software die je al gebruikt. Gegevens lopen vanzelf door, en je hoeft niets te vervangen.'
+            'AI die enkel antwoorden geeft, helpt een beetje. AI die in je systemen werkt, neemt echt werk over. Wij zorgen voor die verbinding. Je hoeft niets te vervangen: we bouwen verder op de software die je vandaag al gebruikt.'
         ] },
         { id: 'controle', naam: 'Controle', beeld: controleBeeld, alt: 'Een tablet met een voorstel van AI en de knoppen goedkeuren en afwijzen; een hand staat op het punt goed te keuren, met ernaast een slotje', tekst: [
-            'AI mag voorstellen, maar jouw mensen beslissen. Bij twijfel kijkt altijd iemand van je team na, en pas als het betrouwbaar blijkt, krijgt AI meer vrijheid.',
-            'Iedereen ziet enkel wat voor hem bedoeld is, en je gegevens blijven van jou. Zo blijft AI binnen de lijnen die jij bepaalt.'
+            'Vertrouwen groeit stap voor stap. AI begint met voorstellen, en jij beslist hoeveel ze zelf mag afhandelen. Zo hou je altijd zelf de touwtjes in handen.'
         ] },
         { id: 'feedback', naam: 'Feedback', beeld: feedbackBeeld, alt: 'Drie voorstellen van AI op een rij: het achterste heeft twee verbeteringen, het middelste één, en het voorste is juist', tekst: [
-            'Een AI-oplossing is niet af op de dag van de oplevering. Elke keer dat je planner een voorstel aanpast of je kantoor iets afkeurt, zegt dat iets: wat er misliep, en hoe het wel moet.',
-            'Wij zorgen dat die feedback niet verloren gaat. Het systeem bewaart wat je mensen verbeteren en leert daaruit, zodat het volgende voorstel beter is.'
+            'Een AI-oplossing is niet af op de dag van de oplevering. Ze leert van wie ermee werkt en wordt elke dag beter. Elke aanpassing van je team wordt bewaard, zodat dezelfde fout geen tweede keer gebeurt.'
         ] }
     ],
     en: [
         { id: 'kennis', naam: 'Knowledge', beeld: kennisBeeld, alt: 'A tidy shelf with binders and documents, one green binder carrying the sign of the AI, and a speech bubble above it', tekst: [
-            'AI knows nothing about your business until you tell it. Documents on shared drives, prices, terms, internal rules and the way you work: that is the knowledge that makes the difference.',
-            'We bring that knowledge together and make it available to AI. So it answers like an experienced colleague, with the source alongside, not like a generic chatbot.'
+            'What you know is spread across people and documents. We bring it together, so nobody has to explain it over and over again. So AI answers like a colleague who knows your business inside out, and no knowledge is lost when someone leaves.'
         ] },
         { id: 'gegevens', naam: 'Data', beeld: gegevensBeeld, alt: 'A database with a neat table on top in which one row is highlighted green, with a clock and a check mark beside it', tekst: [
-            'AI is only as good as the data it gets. If your trips, clients and schedules are scattered across spreadsheets and paper lists, its answers cannot be trusted.',
-            'We bring everything together in one system, with fixed agreements on what a client, a trip or a slip is. So AI works with the right facts, and every change is kept.'
+            'Good decisions need the right figures. We make sure AI always works with the most recent data. Everything is in one place, so everyone works with the same information and you can rely on the answers.'
         ] },
         { id: 'invoer', naam: 'Input', beeld: invoerBeeld, alt: 'A phone showing the photo of a slip with the fields below filled in automatically, with a safety helmet beside it', tekst: [
-            'AI needs fresh information, and that is created where the work happens: on the road, on site, at the counter. What stays on paper does not exist for AI.',
-            'We make sure your people record their work in a simple app, even without signal. A photo of a slip is enough. Nobody retypes anything.'
+            'The more easily your people pass on information, the more AI can do with it. We make that as effortless as possible. What is entered once never has to be retyped, and it is immediately available to whoever needs it.'
         ] },
         { id: 'koppelingen', naam: 'Integrations', beeld: koppelingenBeeld, alt: 'Puzzle pieces for the ERP, the accounting and the schedule fitting together around a green piece with the sign of the AI, with one loose piece beside them', tekst: [
-            'An AI that only talks delivers little. Only when it can work inside your systems does it take real work off your hands: updating a schedule, preparing a quote, getting an invoice ready.',
-            'We connect to your ERP, your accounting and the software you already use. Data flows through on its own, and you do not have to replace anything.'
+            'AI that only gives answers helps a little. AI that works inside your systems takes real work off your hands. We make that connection. You do not have to replace anything: we build on the software you already use today.'
         ] },
         { id: 'controle', naam: 'Control', beeld: controleBeeld, alt: 'A tablet showing a proposal from AI with approve and reject buttons; a hand is about to approve, with a padlock beside it', tekst: [
-            'AI may suggest, but your people decide. When in doubt, someone on your team always checks, and only once it proves reliable does AI get more freedom.',
-            'Everyone only sees what is meant for them, and your data stays yours. That keeps AI within the lines you set.'
+            'Trust grows step by step. AI starts by making suggestions, and you decide how much it may handle on its own. That way you always stay in control.'
         ] },
         { id: 'feedback', naam: 'Feedback', beeld: feedbackBeeld, alt: 'Three AI proposals in a row: the back one has two corrections, the middle one has one, and the front one is right', tekst: [
-            'An AI solution is not finished on delivery day. Every time your planner adjusts a proposal or your office rejects something, that says something: what went wrong, and how it should be done.',
-            'We make sure that feedback is not lost. The system keeps what your people correct and learns from it, so the next proposal is better.'
+            'An AI solution is not finished on delivery day. It learns from the people who use it and gets better every day. Every adjustment your team makes is kept, so the same mistake does not happen twice.'
         ] }
     ]
 };
@@ -118,7 +109,7 @@ const werkwijze = {
 // de prijsvraag volgt het antwoord van de vroegere pagina Custom tools
 const faq = {
     nl: [
-        { q: 'Wat kunnen jullie allemaal bouwen?', a: 'Van een app voor je mensen op de baan of de werf tot een volledig platform voor op kantoor, met AI die documenten leest, vragen beantwoordt, planningen voorstelt of taken afwerkt. Alles bouwen we op maat. Daarom kijken we altijd eerst even samen hoe jouw bedrijf werkt en waar het het meeste oplevert, voor we iets voorstellen.' },
+        { q: 'Wat kunnen jullie allemaal bouwen?', a: 'Van een app voor je mensen op de baan of de werf tot een volledig platform voor op kantoor, met AI die documenten leest, vragen beantwoordt, planningen voorstelt of taken afwerkt. Alles bouwen we op maat. Daarom kijken we altijd eerst even samen hoe je bedrijf werkt en waar het het meeste oplevert, voor we iets voorstellen.' },
         { q: 'Moeten mijn gegevens eerst op orde zijn?', a: 'Nee. In de meeste bedrijven zitten gegevens verspreid over mails, Excel, pdf\'s en een paar systemen. Ze samenbrengen hoort bij ons werk: we zetten alles op één plek, met vaste afspraken over wat wat betekent, zodat AI met de juiste feiten werkt.' },
         { q: 'Moet ik mijn huidige software vervangen?', a: 'Nee. We koppelen aan je ERP, je boekhouding en de software die je al gebruikt, zodat niemand iets dubbel moet ingeven. We bouwen wat ontbreekt. Of een koppeling kan, hangt af van wat je systeem toelaat. Dat bekijken we samen in het eerste gesprek.' },
         { q: 'Moeten mijn mensen technisch zijn?', a: 'Nee. We bouwen het scherm op maat van wie ermee werkt, zo eenvoudig dat iedereen er meteen mee weg kan. Een vraag stellen gaat zoals een bericht sturen naar een collega. Bij de start begeleiden we je mensen.' },
@@ -127,7 +118,7 @@ const faq = {
     ],
     en: [
         { q: 'What can you build?', a: 'From an app for your people on the road or on site to a complete platform for the office, with AI that reads documents, answers questions, suggests schedules or completes tasks. Everything is built to measure. That is why we always first take a quick look together at how your business works and where it delivers the most, before we propose anything.' },
-        { q: 'Does my data need to be in order first?', a: 'No. In most companies data is scattered across emails, spreadsheets, PDFs and a few systems. Bringing it together is part of our job: we put everything in one place, with fixed agreements on what means what, so AI works with the right facts.' },
+        { q: 'Does my data need to be in order first?', a: 'No. In most companies data is scattered across emails, spreadsheets, PDFs and a few systems. Bringing it together is part of our job: we put everything in one place, with fixed definitions of what means what, so AI works with the right facts.' },
         { q: 'Do I have to replace my current software?', a: 'No. We connect to your ERP, your accounting and the software you already use, so nobody has to enter anything twice. We build what is missing. Whether a connection is possible depends on what your system allows. We look at that together in the first conversation.' },
         { q: 'Do my people need to be technical?', a: 'No. We build the screen around the people who use it, so simple that everyone can get going right away. Asking a question works like sending a message to a colleague. We guide your people through the start.' },
         { q: 'What happens to our data?', a: 'Your data stays yours. Everyone only sees what is meant for them, and AI works within the limits you set. How and where everything is stored, we agree on together in advance.' },
@@ -143,12 +134,7 @@ export default function AiOplossingen() {
 
     return (
         <div ref={pageRef} className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-            <Seo
-                title={nl ? 'AI-oplossingen | TriaCore AI' : 'AI solutions | TriaCore AI'}
-                description={nl
-                    ? 'AI verandert elke sector. Wij bouwen voor bedrijven die vooruit durven denken: software en AI op maat, gekoppeld aan wat je al gebruikt.'
-                    : 'AI is changing every industry. We build for companies that dare to think ahead: custom software and AI, connected to what you already use.'}
-            />
+            <Seo {...seoVoor('/ai-oplossingen', language)} />
             <Navbar />
             <main className="relative flex-grow">
                 {/* Hero: gecentreerd de bovenregel, de titel, een korte ondertitel en een knop, op de zijden lagen.
@@ -159,8 +145,8 @@ export default function AiOplossingen() {
                     op 17/11 even geprobeerd en weer weggelaten */}
                 <OplossingenHero {...heroTeksten[language]} laag={<LagenLicht />} toon="licht" />
 
-                {/* Wat een goede AI-oplossing nodig heeft: links de lijst met per onderdeel de uitleg die openklapt,
-                    rechts per onderdeel een kaart voor de visual (volgt) */}
+                {/* Wat een goede AI-oplossing nodig heeft: per onderdeel naam, visual en uitleg, op desktop in een
+                    zigzag (links, rechts, links, ...), zonder iets vast te zetten */}
                 <NodigSectie
                     titel={nl ? 'Wat een goede AI-oplossing nodig heeft.' : 'What a good AI solution needs.'}
                     intro={nl

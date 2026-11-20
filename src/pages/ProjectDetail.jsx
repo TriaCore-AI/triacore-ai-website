@@ -45,7 +45,11 @@ export default function ProjectDetail() {
 
     return (
         <div ref={ref} className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-            <Seo title={`${project.title[language]} | TriaCore AI`} description={project.description[language]} />
+            {/* De korte titel en omschrijving voor Google (veld seo in projecten.jsx), anders de gewone */}
+            <Seo
+                title={project.seo?.[language]?.title ?? `${project.title[language]} | TriaCore AI`}
+                description={project.seo?.[language]?.description ?? project.description[language]}
+            />
             <Navbar />
 
             {/* Op een liggende gsm (laag scherm) minder ruimte bovenaan, zoals bij de paginaheader */}

@@ -1,186 +1,128 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// "Wat een goede AI-oplossing nodig heeft" op Oplossingen (v2). De titel staat gecentreerd boven alles.
-// Vanaf 1024px: de sectie is hoger dan het scherm en terwijl je erdoor scrolt, blijven de lijst en één kaart
-// vast in beeld staan. Per onderdeel scrol je ongeveer driekwart scherm (STAP). Links klapt het actieve
-// onderdeel open met zijn uitleg; rechts wisselt de inhoud van de kaart met een zachte overgang. Klikken op
-// een naam scrolt naar dat onderdeel. In de kaart komt enkel de visual (`beeld`, gemaakt met ChatGPT, als
-// WebP in src/assets/oplossingen), geen nummer of titel. Zonder beeld staat er een plaatshouder.
-// Op gsm en tablet: per onderdeel de naam, de uitleg en daaronder een kaart, gewoon onder elkaar.
+gsap.registerPlugin(ScrollTrigger);
+
+// "Wat een goede AI-oplossing nodig heeft" op AI-oplossingen. Alles staat op één grote witte kaart met afgeronde
+// hoeken, de titel bovenaan. Niets staat vast tijdens het scrollen (vraag Lucas, 20/11: de vroegere vastgezette
+// versie met een lijst en één wisselende kaart vond hij vervelend).
+// Vanaf 1024px: per onderdeel één blok met bovenaan het nummer en de naam, dan de visual (`beeld`, gemaakt met
+// ChatGPT, als WebP in src/assets/oplossingen) en daaronder de uitleg. De blokken staan afwisselend links en
+// rechts, en elk volgend blok begint op de hoogte van het midden van het vorige: Kennis links bovenaan, Gegevens
+// rechts vanaf het midden van Kennis, Invoer links vanaf het midden van Gegevens, enzovoort. Elk blok zweeft als
+// geheel binnen, een linkse van links en een rechtse van rechts, en pas als het bijna midden in het scherm staat
+// (vraag Lucas, 20/11: niet te vroeg tonen). Speelt één keer.
+// Op gsm en tablet: per onderdeel één lichtgroen kaartje, gewoon onder elkaar.
 // Wat AI daarmee kan, staat in een eigen sectie eronder (vermogens-sectie.jsx).
 
-const STAP = 75; // vh scrollen per onderdeel
-const NAV = 112; // px: hoogte van de navigatiebalk bovenaan; de vastgezette inhoud komt nooit hoger
+const TUSSEN = 48; // px: minstens zoveel ruimte tussen twee blokken in dezelfde kolom
+const AFSTAND = 96; // px: van zo ver opzij zweeft een blok binnen
+const START = 'center 60%'; // een blok komt binnen zodra zijn midden 60% van de schermhoogte bereikt
+const START_EERSTE = 'top 80%'; // het eerste blok al zodra het in beeld schuift, anders staat er onder de titel even een leeg vlak
 
-const MARGE = 16; // px vrij onder de kaart als ze tot onderaan het scherm moet
+// Waar elk blok staat. Blok i begint op het midden van blok i-1 (de zigzag), plus de helft van TUSSEN: zo is
+// elke stap even groot en zit er tussen twee blokken in dezelfde kolom precies TUSSEN ruimte. Is het blok erboven
+// in dezelfde kolom (i-2) veel hoger, dan schuift blok i verder naar beneden, zodat ze nooit overlappen
+function berekenPlaatsen(hoogtes) {
+    const tops = [];
+    hoogtes.forEach((_, i) => {
+        let top = 0;
+        if (i >= 1) top = tops[i - 1] + (hoogtes[i - 1] + TUSSEN) / 2;
+        if (i >= 2) top = Math.max(top, tops[i - 2] + hoogtes[i - 2] + TUSSEN);
+        tops.push(Math.round(top));
+    });
+    const totaal = Math.max(0, ...hoogtes.map((h, i) => tops[i] + h));
+    return { tops, totaal };
+}
 
-// Waar de vastgezette inhoud stopt met meeschuiven. Past ze tussen de navigatiebalk en de onderrand, dan precies
-// in het midden van het scherm. Is ze hoger (een laag scherm), dan schuift ze tijdens het scrollen zelf mee: bij
-// het eerste onderdeel staat de bovenkant net onder de navigatiebalk, bij het laatste staat de onderkant net
-// boven de onderrand. Zo is alles altijd te zien. voortgang gaat van 0 (eerste onderdeel) tot 1 (laatste)
-const pastIn = (h) => h <= window.innerHeight - NAV - MARGE;
-const startTop = (h) => (pastIn(h) ? Math.max(NAV, Math.round((window.innerHeight - h) / 2)) : NAV);
-const vastTop = (h, voortgang = 0) => {
-    if (pastIn(h)) return startTop(h);
-    const eind = window.innerHeight - MARGE - h;
-    return Math.round(NAV + (eind - NAV) * voortgang);
-};
+function Zigzag({ onderdelen, leeg }) {
+    const blokRefs = useRef([]);
+    const [plaats, setPlaats] = useState({ tops: [], totaal: 0 });
 
-export default function NodigSectie({ titel, intro, onderdelen, leeg }) {
-    const [actief, setActief] = useState(0);
-    const vastRef = useRef(null);
-    const inhoudRef = useRef(null);
-    const n = onderdelen.length;
-
-    // De vastgezette inhoud is zo hoog als nodig (niet een volledig scherm), zodat er na het laatste onderdeel
-    // geen lege ruimte overblijft en de volgende sectie op de gewone afstand volgt. De hoogte wordt gemeten; de
-    // grootste meting telt, zodat de sectie niet verspringt als een uitleg open- of dichtklapt. Bij een andere
-    // schermgrootte wordt opnieuw gemeten. De plaats (top) zetten we rechtstreeks op het element, omdat ze bij
-    // een hoge kaart bij elke scrollbeweging verandert
-    const [inhoudH, setInhoudH] = useState(0);
-    const zetTop = (voortgang = 0) => {
-        const el = inhoudRef.current;
-        if (el) el.style.top = `${vastTop(el.offsetHeight, voortgang)}px`;
-    };
-    const voortgangRef = useRef(0);
-
-    useEffect(() => {
-        const el = inhoudRef.current;
-        if (!el) return undefined;
+    // Meten vóór het tekenen (useLayoutEffect), zodat de blokken nooit even op elkaar staan. Opnieuw meten als een
+    // blok van hoogte verandert: een andere schermbreedte, of de letters die later inladen
+    useLayoutEffect(() => {
         const meet = () => {
-            setInhoudH((h) => Math.max(h, el.offsetHeight));
-            zetTop(voortgangRef.current);
+            const hoogtes = blokRefs.current.map((el) => el?.offsetHeight || 0);
+            const nieuw = berekenPlaatsen(hoogtes);
+            setPlaats((oud) => (oud.totaal === nieuw.totaal && oud.tops.join() === nieuw.tops.join() ? oud : nieuw));
         };
-        const opnieuw = () => {
-            setInhoudH(el.offsetHeight);
-            zetTop(voortgangRef.current);
-        };
+        meet();
         const ro = new ResizeObserver(meet);
-        ro.observe(el);
-        window.addEventListener('resize', opnieuw);
-        return () => {
-            ro.disconnect();
-            window.removeEventListener('resize', opnieuw);
-        };
-    }, []);
+        blokRefs.current.forEach((el) => el && ro.observe(el));
+        return () => ro.disconnect();
+    }, [onderdelen]);
 
-    // Verandert de hoogte van deze sectie (na het meten), dan schuift alles eronder op. De scrollanimaties verderop
-    // (de kaarten van Wat AI daarmee kan, de titels die opkomen) hadden hun startpunt dan al berekend op de oude
-    // hoogte en zouden te laat of nooit starten: daarom rekenen ze hier opnieuw
+    // Verandert de hoogte van de sectie, dan schuift alles eronder op. De scrollanimaties (ook die van deze blokken
+    // zelf) rekenen dan hun startpunt opnieuw uit, anders zouden ze te vroeg, te laat of nooit starten
     useEffect(() => {
-        if (!inhoudH) return undefined;
+        if (!plaats.totaal) return undefined;
         const id = requestAnimationFrame(() => ScrollTrigger.refresh());
         return () => cancelAnimationFrame(id);
-    }, [inhoudH]);
+    }, [plaats]);
 
-    // Welk onderdeel is actief? Hangt af van hoe ver je door de vastgezette sectie gescrold bent. Bij een kaart
-    // die hoger is dan het scherm schuift ze hier ook mee (zetTop)
+    // Het binnenzweven: zacht uitlopend (power3.out), enkel opzij en in doorzichtigheid, zonder op- of neerwaartse
+    // beweging. Wie in het systeem minder beweging vraagt, ziet alles meteen
     useEffect(() => {
-        let raf = 0;
-        const bereken = () => {
-            raf = 0;
-            const el = vastRef.current;
-            if (!el || el.offsetParent === null) return;
-            const r = el.getBoundingClientRect();
-            const h = inhoudRef.current?.offsetHeight || window.innerHeight;
-            const bereik = r.height - h;
-            if (bereik <= 0) return;
-            const voortgang = Math.min(0.9999, Math.max(0, (startTop(h) - r.top) / bereik));
-            voortgangRef.current = voortgang;
-            zetTop(voortgang);
-            setActief(Math.floor(voortgang * n));
-        };
-        const opScroll = () => { if (!raf) raf = requestAnimationFrame(bereken); };
-        bereken();
-        window.addEventListener('scroll', opScroll, { passive: true });
-        window.addEventListener('resize', opScroll);
-        return () => {
-            window.removeEventListener('scroll', opScroll);
-            window.removeEventListener('resize', opScroll);
-            if (raf) cancelAnimationFrame(raf);
-        };
-    }, [n]);
-
-    // Naar het midden van de scrollzone van onderdeel i
-    const ga = (i) => {
-        const el = vastRef.current;
-        if (!el) return;
-        const h = inhoudRef.current?.offsetHeight || window.innerHeight;
-        const bereik = el.offsetHeight - h;
-        const doel = el.getBoundingClientRect().top + window.scrollY - startTop(h) + ((i + 0.5) / n) * bereik;
-        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: doel, behavior: reduce ? 'auto' : 'smooth' });
-    };
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+        const ctx = gsap.context(() => {
+            blokRefs.current.forEach((el, i) => {
+                if (!el) return;
+                gsap.fromTo(el,
+                    { x: i % 2 === 1 ? AFSTAND : -AFSTAND, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: i === 0 ? START_EERSTE : START, once: true } });
+            });
+        });
+        return () => ctx.revert();
+    }, [onderdelen]);
 
     return (
-        <section id="nodig" className="relative scroll-mt-28 pb-24 md:pb-32">
-            {/* Gsm en tablet: de titel gewoon boven de onderdelen */}
-
-            {/* Vanaf 1024px: titel, lijst en één kaart, samen vastgezet terwijl je door de sectie scrolt, in het
-                midden van het scherm (vastTop). Op een laag scherm (minder dan 900 px hoog) is alles iets compacter;
-                is de kaart dan nog hoger dan het scherm, dan schuift ze tijdens het scrollen zacht mee, zodat zowel
-                de titel als de onderkant in beeld komen. De ruimte boven de sectie geeft de afstand tot de hero */}
-            <div aria-hidden="true" className="hidden lg:block h-24" />
-            <div ref={vastRef} className="hidden lg:block relative" style={{ height: inhoudH ? `calc(${inhoudH}px + ${n * STAP}vh)` : `calc(100vh + ${n * STAP}vh)` }}>
-                {/* De hele sectie staat op één grote witte kaart met afgeronde hoeken, met links en rechts een smalle
-                    marge tot de rand van het scherm, en mee vastgezet */}
-                <div ref={inhoudRef} className="sticky top-28 mx-4 xl:mx-6 flex flex-col justify-start px-6 md:px-16 lg:px-20 py-14 xl:py-16 [@media(max-height:900px)]:py-9 bg-white rounded-[2.5rem]">
-                    <div className="max-w-7xl w-full mx-auto mb-12 md:mb-16 [@media(max-height:900px)]:mb-7">
-                        <h2 className="hero-title text-foreground text-6xl [@media(max-height:900px)]:text-5xl leading-[1.08]">{titel}</h2>
-                        {intro && <p className="mt-4 [@media(max-height:900px)]:mt-2 text-foreground/60 text-xl [@media(max-height:900px)]:text-lg leading-relaxed max-w-xl">{intro}</p>}
-                    </div>
-                    <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-16 items-center">
-                        {/* Links: de lijst. Het actieve onderdeel klapt open */}
-                        <ol className="col-span-5 flex flex-col">
-                            {onderdelen.map((o, i) => {
-                                const open = actief === i;
-                                return (
-                                    <li key={o.id} className="border-t border-foreground/10 last:border-b">
-                                        <button
-                                            type="button"
-                                            onClick={() => ga(i)}
-                                            aria-expanded={open}
-                                            className="group w-full flex items-center py-4 [@media(max-height:900px)]:py-3 text-left"
-                                        >
-                                            <span className={`text-xl transition-colors duration-500 ${open ? 'text-foreground font-medium' : 'text-foreground/40 group-hover:text-foreground/70'}`}>
-                                                {o.naam}
-                                            </span>
-                                        </button>
-                                        {/* De uitleg klapt open en dicht met de hoogte mee */}
-                                        <div className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                                            <div className="overflow-hidden min-h-0">
-                                                <div className="pb-6 [@media(max-height:900px)]:pb-4 flex flex-col gap-3 [@media(max-height:900px)]:gap-2">
-                                                    {o.tekst.map((t, j) => (
-                                                        <p key={j} className="text-base [@media(max-height:900px)]:text-[15px] text-foreground/70 leading-relaxed [@media(max-height:900px)]:leading-normal">{t}</p>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ol>
-
-                        {/* Rechts: één kaart. De inhoud per onderdeel ligt op elkaar en wisselt met een overgang */}
-                        <div className="col-span-7">
-                            {/* Altijd in de verhouding van de beelden (4:3), zodat er niets wordt afgeknipt. De breedte
-                                is begrensd, zodat de kaart nooit hoger wordt dan ongeveer de helft van het scherm; op een
-                                laag scherm wordt ze dus kleiner, maar blijft ze 4:3 */}
-                            <div className="relative mx-auto w-full aspect-[4/3] max-w-[calc(min(52vh,540px)*4/3)] [@media(max-height:900px)]:max-w-[calc(min(46vh,440px)*4/3)] rounded-3xl bg-[#fafafa] border border-foreground/[0.08] overflow-hidden">
-                                {onderdelen.map((o, i) => (
-                                    <div
-                                        key={o.id}
-                                        aria-hidden={actief !== i}
-                                        className={`absolute inset-0 flex flex-col transition-all duration-700 ease-out motion-reduce:transition-none ${actief === i ? 'opacity-100 translate-y-0' : i < actief ? 'opacity-0 -translate-y-6' : 'opacity-0 translate-y-6'}`}
-                                    >
-                                        {o.beeld
-                                            ? <img src={o.beeld} alt={o.alt || ''} className="w-full h-full object-contain" />
-                                            : <p className="mt-auto p-10 text-sm text-foreground/30">{leeg}</p>}
-                                    </div>
-                                ))}
-                            </div>
+        <ol className="relative" style={{ height: plaats.totaal || undefined }}>
+            {onderdelen.map((o, i) => {
+                const rechts = i % 2 === 1;
+                return (
+                    <li
+                        key={o.id}
+                        ref={(el) => { blokRefs.current[i] = el; }}
+                        className="absolute w-[calc(50%-2.5rem)] xl:w-[calc(50%-3.5rem)]"
+                        style={{ top: plaats.tops[i] ?? 0, [rechts ? 'right' : 'left']: 0 }}
+                    >
+                        <div className="flex items-baseline gap-3">
+                            <span className="text-sm font-medium text-accent tabular-nums">0{i + 1}</span>
+                            <h3 className="text-2xl xl:text-3xl font-medium text-foreground leading-tight">{o.naam}</h3>
                         </div>
+                        {/* De visual, altijd 4:3 zoals de beelden, zodat er niets wordt afgeknipt */}
+                        <div className="mt-5 w-full aspect-[4/3] rounded-3xl bg-[#fafafa] border border-foreground/[0.08] overflow-hidden">
+                            {o.beeld
+                                ? <img src={o.beeld} alt={o.alt || ''} loading="lazy" decoding="async" className="w-full h-full object-contain" />
+                                : <p className="h-full flex items-end p-10 text-sm text-foreground/30">{leeg}</p>}
+                        </div>
+                        <div className="mt-6 flex flex-col gap-3">
+                            {o.tekst.map((t, j) => (
+                                <p key={j} className="text-base text-foreground/70 leading-relaxed">{t}</p>
+                            ))}
+                        </div>
+                    </li>
+                );
+            })}
+        </ol>
+    );
+}
+
+export default function NodigSectie({ titel, intro, onderdelen, leeg }) {
+    return (
+        <section id="nodig" className="relative scroll-mt-28 pb-24 md:pb-32">
+            {/* Vanaf 1024px: de titel en de zigzag op één grote witte kaart, met links en rechts een smalle marge tot
+                de rand van het scherm. De ruimte erboven geeft de afstand tot de hero */}
+            <div className="hidden lg:block pt-24 overflow-x-clip">
+                <div className="mx-4 xl:mx-6 px-20 py-16 xl:py-20 bg-white rounded-[2.5rem]">
+                    <div data-reveal-head className="max-w-6xl mx-auto mb-16 xl:mb-20">
+                        <h2 className="rv-fade hero-title text-foreground text-6xl leading-[1.08]">{titel}</h2>
+                        {intro && <p className="rv-fade mt-4 text-foreground/60 text-xl leading-relaxed max-w-xl">{intro}</p>}
+                    </div>
+                    <div className="max-w-6xl mx-auto">
+                        <Zigzag onderdelen={onderdelen} leeg={leeg} />
                     </div>
                 </div>
             </div>

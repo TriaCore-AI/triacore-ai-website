@@ -8,10 +8,20 @@ import { useState, useEffect } from 'react';
  * @param {string[]} extensions - Array of extensions to try (default: ['webp', 'png', 'jpg', 'jpeg', 'svg'])
  * @returns {string} - The first existing image path found, or the original basePath with the first extension if none found.
  */
+// Beelden waarvan we het bestand kennen: die tonen we meteen, zonder eerst te zoeken. Zonder deze lijst toonde de
+// site eerst /team/lucas.webp (bestaat niet: een gebroken beeld) en deed ze tot drie extra verzoeken per foto.
+const BEKEND = {
+    '/team/lucas': '/team/lucas.jpg',
+    '/team/rian': '/team/rian.jpg',
+    '/team/jorn': '/team/jorn.webp',
+};
+
 export function useAutoImage(basePath, extensions = ['webp', 'png', 'jpg', 'jpeg', 'svg']) {
-    const [src, setSrc] = useState(basePath + '.' + extensions[0]);
+    const bekend = BEKEND[basePath];
+    const [src, setSrc] = useState(bekend ?? basePath + '.' + extensions[0]);
 
     useEffect(() => {
+        if (bekend) return;
         const checkImages = async () => {
             for (const ext of extensions) {
                 const fullPath = `${basePath}.${ext}`;
@@ -32,7 +42,7 @@ export function useAutoImage(basePath, extensions = ['webp', 'png', 'jpg', 'jpeg
         if (basePath) {
             checkImages();
         }
-    }, [basePath, extensions.join(',')]);
+    }, [basePath, bekend, extensions.join(',')]);
 
     return src;
 }
@@ -42,5 +52,5 @@ export function useAutoImage(basePath, extensions = ['webp', 'png', 'jpg', 'jpeg
  */
 export function AutoImage({ basePath, alt, className, ...props }) {
     const src = useAutoImage(basePath);
-    return <img src={src} alt={alt} className={className} {...props} />;
+    return <img src={src} alt={alt} className={className} loading="lazy" decoding="async" {...props} />;
 }

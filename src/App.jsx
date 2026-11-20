@@ -23,6 +23,7 @@ import QuoteStage from './components/ui/quote-stage';
 import SectionNav from './components/ui/section-nav';
 import FaqList from './components/ui/faq-list';
 import Seo from './components/ui/seo';
+import { seoVoor } from './data/seo';
 import { LagenLicht } from './components/ui/hero-achtergronden';
 // De opmaak van de logorij in de hero staat (nog) in het stijlblad van de vroegere 3D-scène
 import './components/ui/hero-scene.css';
@@ -107,7 +108,7 @@ const faqVragen = [
     }
   },
   {
-    q: { nl: 'Bouwen jullie altijd op maat, of raden jullie soms een bestaande tool aan?', en: 'Do you always build to measure, or do you sometimes recommend an existing tool?' },
+    q: { nl: 'Bouwen jullie altijd op maat, of raden jullie soms een bestaande tool aan?', en: 'Do you always build custom solutions, or do you sometimes recommend an existing tool?' },
     a: {
       nl: 'Niet elk probleem vraagt om maatwerk. Lost een bestaande tool jouw probleem op, dan zeggen we dat eerlijk en helpen we je op weg. Een AI-oplossing op maat bouwen we enkel als het de juiste keuze is.',
       en: 'Not every problem calls for custom work. If an existing tool solves your problem, we say so honestly and help you get started. We only build a custom AI solution when it is the right choice.'
@@ -178,7 +179,7 @@ const snelmenu = {
 const aanpakPijlers = {
   nl: [
     { word: 'Begrijpen', desc: 'We leren jouw uitdagingen echt kennen.' },
-    { word: 'Vertalen', desc: 'We vertalen jouw uitdaging naar een concreet plan.' },
+    { word: 'Vertalen', desc: 'We vertalen je uitdaging naar een concreet plan.' },
     { word: 'Waarmaken', desc: 'We realiseren je oplossing en begeleiden je onderweg.' }
   ],
   en: [
@@ -378,14 +379,7 @@ function App() {
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-grain text-foreground font-sans selection:bg-foreground selection:text-background">
 
-      <Seo
-        title={language === 'nl'
-          ? 'TriaCore AI | De AI-partner waar ambitieuze bedrijven op bouwen'
-          : 'TriaCore AI | The AI partner that ambitious companies build on'}
-        description={language === 'nl'
-          ? 'TriaCore AI uit Hasselt helpt bedrijven om AI een vaste plaats te geven in hun werking, met AI-oplossingen op maat en AI-workshops voor je team.'
-          : 'TriaCore AI from Hasselt helps companies give AI a permanent place in how they work, with custom AI solutions and AI workshops for your team.'}
-      />
+      <Seo {...seoVoor('/', language)} />
 
       <Navbar />
       {/* Onze aanpak houdt de pagina nergens meer vast en volgt het scrollen vanzelf, dus een sprong via het
@@ -425,17 +419,23 @@ function App() {
               <span className="hero-row block w-fit max-w-full mx-auto" data-from="left">
                 {language === 'nl' ? 'De AI-partner waar' : 'The AI partner that'}
               </span>
+              {/* Een spatie tussen de regels, zodat de titel voor Google en schermlezers niet aan elkaar plakt */}
+              {' '}
               <span className="hero-row block w-fit max-w-full mx-auto italic text-accent" data-from="right">
                 {language === 'nl' ? 'ambitieuze bedrijven op bouwen.' : 'ambitious companies build on.'}
               </span>
             </h1>
 
-            {/* Naar de opbouw van Distyl: wat we doen (AI een vaste plaats geven) en hoe (op maat bouwen en erbij
-                blijven tot het resultaat er staat). Kort gehouden, zodat de klantlogo's eronder in beeld blijven */}
+            {/* Naar het ritme van Distyl ("partners with ... to design and operationalize"), bewust anders verwoord:
+                met wie we werken, wat we doen (ontwerpen en waarmaken, de derde pijler van Onze aanpak) en de belofte
+                (op maat gebouwd, om mee te groeien: een lange samenwerking, niet "tot het resultaat er staat", want dat
+                klinkt als een einde; keuze Lucas).
+                Geen "ambitieuze" of "partner": die staan al in de titel.
+                Kort gehouden, zodat de klantlogo's eronder in beeld blijven (20/11) */}
             <p className="hero-fade mt-5 sm:mt-8 md:mt-10 mx-auto tekst-hero text-foreground/70 max-w-2xl text-balance">
               {language === 'nl'
-                ? 'TriaCore AI helpt je om AI een vaste plaats te geven in je werking. We bouwen het op maat en blijven erbij tot het resultaat er staat.'
-                : 'TriaCore AI helps you give AI a permanent place in how you work. We build it to measure and stay involved until the results are there.'}
+                ? 'TriaCore AI werkt samen met vooruitstrevende bedrijven om hun AI-transformatie te ontwerpen en waar te maken. Op maat gebouwd, om mee te groeien met je bedrijf.'
+                : 'TriaCore AI works with forward-thinking companies to design their AI transformation and make it real. Custom-built to grow with your business.'}
             </p>
 
             {/* Op gsm is de tekstlink 44px hoog om op te tikken; de kleinere rijafstand houdt de witruimte gelijk */}
@@ -489,8 +489,8 @@ function App() {
             </div>
             <p className="rv-fade section-subtitle text-foreground/60 text-lg md:text-xl max-w-xl mx-auto">
               {language === 'nl'
-                ? 'Bedrijven die we verder hielpen, met een AI-oplossing op maat of een workshop voor hun team.'
-                : 'Companies we helped move forward, with a custom AI solution or a workshop for their team.'}
+                ? 'Bedrijven die we verder hielpen, met een AI-oplossing op maat of een AI-workshop voor hun team.'
+                : 'Companies we helped move forward, with a custom AI solution or an AI workshop for their team.'}
             </p>
           </div>
 
@@ -525,12 +525,12 @@ function App() {
                 to: '/ai-oplossingen',
                 title: language === 'nl' ? 'AI-oplossingen' : 'AI solutions',
                 desc: language === 'nl'
-                  ? 'Processen met veel mensen, stappen en gegevens los je niet op met één prompt. Daarvoor bouwen we een AI-oplossing op maat van jouw bedrijf, die veilig met je data werkt en stappen overneemt.'
+                  ? 'Processen met veel mensen, stappen en gegevens los je niet op met één prompt. Daarvoor bouwen we een AI-oplossing op maat van je bedrijf, die veilig met je data werkt en stappen overneemt.'
                   : 'Processes with many people, steps and data cannot be solved with a single prompt. That is why we build an AI solution tailored to your business, one that works safely with your data and takes steps off your hands.'
               },
               {
                 to: '/workshops',
-                title: 'Workshops',
+                title: language === 'nl' ? 'AI-workshops' : 'AI workshops',
                 desc: language === 'nl'
                   ? 'Meer dan wat chatten met ChatGPT. Jouw team leert AI structureel inzetten in het eigen werk, en er meer uit halen dan een snel antwoord.'
                   : 'More than a bit of chatting with ChatGPT. Your team learns to use AI in a structured way in their own work, and to get more out of it than a quick answer.'
@@ -673,7 +673,7 @@ function App() {
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-14 sm:gap-10 md:gap-14">
             {[
               { name: 'Lucas Curto', role: language === 'nl' ? 'AI & Strategie' : 'AI & Strategy', image: '/team/lucas', desc: language === 'nl' ? 'Vertaalt nieuwe AI-mogelijkheden naar wat ze voor jouw bedrijf betekenen.' : 'Translates new AI possibilities into what they mean for your business.' },
-              { name: 'Rian Mathijs', role: language === 'nl' ? 'Sales & Klantrelaties' : 'Sales & Client Relations', image: '/team/rian', desc: language === 'nl' ? 'Eerste aanspreekpunt voor klanten en zorgt voor duidelijke afstemming en opvolging.' : 'First point of contact for clients, ensuring clear alignment and follow-up.' },
+              { name: 'Rian Mathijs', role: language === 'nl' ? 'Sales & Klantrelaties' : 'Sales & Client Relations', image: '/team/rian', desc: language === 'nl' ? 'Is het eerste aanspreekpunt voor klanten en zorgt voor duidelijke afstemming en opvolging.' : 'First point of contact for clients, ensuring clear alignment and follow-up.' },
               { name: 'Jorn van Breemaat', role: language === 'nl' ? 'Softwareontwikkeling & ICT-advies' : 'Software Development & IT Advisory', image: '/team/jorn', desc: language === 'nl' ? 'Ontwerpt en bouwt onze oplossingen en adviseert op technisch en ICT-vlak.' : 'Designs and builds our solutions and advises on technical and IT matters.' }
             ].map((member, i) => (
               <Link

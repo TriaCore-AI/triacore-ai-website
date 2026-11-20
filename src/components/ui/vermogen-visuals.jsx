@@ -321,7 +321,7 @@ const SITUATIES = {
         {
             vraag: 'Which terms apply when a client cancels?',
             stappen: ['Searching the terms and conditions', 'Reading the framework contracts', 'Checking emails about cancellations'],
-            antwoord: 'Up to 48 hours before, it is free of charge. After that we charge 25% of the amount.',
+            antwoord: 'Free of charge up to 48 hours in advance. After that we charge 25% of the amount.',
             bronnen: ['Terms and conditions', 'Framework contract 2025', '+ 3'],
             aantal: 5
         },

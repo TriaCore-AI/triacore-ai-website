@@ -107,8 +107,12 @@ export default function OplossingenHero({ boven, regels, intro, noot, meer, klan
                             )}
                             {metBeeld ? (
                                 <h1 className={`hero-title titel-hero ${s.titel}`}>
+                                    {/* De spatie tussen de regels houdt de titel leesbaar voor Google en schermlezers */}
                                     {regels.map((r, i) => (
-                                        <span key={i} className="oh-regel block whitespace-nowrap">{r}</span>
+                                        <React.Fragment key={i}>
+                                            {i > 0 && ' '}
+                                            <span className="oh-regel block whitespace-nowrap">{r}</span>
+                                        </React.Fragment>
                                     ))}
                                 </h1>
                             ) : (
@@ -122,6 +126,7 @@ export default function OplossingenHero({ boven, regels, intro, noot, meer, klan
                                             <React.Fragment key={i}>{i > 0 && ' '}{r}</React.Fragment>
                                         ))}
                                     </span>
+                                    {' '}
                                     <span className="oh-regel block w-fit max-w-full mx-auto">{regels[regels.length - 1]}</span>
                                 </h1>
                             )}

@@ -36,7 +36,7 @@ export default function Footer() {
                             <span className="text-lg font-medium tracking-tight">TriaCore AI</span>
                         </Link>
                         <p className="mt-4 text-sm text-white/50 leading-relaxed max-w-xs">
-                            {nl ? 'AI voor operationele vooruitgang.' : 'AI for operational progress.'}
+                            {nl ? 'De AI-partner waar ambitieuze bedrijven op bouwen.' : 'The AI partner that ambitious companies build on.'}
                         </p>
                         {/* Onder 1024px een tikvlak van 42px rond elk icoon, zonder dat de iconen verschuiven */}
                         <div className="mt-6 flex gap-4 max-lg:gap-6">
@@ -55,7 +55,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-2.5">
                             <p className="text-sm font-medium text-white mb-1.5">{nl ? "Pagina's" : 'Pages'}</p>
                             <Link to="/ai-oplossingen" className={linkClass}>{nl ? 'AI-oplossingen' : 'AI solutions'}</Link>
-                            <Link to="/workshops" className={linkClass}>Workshops</Link>
+                            <Link to="/workshops" className={linkClass}>{nl ? 'AI-workshops' : 'AI workshops'}</Link>
                             <Link to="/projecten" className={linkClass}>{nl ? 'Projecten' : 'Projects'}</Link>
                             <Link to="/team" className={linkClass}>Team</Link>
                             <Link to="/contact" className={linkClass}>Contact</Link>

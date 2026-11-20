@@ -156,7 +156,7 @@ export default function WorkshopFormulier({ data, setData, onSucces }) {
                 )}
                 {status === 'error' && (
                     <p className="text-sm text-red-600">
-                        {nl ? 'Er ging iets mis. Probeer opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.
+                        {nl ? 'Er ging iets mis. Probeer het opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.
                     </p>
                 )}
             </div>

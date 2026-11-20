@@ -5,32 +5,92 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/logo/TriaCore Logo Zwart.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TriaCore AI | De AI-partner waar ambitieuze bedrijven op bouwen</title>
+  <!-- Titel, omschrijving, canonical en og:url hieronder zijn die van de homepage. Bij de build maakt
+       scripts/prerender-meta.mjs voor elke pagina een kopie met haar eigen gegevens (uit src/data/seo.js);
+       hou deze tags dus in deze vorm, anders stopt de build met een melding. -->
+  <title>TriaCore AI | AI-oplossingen en AI-workshops voor bedrijven</title>
   <meta name="description"
-    content="TriaCore AI uit Hasselt helpt bedrijven om AI een vaste plaats te geven in hun werking, met AI-oplossingen op maat en AI-workshops voor je team." />
-  <meta name="keywords"
-    content="AI agents, digitale transformatie, procesoptimalisatie, TriaCore AI, business automation" />
+    content="De AI-partner waar ambitieuze bedrijven op bouwen. TriaCore AI uit Hasselt ontwerpt en bouwt AI-oplossingen op maat en geeft AI-workshops aan je team." />
   <link rel="canonical" href="https://triacore.be/" />
-  <meta property="og:title" content="TriaCore AI | De AI-partner waar ambitieuze bedrijven op bouwen" />
+  <meta property="og:title" content="TriaCore AI | AI-oplossingen en AI-workshops voor bedrijven" />
   <meta property="og:description"
-    content="TriaCore AI uit Hasselt helpt bedrijven om AI een vaste plaats te geven in hun werking, met AI-oplossingen op maat en AI-workshops voor je team." />
+    content="De AI-partner waar ambitieuze bedrijven op bouwen. TriaCore AI uit Hasselt ontwerpt en bouwt AI-oplossingen op maat en geeft AI-workshops aan je team." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://triacore.be/" />
   <meta property="og:site_name" content="TriaCore AI" />
-  <meta property="og:image" content="https://triacore.be/logo/triacore-mark.png" />
+  <meta property="og:locale" content="nl_BE" />
+  <!-- Het deelbeeld (bron en uitleg: Herontwerp officieel/og-beeld/) -->
+  <meta property="og:image" content="https://triacore.be/og/triacore-og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="TriaCore AI: de AI-partner waar ambitieuze bedrijven op bouwen" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Syne:wght@700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap"
     rel="stylesheet">
+
+  <!-- Wie TriaCore AI is, in de vorm die Google leest (gestructureerde gegevens). Staat op elke pagina -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://triacore.be/#organization",
+        "name": "TriaCore AI",
+        "legalName": "TriaCore AI BV",
+        "url": "https://triacore.be/",
+        "logo": "https://triacore.be/logo/triacore-mark.png",
+        "image": "https://triacore.be/og/triacore-og.png",
+        "slogan": "De AI-partner waar ambitieuze bedrijven op bouwen.",
+        "description": "TriaCore AI uit Hasselt bouwt AI-oplossingen op maat rond de processen van bedrijven en geeft AI-workshops aan teams.",
+        "email": "info@triacore.be",
+        "telephone": "+32 499 87 46 62",
+        "vatID": "BE1042233821",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Kempische Steenweg 303",
+          "postalCode": "3500",
+          "addressLocality": "Hasselt",
+          "addressRegion": "Limburg",
+          "addressCountry": "BE"
+        },
+        "areaServed": { "@type": "Country", "name": "België" },
+        "knowsAbout": ["AI-oplossingen op maat", "procesautomatisering", "AI-workshops"],
+        "sameAs": [
+          "https://be.linkedin.com/company/triacore-ai",
+          "https://www.instagram.com/triacore.ai/"
+        ],
+        "employee": [
+          { "@type": "Person", "name": "Lucas Curto", "jobTitle": "AI & Strategie", "sameAs": "https://www.linkedin.com/in/lucas-curto-67555a377/" },
+          { "@type": "Person", "name": "Rian Mathijs", "jobTitle": "Sales & Klantrelaties", "sameAs": "https://www.linkedin.com/in/rian-mathijs-6a4350356/" },
+          { "@type": "Person", "name": "Jorn van Breemaat", "jobTitle": "Softwareontwikkeling & ICT-advies", "sameAs": "https://www.linkedin.com/in/jorn-van-breemaat/" }
+        ],
+        "makesOffer": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI-oplossingen op maat", "url": "https://triacore.be/ai-oplossingen" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI-workshops voor bedrijven", "url": "https://triacore.be/workshops" } }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://triacore.be/#website",
+        "url": "https://triacore.be/",
+        "name": "TriaCore AI",
+        "inLanguage": "nl-BE",
+        "publisher": { "@id": "https://triacore.be/#organization" }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
   <div id="root"></div>
 
   <!-- Verborgen formulier waaraan Netlify Forms de velden herkent. Elk veld dat de site verstuurt, moet hier
-       staan. De onderwerpen zijn dezelfde als de knoppen in contact-form.jsx: Custom tool en Weet ik nog niet
+       staan. De onderwerpen zijn dezelfde als de knoppen in contact-form.jsx: AI-oplossing en Weet ik nog niet
        (bericht in "message"), Workshop (ook vanaf de workshoppagina; aantal personen en locatie staan dan in
        "message"). -->
   <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
@@ -39,7 +99,7 @@
     <input type="email" name="email" />
     <input type="tel" name="phone" />
     <select name="topic">
-      <option value="Custom tool"></option>
+      <option value="AI-oplossing"></option>
       <option value="Workshop"></option>
       <option value="Weet ik nog niet"></option>
     </select>

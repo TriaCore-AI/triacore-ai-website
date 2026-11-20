@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
+import { seoVoor } from '../data/seo';
 import PageHeader from '../components/ui/page-header';
 import ContactForm from '../components/ui/contact-form';
 import { AutoImage } from '../components/ui/auto-image';
@@ -41,12 +42,7 @@ export default function Contact() {
 
     return (
         <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-            <Seo
-                title="Contact | TriaCore AI"
-                description={nl
-                    ? 'Plan een vrijblijvend gesprek. Vertel waar je processen vastlopen en we bekijken samen wat software op maat en AI voor jouw bedrijf kunnen betekenen.'
-                    : 'Book a no-obligation call. Tell us where your processes get stuck and we will explore together what custom software and AI can do for your business.'}
-            />
+            <Seo {...seoVoor('/contact', language)} />
             <Navbar />
             <main className="relative flex-grow">
                 <PageHeader

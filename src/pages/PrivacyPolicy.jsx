@@ -1,5 +1,6 @@
 import React from 'react';
 import LegalPage from '../components/ui/legal-page';
+import { seoVoor } from '../data/seo';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function PrivacyPolicy() {
@@ -7,24 +8,19 @@ export default function PrivacyPolicy() {
 
     return (
         <LegalPage
-            seo={{
-                title: language === 'nl' ? 'Privacybeleid | TriaCore AI' : 'Privacy policy | TriaCore AI',
-                description: language === 'nl'
-                    ? 'Lees hoe TriaCore AI omgaat met je persoonsgegevens: welke gegevens we verzamelen, waarvoor en hoe je ze kunt beheren.'
-                    : 'Read how TriaCore AI handles your personal data: what data we collect, for what purpose and how you can manage it.'
-            }}
-            title={language === 'nl' ? 'Privacyverklaring.' : 'Privacy policy.'}
+            seo={seoVoor('/privacybeleid', language)}
+            title={language === 'nl' ? 'Privacybeleid.' : 'Privacy policy.'}
             intro={language === 'nl'
                 ? 'Bij TriaCore AI hechten wij veel belang aan de bescherming van persoonsgegevens. In deze verklaring leggen wij helder uit hoe wij met gegevens omgaan.'
                 : 'At TriaCore AI we attach great importance to the protection of personal data. In this policy we clearly explain how we handle your data.'}
-            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on 3 March 2026'}
+            updated={language === 'nl' ? 'Laatst bijgewerkt op 20 november 2026' : 'Last updated on 20 November 2026'}
         >
 
             <section>
-                <h2>{language === 'nl' ? '1. Waarover gaat deze privacyverklaring?' : '1. What is this privacy policy about?'}</h2>
+                <h2>{language === 'nl' ? '1. Waarover gaat dit privacybeleid?' : '1. What is this privacy policy about?'}</h2>
                 <p>
                     {language === 'nl'
-                        ? 'Wanneer je onze website bezoekt of met TriaCore AI in contact treedt, verwerken wij bepaalde persoonsgegevens. In deze privacyverklaring leggen wij uit welke gegevens dat zijn, waarvoor wij ze gebruiken en welke rechten je daarbij hebt.'
+                        ? 'Wanneer je onze website bezoekt of met TriaCore AI in contact treedt, verwerken wij bepaalde persoonsgegevens. In dit privacybeleid leggen wij uit welke gegevens dat zijn, waarvoor wij ze gebruiken en welke rechten je daarbij hebt.'
                         : 'When you visit our website or contact TriaCore AI, we process certain personal data. In this privacy policy we explain what data that is, what we use it for and what rights you have.'}
                 </p>
                 <p>{language === 'nl' ? 'Deze verklaring is van toepassing op:' : 'This policy applies to:'}</p>
@@ -42,7 +38,7 @@ export default function PrivacyPolicy() {
                 <p className="rij">{language === 'nl' ? 'Maatschappelijke zetel' : 'Registered office'}: Berkenstraat 44, 3850 Nieuwerkerken</p>
                 <p className="rij">{language === 'nl' ? 'Kantoor' : 'Office'}: Kempische Steenweg 303, 3500 Hasselt (Corda Incubator)</p>
                 <p className="rij">{language === 'nl' ? 'Ondernemingsnummer' : 'Company number'}: BE 1042.233.821</p>
-                <p className="rij">{language === 'nl' ? 'BTW nummer' : 'VAT number'}: BE 1042.233.821</p>
+                <p className="rij">{language === 'nl' ? 'Btw-nummer' : 'VAT number'}: BE 1042.233.821</p>
                 <p className="rij">{language === 'nl' ? 'RPR Antwerpen, afdeling Hasselt' : 'RLE Antwerp, Hasselt division'}</p>
                 <p className="rij">{language === 'nl' ? 'E-mail' : 'Email'}: <a href="mailto:info@triacore.be">info@triacore.be</a></p>
                 <p>Website: <a href="https://www.triacore.be" target="_blank" rel="noopener noreferrer">www.triacore.be</a></p>
@@ -56,9 +52,11 @@ export default function PrivacyPolicy() {
                 <h3>{language === 'nl' ? 'Wanneer je ons contacteert:' : 'When you contact us:'}</h3>
                 <ul>
                     <li>{language === 'nl' ? 'je naam;' : 'your name;'}</li>
+                    <li>{language === 'nl' ? 'je bedrijfsnaam (indien opgegeven);' : 'your company name (if provided);'}</li>
                     <li>{language === 'nl' ? 'je e-mailadres;' : 'your email address;'}</li>
                     <li>{language === 'nl' ? 'je telefoonnummer (indien opgegeven);' : 'your phone number (if provided);'}</li>
-                    <li>{language === 'nl' ? 'een onderwerp (optioneel);' : 'a subject (optional);'}</li>
+                    <li>{language === 'nl' ? 'waarover je contact opneemt;' : 'what you are contacting us about;'}</li>
+                    <li>{language === 'nl' ? 'bij een workshopaanvraag: het aantal deelnemers en de gewenste locatie (indien opgegeven);' : 'for a workshop request: the number of participants and the preferred location (if provided);'}</li>
                     <li>{language === 'nl' ? 'de inhoud van je bericht.' : 'the content of your message.'}</li>
                 </ul>
 
@@ -107,7 +105,7 @@ export default function PrivacyPolicy() {
                     <li>{language === 'nl' ? 'het opvolgen van zakelijke contacten en aanvragen;' : 'following up on business contacts and requests;'}</li>
                     <li>{language === 'nl' ? 'het uitvoeren van onze dienstverlening;' : 'carrying out our services;'}</li>
                     <li>{language === 'nl' ? 'klantenbeheer en communicatie;' : 'client management and communication;'}</li>
-                    <li>{language === 'nl' ? 'het versturen van onze nieuwsbrief met resource-updates, indien je je daarvoor hebt ingeschreven;' : 'sending our newsletter with resource updates, if you have subscribed to it;'}</li>
+                    <li>{language === 'nl' ? 'het versturen van onze nieuwsbrief, indien je je daarvoor hebt ingeschreven;' : 'sending our newsletter, if you have subscribed to it;'}</li>
                     <li>{language === 'nl' ? 'administratieve en wettelijke verplichtingen.' : 'administrative and legal obligations.'}</li>
                 </ul>
             </section>
@@ -182,7 +180,7 @@ export default function PrivacyPolicy() {
 
             <section>
                 <h2>{language === 'nl' ? '13. Aanpassingen aan deze verklaring' : '13. Changes to this policy'}</h2>
-                <p>{language === 'nl' ? 'Deze privacyverklaring kan worden aangepast indien onze werking of de wetgeving wijzigt. De meest recente versie is steeds beschikbaar op onze website.' : 'This privacy policy may be amended if our operations or the law change. The most recent version is always available on our website.'}</p>
+                <p>{language === 'nl' ? 'Dit privacybeleid kan worden aangepast indien onze werking of de wetgeving wijzigt. De meest recente versie is steeds beschikbaar op onze website.' : 'This privacy policy may be amended if our operations or the law change. The most recent version is always available on our website.'}</p>
             </section>
         </LegalPage>
     );

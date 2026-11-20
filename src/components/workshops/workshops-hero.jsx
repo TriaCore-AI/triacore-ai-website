@@ -157,16 +157,16 @@ export default function WorkshopsHero() {
             <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[10fr_12fr] gap-14 lg:gap-20 items-center">
                 <div>
                     <h1 className="wh-title hero-title titel-hero text-foreground">
-                        Workshops
+                        AI-workshops
                     </h1>
                     <p className="wh-fade mt-8 md:mt-10 tekst-hero text-foreground/70 max-w-xl">
                         {nl
-                            ? 'Jouw team leert zelf werken met AI. Praktisch, op maat van je sector en met voorbeelden uit het eigen werk.'
+                            ? 'Je team leert zelf werken met AI. Praktisch, op maat van je sector en met voorbeelden uit het eigen werk.'
                             : 'Your team learns to work with AI on their own. Practical, tailored to your sector, with examples from their own work.'}
                     </p>
                     <div className="wh-fade mt-10 md:mt-12 flex">
                         <CTAButton to="/contact" size="md">
-                            {nl ? 'Plan een workshop' : 'Book a workshop'}
+                            {nl ? 'Plan een AI-workshop' : 'Book an AI workshop'}
                         </CTAButton>
                     </div>
                 </div>

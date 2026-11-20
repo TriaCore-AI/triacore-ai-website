@@ -1,5 +1,6 @@
 import React from 'react';
 import LegalPage from '../components/ui/legal-page';
+import { seoVoor } from '../data/seo';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function CookiePolicy() {
@@ -7,12 +8,7 @@ export default function CookiePolicy() {
 
     return (
         <LegalPage
-            seo={{
-                title: language === 'nl' ? 'Cookiebeleid | TriaCore AI' : 'Cookie policy | TriaCore AI',
-                description: language === 'nl'
-                    ? 'Lees welke cookies TriaCore AI gebruikt op deze website en hoe je je cookievoorkeuren kunt aanpassen.'
-                    : 'Read which cookies TriaCore AI uses on this website and how you can adjust your cookie preferences.'
-            }}
+            seo={seoVoor('/cookiebeleid', language)}
             title={language === 'nl' ? 'Cookiebeleid.' : 'Cookie policy.'}
             intro={language === 'nl'
                 ? 'Op deze pagina leggen wij transparant uit hoe wij cookies gebruiken en welke keuzes je daarbij hebt.'
@@ -25,7 +21,7 @@ export default function CookiePolicy() {
                 <p>
                     {language === 'nl'
                         ? 'Dit cookiebeleid legt uit hoe TriaCore AI cookies gebruikt op haar website en welke keuzes je als bezoeker hebt. Het beleid vormt een aanvulling op onze privacyverklaring en heeft uitsluitend betrekking op het gebruik van cookies en gelijkaardige technologieën.'
-                        : 'This cookie policy explains how TriaCore AI uses cookies on its website and what choices you have as a visitor. The policy complements our privacy statement and relates exclusively to the use of cookies and similar technologies.'}
+                        : 'This cookie policy explains how TriaCore AI uses cookies on its website and what choices you have as a visitor. The policy complements our privacy policy and relates exclusively to the use of cookies and similar technologies.'}
                 </p>
             </section>
 
@@ -101,7 +97,7 @@ export default function CookiePolicy() {
                 <p>
                     {language === 'nl'
                         ? 'TriaCore AI behoudt zich het recht voor dit cookiebeleid aan te passen wanneer de website, de gebruikte technologieën of de toepasselijke wetgeving wijzigen. De meest recente versie is steeds beschikbaar op onze website.'
-                        : 'TriaCore AI reserves the right to amend this cookie policy if the website, the technologies used or the applicable legislation changes. The most recent version is always available on our website.'}
+                        : 'TriaCore AI reserves the right to amend this cookie policy if the website, the technologies used or the applicable legislation change. The most recent version is always available on our website.'}
                 </p>
             </section>
 

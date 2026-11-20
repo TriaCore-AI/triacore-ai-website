@@ -10,7 +10,7 @@ import { useLanguage } from '../../context/LanguageContext';
 // AI-oplossingen (AiOplossingen.jsx) is de opvolger van Custom tools.
 const OPLOSSINGEN = [
     { to: '/ai-oplossingen', title: { nl: 'AI-oplossingen', en: 'AI solutions' }, sub: { nl: 'Software en AI op maat van je bedrijf', en: 'Software and AI built around your business' } },
-    { to: '/workshops', title: { nl: 'Workshops', en: 'Workshops' }, sub: { nl: 'Jouw team leert werken met AI', en: 'Your team learns to work with AI' } }
+    { to: '/workshops', title: { nl: 'AI-workshops', en: 'AI workshops' }, sub: { nl: 'Jouw team leert werken met AI', en: 'Your team learns to work with AI' } }
 ];
 
 // De opmaak van een regel in het menu op gsm: groot in de titelletter, de pagina waar je bent in het groen.
@@ -95,7 +95,7 @@ export default function Navbar() {
                     <Link to="/" className="hover:opacity-80 transition-opacity z-50">
                         <img
                             src="/logo/TriaCore Logo Zwart.svg"
-                            alt="TriaCore AI Logo"
+                            alt="TriaCore AI"
                             className="h-11 w-auto md:h-12"
                         />
                     </Link>

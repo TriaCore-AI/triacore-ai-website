@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 // Onze aanpak op kleinere schermen (onder 1280): het logo als geheel, waarvan telkens één balk openklapt tot zijn
 // pijler. De pagina wordt nergens vastgehouden: je scrolt altijd vrij (de vorige versie hield de pagina even
@@ -20,6 +21,8 @@ const PANEEL = 136;   // hoogte van een open pijler in pixels, genoeg voor een t
 
 export default function AanpakKlein({ pijlers }) {
     const wrapRef = useRef(null);
+    const { language } = useLanguage();
+    const nl = language === 'nl';
     const [actief, setActief] = useState(-1);
     const [rustig] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     const laatste = pijlers.length - 1;
@@ -88,7 +91,7 @@ export default function AanpakKlein({ pijlers }) {
                             type="button"
                             onClick={() => naar(actief - 1)}
                             disabled={actief <= 0}
-                            aria-label="Vorige pijler"
+                            aria-label={nl ? 'Vorige pijler' : 'Previous pillar'}
                             className="w-11 h-11 rounded-full border border-foreground/15 flex items-center justify-center text-foreground/70 transition-colors duration-300 hover:border-foreground/40 hover:text-foreground disabled:opacity-30 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                         >
                             <ChevronUp size={18} strokeWidth={1.5} />
@@ -100,7 +103,7 @@ export default function AanpakKlein({ pijlers }) {
                             type="button"
                             onClick={() => naar(actief + 1)}
                             disabled={actief >= laatste}
-                            aria-label="Volgende pijler"
+                            aria-label={nl ? 'Volgende pijler' : 'Next pillar'}
                             className="w-11 h-11 rounded-full border border-foreground/15 flex items-center justify-center text-foreground/70 transition-colors duration-300 hover:border-foreground/40 hover:text-foreground disabled:opacity-30 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                         >
                             <ChevronDown size={18} strokeWidth={1.5} />

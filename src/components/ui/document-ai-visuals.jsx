@@ -134,7 +134,7 @@ const ASK_LAYOUTS = {
 
 const ASK_TEXT = {
     nl: {
-        label: 'Een chat. Een medewerker vraagt waar de bon van werf Noord van maandag is. De AI toont meteen de juiste bon, met het nummer, de datum en het gewicht, en een knop om ze te openen.',
+        label: 'Een chat. Een medewerker vraagt waar de bon van werf Noord van maandag is. De AI toont meteen de juiste bon, met het nummer, de datum en het gewicht, en een knop om hem te openen.',
         heading: 'Documenten',
         assistant: 'AI-assistent',
         placeholder: 'Stel een vraag aan je documenten',

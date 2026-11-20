@@ -18,7 +18,7 @@ import { useLanguage } from '../../context/LanguageContext';
 const onderwerpen = {
     nl: [
         { icon: ShieldCheck, title: 'Veilig werken', desc: 'Welke gegevens je in AI mag zetten en welke niet. En hoe je een antwoord nakijkt voor je het gebruikt.' },
-        { icon: Compass, title: 'Juiste tools', desc: 'ChatGPT, Copilot, Claude: waarin ze verschillen en waarvoor elk het best werkt. Zo kies je wat bij jouw bedrijf past.' },
+        { icon: Compass, title: 'Juiste tools', desc: 'ChatGPT, Copilot, Claude: waarin ze verschillen en waarvoor elk het best werkt. Zo kies je wat bij je bedrijf past.' },
         { icon: Brain, title: 'Tweede brein', desc: 'Je klanten, producten en werkwijze op één plek, in een vorm die AI kan lezen. Zo hoef je niet elke keer opnieuw uit te leggen wie je bent.' },
         { icon: ListChecks, title: 'Skills', desc: 'Een skill is een vaste taak die je één keer goed uitlegt, zoals een offerte of een verslag. Daarna doet AI ze telkens op dezelfde manier.' },
         { icon: Plug, title: 'Connectoren', desc: 'Je koppelt AI aan je mail, agenda of CRM. Dan zoekt AI de informatie zelf op en hoef je niets meer te kopiëren en plakken.' },

@@ -7,27 +7,28 @@ import { WerkbonVisual } from '../components/ui/werkbon-visual';
 // Inhoud van de hero van de pagina AI-oplossingen (AiOplossingen.jsx).
 
 export const heroTeksten = {
-    // De eerste zin staat klein als bovenregel. De titel staat op drie even lange regels (elk hoogstens een
-    // vijftiental tekens), zodat er nooit een los woord achteraan een regel bengelt
+    // De titel staat op drie even lange regels (elk hoogstens een vijftiental tekens), zodat er nooit een los
+    // woord achteraan een regel bengelt. Geen bovenregel meer ("AI verandert elke sector" in hoofdletters): de
+    // branding bible verbiedt eyebrows (20/11). De zoekterm "AI-oplossingen" staat daarom in de intro
     nl: {
-        boven: 'AI verandert elke sector',
         regels: [
             'Wij bouwen voor',
             'bedrijven die',
             <span className="italic text-accent">vooruit durven denken.</span>
         ],
-        intro: 'De meeste bedrijven blijven bij losse proefjes met AI. Wij bouwen AI die verankerd zit in je processen en je manier van werken, en zo uitgroeit tot een blijvend voordeel.',        knop: { tekst: 'Plan een gesprek', to: '/contact' },
+        intro: 'De meeste bedrijven blijven bij losse proefjes met AI. Wij bouwen AI-oplossingen die verankerd zitten in je processen en je manier van werken, en zo uitgroeien tot een blijvend voordeel.',
+        knop: { tekst: 'Plan een gesprek', to: '/contact' },
         // Na de drie voorbeelden: een link naar de sectie eronder, zodat duidelijk is dat er meer mogelijk is
         meer: { tekst: 'Ontdek nog meer', naar: 'nodig' }
     },
     en: {
-        boven: 'AI is changing every industry',
         regels: [
             'We build for',
             'companies that',
             <span className="italic text-accent">dare to think ahead.</span>
         ],
-        intro: 'Most companies never get past small experiments with AI. We build AI that is anchored in your processes and the way you work, and grows into a lasting advantage.',        knop: { tekst: 'Book a call', to: '/contact' },
+        intro: 'Most companies never get past small experiments with AI. We build AI solutions that are anchored in your processes and the way you work, and grow into a lasting advantage.',
+        knop: { tekst: 'Book a call', to: '/contact' },
         meer: { tekst: 'Discover more', naar: 'nodig' }
     }
 };
@@ -45,6 +46,6 @@ export const heroOplossingen = {
     en: [
         { id: 'planning', naam: 'AI-driven scheduling', visual: <PlanningVisual /> },
         { id: 'documenten', naam: 'Document management with AI', visual: <DocumentAskVisual /> },
-        { id: 'werkbonnen', naam: 'Voice-to-work-order', visual: <WerkbonVisual /> }
+        { id: 'werkbonnen', naam: 'Work orders by voice', visual: <WerkbonVisual /> }
     ]
 };

@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
+import { seoVoor } from '../data/seo';
 import PageHeader from '../components/ui/page-header';
 import CornerTrace from '../components/ui/corner-trace';
 import { AutoImage } from '../components/ui/auto-image';
@@ -97,17 +98,14 @@ export default function Team() {
 
     return (
         <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-            <Seo
-                title="Team | TriaCore AI"
-                description={nl
-                    ? 'Maak kennis met het team achter TriaCore AI: Lucas Curto, Rian Mathijs en Jorn van Breemaat uit Hasselt.'
-                    : 'Meet the team behind TriaCore AI: Lucas Curto, Rian Mathijs and Jorn van Breemaat from Hasselt.'}
-            />
+            <Seo {...seoVoor('/team', language)} />
             <Navbar />
             <main className="relative flex-grow">
                 <PageHeader
                     title={nl ? 'Ons team.' : 'Our team.'}
-                    intro={nl ? 'Een complementair team dat structuur brengt in elke implementatie.' : 'A complementary team that brings structure to every implementation.'}
+                    intro={nl
+                        ? 'Een complementair team dat structuur brengt in elke implementatie. We kennen onze klanten, hun mensen en hun manier van werken.'
+                        : 'A complementary team that brings structure to every implementation. We know our clients, their people and the way they work.'}
                 />
 
                 <section ref={listRef} className="px-6 md:px-16 lg:px-24 pb-16 md:pb-24">

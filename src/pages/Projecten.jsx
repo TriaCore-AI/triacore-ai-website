@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/ui/navbar';
 import Footer from '../components/ui/footer';
 import Seo from '../components/ui/seo';
+import { seoVoor } from '../data/seo';
 import PageHeader from '../components/ui/page-header';
 import ClientCard from '../components/ui/client-card';
 import { useLanguage } from '../context/LanguageContext';
@@ -37,17 +38,12 @@ export default function Projecten() {
 
     return (
         <div className="relative min-h-screen bg-grain text-foreground flex flex-col font-sans selection:bg-foreground selection:text-background">
-            <Seo
-                title={nl ? 'Projecten | TriaCore AI' : 'Projects | TriaCore AI'}
-                description={nl
-                    ? 'Ontdek hoe bedrijven als Croes NV en A&M Group hun processen herbouwden met TriaCore AI, en voor wie we workshops gaven.'
-                    : 'Discover how companies like Croes NV and A&M Group rebuilt their processes with TriaCore AI, and which organisations we ran workshops for.'}
-            />
+            <Seo {...seoVoor('/projecten', language)} />
             <Navbar />
             <main className="relative flex-grow">
                 <PageHeader
                     title={nl ? 'Onze projecten.' : 'Our projects.'}
-                    intro={nl ? 'Organisaties die we verder hielpen met AI, van een eerste workshop tot software op maat.' : 'Organisations we helped move forward with AI, from a first workshop to custom software.'}
+                    intro={nl ? 'Organisaties die we verder hielpen met AI, van een eerste AI-workshop tot een AI-oplossing op maat.' : 'Organisations we helped move forward with AI, from a first AI workshop to a custom AI solution.'}
                 />
 
                 <section className="px-6 md:px-16 lg:px-24 pb-16 md:pb-24">

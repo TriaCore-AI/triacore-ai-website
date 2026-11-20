@@ -2,26 +2,9 @@
 // gepubliceerde projecten. Draait automatisch voor elke build
 // (zie "build" in package.json) zodat de sitemap nooit achterloopt.
 import { writeFile } from 'fs/promises';
-import { build } from 'esbuild';
+import { loadProjecten } from './load-projecten.mjs';
 
 const SITE_URL = 'https://triacore.be';
-
-async function loadProjecten() {
-    // bundle:true zodat de logo-imports (png/webp) worden meegenomen; die
-    // beelden zelf hebben we niet nodig voor de sitemap, dus loader 'empty'.
-    const result = await build({
-        entryPoints: ['src/data/projecten.jsx'],
-        bundle: true,
-        write: false,
-        format: 'esm',
-        platform: 'node',
-        logLevel: 'silent',
-        loader: { '.png': 'empty', '.webp': 'empty', '.jpg': 'empty', '.jpeg': 'empty', '.svg': 'empty' },
-    });
-    const code = result.outputFiles[0].text;
-    const mod = await import('data:text/javascript;base64,' + Buffer.from(code).toString('base64'));
-    return mod.projecten || [];
-}
 
 const STATIC_ROUTES = [
     { path: '/', priority: '1.0', changefreq: 'weekly' },

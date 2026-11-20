@@ -124,7 +124,7 @@ Volledig tweetalig: **NL** (primair) en **EN** via `LanguageContext`.
 - **Croes NV** (croesnv.be) — klant/partner
 - AI-tools ingezet: ChatGPT, Claude, Gemini
 
-**Solevo** (digitaal platform voor grondverzet- en sloopbedrijven) is tijdelijk van de site gehaald (okt 2026, juridische kwestie). Geen Solevo naam, case, link of voorbeeld op de site plaatsen tot de gebruiker dat terug aanzet. De Syne font en de map `public/images/solevo-visual/` zijn ongebruikt maar niet verwijderd.
+**Solevo** (digitaal platform voor grondverzet- en sloopbedrijven) is tijdelijk van de site gehaald (okt 2026, juridische kwestie). Geen Solevo naam, case, link of voorbeeld op de site plaatsen tot de gebruiker dat terug aanzet. De Syne font is ongebruikt (laadt niet meer). De Solevo-video staat sinds 20/11/2026 niet meer in `public/` maar in `Herontwerp archief/niet-meer-online/`, zodat ze niet meer online bereikbaar is.
 
 ---
 
