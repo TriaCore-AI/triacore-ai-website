@@ -421,29 +421,28 @@ function App() {
               </span>
               {/* Een spatie tussen de regels, zodat de titel voor Google en schermlezers niet aan elkaar plakt */}
               {' '}
-              <span className="hero-row block w-fit max-w-full mx-auto italic text-accent" data-from="right">
+              <span className="hero-row block w-fit max-w-full mx-auto italic text-accent text-balance" data-from="right">
                 {language === 'nl' ? 'ambitieuze bedrijven op bouwen.' : 'ambitious companies build on.'}
               </span>
             </h1>
 
             {/* Naar het ritme van Distyl ("partners with ... to design and operationalize"), bewust anders verwoord:
-                met wie we werken, wat we doen (ontwerpen en waarmaken, de derde pijler van Onze aanpak) en de belofte
-                (op maat gebouwd, om mee te groeien: een lange samenwerking, niet "tot het resultaat er staat", want dat
-                klinkt als een einde; keuze Lucas).
-                Geen "ambitieuze" of "partner": die staan al in de titel.
-                Kort gehouden, zodat de klantlogo's eronder in beeld blijven (20/11) */}
+                met wie we werken en wat we doen (ontwerpen en waarmaken, de derde pijler van Onze aanpak). Geen
+                "ambitieuze" of "partner": die staan al in de titel. Eén zin, zodat de hero rustig blijft en op gsm
+                in één scherm past (20/11: de tweede zin "Op maat gebouwd, om mee te groeien" vond Lucas te veel) */}
             <p className="hero-fade mt-5 sm:mt-8 md:mt-10 mx-auto tekst-hero text-foreground/70 max-w-2xl text-balance">
               {language === 'nl'
-                ? 'TriaCore AI werkt samen met vooruitstrevende bedrijven om hun AI-transformatie te ontwerpen en waar te maken. Op maat gebouwd, om mee te groeien met je bedrijf.'
-                : 'TriaCore AI works with forward-thinking companies to design their AI transformation and make it real. Custom-built to grow with your business.'}
+                ? 'TriaCore AI werkt samen met vooruitstrevende bedrijven om hun AI-transformatie te ontwerpen en waar te maken.'
+                : 'TriaCore AI works with forward-thinking companies to design their AI transformation and make it real.'}
             </p>
 
-            {/* Op gsm is de tekstlink 44px hoog om op te tikken; de kleinere rijafstand houdt de witruimte gelijk */}
+            {/* Op gsm (onder 640) enkel de knop: de tekstlink naar AI-oplossingen valt weg, zodat de hero rustig blijft
+                en in één scherm past (20/11); de oplossingen staan ook in het menu */}
             <div className="hero-fade mt-7 sm:mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5 max-md:gap-y-3">
               <CTAButton to="/contact" size="md">
                 {language === 'nl' ? 'Plan een gesprek' : 'Book a call'}
               </CTAButton>
-              <Link to="/ai-oplossingen" className="group/hero-link inline-flex items-center gap-2 max-md:py-2 text-base sm:text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
+              <Link to="/ai-oplossingen" className="group/hero-link max-sm:hidden inline-flex items-center gap-2 max-md:py-2 text-base sm:text-lg font-medium text-foreground/70 hover:text-accent transition-colors duration-300">
                 {language === 'nl' ? 'Bekijk onze AI-oplossingen' : 'View our AI solutions'}
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover/hero-link:translate-x-1" />
               </Link>

@@ -81,3 +81,12 @@
 @keyframes hero-logos-schuif {
   to { transform: translateX(-680px); }
 }
+
+/* Gsm (onder 640): de hero van de homepage iets kleiner en rustiger, zodat titel, zin, knoppen en logo's samen in
+   één scherm passen en de hero zo in het midden komt (vraag Lucas, 20/11). Enkel op de homepage (#home): de
+   andere pagina's houden de vaste hero-maten uit index.css. Dit bestand staat buiten de Tailwind-lagen en gaat
+   daardoor voor op titel-hero en tekst-hero */
+@media (max-width: 639.98px) {
+  #home .titel-hero { font-size: 2.25rem; line-height: 1.08; }
+  #home .tekst-hero { font-size: 1rem; line-height: 1.6; }
+}
