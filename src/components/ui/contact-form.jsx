@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import CTAButton from './cta-button';
 import SuccesMelding from './succes-melding';
-import { FoutTekst, foutRand, isEmail, naarEersteFout } from './formulier-fouten';
+import { FoutTekst, FoutenSamenvatting, EmailVoorstel } from './formulier-fouten';
+import { foutRand, emailFout, zichtbareFouten, naarEersteFout } from './formulier-controle';
 import { useLanguage } from '../../context/LanguageContext';
 
 // Het contactformulier, in de nieuwe stijl: witte velden zonder kader eromheen en één primaire knop.
@@ -10,9 +11,8 @@ import { useLanguage } from '../../context/LanguageContext';
 // vraag je aan op de workshoppagina (workshop-formulier.jsx, onderwerp "Workshop").
 // Het formulier rekt mee in de hoogte (het berichtveld groeit), zodat het even hoog kan staan als de
 // kolom ernaast. Verstuurt naar Netlify Forms (formulier "contact").
-// De verstuurknop werkt pas als de verplichte velden (naam, een geldig e-mailadres en het bericht) ingevuld
-// zijn; tot dan is hij grijs, zonder extra uitleg ernaast, net als op het workshopformulier. De controle bij
-// het versturen (formulier-fouten.jsx) blijft als vangnet.
+// Verplicht: naam, een geldig e-mailadres en het bericht; bedrijf en telefoon staan als "(optioneel)". De
+// verstuurknop is altijd aan te klikken; hoe de controle werkt, staat in formulier-controle.js (20/11).
 // Na het versturen verschijnt een klein bevestigingsvenster (succes-melding.jsx) en is het formulier weer leeg.
 // Let op: elk veld en elk onderwerp moet ook in het verborgen formulier in index.html staan, anders laat Netlify
 // het weg.
@@ -29,20 +29,23 @@ export default function ContactForm() {
     const empty = { name: '', company: '', email: '', phone: '', message: '' };
     const [formData, setFormData] = useState(empty);
 
-    // Wat er nog ontbreekt, per id van het veld. Pas zichtbaar na een eerste poging tot versturen
+    // Wat er nog ontbreekt, per id van het veld. Zichtbaar zodra je een veld met iets erin verlaat (aangeraakt),
+    // en voor alle velden na een eerste poging tot versturen
     const [poging, setPoging] = useState(false);
+    const [aangeraakt, setAangeraakt] = useState({});
     const controleer = (d) => {
         const f = {};
         if (!d.name.trim()) f.name = nl ? 'Vul je naam in.' : 'Enter your name.';
-        if (!d.email.trim()) f.email = nl ? 'Vul je e-mailadres in.' : 'Enter your email address.';
-        else if (!isEmail(d.email)) f.email = nl ? 'Dit e-mailadres klopt niet.' : 'This email address does not look right.';
+        const mail = emailFout(d.email, nl);
+        if (mail) f.email = mail;
         if (!d.message.trim()) f.message = nl ? 'Vertel kort wat je wilt bespreken.' : 'Tell us briefly what you would like to discuss.';
         return f;
     };
-    const fouten = poging ? controleer(formData) : {};
-    const heeftFouten = Object.keys(fouten).length > 0;
-    // Zijn de verplichte velden in orde? Pas dan kan je versturen
-    const klaar = Object.keys(controleer(formData)).length === 0;
+    const fouten = zichtbareFouten(controleer(formData), poging, aangeraakt);
+    const verlaat = (e) => {
+        const { id, value } = e.target;
+        if (value.trim()) setAangeraakt((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -59,6 +62,7 @@ export default function ContactForm() {
         if (import.meta.env.DEV) {
             setStatus('idle');
             setPoging(false);
+            setAangeraakt({});
             setFormData(empty);
             setMelding(true);
             return;
@@ -80,6 +84,7 @@ export default function ContactForm() {
             if (res.ok) {
                 setStatus('idle');
                 setPoging(false);
+                setAangeraakt({});
                 setFormData(empty);
                 setMelding(true);
             } else {
@@ -101,38 +106,37 @@ export default function ContactForm() {
             <form noValidate onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label htmlFor="name" className={labelClass}>{nl ? 'Naam *' : 'Name *'}</label>
-                    <input required id="name" type="text" autoComplete="name" value={formData.name} onChange={handleInputChange} aria-invalid={!!fouten.name} className={`${fieldClass} ${foutRand(fouten.name)}`} placeholder={nl ? 'Voor- en achternaam' : 'First and last name'} />
+                    <label htmlFor="name" className={labelClass}>{nl ? 'Naam' : 'Name'}</label>
+                    <input required id="name" type="text" autoComplete="name" value={formData.name} onChange={handleInputChange} onBlur={verlaat} aria-invalid={!!fouten.name} className={`${fieldClass} ${foutRand(fouten.name)}`} placeholder={nl ? 'Voor- en achternaam' : 'First and last name'} />
                     <FoutTekst>{fouten.name}</FoutTekst>
                 </div>
                 <div>
-                    <label htmlFor="email" className={labelClass}>{nl ? 'E-mail *' : 'Email *'}</label>
-                    <input required id="email" type="email" autoComplete="email" value={formData.email} onChange={handleInputChange} aria-invalid={!!fouten.email} className={`${fieldClass} ${foutRand(fouten.email)}`} placeholder={nl ? 'naam@bedrijf.be' : 'name@company.com'} />
+                    <label htmlFor="email" className={labelClass}>{nl ? 'E-mail' : 'Email'}</label>
+                    <input required id="email" type="email" inputMode="email" autoCapitalize="none" spellCheck={false} autoComplete="email" value={formData.email} onChange={handleInputChange} onBlur={verlaat} aria-invalid={!!fouten.email} className={`${fieldClass} ${foutRand(fouten.email)}`} placeholder={nl ? 'naam@bedrijf.be' : 'name@company.com'} />
                     <FoutTekst>{fouten.email}</FoutTekst>
+                    {!fouten.email && <EmailVoorstel waarde={formData.email} nl={nl} onKies={(v) => setFormData((prev) => ({ ...prev, email: v }))} />}
                 </div>
                 <div>
-                    <label htmlFor="company" className={labelClass}>{nl ? 'Bedrijf' : 'Company'}</label>
+                    <label htmlFor="company" className={labelClass}>{nl ? 'Bedrijf (optioneel)' : 'Company (optional)'}</label>
                     <input id="company" type="text" autoComplete="organization" value={formData.company} onChange={handleInputChange} className={fieldClass} placeholder={nl ? 'Bedrijfsnaam' : 'Company name'} />
                 </div>
                 <div>
-                    <label htmlFor="phone" className={labelClass}>{nl ? 'Telefoon' : 'Phone'}</label>
+                    <label htmlFor="phone" className={labelClass}>{nl ? 'Telefoon (optioneel)' : 'Phone (optional)'}</label>
                     <input id="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={handleInputChange} className={fieldClass} placeholder={nl ? 'Telefoonnummer' : 'Phone number'} />
                 </div>
             </div>
 
             <div className="flex-1 flex flex-col">
-                <label htmlFor="message" className={labelClass}>{nl ? 'Wat wil je bespreken? *' : 'What would you like to discuss? *'}</label>
-                <textarea required id="message" rows="5" value={formData.message} onChange={handleInputChange} aria-invalid={!!fouten.message} className={`${fieldClass} ${foutRand(fouten.message)} resize-none flex-1 min-h-[140px]`} placeholder={nl ? 'Beschrijf kort je situatie of wat je wilt bereiken.' : 'Briefly describe your situation or what you want to achieve.'} />
+                <label htmlFor="message" className={labelClass}>{nl ? 'Wat wil je bespreken?' : 'What would you like to discuss?'}</label>
+                <textarea required id="message" rows="5" value={formData.message} onChange={handleInputChange} onBlur={verlaat} aria-invalid={!!fouten.message} className={`${fieldClass} ${foutRand(fouten.message)} resize-none flex-1 min-h-[140px]`} placeholder={nl ? 'Beschrijf kort je situatie of wat je wilt bereiken.' : 'Briefly describe your situation or what you want to achieve.'} />
                 <FoutTekst>{fouten.message}</FoutTekst>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center gap-5 mt-2">
-                <CTAButton type="submit" disabled={!klaar || status === 'loading'} className="w-full md:w-auto">
+                <CTAButton type="submit" disabled={status === 'loading'} className="w-full md:w-auto">
                     {status === 'loading' ? (nl ? 'Even geduld...' : 'One moment...') : (nl ? 'Verstuur' : 'Send')}
                 </CTAButton>
-                {heeftFouten && (
-                    <p className="text-sm text-red-600">{nl ? 'Vul de rood gemarkeerde velden nog aan.' : 'Please complete the fields marked in red.'}</p>
-                )}
+                {poging && <FoutenSamenvatting aantal={Object.keys(fouten).length} nl={nl} />}
                 {status === 'error' && (
                     <p className="text-sm text-red-600">
                         {nl ? 'Er ging iets mis. Probeer het opnieuw of mail naar' : 'Something went wrong. Try again or email'} <a href="mailto:info@triacore.be" className="underline">info@triacore.be</a>.
