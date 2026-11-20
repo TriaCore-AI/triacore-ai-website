@@ -13,14 +13,14 @@ export default function CookiePolicy() {
             intro={language === 'nl'
                 ? 'Op deze pagina leggen wij transparant uit hoe wij cookies gebruiken en welke keuzes je daarbij hebt.'
                 : 'On this page we explain clearly how we use cookies and what choices you have.'}
-            updated={language === 'nl' ? 'Laatst bijgewerkt op 3 maart 2026' : 'Last updated on 3 March 2026'}
+            updated={language === 'nl' ? 'Laatst bijgewerkt op 20 november 2026' : 'Last updated on 20 November 2026'}
         >
 
             <section>
                 <h2>{language === 'nl' ? '1. Doel van dit cookiebeleid' : '1. Purpose of this cookie policy'}</h2>
                 <p>
                     {language === 'nl'
-                        ? 'Dit cookiebeleid legt uit hoe TriaCore AI cookies gebruikt op haar website en welke keuzes je als bezoeker hebt. Het beleid vormt een aanvulling op onze privacyverklaring en heeft uitsluitend betrekking op het gebruik van cookies en gelijkaardige technologieën.'
+                        ? 'Dit cookiebeleid legt uit hoe TriaCore AI cookies gebruikt op haar website en welke keuzes je als bezoeker hebt. Het beleid vormt een aanvulling op ons privacybeleid en heeft uitsluitend betrekking op het gebruik van cookies en gelijkaardige technologieën.'
                         : 'This cookie policy explains how TriaCore AI uses cookies on its website and what choices you have as a visitor. The policy complements our privacy policy and relates exclusively to the use of cookies and similar technologies.'}
                 </p>
             </section>
@@ -45,10 +45,18 @@ export default function CookiePolicy() {
                             : 'These cookies are necessary for the proper functioning, security and stability of the website.'}
                     </li>
                     <li>
-                        <strong>{language === 'nl' ? 'Beperkte, privacyvriendelijke analytische cookies:' : 'Limited, privacy-friendly analytics cookies:'}</strong><br />
+                        <strong>{language === 'nl' ? 'Analytische cookies, enkel met je toestemming:' : 'Analytics cookies, only with your consent:'}</strong><br />
                         {language === 'nl'
-                            ? 'Wij maken gebruik van Google Analytics 4 om geanonimiseerde inzichten te verkrijgen in het gebruik van onze website. Hierbij worden gegevens verzameld zoals paginabezoeken, sessieduur, apparaattype en locatie op landniveau. Deze data wordt 14 maanden bewaard. Je kan je toestemming op elk moment intrekken.'
-                            : 'We use Google Analytics 4 to gain anonymised insights into how our website is used. This collects data such as page views, session duration, device type and country-level location. This data is kept for 14 months. You can withdraw your consent at any time.'}
+                            ? 'Wij maken gebruik van Google Analytics 4 om inzicht te krijgen in het gebruik van onze website. Hierbij worden gegevens verzameld zoals paginabezoeken, sessieduur, apparaattype en locatie op landniveau. Deze data wordt 14 maanden bewaard.'
+                            : 'We use Google Analytics 4 to gain insight into how our website is used. This collects data such as page views, session duration, device type and country-level location. This data is kept for 14 months.'}
+                        <br /><br />
+                        {language === 'nl'
+                            ? 'Daarnaast gebruiken we Microsoft Clarity om te zien hoe bezoekers door de website bewegen: hoe ver ze scrollen, waar ze klikken en waar ze afhaken. Clarity maakt daarvoor ook opnames van bezoeken; wat je in formuliervelden typt, blijft daarin onzichtbaar. Clarity plaatst de cookies _clck (één jaar) en _clsk (één dag). Opnames worden 30 dagen bewaard, overzichten tot 13 maanden.'
+                            : 'We also use Microsoft Clarity to see how visitors move through the website: how far they scroll, where they click and where they drop off. For this, Clarity also records visits; what you type in form fields is not visible in these recordings. Clarity places the cookies _clck (one year) and _clsk (one day). Recordings are kept for 30 days, overviews for up to 13 months.'}
+                        <br /><br />
+                        {language === 'nl'
+                            ? 'Je kan je toestemming op elk moment intrekken via de cookie-instellingen onderaan de website.'
+                            : 'You can withdraw your consent at any time via the cookie settings at the bottom of the website.'}
                     </li>
                 </ul>
                 <p className="font-medium text-foreground">

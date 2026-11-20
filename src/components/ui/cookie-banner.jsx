@@ -4,6 +4,43 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import ReactGA from 'react-ga4';
 
+// Microsoft Clarity (scrolldiepte, heatmaps, opnames van bezoeken met formuliervelden onzichtbaar), project
+// "triacore.be" (20/11/2026). Laadt net als Google Analytics enkel na toestemming voor analytische cookies, en
+// enkel op triacore.be zelf: lokaal en op staging niet, zodat testbezoeken de cijfers niet vervuilen. De
+// toestemming gaat naar Clarity via de Consent API v2 (verplicht voor bezoekers uit de EER sinds 31/10/2025)
+const CLARITY_ID = 'zgmk9u59qw';
+const isLiveSite = () => window.location.hostname === 'triacore.be' || window.location.hostname === 'www.triacore.be';
+
+function laadClarity() {
+    if (!isLiveSite() || window.clarity) return;
+    window.clarity = function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.clarity.ms/tag/${CLARITY_ID}`;
+    document.head.appendChild(s);
+}
+
+// Laadt Google Analytics en Clarity na toestemming voor analytische cookies
+function loadAnalytics() {
+    if (!ReactGA.isInitialized) {
+        // Geen automatische paginaweergave: de useEffect in CookieBanner stuurt er precies één per pagina. Vroeger
+        // telde elke weergave twee tot drie keer (initialize, een extra send en de useEffect)
+        ReactGA.initialize('G-3STMTJMMHJ', { gtagOptions: { send_page_view: false } });
+    } else {
+        // Opnieuw toestemming na een eerdere weigering in dezelfde sessie
+        ReactGA.gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
+    laadClarity();
+    if (window.clarity) window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+}
+
+// Trekt iemand zijn toestemming in via de cookie-instellingen, dan stoppen Clarity en Google Analytics meteen met
+// cookies (zonder herladen)
+function trekToestemmingIn() {
+    if (window.clarity) window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' });
+    if (ReactGA.isInitialized) ReactGA.gtag('consent', 'update', { analytics_storage: 'denied' });
+}
+
 export default function CookieBanner() {
     const { language } = useLanguage();
     const location = useLocation();
@@ -39,14 +76,6 @@ export default function CookieBanner() {
         }
     }, [location, consent.analytics]);
 
-    const loadAnalytics = () => {
-        if (!ReactGA.isInitialized) {
-            // Geen automatische paginaweergave: de useEffect hierboven stuurt er precies één per pagina. Vroeger telde
-            // elke weergave twee tot drie keer (initialize, een extra send hier en de useEffect)
-            ReactGA.initialize('G-3STMTJMMHJ', { gtagOptions: { send_page_view: false } });
-        }
-    };
-
     const handleAcceptAll = () => {
         const newConsent = { analytics: true };
         saveConsent(newConsent);
@@ -63,6 +92,7 @@ export default function CookieBanner() {
         setConsent(newConsent);
         // Ook wie analytische cookies aanzet via de instellingen, krijgt Analytics meteen (niet pas na herladen)
         if (newConsent.analytics) loadAnalytics();
+        else trekToestemmingIn();
         setIsVisible(false);
         setShowSettings(false);
     };
@@ -136,8 +166,8 @@ export default function CookieBanner() {
                                     <h4 className="text-sm font-bold text-foreground mb-1">{language === 'nl' ? 'Analytische cookies' : 'Analytics cookies'}</h4>
                                     <p className="text-xs text-foreground/40 leading-relaxed">
                                         {language === 'nl'
-                                            ? 'Helpt ons geanonimiseerde inzichten te verkrijgen in websitegebruik om de ervaring te verbeteren.'
-                                            : 'Helps us gain anonymised insights into how the website is used, so we can improve it.'}
+                                            ? 'Helpen ons begrijpen hoe de website gebruikt wordt, zodat we ze kunnen verbeteren (Google Analytics en Microsoft Clarity).'
+                                            : 'Help us understand how the website is used, so we can improve it (Google Analytics and Microsoft Clarity).'}
                                     </p>
                                 </div>
                                 <button

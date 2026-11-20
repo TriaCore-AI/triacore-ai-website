@@ -74,15 +74,16 @@ export default function PrivacyPolicy() {
                     <li>{language === 'nl' ? 'je taalvoorkeur (Nederlands of Engels).' : 'your language preference (Dutch or English).'}</li>
                 </ul>
 
-                <h3>{language === 'nl' ? 'Via onze website (Google Analytics 4):' : 'Via our website (Google Analytics 4):'}</h3>
+                <h3>{language === 'nl' ? 'Via onze website (Google Analytics 4 en Microsoft Clarity):' : 'Via our website (Google Analytics 4 and Microsoft Clarity):'}</h3>
                 <p>{language === 'nl' ? 'Indien je hiervoor via de cookiebanner toestemming hebt gegeven, verzamelen wij analytische gegevens:' : 'If you have given consent via the cookie banner, we collect analytics data:'}</p>
                 <ul>
                     <li>{language === 'nl' ? 'paginabezoeken en interacties;' : 'page views and interactions;'}</li>
                     <li>{language === 'nl' ? 'sessieduur;' : 'session duration;'}</li>
                     <li>{language === 'nl' ? 'apparaattype en browser;' : 'device type and browser;'}</li>
-                    <li>{language === 'nl' ? 'locatie (beperkt tot landniveau).' : 'location (limited to country level).'}</li>
+                    <li>{language === 'nl' ? 'locatie (beperkt tot landniveau);' : 'location (limited to country level);'}</li>
+                    <li>{language === 'nl' ? 'hoe je door de website beweegt (scrollen, klikken en muisbewegingen), ook als opname van je bezoek. Wat je in formuliervelden typt, blijft daarin onzichtbaar.' : 'how you move through the website (scrolling, clicks and mouse movements), also as a recording of your visit. What you type in form fields is not visible in it.'}</li>
                 </ul>
-                <p className="noot">{language === 'nl' ? 'Deze data wordt gedurende 14 maanden bewaard in Google Analytics. Je kan je toestemming steeds intrekken via de cookie-instellingen.' : 'This data is stored for 14 months in Google Analytics. You can withdraw your consent at any time via the cookie settings.'}</p>
+                <p className="noot">{language === 'nl' ? 'Google Analytics bewaart deze gegevens 14 maanden. Bij Microsoft Clarity worden opnames 30 dagen bewaard en overzichten tot 13 maanden. Je kan je toestemming steeds intrekken via de cookie-instellingen.' : 'Google Analytics keeps this data for 14 months. Microsoft Clarity keeps recordings for 30 days and overviews for up to 13 months. You can withdraw your consent at any time via the cookie settings.'}</p>
                 <p className="noot">{language === 'nl' ? 'Wij verzamelen geen bijzondere of gevoelige persoonsgegevens en richten ons uitsluitend op professionele (B2B) contacten.' : 'We do not collect any special or sensitive personal data and focus exclusively on professional (B2B) contacts.'}</p>
             </section>
 
@@ -106,6 +107,7 @@ export default function PrivacyPolicy() {
                     <li>{language === 'nl' ? 'het uitvoeren van onze dienstverlening;' : 'carrying out our services;'}</li>
                     <li>{language === 'nl' ? 'klantenbeheer en communicatie;' : 'client management and communication;'}</li>
                     <li>{language === 'nl' ? 'het versturen van onze nieuwsbrief, indien je je daarvoor hebt ingeschreven;' : 'sending our newsletter, if you have subscribed to it;'}</li>
+                    <li>{language === 'nl' ? 'het verbeteren van onze website op basis van gebruiksgegevens, indien je daarvoor toestemming gaf;' : 'improving our website based on usage data, if you have given consent;'}</li>
                     <li>{language === 'nl' ? 'administratieve en wettelijke verplichtingen.' : 'administrative and legal obligations.'}</li>
                 </ul>
             </section>
@@ -127,6 +129,7 @@ export default function PrivacyPolicy() {
                 <ul>
                     <li>{language === 'nl' ? 'interne opvolgsystemen (zoals spreadsheets of CRM-software);' : 'internal tracking systems (such as spreadsheets or CRM software);'}</li>
                     <li>{language === 'nl' ? 'onze e-mailverzenddienst Resend, die de nieuwsbrieflijst beheert en onze e-mails verstuurt;' : 'our email delivery service Resend, which manages the newsletter list and sends our emails;'}</li>
+                    <li>{language === 'nl' ? 'de analysediensten Google Analytics (Google) en Microsoft Clarity (Microsoft), enkel met je toestemming;' : 'the analytics services Google Analytics (Google) and Microsoft Clarity (Microsoft), only with your consent;'}</li>
                     <li>{language === 'nl' ? 'technische of administratieve dienstverleners die ons ondersteunen.' : 'technical or administrative service providers who support us.'}</li>
                 </ul>
                 <p>{language === 'nl' ? 'Je gegevens worden niet verkocht en niet gebruikt voor commerciële doeleinden van derden.' : 'Your data is never sold and is not used for third-party commercial purposes.'}</p>
@@ -136,6 +139,7 @@ export default function PrivacyPolicy() {
                 <h2>{language === 'nl' ? '8. Verwerking buiten de EU' : '8. Processing outside the EU'}</h2>
                 <p>{language === 'nl' ? 'Indien persoonsgegevens worden verwerkt door partijen buiten de Europese Economische Ruimte, zorgen wij ervoor dat dit gebeurt met passende waarborgen in overeenstemming met de GDPR.' : 'If personal data is processed by parties outside the European Economic Area, we ensure that this is done with appropriate safeguards in accordance with the GDPR.'}</p>
                 <p>{language === 'nl' ? 'Concreet wordt ons e-mailverkeer voor de nieuwsbrief verwerkt door Resend, een dienstverlener gevestigd in de Verenigde Staten. Deze doorgifte gebeurt op basis van de standaardcontractbepalingen (SCC’s) van de Europese Commissie.' : 'Specifically, our newsletter email traffic is processed by Resend, a service provider based in the United States. This transfer takes place on the basis of the European Commission’s Standard Contractual Clauses (SCCs).'}</p>
+                <p>{language === 'nl' ? 'Ook Google (Google Analytics) en Microsoft (Microsoft Clarity) zijn gevestigd in de Verenigde Staten. Die doorgifte gebeurt enkel met je toestemming en op basis van het EU-VS-kader voor gegevensbescherming (Data Privacy Framework), waarbij beide bedrijven aangesloten zijn.' : 'Google (Google Analytics) and Microsoft (Microsoft Clarity) are also based in the United States. That transfer only takes place with your consent and on the basis of the EU-US Data Privacy Framework, in which both companies participate.'}</p>
             </section>
 
             <section>
