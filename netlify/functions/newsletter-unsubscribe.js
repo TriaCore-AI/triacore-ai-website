@@ -1,6 +1,6 @@
-import { Resend } from 'resend';
 import { unsubscribePage } from '../../lib/email-template.js';
-import { verifyEmailToken } from '../../lib/unsubscribe.js';
+import { unsubscribeSecret, verifyEmailToken } from '../../lib/unsubscribe.js';
+import { unsubscribe } from '../../lib/resend-api.js';
 
 // Uitschrijven vanaf een ondertekende link (werkt in elke mail, ook de
 // transactionele welkomstmail). Zet het contact op unsubscribed in Resend.
@@ -20,11 +20,11 @@ export const handler = async (event) => {
     const language = q.l === 'en' ? 'en' : 'nl';
     const isPost = event.httpMethod === 'POST'; // one-click vanuit de mailclient
 
-    const secret = process.env.RESEND_API_KEY;
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    const apiKey = process.env.RESEND_API_KEY;
+    const secret = unsubscribeSecret();
 
-    if (!secret || !audienceId) {
-        console.error('Unsubscribe: ontbrekende env (RESEND_API_KEY / RESEND_AUDIENCE_ID)');
+    if (!apiKey || !secret) {
+        console.error('Unsubscribe: RESEND_API_KEY ontbreekt');
         return isPost ? { statusCode: 500, body: '' } : html(500, unsubscribePage(language, false));
     }
 
@@ -33,13 +33,9 @@ export const handler = async (event) => {
         return isPost ? { statusCode: 400, body: '' } : html(400, unsubscribePage(language, false));
     }
 
+    // Uitschrijven geldt in Resend voor het adres, dus voor alle nieuwsbrieven. Een onbekend adres is ook goed.
     try {
-        const resend = new Resend(secret);
-        const { error } = await resend.contacts.update({ audienceId, email, unsubscribed: true });
-        // Bestaat het contact niet (meer), dan is het doel ook bereikt: niet abonneren.
-        if (error && !String(error.message || '').toLowerCase().includes('not found')) {
-            console.error('Unsubscribe: contacts.update faalde', error);
-        }
+        await unsubscribe(apiKey, String(email).trim().toLowerCase());
     } catch (err) {
         console.error('Unsubscribe: onverwachte fout', err);
         return isPost ? { statusCode: 500, body: '' } : html(500, unsubscribePage(language, false));

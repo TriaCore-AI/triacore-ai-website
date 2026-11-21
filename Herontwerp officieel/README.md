@@ -31,6 +31,7 @@ lokaal (dev server)  →  staging (GitHub, bewaren)  →  main (GitHub, live via
 | **main** | Gekoppeld aan Netlify (site "triacore" → triacore.be). Pas mergen en pushen als het herontwerp live mag, en enkel na uitdrukkelijke bevestiging. |
 
 - **Nooit pushen zonder expliciete bevestiging.** Ook niet naar `staging`.
+- **De staging-site bouwt niet vanzelf na een push**: het Netlify-project `triacore-staging` is niet aan GitHub gekoppeld. Een nieuwe versie zet je online met de Netlify-koppeling van Claude (deploy-site), die een map uploadt en in Netlify bouwt. Doe dat vanuit een schone kopie van de commit (`git archive <commit> | tar -x -C <map>`): vanuit een git worktree faalt de build, en zo gaan lokale testbestanden niet mee.
 - Pushen vanuit Claude lukt via de GitHub CLI: `git -c credential.helper= -c credential.helper='!gh auth git-credential' push origin staging` (in Bash; via PowerShell kan de credential manager niet om een login vragen).
 - **Startpunt:** de tag `voor-herontwerp` (commit `3319d9a`) is de site van voor het herontwerp. Daarnaar teruggaan kan altijd. De tag staat voorlopig enkel lokaal.
 - **Terugdraaien:** per commit met `git revert`, per bestand met `git checkout voor-herontwerp -- <bestand>`.

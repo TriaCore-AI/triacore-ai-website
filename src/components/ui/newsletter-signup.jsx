@@ -61,7 +61,8 @@ export default function NewsletterSignup({ tone = 'light' }) {
         }
     };
 
-    const voornaam = naam.trim().split(/\s+/)[0];
+    const eerste = naam.trim().split(/\s+/)[0];
+    const voornaam = eerste ? eerste.charAt(0).toLocaleUpperCase('nl-BE') + eerste.slice(1) : '';
     const muted = dark ? 'text-white/50' : 'text-foreground/55';
     const foutKleur = dark ? 'text-red-300' : 'text-red-600';
 

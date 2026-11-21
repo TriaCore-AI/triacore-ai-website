@@ -145,9 +145,11 @@ Sinds 21 november 2026 terug, in een nieuwe vorm (de beslissing van 4 november o
   `src/content/resources/` en `public/resources/` zet. Formaat: `src/content/resources/README.md`. In het menu en de
   footer; nog geen eigen sectie op de homepage.
 - **Nieuwsbrief:** inschrijven in de footer en rechts in de kop van de kennisbankpagina
-  (`src/components/ui/newsletter-signup.jsx`: naam en e-mailadres, enkel het e-mailadres is verplicht) via `netlify/functions/newsletter-subscribe.js` naar een Resend-lijst, met een welkomstmail
-  (`lib/email-template.js`). Uitschrijven via `newsletter-unsubscribe.js`. Env: zie `.env.example`. Een mail bij een
-  nieuw artikel is er nog niet. Op `main` staat de oude opzet nog tot het herontwerp live gaat.
+  (`src/components/ui/newsletter-signup.jsx`: naam en e-mailadres, enkel het e-mailadres is verplicht) via `netlify/functions/newsletter-subscribe.js` naar een Resend-segment (`lib/resend-api.js`), met een welkomstmail.
+  De tekst van die welkomstmail beheer je in de ERP (Marketing → Kennisbank → Mails, Resend-template
+  `kennisbank-welkom-nl`/`-en`); zonder template vertrekt de standaardtekst uit `lib/email-template.js`. Uitschrijven
+  via `newsletter-unsubscribe.js`. Env: zie `.env.example`. Nieuwsbrieven over een artikel zet je klaar vanuit de ERP
+  en verstuur je in Resend. Op `main` staat de oude opzet nog tot het herontwerp live gaat.
 
 ---
 
