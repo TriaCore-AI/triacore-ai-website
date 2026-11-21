@@ -137,6 +137,7 @@ export default function Navbar() {
                             </div>
                         </div>
                         <Link to="/projecten" className={linkClass}>{language === 'nl' ? 'Projecten' : 'Projects'}</Link>
+                        <Link to="/kennisbank" className={linkClass}>{language === 'nl' ? 'Kennisbank' : 'Resources'}</Link>
                         <Link to="/team" className={linkClass}>Team</Link>
                         <Link to="/contact" className={linkClass}>Contact</Link>
                     </div>
@@ -193,6 +194,7 @@ export default function Navbar() {
                     ))}
 
                     <MobileLink to="/projecten" active={location.pathname.startsWith('/projecten')} onClick={closeMobile}>{language === 'nl' ? 'Projecten' : 'Projects'}</MobileLink>
+                    <MobileLink to="/kennisbank" active={location.pathname.startsWith('/kennisbank')} onClick={closeMobile}>{language === 'nl' ? 'Kennisbank' : 'Resources'}</MobileLink>
                     <MobileLink to="/team" active={location.pathname === '/team'} onClick={closeMobile}>Team</MobileLink>
                     <MobileLink to="/contact" active={location.pathname === '/contact'} onClick={closeMobile}>Contact</MobileLink>
 

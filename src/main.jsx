@@ -13,6 +13,9 @@ import AiOplossingen from './pages/AiOplossingen.jsx'
 import Projecten from './pages/Projecten.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import Workshops from './pages/Workshops.jsx'
+import Resources from './pages/Resources.jsx'
+import ResourceDetail, { NaarKennisbank } from './pages/ResourceDetail.jsx'
+import ResourcePreview from './pages/ResourcePreview.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ScrollToTop from './components/ui/ScrollToTop.jsx'
 import CookieBanner from './components/ui/cookie-banner.jsx'
@@ -22,7 +25,8 @@ createRoot(document.getElementById('root')).render(
     <LanguageProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <CookieBanner />
+        {/* Het voorbeeld voor de ERP toont geen cookiebanner (en laadt dus ook geen analytics) */}
+        {window.location.pathname !== '/kennisbank/voorbeeld' && <CookieBanner />}
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/team" element={<Team />} />
@@ -37,6 +41,14 @@ createRoot(document.getElementById('root')).render(
           <Route path="/projecten" element={<Projecten />} />
           <Route path="/projecten/:slug" element={<ProjectDetail />} />
           <Route path="/workshops" element={<Workshops />} />
+          {/* Kennisbank (in het Engels "Resources"): de artikels komen uit src/content/resources/ en worden
+              beheerd vanuit de ERP. /kennisbank/voorbeeld is het voorbeeld dat de ERP in een venster toont (niet in
+              Google). Het vroegere adres /resources stuurt door, op Netlify ook via public/_redirects */}
+          <Route path="/kennisbank" element={<Resources />} />
+          <Route path="/kennisbank/voorbeeld" element={<ResourcePreview />} />
+          <Route path="/kennisbank/:slug" element={<ResourceDetail />} />
+          <Route path="/resources" element={<Navigate to="/kennisbank" replace />} />
+          <Route path="/resources/:slug" element={<NaarKennisbank />} />
           {/* De pagina over AI-agents (src/pages/AiBegeleiding.jsx) is tijdelijk offline tot er genoeg bewijs
               is (beslissing Lucas, 6/11). Het adres stuurt door naar de homepage, ook op Netlify
               (public/_redirects, met 302 omdat ze terugkomt). Terugzetten: importeer AiBegeleiding en

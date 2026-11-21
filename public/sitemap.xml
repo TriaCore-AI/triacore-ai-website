@@ -31,6 +31,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://triacore.be/kennisbank</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://triacore.be/privacybeleid</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

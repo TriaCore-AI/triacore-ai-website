@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import NewsletterSignup from './newsletter-signup';
 
 // Overgang van de lichte pagina naar de donkere footer: een verloop dat volgens een zachte
 // S-curve van doorzichtig naar #020617 gaat. Door de vele tussenstappen is er nergens een begin of
@@ -16,8 +17,8 @@ const FADE_TO_DARK = `linear-gradient(to bottom, ${FADE_STOPS.map(([p, a]) => `r
 // Onder 1024px krijgt elke link een ruimer tikvlak; de negatieve marge houdt de opmaak gelijk
 const linkClass = 'text-sm text-white/55 hover:text-white transition-colors duration-300 w-max max-lg:py-1.5 max-lg:-my-1.5';
 
-// Compacte, rustige footer: links het merk, rechts de pagina's en de contactgegevens.
-// Onderaan één regel met de wettelijke gegevens.
+// Compacte, rustige footer: links het merk, rechts de pagina's en de contactgegevens. Daaronder de
+// inschrijving op de nieuwsbrief, onderaan één regel met de wettelijke gegevens.
 export default function Footer() {
     const { language } = useLanguage();
     const nl = language === 'nl';
@@ -57,6 +58,7 @@ export default function Footer() {
                             <Link to="/ai-oplossingen" className={linkClass}>{nl ? 'AI-oplossingen' : 'AI solutions'}</Link>
                             <Link to="/workshops" className={linkClass}>{nl ? 'AI-workshops' : 'AI workshops'}</Link>
                             <Link to="/projecten" className={linkClass}>{nl ? 'Projecten' : 'Projects'}</Link>
+                            <Link to="/kennisbank" className={linkClass}>{nl ? 'Kennisbank' : 'Resources'}</Link>
                             <Link to="/team" className={linkClass}>Team</Link>
                             <Link to="/contact" className={linkClass}>Contact</Link>
                         </div>
@@ -69,6 +71,21 @@ export default function Footer() {
                                 Kempische Steenweg 303<br />3500 Hasselt · Corda Incubator
                             </p>
                         </div>
+                    </div>
+                </div>
+
+                {/* Nieuwsbrief van de kennisbank, op dezelfde kolommen als het merk en de links erboven */}
+                <div className="mt-12 pt-10 border-t border-white/[0.07] grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 lg:items-start">
+                    <div className="lg:col-span-4">
+                        <p className="text-sm font-medium text-white">{nl ? 'Nieuwsbrief' : 'Newsletter'}</p>
+                        <p className="mt-2 text-sm text-white/50 leading-relaxed max-w-xs">
+                            {nl
+                                ? 'Nieuwe artikels uit onze kennisbank in je mailbox: AI-tips, prompts en ideeën.'
+                                : 'New articles from our resources in your inbox: AI tips, prompts and ideas.'}
+                        </p>
+                    </div>
+                    <div className="lg:col-span-6 lg:col-start-7 max-w-md lg:max-w-none">
+                        <NewsletterSignup tone="dark" />
                     </div>
                 </div>
 

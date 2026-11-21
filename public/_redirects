@@ -2,9 +2,13 @@
 # (raakt triacore-staging.netlify.app en deploy previews niet)
 https://triacore.netlify.app/*  https://triacore.be/:splat  301!
 
+# De kennisbank (beheerd vanuit de ERP) heette eerst /resources. Een artikel krijgt hetzelfde adres in de
+# kennisbank; een onbekend artikel toont het overzicht. Enkel /resources/<slug> (één deel), zodat de
+# afbeeldingen van de artikels in /resources/<slug>/<bestand>.webp gewoon blijven werken
+/resources  /kennisbank  301
+/resources/:slug  /kennisbank/:slug  301
+
 # Weggevallen pagina's van de nieuwe site
-/resources    /  301
-/resources/*  /  301
 /ai-begeleiding  /  302
 /custom-oplossingen  /ai-oplossingen  301
 /oplossingen-v2  /ai-oplossingen  301

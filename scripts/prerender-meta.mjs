@@ -10,6 +10,7 @@ import { readFile, writeFile, mkdir } from 'fs/promises';
 import { dirname } from 'path';
 import { SITE_URL, paginaSeo } from '../src/data/seo.js';
 import { loadProjecten } from './load-projecten.mjs';
+import { loadResources } from './load-resources.mjs';
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -20,8 +21,13 @@ function vervang(html, patroon, nieuw, naam) {
     return html.replace(patroon, nieuw);
 }
 
-function metMeta(html, { path, title, description }) {
+function metMeta(html, { path, title, description, image }) {
     const url = SITE_URL + path;
+    // Een artikel uit de kennisbank deelt zijn eigen thumbnail op LinkedIn en co.; de rest houdt de standaardafbeelding
+    if (image) {
+        html = vervang(html, /(<meta\s+property="og:image"\s+content=")[^"]*"/, `$1${esc(SITE_URL + image)}"`, 'og:image');
+        html = html.replace(/\s*<meta\s+property="og:image:(width|height|alt)"[^>]*>/g, '');
+    }
     html = vervang(html, /<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`, 'title');
     html = vervang(html, /(<meta\s+name="description"\s+content=")[^"]*"/, `$1${esc(description)}"`, 'description');
     html = vervang(html, /(<meta\s+property="og:title"\s+content=")[^"]*"/, `$1${esc(title)}"`, 'og:title');
@@ -33,6 +39,7 @@ function metMeta(html, { path, title, description }) {
 
 const basis = await readFile('dist/index.html', 'utf-8');
 const projecten = (await loadProjecten()).filter((p) => p.status === 'live');
+const resources = await loadResources();
 
 const paginas = [
     ...Object.entries(paginaSeo).map(([path, teksten]) => ({ path, ...teksten.nl })),
@@ -40,6 +47,12 @@ const paginas = [
         path: `/projecten/${p.slug}`,
         title: p.seo?.nl?.title ?? `${p.title.nl} | TriaCore AI`,
         description: p.seo?.nl?.description ?? p.description.nl,
+    })),
+    ...resources.map((r) => ({
+        path: `/kennisbank/${r.slug}`,
+        title: `${r.nl.title} | TriaCore AI`,
+        description: r.nl.description,
+        image: r.thumbnail ?? undefined,
     })),
 ];
 

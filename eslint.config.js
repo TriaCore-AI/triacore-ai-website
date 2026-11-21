@@ -26,4 +26,9 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  // De Netlify Functions en hun hulpbestanden draaien op de server (Node), niet in de browser
+  {
+    files: ['netlify/**/*.{js,mjs}', 'lib/**/*.js', 'scripts/**/*.mjs'],
+    languageOptions: { globals: globals.node },
+  },
 ])

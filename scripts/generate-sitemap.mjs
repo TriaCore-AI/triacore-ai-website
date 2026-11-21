@@ -3,6 +3,7 @@
 // (zie "build" in package.json) zodat de sitemap nooit achterloopt.
 import { writeFile } from 'fs/promises';
 import { loadProjecten } from './load-projecten.mjs';
+import { loadResources } from './load-resources.mjs';
 
 const SITE_URL = 'https://triacore.be';
 
@@ -14,6 +15,7 @@ const STATIC_ROUTES = [
     { path: '/team', priority: '0.6', changefreq: 'monthly' },
     { path: '/contact', priority: '0.7', changefreq: 'monthly' },
     { path: '/projecten', priority: '0.8', changefreq: 'weekly' },
+    { path: '/kennisbank', priority: '0.7', changefreq: 'weekly' },
     { path: '/privacybeleid', priority: '0.3', changefreq: 'yearly' },
     { path: '/cookiebeleid', priority: '0.3', changefreq: 'yearly' },
 ];
@@ -31,12 +33,14 @@ function urlEntry(loc, { priority, changefreq, lastmod }) {
 
 async function main() {
     const projecten = await loadProjecten();
+    const resources = await loadResources();
 
     const entries = [
         ...STATIC_ROUTES.map((r) => urlEntry(r.path, r)),
         ...projecten
             .filter((p) => p.status === 'live')
             .map((p) => urlEntry(`/projecten/${p.slug}`, { priority: '0.7', changefreq: 'monthly' })),
+        ...resources.map((r) => urlEntry(`/kennisbank/${r.slug}`, { priority: '0.6', changefreq: 'monthly', lastmod: r.date })),
     ];
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`;

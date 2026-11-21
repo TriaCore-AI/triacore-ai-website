@@ -50,6 +50,16 @@ export const paginaSeo = {
             description: 'Organisations we helped move forward with AI, from a first AI workshop to a custom AI solution. Explore our projects and case studies.',
         },
     },
+    '/kennisbank': {
+        nl: {
+            title: 'Kennisbank: AI-tips en prompts | TriaCore AI',
+            description: 'Praktische AI-tips, prompts om meteen te kopiëren en ideeën om AI slim in te zetten in je bedrijf. Kort en concreet, van het team van TriaCore AI.',
+        },
+        en: {
+            title: 'Resources: AI tips and prompts | TriaCore AI',
+            description: 'Practical AI tips, prompts to copy right away and ideas to put AI to smart use in your business. Short and concrete, from the TriaCore AI team.',
+        },
+    },
     '/team': {
         nl: {
             title: 'Ons team in Hasselt | TriaCore AI',

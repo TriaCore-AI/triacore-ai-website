@@ -8,3 +8,11 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Het voorbeeld voor de ERP (src/pages/ResourcePreview.jsx): enkel de ERP mag het in een venster tonen,
+# en het hoort niet in Google
+[[headers]]
+  for = "/kennisbank/voorbeeld"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors https://management-triacore.netlify.app https://cedar-index-8k2m.netlify.app http://localhost:3001 http://localhost:3002"
+    X-Robots-Tag = "noindex, nofollow"

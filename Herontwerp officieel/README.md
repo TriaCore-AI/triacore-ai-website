@@ -101,8 +101,9 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 | Contact (`/contact`) | Header, links Rian en Lucas met gegevens, rechts het formulier |
 | Custom oplossingen, Workshops, AI-begeleiding | Enkel de header; worden nu uitgewerkt in de drie chats |
 | Privacybeleid, cookiebeleid | Header en leeskolom in de nieuwe stijl (`legal-page.jsx`), juridische tekst ongewijzigd |
+| Kennisbank (`/kennisbank`, `/kennisbank/<artikel>`) | Header met links de titel en rechts de inschrijving op de nieuwsbrief (`PageHeader` met `aside`), filter op categorie, artikelkaarten. De artikels komen uit de ERP |
 
-**Menubalk:** Oplossingen (dropdown met de drie pagina's) · Projecten · Team · Contact.
+**Menubalk:** Home · Oplossingen (dropdown) · Projecten · Kennisbank · Team · Contact.
 
 ### Gedeelde onderdelen (`src/components/ui/`)
 
@@ -131,7 +132,7 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 - **Klantlogo's** staan in `src/assets/klantcases/`, de foto van Naomi in `src/assets/quotes/`.
 - **Sitemap:** nieuwe routes toevoegen in `scripts/generate-sitemap.mjs`; de build maakt `public/sitemap.xml` opnieuw.
 - **Tekstblokken van de cases** (`src/components/content/ContentBlocks.jsx`): `theme="nieuw"`; bloktypes zonder eigen versie vallen terug op de klassieke stijl.
-- **Resources en nieuwsbrief zijn weg** (beslissing 4 november 2026): de pagina's, de inschrijving en de aankondigingsscripts. `/resources` en alles eronder sturen door naar de homepage (`public/_redirects`). Enkel de uitschrijflink (`newsletter-unsubscribe.js`, `lib/unsubscribe.js`, `lib/email-template.js`) blijft, voor wie in oude mails nog wil uitschrijven.
+- **Kennisbank en nieuwsbrief zijn terug** (21 november 2026, vervangt de beslissing van 4 november). De kennisbank staat op `/kennisbank` (in het Engels "Resources"; `/resources` en `/resources/<artikel>` sturen door) en wordt gevuld vanuit de ERP: zie `src/content/resources/README.md`. Inschrijven op de nieuwsbrief kan in de footer en op de kennisbankpagina (`newsletter-signup.jsx` → `netlify/functions/newsletter-subscribe.js` → Resend, met welkomstmail). Nog geen eigen sectie op de homepage en nog geen mail bij een nieuw artikel.
 - De oude pagina Custom oplossingen staat als archief in `src/pages/CustomOplossingenOud.jsx` (niet gekoppeld aan een route).
 
 ---
@@ -140,7 +141,6 @@ Verder: een **snelmenu linksonder** om tussen de secties te springen, en een vlo
 
 - De drie oplossingspagina's uitwerken (bezig).
 - Quote van The Box verzamelen (naam, functie, quote). De quote van Croes NV laten nakijken door Alain Vangeebergen (samengevoegd uit zijn vragenlijst en licht geredigeerd).
-- Het privacybeleid vermeldt nog de nieuwsbrief: aanpassen zodra beslist is wat er met de bestaande inschrijvingen in Resend gebeurt.
 - `CLAUDE.md` bijwerken naar de nieuwe stijl en pagina's zodra het herontwerp vastligt.
 - Opruimen: `tailwind.config.js` (niet meer gebruikt), en het lettertype Syne (enkel voor Solevo).
 - Hogere resolutie van de teamfoto's (nu 512 × 512).

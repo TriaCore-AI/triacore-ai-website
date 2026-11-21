@@ -132,16 +132,22 @@ Volledig tweetalig: **NL** (primair) en **EN** via `LanguageContext`.
 
 React 19 · React Router 7 · Vite 7 · Tailwind CSS 4 · GSAP 3 · Framer Motion · Lucide React
 Hosting/forms: Netlify | Animaties: scroll-triggered GSAP + Framer Motion
-Uitschrijflink vroegere nieuwsbrief: Resend (via Netlify Function)
+Nieuwsbrief: Resend (via Netlify Functions)
 
 ---
 
-## Nieuwsbrief (Resend)
+## Kennisbank en nieuwsbrief (Resend)
 
-**Resources en de nieuwsbriefinschrijving vallen weg in het herontwerp** (beslissing Lucas, 4 november 2026). Op `staging`
-zijn ze verwijderd; `/resources` stuurt door naar de homepage. Enkel de uitschrijflink blijft
-(`netlify/functions/newsletter-unsubscribe.js`) voor wie in oude mails nog wil uitschrijven. Op `main` staat de oude
-opzet nog tot het herontwerp live gaat. Niet opnieuw toevoegen tenzij de gebruiker dat vraagt.
+Sinds 21 november 2026 terug, in een nieuwe vorm (de beslissing van 4 november om ze te schrappen is daarmee vervangen):
+
+- **Kennisbank** (`/kennisbank`, in het Engels "Resources"; het oude adres `/resources` stuurt door). De artikels worden
+  geschreven en gepubliceerd vanuit de ERP (TriaCore management, Marketing → Resources), die ze als bestanden in
+  `src/content/resources/` en `public/resources/` zet. Formaat: `src/content/resources/README.md`. In het menu en de
+  footer; nog geen eigen sectie op de homepage.
+- **Nieuwsbrief:** inschrijven in de footer en rechts in de kop van de kennisbankpagina
+  (`src/components/ui/newsletter-signup.jsx`: naam en e-mailadres, enkel het e-mailadres is verplicht) via `netlify/functions/newsletter-subscribe.js` naar een Resend-lijst, met een welkomstmail
+  (`lib/email-template.js`). Uitschrijven via `newsletter-unsubscribe.js`. Env: zie `.env.example`. Een mail bij een
+  nieuw artikel is er nog niet. Op `main` staat de oude opzet nog tot het herontwerp live gaat.
 
 ---
 
